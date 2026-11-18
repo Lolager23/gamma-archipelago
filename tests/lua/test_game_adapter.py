@@ -151,3 +151,12 @@ def test_write_open_write_and_close_failures_are_reported(lua):
         module.actor_on_update()
         assert any("write" in message or "failed" in message for message in engine.logs.values())
         engine[failure] = False
+
+
+def test_bridge_accepts_the_engine_bin_parent_alias_without_writing_outside_appdata(lua):
+    module, engine = load_game(lua)
+    engine.root = "d:/anomalyap/bin/..\\appdata\\"
+    set_incoming(engine)
+    module.actor_on_update()
+    assert list(engine.created.values()) == ["itm_basickit"]
+    assert "D:/AnomalyAP/appdata/archipelago\\outgoing.txt" in engine.files

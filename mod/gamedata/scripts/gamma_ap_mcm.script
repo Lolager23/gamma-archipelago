@@ -11,7 +11,6 @@ function on_mcm_load()
                 id = "spawn_basic_tools",
                 type = "button",
                 functor = {gamma_ap_actions.spawn_basic_tools},
-                precondition = {gamma_ap_actions.can_spawn},
             },
         },
     }

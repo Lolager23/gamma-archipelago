@@ -4,8 +4,8 @@ local TOOLKIT_SECTION = "itm_basickit"
 local DROP_HEIGHT_METRES = 0.2 -- Clear ground collision before the item settles.
 
 function can_spawn()
-    local root = getFS():update_path("$app_data_root$", "")
-    if root:gsub("\\", "/"):lower():gsub("/+$", "") ~= "d:/anomalyap/appdata" then
+    local root = gamma_ap_paths.appdata_root(getFS():update_path("$app_data_root$", ""))
+    if not root then
         return false
     end
     return level.present() and db.actor ~= nil and db.actor:alive()

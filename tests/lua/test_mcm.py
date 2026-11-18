@@ -73,7 +73,7 @@ def test_menu_discovery_has_no_side_effect_and_localizes_its_controls(lua):
 def test_button_click_creates_exactly_one_unowned_toolkit_at_the_players_feet(lua):
     menu, _, engine = load_menu(lua)
     button = menu.on_mcm_load().gr[3]
-    assert button.precondition[1]() is True
+    assert button.precondition is None
     assert button.functor[1]() is True
     created = list(engine.creates.values())
     assert len(created) == 1
@@ -90,7 +90,7 @@ def test_button_click_creates_exactly_one_unowned_toolkit_at_the_players_feet(lu
 @pytest.mark.parametrize(
     "condition", ["main_menu", "no_actor", "dead", "normal_root", "other_root"]
 )
-def test_button_is_hidden_and_direct_calls_are_refused_when_unavailable(lua, condition):
+def test_button_stays_visible_but_clicks_are_refused_when_unavailable(lua, condition):
     menu, actions, engine = load_menu(lua)
     if condition == "main_menu":
         engine.present = False
@@ -102,7 +102,7 @@ def test_button_is_hidden_and_direct_calls_are_refused_when_unavailable(lua, con
         engine.root = "D:/Anomaly/appdata/"
     else:
         engine.root = "D:/Other/appdata/"
-    assert menu.on_mcm_load().gr[3].precondition[1]() is False
+    assert menu.on_mcm_load().gr[3].precondition is None
     assert actions.spawn_basic_tools() is False
     assert not list(engine.creates.values()) and not list(engine.tips.values())
 
@@ -110,7 +110,7 @@ def test_button_is_hidden_and_direct_calls_are_refused_when_unavailable(lua, con
 def test_click_rechecks_player_state_after_the_menu_has_been_built(lua):
     menu, _, engine = load_menu(lua)
     button = menu.on_mcm_load().gr[3]
-    assert button.precondition[1]() is True
+    assert button.precondition is None
     engine.alive = False
     assert button.functor[1]() is False
     assert not list(engine.creates.values())
@@ -153,3 +153,16 @@ def test_manual_toolkit_does_not_change_the_pilots_saved_checks_or_receipts(lua)
     assert result.session_key == original.session_key and result.received_count == 1
     assert dict(result.checks.items()) == {28052001: True}
     assert list(result.applied_items.values()) == [28051002]
+
+
+def test_engine_bin_parent_path_is_the_same_development_appdata(lua):
+    _, actions, engine = load_menu(lua)
+    engine.root = "d:/anomalyap/bin/..\\appdata\\"
+    assert actions.can_spawn() is True
+
+
+def test_mcm_always_displays_the_button_even_when_opened_before_loading_a_save(lua):
+    menu, _, engine = load_menu(lua)
+    engine.present = False
+    button = menu.on_mcm_load().gr[3]
+    assert button.precondition is None
