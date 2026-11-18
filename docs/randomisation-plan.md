@@ -62,11 +62,28 @@ checklist for the fourteen proposed check options and their precise semantics.
 | Supplies | Medicine, ammo, repair supplies, money | Bounded filler pool |
 | Traps | Equipment malfunction, temporary debuff | Optional exploration only; avoid irreversible damage |
 
-The six requested reward switches separate white stashes, orange stashes, quest
-keys, reputation, stat levels and zone keys. Toolkits/detectors/protection remain
+The original six reward switches separate white stashes, orange stashes, quest
+keys, reputation, stat levels and zone keys. Starting-gear unlocks add a seventh
+category for optional AP-locked equipment starts. Toolkits/detectors/protection remain
 candidate content for the progression pool. A disabled reward category must not
 leave its AP-specific locks active. Orange markers never substitute for logic
 that requires the contained progression item to be physically collected.
+
+## Optional restricted starts
+
+Plan independent starting-loadout options for no detector, no PDA, no firearms,
+no knife/melee, no outfit/headgear, no backpack, no tools and optional reductions
+to utility equipment, ammunition, supplies and money. Defaults preserve the
+ordinary loadout. The No Starting Weapons preset omits firearms and melee;
+No Starting Firearms can preserve the knife.
+
+Separate initial omission from a durable AP permission lock. Omitted gear can be
+found normally; AP-locked gear requires a matching unlock reward and documented
+usable baseline equipment. Consumables use quantity/omission settings. Generation
+validates early access, enabled reward categories, pool size and protection needs.
+No-PDA starts keep the AP client/bridge working and queue PDA-only messages until
+restoration. Initialize only once, before AP rewards; never strip earned gear on
+reload. The expanded checklist specifies the full contract and acceptance cases.
 
 ## Goal choices and messages
 

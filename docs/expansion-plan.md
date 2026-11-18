@@ -44,6 +44,67 @@ unreachable goals and incompatible starts/integrations with an actionable error.
 Do not remove mandatory keys to make a small pool fit. Fill remaining locations
 with bounded supplies; do not require every reward category to be enabled.
 
+## Optional starting-gear restrictions
+
+Add independent APWorld options for the starting loadout, all defaulting to the
+ordinary supported loadout. These are seed-generation settings, not changes to
+the current pilot or a running save. Freeze the chosen loadout in slot data.
+
+| Equipment group | Proposed restricted start |
+|---|---|
+| Detector | No starting detector; advanced detection checks require later access. |
+| PDA | No starting PDA; restore its map/task functionality when acquired/unlocked. |
+| Firearms | No starting guns. Treat their ammunition separately. |
+| Knife/melee | No starting knife or other melee weapon, independently selectable. |
+| Armour and headgear | No starting outfit and/or helmet, with separate selections. |
+| Backpack | No starting backpack; account for actual carrying-capacity effects. |
+| Tools | No starting toolkit/repair equipment, with explicit item groups. |
+| Utility equipment | Optional no binoculars, flashlight or other inventoried starter utilities. |
+| Supplies and money | Optional reduced/zero ammo, medicine, food or starting money, each independently configured. |
+
+Provide a **No Starting Weapons** preset that removes both firearms and melee
+weapons, and a separate **No Starting Firearms** selection that keeps a knife
+unless its own restriction is enabled. Publish the exact affected item groups;
+do not infer weapons or armour from item names, weight or price.
+
+For durable equipment, distinguish these proposed modes:
+
+- **Normal:** use the ordinary starting loadout and ordinary acquisition rules.
+- **Absent at start:** omit the initial item; later looting, buying and using it
+  work normally. This does not create a permanent equipment permission gate.
+- **Locked until AP unlock:** omit the initial item and gate the corresponding
+  equipment capability until its AP reward is applied. Implement this later with
+  explicit acquisition/use rules; finding a physical item must not bypass the
+  chosen permission lock. The unlock supplies a documented usable baseline item
+  where needed, rather than leaving the player with an unusable permission.
+
+Use omission/quantity settings for consumables and money, not permanent bans on
+food, medicine or ammunition. Add a separately selectable
+`rewards_starting_gear_unlocks` category for delayed equipment permissions; this
+is the seventh reward category, in addition to the six previously requested.
+Generation rejects an AP-locked start if its required unlock rewards are disabled
+or do not fit the selected check pool. Absent-at-start mode needs no AP unlock.
+
+Prefer changing the authoritative initial-loadout grant before inventory is
+created. If the engine needs a fallback removal step, run it exactly once before
+AP deliveries and persist its completion. Never repeatedly strip inventory on
+load, respawn or reconnect; preserve earned, traded, crafted and AP-delivered
+equipment. Verify faction defaults, custom loadout purchases, difficulty presets,
+tutorial grants and any refunds so none bypass or duplicate the restriction.
+
+No-PDA starts must not stop the AP bridge, lose pending messages or prevent the
+PDA unlock from being received. Keep connection/recovery status available in the
+companion and an appropriate menu. Queue PDA-only notifications/history while
+locked, then deliver them in bounded batches after restoration. Do not expose a
+restricted map or task screen accidentally through another UI or keybind.
+
+The world must model the missing capabilities: no detector cannot imply early
+detector-dependent artefact access; no weapons cannot imply early combat checks;
+no PDA cannot imply early PDA-dependent jobs, maps or stash interactions. Check
+combined restrictions and full multiworld progression spheres. Guarantee viable
+early checks and recovery equipment without depending on lucky loot or an item
+behind its own requirement. Reject unsupported unsafe starts clearly.
+
 ## Checks: required categories and precise proposed triggers
 
 All checks are finite and monotonic. Threshold lists are sorted, unique and capped
@@ -83,6 +144,7 @@ silently remove a requested category after a failed probe.
 | `rewards_faction_reputation` | Grant bounded reputation/goodwill increases for selected factions, enabling documented trader tiers. | Verify the actual trader eligibility calculation. Do not equate reputation with faction friendship or override story hostility. Clamp gains and reconcile permanent AP bonuses after reload. |
 | `rewards_stat_levels` | Grant named character-skill levels through the supported stat mod. | Start with the installed Haruka Skill System plus GAMMA's balance override. Use a dedicated adapter, respect caps and recalculate effects through its API. Refuse this option if the compatible integration is absent. |
 | `rewards_zone_keys` | Grant permanent access to named zones and an optional first-arrival fast-travel opportunity. | Enforce every supported entry route and preserve a return route. See the travel policy below; an AP key does not automatically grant physical psi/radiation protection. |
+| `rewards_starting_gear_unlocks` | Restore selected equipment capabilities omitted and locked by the starting-loadout options. | Only create the required unlocks for selected AP-locked groups. Supply documented baseline equipment, enforce the chosen permission, and reconcile it after save/load. |
 
 Provide explicit sets/ranges for stash quality, ammo families, reputation factions,
 skill rewards and finite quantities. The pool must contain every required key and
@@ -184,6 +246,8 @@ callback arguments and save behaviour have been observed in the installed build.
   planned integration before treating it as supported.
 - [ ] Inventory all requested content rosters and real callbacks/info portions.
 - [ ] Record credit rules, task identities, equipment tiers and lab roster.
+- [ ] Identify authoritative starter grants, faction/difficulty loadouts and PDA
+  dependencies before defining supported restricted-start combinations.
 
 Exit: repeatable pilot evidence and a finite manifest/probe backlog; no claim that
 current inventory receipts prove crash-safe recovery.
@@ -203,6 +267,8 @@ reconnect/load do not spam or create rewards twice because a notice failed.
 ### Stage 2: options, catalogue and exploration
 
 - [ ] Implement all category options and typed, versioned slot manifest.
+- [ ] Add independent starting-loadout omissions and the No Starting Weapons
+  preset; initialize once before AP grants and preserve later earned inventory.
 - [ ] Add every supported map, preserving pilot IDs.
 - [ ] Add every curated major settlement using actual entry volumes.
 - [ ] Build a real region graph from current transitions, including extra routes.
@@ -240,11 +306,15 @@ policy, and disabled categories impose no new locks or missing dependencies.
 ### Stage 5: quest and zone keys
 
 - [ ] Implement quest-stage permissions and ordinary-source replacement.
+- [ ] Add AP-locked starting-equipment permissions and their required unlock
+  rewards, including PDA restoration, usable baseline gear and queued messages.
 - [ ] Implement zone access permissions across normal, extra, scripted and
   fast-travel routes. Preserve return travel and the starting safe region.
 - [ ] Offer and persist one optional settlement trip after a zone unlock.
 - [ ] Model protection, trader, stash and story prerequisites in AP logic.
 - [ ] Test self-locks, hostile hubs, death, load in a locked area and old saves.
+- [ ] Test no-detector, no-PDA and no-weapons starts individually and combined;
+  verify early progression, bought/looted gear policy and duplicate starter grants.
 
 Exit: game enforcement matches generator access rules; no progression key is
 placed behind itself and every supported configuration has a completion route.
