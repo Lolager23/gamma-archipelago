@@ -1,0 +1,69 @@
+"""Strict data-only snapshots shared with Lua; no executable commands cross the bridge."""
+
+import re
+from dataclasses import dataclass
+
+from .catalog import ITEM_SECTIONS, LOCATION_IDS, MAX_ITEMS, MAX_SNAPSHOT_BYTES
+
+
+class ProtocolError(ValueError):
+    """A snapshot is incomplete, incompatible or belongs to another session."""
+
+
+@dataclass(frozen=True)
+class GameSnapshot:
+    session_key: str
+    received_count: int
+    checked_locations: frozenset[int]
+    goal_complete: bool
+
+
+def validate_session_key(value: str) -> None:
+    if re.fullmatch(r"[0-9a-f]{64}", value) is None:
+        raise ProtocolError("Session key must contain 64 lowercase hexadecimal characters")
+
+
+def _number(value: str) -> int:
+    if re.fullmatch(r"0|[1-9][0-9]{0,9}", value) is None:
+        raise ProtocolError("Expected a canonical nonnegative integer")
+    return int(value)
+
+
+def encode_incoming(session_key: str, item_ids: tuple[int, ...]) -> str:
+    validate_session_key(session_key)
+    if len(item_ids) > MAX_ITEMS or any(item_id not in ITEM_SECTIONS for item_id in item_ids):
+        raise ProtocolError("Incoming history contains too many items or an unsupported item")
+    lines = ["GAMMA_AP_IN|1", f"session|{session_key}"]
+    lines.extend(f"item|{index}|{item_id}" for index, item_id in enumerate(item_ids))
+    lines.append(f"end|{len(item_ids)}")
+    return "\n".join(lines) + "\n"
+
+
+def decode_outgoing(content: str, session_key: str) -> GameSnapshot:
+    validate_session_key(session_key)
+    if len(content.encode("utf-8")) > MAX_SNAPSHOT_BYTES or not content.endswith("\n"):
+        raise ProtocolError("Snapshot is oversized or missing its final newline")
+    lines = content.splitlines()
+    if len(lines) < 5 or lines[0] != "GAMMA_AP_OUT|1":
+        raise ProtocolError("Unsupported or incomplete game snapshot")
+    if lines[1] != f"session|{session_key}":
+        raise ProtocolError("Game snapshot belongs to another seed or slot")
+    if not lines[2].startswith("received|") or lines[-2] not in ("goal|0", "goal|1"):
+        raise ProtocolError("Snapshot fields are missing or out of order")
+    received_count = _number(lines[2].removeprefix("received|"))
+    if received_count > MAX_ITEMS:
+        raise ProtocolError("Received count exceeds the supported history size")
+    checks = []
+    for line in lines[3:-2]:
+        if not line.startswith("check|"):
+            raise ProtocolError("Unexpected snapshot field")
+        location_id = _number(line.removeprefix("check|"))
+        if location_id not in LOCATION_IDS or location_id in checks:
+            raise ProtocolError("Unknown or duplicate location")
+        checks.append(location_id)
+    if lines[-1] != f"end|{len(checks)}":
+        raise ProtocolError("Snapshot trailer does not match its check count")
+    goal = lines[-2] == "goal|1"
+    if goal and frozenset(checks) != LOCATION_IDS:
+        raise ProtocolError("Pilot completion requires every pilot location")
+    return GameSnapshot(session_key, received_count, frozenset(checks), goal)

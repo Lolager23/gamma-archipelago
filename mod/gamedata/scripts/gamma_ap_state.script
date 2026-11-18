@@ -1,0 +1,49 @@
+-- The sole owner of this save's AP state. Files and engine calls are injected.
+
+function new_state()
+    return { session_key = nil, received_count = 0, checks = {}, applied_items = {} }
+end
+
+function copy_state(state)
+    local result = new_state()
+    result.session_key = state.session_key
+    result.received_count = state.received_count
+    for key, value in pairs(state.checks) do result.checks[key] = value end
+    for key, value in pairs(state.applied_items) do result.applied_items[key] = value end
+    return result
+end
+
+function bind_session(state, incoming)
+    if state.session_key and state.session_key ~= incoming.session_key then
+        return false, "This save belongs to another AP seed or slot"
+    end
+    if state.received_count > #incoming.items then
+        return false, "Received item history is shorter than this save"
+    end
+    for index = 1, state.received_count do
+        if state.applied_items[index] ~= incoming.items[index] then
+            return false, "Received item history conflicts with this save"
+        end
+    end
+    state.session_key = incoming.session_key
+    return true
+end
+
+function apply_pending(state, incoming, give_item)
+    local bound, reason = bind_session(state, incoming)
+    if not bound then return false, reason end
+    -- One item per update limits engine work and makes delivery failure visible.
+    local next_index = state.received_count + 1
+    local item_id = incoming.items[next_index]
+    if not item_id then return true end
+    local section = gamma_ap_catalog.item_sections[item_id]
+    if not section or not give_item(section) then return false, "Reward creation failed" end
+    state.received_count = next_index
+    state.applied_items[next_index] = item_id
+    return true
+end
+
+function check_level(state, level_name)
+    local location_id = gamma_ap_catalog.location_by_level[level_name]
+    if location_id then state.checks[location_id] = true end
+end

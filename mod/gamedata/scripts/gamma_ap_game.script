@@ -1,0 +1,85 @@
+-- Thin Anomaly adapter: all AP decisions live in state/protocol modules.
+-- Deploy only through the isolated GAMMA MO2 instance.
+
+local state = gamma_ap_state.new_state()
+local next_poll = 0
+local last_error = nil
+
+local function report_error(message)
+    if message ~= last_error then
+        printf("[GAMMA AP] %s", message)
+        last_error = message
+    end
+end
+
+local function bridge_path(filename)
+    local root = getFS():update_path("$app_data_root$", "")
+    local normal = root:gsub("\\", "/"):lower():gsub("/+$", "")
+    if normal ~= "d:/anomalyap/appdata" then
+        return nil, "AP add-on is allowed only in D:/AnomalyAP/appdata"
+    end
+    return root .. "archipelago\\" .. filename
+end
+
+local function read_incoming()
+    local path, reason = bridge_path("incoming.txt")
+    if not path then return nil, reason end
+    local file = io.open(path, "rb")
+    if not file then return nil, "Start the AP companion client before loading a test save" end
+    local content = file:read(131073)
+    file:close()
+    return gamma_ap_protocol.parse_incoming(content)
+end
+
+local function write_outgoing()
+    local path, reason = bridge_path("outgoing.txt")
+    if not path then return false, reason end
+    local file, open_error = io.open(path, "wb")
+    if not file then return false, "Cannot write AP state: " .. tostring(open_error) end
+    local written = file:write(gamma_ap_protocol.encode_outgoing(state))
+    local closed = file:close()
+    if not written or not closed then return false, "AP snapshot write failed" end
+    return true
+end
+
+local function give_item(section)
+    local object = alife_create_item(section, db.actor)
+    if not object then return false end
+    printf("[GAMMA AP] Received %s", section)
+    return true
+end
+
+function actor_on_update()
+    if not db.actor or not db.actor:alive() then return end
+    local now = time_global()
+    if now < next_poll then return end
+    next_poll = now + 500
+    local incoming, reason = read_incoming()
+    if not incoming then report_error(reason); return end
+    local success, delivery_error = gamma_ap_state.apply_pending(state, incoming, give_item)
+    if not success then report_error(delivery_error); return end
+    gamma_ap_state.check_level(state, level.name())
+    local written, write_error = write_outgoing()
+    if not written then report_error(write_error); return end
+    last_error = nil
+end
+
+function save_state(data)
+    data.gamma_archipelago_v1 = gamma_ap_state.copy_state(state)
+end
+
+function load_state(data)
+    state = gamma_ap_state.copy_state(data.gamma_archipelago_v1 or gamma_ap_state.new_state())
+    next_poll = 0
+    last_error = nil
+end
+
+function on_game_start()
+    state = gamma_ap_state.new_state()
+    next_poll = 0
+    last_error = nil
+    RegisterScriptCallback("actor_on_update", actor_on_update)
+    RegisterScriptCallback("save_state", save_state)
+    RegisterScriptCallback("load_state", load_state)
+    printf("[GAMMA AP] Pilot loaded; multiplayer roots are forbidden")
+end

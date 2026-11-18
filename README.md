@@ -17,6 +17,8 @@ is protected throughout development.
 - [Architecture](docs/architecture.md): responsibilities and persistence boundaries.
 - [Development environment](docs/development-environment.md): installation and isolation.
 - [Resources](docs/resources.md): primary documentation and version policy.
+- [Build and test guide](docs/development-guide.md): commands, pilot scope and game acceptance.
+- [Verification record](docs/verification-record.md): measured results and remaining checks.
 
 Game files, downloaded archives, credentials and personal saves are not distributed
 in this repository. Install Anomaly and GAMMA independently using their official
