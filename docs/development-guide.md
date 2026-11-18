@@ -53,11 +53,10 @@ decision-outcome tests; this is not a Lua branch-coverage measurement.
 
 ## Packages and deployment
 
-The same verification job is prepared for Windows and Linux in `ci/verify.yml`.
-It is currently inactive: GitHub rejected publishing it under `.github/workflows`
-because the existing OAuth login lacks `workflow` scope. After authorising that
-scope, move the template to `.github/workflows/verify.yml` in a follow-up commit
-and check both jobs. Until then, local verification is the available evidence.
+The same verification job runs on Windows and Linux through
+`.github/workflows/verify.yml`, on pushes and pull requests. It retains coverage
+reports and experimental packages as run artifacts. The repository uses read-only
+workflow permissions. Check both job results on the PR before declaring CI passed.
 
 `python tools/build.py` writes deterministic `dist/gamma.apworld`,
 `dist/gamma-archipelago-mo2.zip` and `dist/SHA256SUMS`. Only owned code and data are

@@ -52,9 +52,10 @@ to the local Python/C-backed YAML interaction described in the development guide
 
 ## Remaining acceptance
 
-- CI is an inactive template at `ci/verify.yml`. GitHub rejected the workflow push
-  because the current OAuth login lacks `workflow` scope. Activation and Windows/
-  Linux CI results remain pending; local verification passes.
+- The Windows/Linux workflow is active at `.github/workflows/verify.yml` after
+  the user authorised the required GitHub `workflow` scope. Hosted run evidence
+  is linked from [PR #1](https://github.com/Lolager23/gamma-archipelago/pull/1/checks);
+  inspect the current head's results separately from the local results above.
 - Official GAMMA installation completion and final resolved-path audit.
 - Development MO2 profile, copied add-on deployment and profile save/settings check.
 - All engine checks listed in the development guide, including actual delivery.
