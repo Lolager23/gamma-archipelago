@@ -1,0 +1,23 @@
+# GAMMA Archipelago
+
+An experimental Archipelago integration for S.T.A.L.K.E.R. Anomaly with G.A.M.M.A.
+
+The first delivery establishes an isolated development installation and proves
+location checks and item delivery. It is not the finished randomiser. Multiplayer
+compatibility is a separate research task; the existing multiplayer installation
+is protected throughout development.
+
+## Project documents
+
+- [Execution plan](docs/execution-plan.md): investigation through release.
+- [Branch roadmap](docs/branch-roadmap.md): ordered, reviewable increments.
+- [Randomisation design](docs/randomisation-plan.md): candidates, MVP, exploration and completion.
+- [Coding standard](docs/coding-standard.md): clarity, ownership and test requirements.
+- [Git workflow](docs/git-workflow.md): identity, commits, branches and PRs.
+- [Architecture](docs/architecture.md): responsibilities and persistence boundaries.
+- [Development environment](docs/development-environment.md): installation and isolation.
+- [Resources](docs/resources.md): primary documentation and version policy.
+
+Game files, downloaded archives, credentials and personal saves are not distributed
+in this repository. Install Anomaly and GAMMA independently using their official
+instructions. No affiliation with GSC Game World, GAMMA or Archipelago is implied.

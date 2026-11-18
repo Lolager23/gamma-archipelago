@@ -1,0 +1,27 @@
+# Game installations, saves and machine state are never repository content.
+.local/
+.venv/
+build/
+dist/
+artifacts/
+htmlcov/
+.coverage*
+coverage.json
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+*.scop
+*.scoc
+*.sav
+*.log
+*.7z
+*.zip
+*.exe
+*.dll
+*.clixml
+.env
+.env.*
+!.env.example
