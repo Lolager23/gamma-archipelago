@@ -20,6 +20,7 @@ is protected throughout development.
 - [Resources](docs/resources.md): primary documentation and version policy.
 - [Build and test guide](docs/development-guide.md): commands, pilot scope and game acceptance.
 - [Verification record](docs/verification-record.md): measured results and remaining checks.
+- [Mod Configuration Menu](docs/mod-configuration-menu.md): Archipelago page and toolkit test action.
 
 Game files, downloaded archives, credentials and personal saves are not distributed
 in this repository. Install Anomaly and GAMMA independently using their official

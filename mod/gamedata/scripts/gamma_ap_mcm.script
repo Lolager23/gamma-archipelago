@@ -1,0 +1,18 @@
+-- MCM discovers *mcm.script and calls this function to build its options tree.
+
+function on_mcm_load()
+    return {
+        id = "gamma_archipelago",
+        sh = true,
+        gr = {
+            {id = "title", type = "title", text = "ui_mcm_menu_gamma_archipelago"},
+            {id = "description", type = "desc", text = "ui_mcm_gamma_archipelago_description"},
+            {
+                id = "spawn_basic_tools",
+                type = "button",
+                functor = {gamma_ap_actions.spawn_basic_tools},
+                precondition = {gamma_ap_actions.can_spawn},
+            },
+        },
+    }
+end
