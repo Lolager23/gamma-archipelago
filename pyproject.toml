@@ -1,0 +1,51 @@
+[build-system]
+requires = ["setuptools>=75,<81"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gamma-archipelago"
+version = "0.1.0"
+description = "An isolated Archipelago integration pilot for STALKER Anomaly / GAMMA"
+requires-python = ">=3.12,<3.14"
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+  "pytest==9.2.0", "pytest-cov==7.1.0", "coverage==7.17.3",
+  "ruff==0.17.5", "mypy==2.4.1", "lupa==2.8",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+gamma_archipelago = ["catalog.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-ra"
+markers = [
+  "integration: uses the pinned upstream Archipelago checkout",
+  "server: actual upstream generator and websocket server, verified without tracing",
+]
+
+[tool.coverage.run]
+branch = true
+source = ["gamma_archipelago"]
+
+[tool.coverage.report]
+show_missing = true
+fail_under = 95
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+files = ["src/gamma_archipelago"]

@@ -1,0 +1,6 @@
+name: GammaPilot
+game: S.T.A.L.K.E.R. GAMMA
+description: Three-region integration pilot; not the finished randomiser.
+S.T.A.L.K.E.R. GAMMA:
+  progression_balancing: 0
+  accessibility: items

@@ -1,0 +1,51 @@
+-- Data-only bridge codec. Keep compatible with Anomaly's LuaJIT/Lua 5.1.
+
+function canonical_number(value)
+    if not value or #value > 10 then return nil end
+    if value ~= "0" and not value:match("^[1-9][0-9]*$") then return nil end
+    return tonumber(value)
+end
+
+function parse_incoming(content)
+    if type(content) ~= "string" or #content > 131072 or content:sub(-1) ~= "\n" then
+        return nil, "Incomplete or oversized incoming snapshot"
+    end
+    local lines = {}
+    for line in content:gmatch("([^\n]*)\n") do
+        lines[#lines + 1] = line:gsub("\r$", "")
+    end
+    if #lines < 3 or lines[1] ~= "GAMMA_AP_IN|1" then
+        return nil, "Unsupported incoming protocol"
+    end
+    local key = lines[2]:match("^session|([0-9a-f]+)$")
+    if not key or #key ~= 64 then return nil, "Invalid session identity" end
+    local count = canonical_number(lines[#lines]:match("^end|(.*)$"))
+    if not count or count > 4000 or count ~= #lines - 3 then
+        return nil, "Incoming trailer does not match item history"
+    end
+    local items = {}
+    for line_index = 3, #lines - 1 do
+        local index_text, id_text = lines[line_index]:match("^item|([^|]+)|([^|]+)$")
+        local index, item_id = canonical_number(index_text), canonical_number(id_text)
+        if index ~= line_index - 3 or not gamma_ap_catalog.item_sections[item_id] then
+            return nil, "Unknown item or nonsequential item history"
+        end
+        items[#items + 1] = item_id
+    end
+    return { session_key = key, items = items }
+end
+
+function encode_outgoing(state)
+    local lines = { "GAMMA_AP_OUT|1", "session|" .. state.session_key,
+        "received|" .. tostring(state.received_count) }
+    local count = 0
+    for _, id in ipairs(gamma_ap_catalog.location_ids) do
+        if state.checks[id] then
+            count = count + 1
+            lines[#lines + 1] = "check|" .. tostring(id)
+        end
+    end
+    lines[#lines + 1] = "goal|" .. (count == #gamma_ap_catalog.location_ids and "1" or "0")
+    lines[#lines + 1] = "end|" .. tostring(count)
+    return table.concat(lines, "\n") .. "\n"
+end

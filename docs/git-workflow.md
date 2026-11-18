@@ -7,6 +7,18 @@ The authenticated personal GitHub account is `Lolager23`. Email verification cou
 not be checked with the existing token scope; the commit address still uses the
 explicit address requested. Global work identity must remain untouched.
 
+This checkout sets `core.hooksPath` locally to `.githooks`, whose commit and push
+hooks validate the personal identity, including outgoing commit authors and
+committers. This replaces the machine's work-only identity policy for this repo;
+the global configuration and work repositories remain untouched. On a fresh
+clone run `git config --local core.hooksPath .githooks` after setting local
+`user`, `author` and `committer` names/emails and `user.useConfigOnly=true`.
+Explicit author/committer settings are needed because this machine has work
+overrides in its global config. The initial published bootstrap commit `e467777`
+inherited those work overrides; that history is retained. Subsequent commits use
+the personal identity. The current single-owner policy rejects
+any other outgoing identity; revisit that policy explicitly before collaboration.
+
 Keep `main` in a state that passes automated checks. Initialise it with the project
 charter and standards, then develop the Archipelago foundation on
 `codex/archipelago-integration`. Create the remote as private initially. Public

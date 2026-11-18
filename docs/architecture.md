@@ -27,7 +27,7 @@ A save must never attach silently to a different key.
 
 Keep received items pending until the game can apply them. A successful file write
 does not mean an item has been applied. An item batch with a gap is rejected and
-requests resynchronisation. Duplicate history with different contents is an error.
+requires resynchronisation. Duplicate history with different contents is an error.
 Location checks are monotonic and can be resent safely.
 
 Anomaly does not provide a general transaction across spawning an item and saving
@@ -40,7 +40,7 @@ consumable replacement, with measured crash and rollback tests before MVP.
 
 ```text
 apworld/gamma/                 Archipelago extension package
-data/catalog.json              Stable IDs and supported pilot content
+src/gamma_archipelago/catalog.json  Stable IDs and supported pilot content
 src/gamma_archipelago/         Typed client, bridge and session logic
 mod/gamedata/scripts/          Thin callbacks and Lua state/protocol modules
 tests/unit/                    Python behaviour tests
