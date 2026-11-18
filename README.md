@@ -9,6 +9,7 @@ is protected throughout development.
 
 ## Project documents
 
+- [Agent instructions](AGENTS.md): repository working rules drawn from the documents below.
 - [Execution plan](docs/execution-plan.md): investigation through release.
 - [Branch roadmap](docs/branch-roadmap.md): ordered, reviewable increments.
 - [Randomisation design](docs/randomisation-plan.md): candidates, MVP, exploration and completion.
