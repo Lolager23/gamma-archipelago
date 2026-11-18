@@ -16,7 +16,10 @@ pytestmark = pytest.mark.integration
 
 def test_packages_are_reproducible_and_load_from_apworld(tmp_path):
     subprocess.run([sys.executable, "tools/build.py"], cwd=ROOT, check=True)
-    outputs = [ROOT / "dist" / name for name in ("gamma.apworld", "gamma-archipelago-mo2.zip")]
+    outputs = [
+        ROOT / "dist" / name
+        for name in ("gamma.apworld", "gamma-archipelago-mo2.zip", "gamma-archipelago-probes.zip")
+    ]
     first = [hashlib.sha256(path.read_bytes()).digest() for path in outputs]
     subprocess.run([sys.executable, "tools/build.py"], cwd=ROOT, check=True)
     assert [hashlib.sha256(path.read_bytes()).digest() for path in outputs] == first
@@ -24,6 +27,10 @@ def test_packages_are_reproducible_and_load_from_apworld(tmp_path):
         assert set(archive.namelist()) == {
             f"gamedata/scripts/gamma_ap_{name}.script"
             for name in ("catalog", "protocol", "state", "game")
+        }
+    with ZipFile(outputs[2]) as archive:
+        assert set(archive.namelist()) == {
+            f"gamedata/scripts/gamma_ap_probe_{name}.script" for name in ("capture", "game")
         }
     runtime = Path(os.environ.get("AP_RUNTIME_ROOT", "D:/GAMMAAPTools/ap-runtime"))
     isolated = tmp_path / "runtime"

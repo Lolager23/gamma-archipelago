@@ -59,6 +59,7 @@ user changes its scope. Do not delegate to other agents unless explicitly asked.
 | `src/gamma_archipelago/` | Typed protocol, file bridge, paths and session core |
 | `apworld/gamma/` | Upstream AP world definitions and CommonClient adapter |
 | `mod/gamedata/scripts/` | Additive Lua game adapter, state and protocol modules |
+| `probes/gamedata/scripts/` | Separate opt-in diagnostic callbacks; never bundle into the pilot |
 | `tests/unit/`, `tests/lua/`, `tests/integration/` | Mirrored behaviour and integration tests |
 | `tools/` | Build, verification, bootstrap, deployment and launch commands |
 | `docs/` | Design, standards, plans and evidence |
