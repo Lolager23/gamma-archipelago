@@ -64,8 +64,11 @@ packaged. The Lua and AP world catalogue copies are generated from
 `src/gamma_archipelago/catalog.json`; edit that source rather than either copy.
 
 Wait for the official GAMMA installer to finish before deployment. Create the
-`Archipelago DEV` MO2 profile as a copy of the fresh development default and enable
-profile-specific saves and settings. The following command copies the add-on
+`Archipelago DEV` MO2 profile as a copy of the fresh development default. The
+installed game plugin reports that profile-local saves are unsupported: isolation
+comes from the separate `D:/AnomalyAP/appdata`, not the MO2 checkbox. Use the
+documented dev launch entry/configuration and a disposable single-player save.
+The following command copies the add-on
 only to `D:/GAMMAAP/mods/GAMMA Archipelago DEV`:
 
 ```powershell

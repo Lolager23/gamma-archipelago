@@ -25,6 +25,7 @@ game scripts. Prefer additive callbacks and DLTX changes where applicable.
 
 - [Adding games](https://github.com/ArchipelagoMW/Archipelago/blob/0.6.8/docs/adding%20games.md).
 - [World API](https://github.com/ArchipelagoMW/Archipelago/blob/0.6.8/docs/world%20api.md).
+- [Option types and common options](https://github.com/ArchipelagoMW/Archipelago/blob/0.6.8/Options.py).
 - [Network protocol](https://github.com/ArchipelagoMW/Archipelago/blob/0.6.8/docs/network%20protocol.md).
 - [CommonClient](https://github.com/ArchipelagoMW/Archipelago/blob/0.6.8/CommonClient.py).
 - [World test base](https://github.com/ArchipelagoMW/Archipelago/blob/0.6.8/test/bases.py).
