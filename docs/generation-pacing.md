@@ -55,6 +55,8 @@ checks need it, and firearms when the selected combat assumptions need them.
 Already precollected permissions need no reservation. Zone-key seeds keep the
 Cordon map check for the first route key; settlement checks provide the other
 opening slots. If space remains, a normal Medkit or Bandage is reserved too.
+Optional supplies respect non-local selections and each location's item rule;
+the reservation tries an allowed fallback or skips supplies when neither fits.
 
 Insufficient reliable checks, non-local opening items or conflicting plando fail
 generation. Enable settlements, relax locked gear, precollect required permissions

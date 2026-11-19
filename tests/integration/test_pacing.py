@@ -16,9 +16,9 @@ from gamma_archipelago.web_planner import catalogue
 CATALOG = catalogue()
 
 
-def started_world(options, starting=()):
+def started_world(options, starting=(), seed=35):
     multiworld = setup_multiworld(
-        GammaWorld, steps=("generate_early", "create_regions"), options=options, seed=35
+        GammaWorld, steps=("generate_early", "create_regions"), options=options, seed=seed
     )
     world = multiworld.worlds[1]
     for name in starting:
@@ -124,6 +124,23 @@ def test_opening_does_not_reserve_a_supply_without_a_spare_check():
     assert len(world.opening_placements) == 1
 
 
+@pytest.mark.parametrize("restriction", ["nonlocal_medkit", "nonlocal_both", "item_rule"])
+def test_optional_opening_supplies_respect_common_locality_and_location_rules(restriction):
+    multiworld, world = started_world(presets()["standard"])
+    if restriction.startswith("nonlocal"):
+        world.options.non_local_items.value = {"Medkit"}
+        if restriction == "nonlocal_both":
+            world.options.non_local_items.value.add("Bandage")
+    else:
+        for check in multiworld.get_locations(1):
+            check.item_rule = lambda item: item.name != "Medkit"
+    place_opening(world, CATALOG)
+    expected = ["Equipment Unlock: PDA"]
+    if restriction != "nonlocal_both":
+        expected.append("Bandage")
+    assert [row["item"] for row in world.opening_placements] == expected
+
+
 def test_zone_route_uses_another_reachable_map_after_a_reservation():
     multiworld, world = started_world({"rewards_zone_keys": 1}, ("Zone Key: Garbage",))
     multiworld.get_location("Cordon: First Arrival", 1).place_locked_item(
@@ -166,6 +183,16 @@ def test_actual_seed_reports_are_optional_and_spoilers_require_explicit_choice(t
     assert data["budget"]["network_checks"] == len(world.fill_slot_data()["location_ids"])
     assert bool(data.get("spoiler_placements")) == (mode == 2)
     assert data["native_verification"] == "not run"
+
+
+@pytest.mark.generation
+@pytest.mark.parametrize("key", ["Zone Key: Radar", "Zone Key: Lab X16", "Zone Key: Lab X19"])
+def test_precollected_psi_zone_keys_never_replace_psi_protection_in_the_route(key):
+    for seed in range(50):
+        multiworld, world = started_world(presets()["standard"], (key,), seed)
+        world.pre_fill()
+        distribute_items_restrictive(multiworld)
+        assert multiworld.can_beat_game(), (key, seed)
 
 
 @pytest.mark.generation
