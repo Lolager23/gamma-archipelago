@@ -74,6 +74,10 @@ end
 
 local function apply_reward(section)
     if type(section) == "number" then
+        if gamma_ap_catalog.item_effects[section] == "unlock" then
+            state.unlocks[gamma_ap_catalog.permissions[section]] = true
+            return true
+        end
         if gamma_ap_catalog.item_effects[section] == "skill" then
             return gamma_ap_skills.receive(state, section)
         end
@@ -99,6 +103,9 @@ function actor_on_update()
     if not incoming then report_error(reason); return end
     local configuration, configuration_error = read_configuration(incoming)
     if incoming.configuration_key and not configuration then report_error(configuration_error); return end
+    local quest_ready, quest_error = gamma_ap_quest_keys.install(function() return state end)
+    if configuration and configuration.expanded and configuration.options.rewards_quest_keys == 1
+        and not quest_ready then report_error(quest_error); return end
     register_task_hook()
     local supported, support_error = gamma_ap_tasks.supported(configuration)
     if not supported then report_error(support_error); return end
@@ -121,6 +128,8 @@ function actor_on_update()
     gamma_ap_state.check_level(state, level.name())
     local equipped, equipment_error = gamma_ap_equipment_checks.poll(state, configuration)
     if not equipped then report_error(equipment_error); return end
+    local quests, quest_error = gamma_ap_quest_keys.poll(state)
+    if not quests then report_error(quest_error); return end
     local stashed, stash_error = gamma_ap_stashes.poll(state)
     local success, delivery_error = gamma_ap_state.apply_pending(state, incoming, apply_reward)
     local written, write_error = write_outgoing()
@@ -182,9 +191,13 @@ end
 
 function load_state(data)
     local prepared, configuration_key = state.loadout_prepared, state.configuration_key
+    local configuration, pending = state.configuration, state.quest_pending
     state = gamma_ap_state.copy_state(data.gamma_archipelago_v1 or gamma_ap_state.new_state())
     if not data.gamma_archipelago_v1 and prepared then
         state.loadout_prepared, state.configuration_key = true, configuration_key
+    end
+    if not data.gamma_archipelago_v1 then
+        state.configuration, state.quest_pending = configuration, pending
     end
     next_poll = 0
     last_error = nil
@@ -199,6 +212,8 @@ function on_game_start()
     if incoming and incoming.configuration_key then
         local configuration, reason = read_configuration(incoming)
         if configuration then
+            state.configuration = gamma_ap_configuration.copy(configuration)
+            gamma_ap_quest_keys.install(function() return state end)
             local prepared, error = gamma_ap_loadout.prepare(state, configuration)
             if not prepared then report_error(error) end
         else report_error(reason) end

@@ -94,9 +94,18 @@ class GammaWorld(World):
             if location["category"] not in self.configuration.checks:
                 continue
             region = regions.get(location["level"], menu)
-            region.locations.append(
-                GammaLocation(self.player, location["name"], location["id"], region)
-            )
+            check = GammaLocation(self.player, location["name"], location["id"], region)
+            if location.get("tasks") and "rewards_quest_keys" in self.configuration.rewards:
+                permission = _catalog["quest_gates"][location["tasks"][0]]
+                key_names = tuple(
+                    item["name"]
+                    for item in _catalog["items"]
+                    if item.get("permission") in _catalog["quest_key_requirements"][permission]
+                )
+                check.access_rule = lambda state, names=key_names: all(
+                    state.has(name, self.player) for name in names
+                )
+            region.locations.append(check)
         if "checks_kill_milestones" in self.configuration.checks:
             for count in self.configuration.kill_milestones:
                 menu.locations.append(
@@ -126,8 +135,8 @@ class GammaWorld(World):
         required = [
             item["name"]
             for item in _catalog["items"]
-            if item.get("category") == "rewards_progression_stashes"
-            and "rewards_progression_stashes" in self.configuration.rewards
+            if item.get("classification") == "progression"
+            and item.get("category") in self.configuration.rewards
         ]
         names = [item["name"] for item in _catalog["items"] if "category" not in item]
         stashes = [
