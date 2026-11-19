@@ -109,6 +109,9 @@ function actor_on_update()
     local quest_ready, quest_error = gamma_ap_quest_keys.install(function() return state end)
     if configuration and configuration.expanded and configuration.options.rewards_quest_keys == 1
         and not quest_ready then report_error(quest_error); return end
+    local zones_ready, zone_error = gamma_ap_zone_keys.install(function() return state end)
+    if configuration and configuration.expanded and configuration.options.rewards_zone_keys == 1
+        and not zones_ready then report_error(zone_error); return end
     register_task_hook()
     local supported, support_error = gamma_ap_tasks.supported(configuration)
     if not supported then report_error(support_error); return end
@@ -123,6 +126,8 @@ function actor_on_update()
     state.enabled_checks = enabled
     state.allowed_items = gamma_ap_state.enabled_items(configuration)
     state.configuration = gamma_ap_configuration.copy(configuration)
+    local zone_valid, zone_reason = gamma_ap_zone_keys.validate_start(state)
+    if not zone_valid then report_error(zone_reason); return end
     gamma_ap_combat.configure(state.combat, configuration)
     gamma_ap_tasks.configure(state.tasks, configuration)
     local ranked, rank_error = gamma_ap_rank.poll(state, configuration)
@@ -136,6 +141,7 @@ function actor_on_update()
     end
     local quests, quest_error = gamma_ap_quest_keys.poll(state)
     if not quests then report_error(quest_error); return end
+    local zones, zone_problem = gamma_ap_zone_keys.poll(state)
     local stashed, stash_error = gamma_ap_stashes.poll(state)
     local success, delivery_error = gamma_ap_state.apply_pending(state, incoming, apply_reward)
     local written, write_error = write_outgoing()
@@ -144,6 +150,7 @@ function actor_on_update()
     if not notified then report_error(notice_error); return end
     if not success then report_error(delivery_error)
     elseif not permitted then report_error(permission_error)
+    elseif not zones then report_error(zone_problem)
     elseif not stashed then report_error(stash_error)
     else last_error = nil end
 end
@@ -235,6 +242,7 @@ function on_game_start()
             local pickup_ready, pickup_error = gamma_ap_gear_locks.install_pickup_guard(configuration)
             if not pickup_ready then report_error(pickup_error) end
             gamma_ap_quest_keys.install(function() return state end)
+            gamma_ap_zone_keys.install(function() return state end)
             local prepared, error = gamma_ap_loadout.prepare(state, configuration)
             if not prepared then report_error(error) end
         else report_error(reason) end

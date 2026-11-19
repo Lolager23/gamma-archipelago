@@ -31,6 +31,7 @@ def lua():
         "skills",
         "quest_keys",
         "gear_locks",
+        "zone_keys",
         "stashes",
         "state",
         "settlements",

@@ -210,6 +210,7 @@ def test_loot_stash_pool_is_optional_seeded_and_fits_even_one_check():
             *range(28051401, 28051405),
             *range(28051501, 28051504),
             *range(28051601, 28051610),
+            *range(28051701, 28051733),
         }
         assert enabled_item_ids(world.configuration.rewards) == ITEM_IDS - {
             28051201,
@@ -217,6 +218,7 @@ def test_loot_stash_pool_is_optional_seeded_and_fits_even_one_check():
             *range(28051401, 28051405),
             *range(28051501, 28051504),
             *range(28051601, 28051610),
+            *range(28051701, 28051733),
         }
         assert multiworld.can_beat_game()
         placements.append(names)
@@ -319,36 +321,41 @@ def test_restricted_start_places_only_selected_permissions_and_keeps_pda_outside
     assert claim.can_reach(state)
 
 
-@pytest.mark.parametrize(
-    "chain,missing",
-    [
-        ("living_legend", "Living Legend"),
-        ("mortal_sin", "Living Legend"),
-        ("mortal_sin", "Mortal Sin"),
-        ("operation_afterglow", "Living Legend"),
-        ("operation_afterglow", "Mortal Sin"),
-        ("operation_afterglow", "Operation Afterglow"),
-    ],
-)
-def test_quest_story_checks_require_permissions_for_all_prior_native_chains(chain, missing):
+def test_zone_keys_gate_all_entrances_and_conservative_global_activities():
     from BaseClasses import CollectionState
 
-    multiworld = setup_multiworld(
-        GammaWorld, options={"checks_story_milestones": 1, "rewards_quest_keys": 1}
+    from gamma_archipelago.configuration import CHECK_OPTIONS, GEAR_OPTIONS
+
+    options = dict.fromkeys(CHECK_OPTIONS, 1)
+    options.update(dict.fromkeys(GEAR_OPTIONS, 2))
+    options.update(
+        rewards_starting_gear_unlocks=1,
+        rewards_zone_keys=1,
+        rewards_progression_stashes=1,
+        rewards_quest_keys=1,
     )
+    multiworld = setup_multiworld(GammaWorld, seed=20, options=options)
     world = multiworld.worlds[1]
-    catalogue = json.loads((ROOT / "src/gamma_archipelago/catalog.json").read_text())
-    identities = {
-        row["id"]
-        for row in catalogue["locations"]
-        if row.get("tasks") and catalogue["quest_gates"][row["tasks"][0]] == chain
-    }
-    locations = [loc for loc in multiworld.get_locations(1) if loc.address in identities]
-    assert locations
     state = CollectionState(multiworld)
-    for key in ("Living Legend", "Mortal Sin", "Operation Afterglow"):
-        if key != missing:
-            state.collect(world.create_item("Quest Key: " + key))
-    assert all(not location.can_reach(state) for location in locations)
-    state.collect(world.create_item("Quest Key: " + missing))
-    assert all(location.can_reach(state) for location in locations)
+    assert state.can_reach_region("l01_escape", 1)
+    assert not state.can_reach_region("l02_garbage", 1)
+    key = world.create_item("Zone Key: Garbage")
+    state.collect(key, prevent_sweep=True)
+    assert state.can_reach_region("l02_garbage", 1)
+    assert not state.can_reach_region("l05_bar", 1)
+    artefact = next(loc for loc in multiworld.get_locations() if loc.address == 28052401)
+    assert not artefact.can_reach(state)
+    for item in list(multiworld.itempool):
+        state.collect(item, prevent_sweep=True)
+    state.sweep_for_advancements()
+    assert artefact.can_reach(state)
+    distribute_items_restrictive(multiworld)
+    assert multiworld.can_beat_game()
+    assert len([name for name in world.item_name_to_id if name.startswith("Zone Key:")]) == 32
+
+
+def test_zone_keys_require_map_checks_for_initial_reachable_slots():
+    with pytest.raises(OptionError, match="require map checks"):
+        setup_multiworld(
+            GammaWorld, options={"checks_maps": 0, "checks_settlements": 1, "rewards_zone_keys": 1}
+        )

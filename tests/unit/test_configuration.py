@@ -64,6 +64,7 @@ def test_default_configuration_is_immutable_and_deterministically_serialized():
             "rewards_stat_levels",
             "rewards_quest_keys",
             "rewards_starting_gear_unlocks",
+            "rewards_zone_keys",
         }
     ),
 )

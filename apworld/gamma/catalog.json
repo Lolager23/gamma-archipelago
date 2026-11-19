@@ -674,6 +674,294 @@
       "permission": "gear_utilities",
       "group": "utilities",
       "baseline": "device_flashlight"
+    },
+    {
+      "id": 28051701,
+      "name": "Zone Key: Great Swamps",
+      "classification": "progression",
+      "effect": "unlock",
+      "category": "rewards_zone_keys",
+      "permission": "zone_k00_marsh",
+      "level": "k00_marsh"
+    },
+    {
+      "id": 28051702,
+      "name": "Zone Key: Garbage",
+      "classification": "progression",
+      "effect": "unlock",
+      "category": "rewards_zone_keys",
+      "permission": "zone_l02_garbage",
+      "level": "l02_garbage"
+    },
+    {
+      "id": 28051703,
+      "name": "Zone Key: Agroprom",
+      "classification": "progression",
+      "effect": "unlock",
+      "category": "rewards_zone_keys",
+      "permission": "zone_l03_agroprom",
+      "level": "l03_agroprom"
+    },
+    {
+      "id": 28051704,
+      "name": "Zone Key: Darkscape",
+      "classification": "progression",
+      "effect": "unlock",
+      "category": "rewards_zone_keys",
+      "permission": "zone_k01_darkscape",
+      "level": "k01_darkscape"
+    },
+    {
+      "id": 28051705,
+      "name": "Zone Key: Dark Valley",
+      "classification": "progression",
+      "effect": "unlock",
+      "category": "rewards_zone_keys",
+      "permission": "zone_l04_darkvalley",
+      "level": "l04_darkvalley"
+    },
+    {
+      "id": 28051706,
+      "name": "Zone Key: Rostok",
+      "classification": "progression",
+      "effect": "unlock",
+      "category": "rewards_zone_keys",
+      "permission": "zone_l05_bar",
+      "level": "l05_bar"
+    },
+    {
+      "id": 28051707,
+      "name": "Zone Key: Wild Territory",
+      "classification": "progression",
+      "effect": "unlock",
+      "category": "rewards_zone_keys",
+      "permission": "zone_l06_rostok",
+      "level": "l06_rostok"
+    },
+    {
+      "id": 28051708,
+      "name": "Zone Key: Army Warehouses",
+      "classification": "progression",
+      "effect": "unlock",
+      "category": "rewards_zone_keys",
+      "permission": "zone_l07_military",
+      "level": "l07_military"
+    },
+    {
+      "id": 28051709,
+      "name": "Zone Key: Yantar",
+      "classification": "progression",
+      "effect": "unlock",
+      "category": "rewards_zone_keys",
+      "permission": "zone_l08_yantar",
+      "level": "l08_yantar"
+    },
+    {
+      "id": 28051710,
+      "name": "Zone Key: Dead City",
+      "classification": "progression",
+      "effect": "unlock",
+      "category": "rewards_zone_keys",
+      "permission": "zone_l09_deadcity",
+      "level": "l09_deadcity"
+    },
+    {
+      "id": 28051711,
+      "name": "Zone Key: Limansk",
+      "classification": "progression",
+      "effect": "unlock",
+      "category": "rewards_zone_keys",
+      "permission": "zone_l10_limansk",
+      "level": "l10_limansk"
+    },
+    {
+      "id": 28051712,
+      "name": "Zone Key: Radar",
+      "classification": "progression",
+      "effect": "unlock",
+      "category": "rewards_zone_keys",
+      "permission": "zone_l10_radar",
+      "level": "l10_radar"
+    },
+    {
+      "id": 28051713,
+      "name": "Zone Key: Red Forest",
+      "classification": "progression",
+      "effect": "unlock",
+      "category": "rewards_zone_keys",
+      "permission": "zone_l10_red_forest",
+      "level": "l10_red_forest"
+    },
+    {
+      "id": 28051714,
+      "name": "Zone Key: Hospital",
+      "classification": "progression",
+      "effect": "unlock",
+      "category": "rewards_zone_keys",
+      "permission": "zone_l11_hospital",
+      "level": "l11_hospital"
+    },
+    {
+      "id": 28051715,
+      "name": "Zone Key: Pripyat",
+      "classification": "progression",
+      "effect": "unlock",
+      "category": "rewards_zone_keys",
+      "permission": "zone_l11_pripyat",
+      "level": "l11_pripyat"
+    },
+    {
+      "id": 28051716,
+      "name": "Zone Key: CNPP South",
+      "classification": "progression",
+      "effect": "unlock",
+      "category": "rewards_zone_keys",
+      "permission": "zone_l12_stancia",
+      "level": "l12_stancia"
+    },
+    {
+      "id": 28051717,
+      "name": "Zone Key: CNPP North",
+      "classification": "progression",
+      "effect": "unlock",
+      "category": "rewards_zone_keys",
+      "permission": "zone_l12_stancia_2",
+      "level": "l12_stancia_2"
+    },
+    {
+      "id": 28051718,
+      "name": "Zone Key: Generators",
+      "classification": "progression",
+      "effect": "unlock",
+      "category": "rewards_zone_keys",
+      "permission": "zone_l13_generators",
+      "level": "l13_generators"
+    },
+    {
+      "id": 28051719,
+      "name": "Zone Key: Agroprom Underground",
+      "classification": "progression",
+      "effect": "unlock",
+      "category": "rewards_zone_keys",
+      "permission": "zone_l03u_agr_underground",
+      "level": "l03u_agr_underground"
+    },
+    {
+      "id": 28051720,
+      "name": "Zone Key: Lab X18",
+      "classification": "progression",
+      "effect": "unlock",
+      "category": "rewards_zone_keys",
+      "permission": "zone_l04u_labx18",
+      "level": "l04u_labx18"
+    },
+    {
+      "id": 28051721,
+      "name": "Zone Key: Lab X16",
+      "classification": "progression",
+      "effect": "unlock",
+      "category": "rewards_zone_keys",
+      "permission": "zone_l08u_brainlab",
+      "level": "l08u_brainlab"
+    },
+    {
+      "id": 28051722,
+      "name": "Zone Key: Lab X19",
+      "classification": "progression",
+      "effect": "unlock",
+      "category": "rewards_zone_keys",
+      "permission": "zone_l10u_bunker",
+      "level": "l10u_bunker"
+    },
+    {
+      "id": 28051723,
+      "name": "Zone Key: Sarcophagus",
+      "classification": "progression",
+      "effect": "unlock",
+      "category": "rewards_zone_keys",
+      "permission": "zone_l12u_sarcofag",
+      "level": "l12u_sarcofag"
+    },
+    {
+      "id": 28051724,
+      "name": "Zone Key: Monolith Control Center",
+      "classification": "progression",
+      "effect": "unlock",
+      "category": "rewards_zone_keys",
+      "permission": "zone_l12u_control_monolith",
+      "level": "l12u_control_monolith"
+    },
+    {
+      "id": 28051725,
+      "name": "Zone Key: War Lab",
+      "classification": "progression",
+      "effect": "unlock",
+      "category": "rewards_zone_keys",
+      "permission": "zone_l13u_warlab",
+      "level": "l13u_warlab"
+    },
+    {
+      "id": 28051726,
+      "name": "Zone Key: Zaton",
+      "classification": "progression",
+      "effect": "unlock",
+      "category": "rewards_zone_keys",
+      "permission": "zone_zaton",
+      "level": "zaton"
+    },
+    {
+      "id": 28051727,
+      "name": "Zone Key: Jupiter",
+      "classification": "progression",
+      "effect": "unlock",
+      "category": "rewards_zone_keys",
+      "permission": "zone_jupiter",
+      "level": "jupiter"
+    },
+    {
+      "id": 28051728,
+      "name": "Zone Key: Jupiter Underground",
+      "classification": "progression",
+      "effect": "unlock",
+      "category": "rewards_zone_keys",
+      "permission": "zone_jupiter_underground",
+      "level": "jupiter_underground"
+    },
+    {
+      "id": 28051729,
+      "name": "Zone Key: Outskirts",
+      "classification": "progression",
+      "effect": "unlock",
+      "category": "rewards_zone_keys",
+      "permission": "zone_pripyat",
+      "level": "pripyat"
+    },
+    {
+      "id": 28051730,
+      "name": "Zone Key: Lab X8",
+      "classification": "progression",
+      "effect": "unlock",
+      "category": "rewards_zone_keys",
+      "permission": "zone_labx8",
+      "level": "labx8"
+    },
+    {
+      "id": 28051731,
+      "name": "Zone Key: Truck Cemetery",
+      "classification": "progression",
+      "effect": "unlock",
+      "category": "rewards_zone_keys",
+      "permission": "zone_k02_trucks_cemetery",
+      "level": "k02_trucks_cemetery"
+    },
+    {
+      "id": 28051732,
+      "name": "Zone Key: Meadow",
+      "classification": "progression",
+      "effect": "unlock",
+      "category": "rewards_zone_keys",
+      "permission": "zone_y04_pole",
+      "level": "y04_pole"
     }
   ],
   "locations": [

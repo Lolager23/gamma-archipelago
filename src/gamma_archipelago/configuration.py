@@ -93,6 +93,7 @@ SUPPORTED_REWARDS: frozenset[str] = frozenset(
         "rewards_stat_levels",
         "rewards_quest_keys",
         "rewards_starting_gear_unlocks",
+        "rewards_zone_keys",
     }
 )
 SUPPORTED_GOALS = frozenset({"pilot_tour"})
@@ -167,6 +168,8 @@ def build_configuration(values: Mapping[str, object]) -> SeedConfiguration:
         raise ConfigurationError("Enable at least one check category")
     if checks == {"checks_story_milestones"} and "rewards_quest_keys" in rewards:
         raise ConfigurationError("Quest keys require checks outside their locked story chains")
+    if "rewards_zone_keys" in rewards and "checks_maps" not in checks:
+        raise ConfigurationError("Zone keys require map checks for a guaranteed exploration route")
     goal = GOALS[_integer(values, "goal", len(GOALS) - 1)]
     gear = {name: _integer(values, name, 2) for name in GEAR_OPTIONS}
     no_weapons = _integer(values, "no_starting_weapons", 1)

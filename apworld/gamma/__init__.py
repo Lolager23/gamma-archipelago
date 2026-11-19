@@ -17,6 +17,8 @@ from gamma_archipelago.catalog import (
 from gamma_archipelago.configuration import OPTION_NAMES, SeedConfiguration, build_configuration
 
 from .options import GammaOptions
+from .rules import apply_access_rules
+from .zone_fill import place_zone_keys
 
 _catalog = json.loads(files(__package__).joinpath("catalog.json").read_text(encoding="utf-8"))
 
@@ -173,11 +175,15 @@ class GammaWorld(World):
             self.multiworld.itempool.append(self.create_item(name))
 
     def set_rules(self) -> None:
+        apply_access_rules(self, _catalog)
         self.multiworld.completion_condition[self.player] = lambda state: all(
             state.can_reach_region(location["level"], self.player)
             for location in _catalog["locations"]
             if location["id"] in LOCATION_IDS
         )
+
+    def pre_fill(self) -> None:
+        place_zone_keys(self, _catalog)
 
     def fill_slot_data(self) -> dict[str, object]:
         return {
