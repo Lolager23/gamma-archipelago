@@ -160,9 +160,18 @@ class GammaWorld(World):
             item["name"]
             for item in _catalog["items"]
             if item.get("category")
-            in {"rewards_loot_stashes", "rewards_faction_reputation", "rewards_stat_levels"}
+            in {
+                "rewards_loot_stashes",
+                "rewards_faction_reputation",
+                "rewards_stat_levels",
+                "rewards_supply_medical",
+                "rewards_supply_maintenance",
+                "rewards_supply_ammunition",
+                "rewards_supply_expedition",
+            }
             and item.get("category") in self.configuration.rewards
         ]
+        weights = {item["name"]: item.get("filler_weight", 1) for item in _catalog["items"]}
         enabled = bool(stashes)
         count = len(self.multiworld.get_unfilled_locations(self.player))
         if len(required) > count:
@@ -170,7 +179,12 @@ class GammaWorld(World):
         self.multiworld.itempool.extend(self.create_item(name) for name in required)
         for index in range(count - len(required)):
             if enabled and (index == 0 or (index > 3 and self.random.randrange(3) == 0)):
-                name = self.random.choice(stashes)
+                chances = [weights[name] for name in stashes]
+                name = (
+                    self.random.choices(stashes, weights=chances, k=1)[0]
+                    if any(chance != 1 for chance in chances)
+                    else self.random.choice(stashes)
+                )
             else:
                 supply_index = index - int(enabled)
                 name = (

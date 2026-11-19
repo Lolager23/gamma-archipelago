@@ -33,6 +33,10 @@ CHECK_OPTIONS = (
     "checks_faction_standing",
 )
 REWARD_OPTIONS = (
+    "rewards_supply_medical",
+    "rewards_supply_maintenance",
+    "rewards_supply_ammunition",
+    "rewards_supply_expedition",
     "rewards_workshop_access",
     "rewards_recipe_access",
     "rewards_progressive_tools",
@@ -105,6 +109,10 @@ SUPPORTED_CHECKS = frozenset(
 )
 SUPPORTED_REWARDS: frozenset[str] = frozenset(
     {
+        "rewards_supply_medical",
+        "rewards_supply_maintenance",
+        "rewards_supply_ammunition",
+        "rewards_supply_expedition",
         "rewards_workshop_access",
         "rewards_recipe_access",
         "rewards_progressive_tools",

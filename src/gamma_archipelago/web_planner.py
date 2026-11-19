@@ -21,6 +21,10 @@ from .presets import presets
 from .web_estimates import ASSUMPTIONS, estimate_playtime
 
 LABELS = {
+    "rewards_supply_medical": "Medical Supply Package",
+    "rewards_supply_maintenance": "Maintenance Supply Package",
+    "rewards_supply_ammunition": "Ammunition Supply Package",
+    "rewards_supply_expedition": "Expedition Supply Package",
     "rewards_workshop_access": "Workshop action permissions",
     "rewards_recipe_access": "Recipe group permissions",
     "rewards_progressive_tools": "Progressive workshop tools",
