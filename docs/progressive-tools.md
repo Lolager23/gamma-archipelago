@@ -53,3 +53,8 @@ Native acceptance is **not run**, reserved for Owen: active workshop and technic
 routes, field repair, actual selected recipe tiers, ordinary tool acquisition,
 physical supplies, late wrappers, permissions at all three levels, and reload.
 No deployment, launch or installed-game write is part of this change.
+
+The complete verifier passed: 894 covered tests, 36 untraced generator/server
+tests and five Node tests (935 total), including 50 filled progressive-tool seeds.
+Owned Python runtime modules reached 100% measured line/branch coverage; Lua
+reached 100% measured executable lines. Lua branch coverage is not measured.
