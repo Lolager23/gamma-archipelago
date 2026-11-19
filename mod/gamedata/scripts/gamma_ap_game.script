@@ -260,3 +260,12 @@ function on_game_start()
     register_task_hook()
     printf("[GAMMA AP] Pilot loaded; multiplayer roots are forbidden")
 end
+
+
+function preview_unlock_travel()
+    return gamma_ap_travel.preview(state)
+end
+
+function take_unlock_travel()
+    return gamma_ap_travel.take(state)
+end

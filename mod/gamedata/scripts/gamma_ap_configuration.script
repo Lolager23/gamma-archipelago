@@ -48,6 +48,7 @@ function parse(content, key, digest)
             values[#values + 1] = value
         end
     end
+    if result.options.zone_unlock_travel == nil then result.options.zone_unlock_travel = 0 end
     for name in pairs(gamma_ap_catalog.config_limits) do
         if result.options[name] == nil then return nil, "Configuration option is missing" end
     end

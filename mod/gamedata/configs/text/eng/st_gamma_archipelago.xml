@@ -18,4 +18,6 @@
     <string id="gamma_ap_tools_spawn_failed">
         <text>Archipelago: Could not spawn basic tools.</text>
     </string>
+    <string id="ui_mcm_gamma_archipelago_preview_unlock_travel"><text>Preview next unlocked-zone trip</text></string>
+    <string id="ui_mcm_gamma_archipelago_take_unlock_travel"><text>Travel to the shown settlement</text></string>
 </string_table>

@@ -51,7 +51,7 @@ def test_menu_discovery_has_no_side_effect_and_localizes_its_controls(lua):
     menu, _, engine = load_menu(lua)
     definition = menu.on_mcm_load()
     assert definition.id == "gamma_archipelago" and definition.sh is True
-    assert len(definition.gr) == 3
+    assert len(definition.gr) == 5
     title, description, button = definition.gr[1], definition.gr[2], definition.gr[3]
     assert title.type == "title" and description.type == "desc"
     assert button.type == "button" and button.id == "spawn_basic_tools"
@@ -166,3 +166,13 @@ def test_mcm_always_displays_the_button_even_when_opened_before_loading_a_save(l
     engine.present = False
     button = menu.on_mcm_load().gr[3]
     assert button.precondition is None
+
+
+def test_travel_menu_buttons_delegate_without_automatic_travel(lua):
+    lua.execute("""gamma_ap_game={preview_unlock_travel=function() return 'preview' end,
+        take_unlock_travel=function() return 'take' end}""")
+    menu, _, engine = load_menu(lua)
+    definition = menu.on_mcm_load()
+    assert definition.gr[4].functor[1]() == "preview"
+    assert definition.gr[5].functor[1]() == "take"
+    assert not list(engine.creates.values())

@@ -171,3 +171,19 @@ def test_quest_key_seed_requires_checks_outside_the_locked_story():
         build_configuration(
             {**defaults(), "checks_maps": 0, "checks_story_milestones": 1, "rewards_quest_keys": 1}
         )
+
+
+def test_travel_configuration_preserves_old_default_digest_and_requires_zone_keys():
+    import hashlib
+    import json
+
+    values = defaults()
+    values.pop("zone_unlock_travel")
+    expected = hashlib.sha256(
+        json.dumps(values, sort_keys=True, separators=(",", ":")).encode()
+    ).hexdigest()
+    assert build_configuration(values).digest == expected
+    with pytest.raises(ConfigurationError, match="requires zone keys"):
+        build_configuration({**defaults(), "zone_unlock_travel": 1})
+    enabled = build_configuration({**defaults(), "rewards_zone_keys": 1, "zone_unlock_travel": 1})
+    assert enabled.zone_unlock_travel == 1 and enabled.digest != expected

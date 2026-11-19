@@ -1,0 +1,95 @@
+-- One explicit, complimentary settlement trip per key; native hazards still veto.
+local hubs = {
+    l01_escape="esc_smart_terrain_2_12", k00_marsh="mar_smart_terrain_base",
+    l05_bar="bar_visitors", l07_military="mil_smart_terrain_7_7",
+    l08_yantar="yan_smart_terrain_6_4", l09_deadcity="cit_killers",
+    zaton="zat_stalker_base_smart", jupiter="jup_a6", pripyat="pri_a16",
+}
+
+local function notify(text)
+    printf("[GAMMA AP] %s", text)
+    if db.actor then db.actor:give_game_news("Archipelago", text, "ui_inGame2_PDA", 0, 10000) end
+end
+
+local function ready(state)
+    return state.session_key and state.configuration and state.configuration.expanded
+        and state.configuration.options.zone_unlock_travel == 1 and db.actor and db.actor:alive()
+        and gamma_ap_paths.appdata_root(getFS():update_path("$app_data_root$", "")) ~= nil
+        and gamma_ap_loadout.pda_available(state)
+end
+
+local function safe_hub(state, where)
+    if not hubs[where] or not gamma_ap_zone_keys.allowed(state, where)
+        or not SIMBOARD or not SIMBOARD.smarts_by_names or not game_relations or not relation_registry then return nil end
+    local smart = SIMBOARD.smarts_by_names[hubs[where]]
+    if not smart or type(smart.npc_info) ~= "table" or not next(smart.npc_info) then return nil end
+    local graph = game_graph()
+    if not graph:valid_vertex_id(smart.m_game_vertex_id)
+        or alife():level_name(graph:vertex(smart.m_game_vertex_id):level_id()) ~= where then return nil end
+    for id,entry in pairs(smart.npc_info) do
+        local npc = entry.se_obj
+        if not npc or not IsStalker(nil, npc:clsid()) then return nil end
+        local faction = npc:community()
+        if game_relations.is_factions_enemies(faction, character_community(db.actor))
+            or relation_registry.community_goodwill(faction, db.actor:id()) <= -1000 then return nil end
+        local online = level.object_by_id(id)
+        if online and online:general_goodwill(db.actor) <= -1000 then return nil end
+    end
+    return smart
+end
+
+local function offer(state)
+    local keys = {}
+    for where,permission in pairs(gamma_ap_catalog.zone_keys) do
+        if state.unlocks[permission] and not state.travel_used[where] then keys[#keys+1] = where end
+    end
+    table.sort(keys)
+    for _,where in ipairs(keys) do
+        local smart = safe_hub(state, where) or safe_hub(state, "l01_escape")
+        if smart then return where, smart end
+    end
+end
+
+function preview(state)
+    if not ready(state) then notify("Unlock travel is unavailable in this seed or without a PDA"); return false end
+    local where,smart = offer(state)
+    if not smart then notify("No unused key has an available non-hostile settlement"); return false end
+    state.travel_selection = where .. "|" .. smart:name()
+    notify("Optional one-time trip: " .. smart:name() .. ". Use Travel to the shown settlement to confirm.")
+    return true
+end
+
+local function hazards_clear()
+    if not ui_options or type(ui_options.get) ~= "function" or not xr_combat_ignore
+        or not xr_conditions or not psi_storm_manager then return false end
+    local setting = ui_options.get("gameplay/fast_travel/state")
+    return type(setting) == "number" and setting > 0
+        and type(xr_combat_ignore.fighting_with_actor_npcs) == "table"
+        and not next(xr_combat_ignore.fighting_with_actor_npcs)
+        and db.actor.bleeding == 0 and db.actor.radiation == 0
+        and db.actor:get_total_weight() <= db.actor:get_actor_max_walk_weight()
+        and not xr_conditions.surge_started() and not psi_storm_manager.is_started()
+end
+
+function take(state)
+    if not ready(state) or not state.travel_selection then notify("Preview an eligible destination first"); return false end
+    local where,smart = offer(state)
+    if not smart or state.travel_selection ~= where .. "|" .. smart:name() then
+        state.travel_selection = nil
+        notify("The destination changed; preview again before travelling")
+        return false
+    end
+    if not hazards_clear() then notify("Native fast-travel settings or current hazards prevent this trip"); return false end
+    if smart.m_level_vertex_id == nil or smart.m_level_vertex_id < 0
+        or smart.m_level_vertex_id >= 4294967295 or not smart.position then
+        notify("Settlement travel coordinates are unavailable"); return false
+    end
+    state.travel_used[where], state.travel_selection = true, nil
+    -- Consume before native travel triggers its save. Exceptions remain consumed
+    -- because the engine may already have accepted a travel side effect.
+    local ok, result = pcall(ChangeLevel, smart.position, smart.m_level_vertex_id,
+        smart.m_game_vertex_id, vector():set(0,0,0), false)
+    if ok and result == false then state.travel_used[where] = nil end
+    if not ok or result == false then notify("Travel was not confirmed; inspect the current save before retrying"); return false end
+    return true
+end

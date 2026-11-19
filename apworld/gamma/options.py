@@ -183,6 +183,12 @@ class SideTaskMilestones(OptionList):
     default = [5, 10, 20, 40]
 
 
+class ZoneUnlockTravel(Toggle):
+    """Offer one optional settlement trip per zone key; never travel automatically."""
+
+    display_name = "One-time travel after zone unlock"
+
+
 @dataclass
 class GammaOptions(PerGameCommonOptions):
     checks_maps: ChecksMaps
@@ -206,6 +212,7 @@ class GammaOptions(PerGameCommonOptions):
     rewards_stat_levels: RewardsStatLevels
     rewards_zone_keys: RewardsZoneKeys
     rewards_starting_gear_unlocks: RewardsStartingGearUnlocks
+    zone_unlock_travel: ZoneUnlockTravel
     goal: Goal
     no_starting_weapons: NoStartingWeapons
     starting_detector: StartingGear
