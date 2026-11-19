@@ -208,11 +208,13 @@ def test_loot_stash_pool_is_optional_seeded_and_fits_even_one_check():
             28051201,
             *range(28051301, 28051309),
             *range(28051401, 28051405),
+            *range(28051501, 28051504),
         }
         assert enabled_item_ids(world.configuration.rewards) == ITEM_IDS - {
             28051201,
             *range(28051301, 28051309),
             *range(28051401, 28051405),
+            *range(28051501, 28051504),
         }
         assert multiworld.can_beat_game()
         placements.append(names)
@@ -263,3 +265,27 @@ def test_orange_stash_is_required_and_its_local_claim_is_a_separate_event():
             location.parent_region.locations.remove(location)
     with pytest.raises(OptionError, match="cannot hold"):
         world.create_items()
+
+
+def test_quest_permissions_are_required_items_and_gate_their_story_checks():
+    from BaseClasses import CollectionState
+
+    multiworld = setup_multiworld(
+        GammaWorld, options={"checks_story_milestones": 1, "rewards_quest_keys": 1}
+    )
+    world = multiworld.worlds[1]
+    location = next(loc for loc in multiworld.get_locations() if loc.address == 28052601)
+    state = CollectionState(multiworld)
+    assert not location.can_reach(state)
+    state.collect(world.create_item("Quest Key: Living Legend"))
+    assert location.can_reach(state)
+    distribute_items_restrictive(multiworld)
+    assert multiworld.can_beat_game()
+    assert all(
+        any(loc.item.name == name for loc in multiworld.get_locations())
+        for name in (
+            "Quest Key: Living Legend",
+            "Quest Key: Mortal Sin",
+            "Quest Key: Operation Afterglow",
+        )
+    )

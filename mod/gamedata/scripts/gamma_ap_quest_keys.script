@@ -1,0 +1,59 @@
+-- Preserve the native task-grant chain, deferring only the frozen story roster.
+local wrapped = nil
+local original = nil
+local current_state = nil
+
+local function locked(state, task_id)
+    local configuration = state.configuration
+    local permission = gamma_ap_catalog.quest_gates[task_id]
+    return permission and configuration and configuration.expanded
+        and configuration.options.rewards_quest_keys == 1 and not state.unlocks[permission]
+end
+
+function install(get_state)
+    current_state = get_state
+    if not task_manager or not task_manager.CRandomTask
+        or type(task_manager.CRandomTask.give_task) ~= "function" then
+        return false, "Quest keys require the native task-manager grant method"
+    end
+    if task_manager.CRandomTask.give_task == wrapped then return true end
+    original = task_manager.CRandomTask.give_task
+    local delegate = original
+    wrapped = function(manager, task_id, giver, ...)
+        local state = current_state()
+        if locked(state, task_id) then
+            if not state.quest_pending[task_id] then state.quest_pending[task_id] = {giver=giver} end
+            return nil
+        end
+        return delegate(manager, task_id, giver, ...)
+    end
+    task_manager.CRandomTask.give_task = wrapped
+    return true
+end
+
+function poll(state)
+    if not next(state.quest_pending) then return true end
+    if not original or not task_manager or type(task_manager.get_task_manager) ~= "function" then
+        return false, "Waiting for the native quest manager"
+    end
+    local ids = {}
+    for id in pairs(state.quest_pending) do ids[#ids+1] = id end
+    table.sort(ids)
+    for _,id in ipairs(ids) do
+        if not locked(state, id) then
+            local manager = task_manager.get_task_manager()
+            if not manager or type(manager.task_info) ~= "table" then
+                return false, "Waiting for native quest state"
+            end
+            if not manager.task_info[id] then
+                local ok = pcall(original, manager, id, state.quest_pending[id].giver)
+                if not ok or not manager.task_info[id] then
+                    return false, "The deferred quest grant was not confirmed"
+                end
+            end
+            state.quest_pending[id] = nil
+            break -- One deferred assignment per poll, without completing objectives.
+        end
+    end
+    return true
+end

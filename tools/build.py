@@ -36,6 +36,14 @@ def generate_catalogues() -> None:
     lines.extend(
         f'    [{item["id"]}] = "{item.get("category", "")}",' for item in catalogue["items"]
     )
+    lines.extend(["}", "permissions = {"])
+    lines.extend(
+        f'    [{item["id"]}] = "{item["permission"]}",'
+        for item in catalogue["items"]
+        if item.get("effect") == "unlock"
+    )
+    lines.extend(["}", "quest_gates = {"])
+    lines.extend(f'    ["{task}"] = "{key}",' for task, key in catalogue["quest_gates"].items())
     lines.extend(["}", "skill_rewards = {"])
     lines.extend(
         f'    [{item["id"]}] = "{item["skill"]}",'

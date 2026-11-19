@@ -62,6 +62,7 @@ def test_default_configuration_is_immutable_and_deterministically_serialized():
             "rewards_progression_stashes",
             "rewards_faction_reputation",
             "rewards_stat_levels",
+            "rewards_quest_keys",
         }
     ),
 )
@@ -160,3 +161,10 @@ def test_wire_configuration_is_deterministic_and_item_v2_references_its_identity
     assert (bridge.directory / "incoming.txt").read_text().startswith("GAMMA_AP_IN|2\n")
     with pytest.raises(ProtocolError):
         encode_incoming("a" * 64, (), "bad")
+
+
+def test_quest_key_seed_requires_checks_outside_the_locked_story():
+    with pytest.raises(ConfigurationError, match="outside"):
+        build_configuration(
+            {**defaults(), "checks_maps": 0, "checks_story_milestones": 1, "rewards_quest_keys": 1}
+        )
