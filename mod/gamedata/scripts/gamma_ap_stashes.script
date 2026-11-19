@@ -1,5 +1,10 @@
 -- Additive loot packages in a frozen roster of native Cordon world containers.
 
+local function markers_ready()
+    local patcher = rawget(_G, "modxml_gamma_ap_stashes")
+    return patcher and type(patcher.ready) == "function" and patcher.ready() == true
+end
+
 function copy(progress)
     local result = {order={}, records={}, marker_cursor=0}
     if not progress then return result end
@@ -82,9 +87,9 @@ function receive(state, item_id)
         or not gamma_ap_catalog.stash_contents[item_id] then
         return false, "This stash reward is not enabled in the current seed"
     end
-    local patcher = rawget(_G, "modxml_gamma_ap_stashes")
-    if not patcher or patcher.registered ~= true then
-        return false, "AP stash markers require the installed Monolith DXML integration"
+    -- Native missing-node assertions terminate the process; pcall cannot catch them.
+    if not markers_ready() then
+        return false, "AP stash DXML marker definitions are not ready; reward remains pending"
     end
     local receipt = state.received_count + 1
     local record = state.stashes.records[receipt]
@@ -159,6 +164,9 @@ end
 function poll(state)
     local progress = state.stashes
     if not state.session_key or not state.expanded or #progress.order == 0 then return true end
+    if not markers_ready() then
+        return false, "AP stash DXML marker definitions are not ready; saved stashes remain pending"
+    end
     local work = 0
     for _,index in ipairs(progress.order) do
         local record = progress.records[index]

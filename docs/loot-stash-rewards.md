@@ -38,3 +38,28 @@ uncertain side effects and preserving checks while reward delivery fails. Native
 treasure-manager, DXML and item-creation APIs were inspected in installed sources.
 In-game marker rendering, cache access and loot interaction are **not run**,
 reserved for the user's post-merge acceptance. No deployment or game launch ran.
+
+## Missing-marker crash correction
+
+A reported mutant-kill crash reached stash reward delivery and the engine's
+`CMapLocation::LoadSpot` assertion for missing `gamma_ap_loot`. This is a native
+fatal assertion; Lua `pcall` cannot turn it into a retryable error.
+
+The inspected development `dxml_core.script` implements `query` as a descendant
+search. A `map_spots` document root therefore does not match `query("map_spots")`.
+The patch now uses `getRoot` and `getElementName`, inserts each missing AP-owned
+node independently, then verifies exactly one of each of the four white/orange
+marker and spot definitions. Standard, `_16`, `_21` and `_219` filenames are
+supported. Native nodes and already-present owned definitions are preserved.
+
+Hook registration alone no longer permits stash delivery. Both new receipts and
+saved-stash polling wait for verified definitions before entering native marker
+APIs or creating stash contents. Missing definitions leave the receipt/plan
+pending with a bounded diagnostic; later successful initialization retries it.
+This transient capability adds no save fields and changes no IDs or protocols.
+
+Regressions model DXML's root/descendant distinction, partial and duplicate
+definitions, failed insertion, and saved-plan recovery without duplicate spawning.
+The fix's native marker rendering and kill-triggered reward acceptance are
+**not run**. Its PR does not deploy code or change the current AP session, either
+game installation, the local developer panel or third-party compatibility fixes.

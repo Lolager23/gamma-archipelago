@@ -11,7 +11,9 @@ ADVANCED = 28051127
 
 
 def stash_game(lua, *, items=(FIRST,), **options):
-    lua.globals().modxml_gamma_ap_stashes = lua.table(registered=True)
+    lua.globals().modxml_gamma_ap_stashes = lua.table(
+        registered=True, ready=lua.eval("function() return true end")
+    )
     game, engine, configuration = configured_game(lua, rewards_loot_stashes=1, **options)
     engine.files[CONFIG_PATH] = encode_configuration(KEY, configuration, expanded=True)
     engine.files["D:/AnomalyAP/appdata/archipelago\\incoming.txt"] = encode_incoming(
@@ -219,11 +221,63 @@ def test_dxml_and_section_capabilities_are_required_before_acknowledging_coordin
     lua.globals().modxml_gamma_ap_stashes = None
     poll(game, engine)
     assert "DXML" in list(engine.logs.values())[-1]
-    lua.globals().modxml_gamma_ap_stashes = lua.table(registered=True)
+    lua.globals().modxml_gamma_ap_stashes = lua.table(
+        registered=True, ready=lua.eval("function() return true end")
+    )
     engine.missing_section = "bandage"
     poll(game, engine)
     assert "loot section is unavailable" in list(engine.logs.values())[-1]
     assert progress(lua, game).received_count == 0
+
+
+@pytest.mark.parametrize("capability", [None, "false", "nil", "string"])
+def test_registered_hook_without_marker_definitions_never_calls_native_map_api(lua, capability):
+    game, engine = stash_game(lua)
+    lua.execute("""
+        engine.map_calls=0
+        level.map_add_object_spot_ser=function()
+            engine.map_calls=engine.map_calls+1
+        end
+    """)
+    lua.globals().modxml_gamma_ap_stashes.ready = (
+        None
+        if capability is None
+        else lua.eval(
+            "function() return "
+            + {"false": "false", "nil": "nil", "string": "'ready'"}[capability]
+            + " end"
+        )
+    )
+    poll(game, engine)
+    assert engine.map_calls == 0
+    assert progress(lua, game).received_count == 0
+
+
+def test_saved_stash_waits_for_verified_definitions_before_map_calls_or_spawning(lua):
+    game, engine = stash_game(lua)
+    poll(game, engine)
+    earlier = saved_state(lua, game)
+    record = earlier.gamma_archipelago_v1.stashes.records[1]
+    game.physic_object_on_use_callback(engine.boxes[record.cache_id], lua.globals().db.actor)
+    stored = saved_state(lua, game)
+    lua.globals().modxml_gamma_ap_stashes.ready = lua.eval("function() return false end")
+    lua.execute("""
+        engine.map_calls=0
+        level.map_has_object_spot=function() engine.map_calls=engine.map_calls+1; return 0 end
+        level.map_add_object_spot_ser=function() engine.map_calls=engine.map_calls+1 end
+    """)
+    game.load_state(stored)
+    poll(game, engine)
+    state = progress(lua, game)
+    assert engine.map_calls == 0 and engine.spawn_calls == 0
+    assert state.received_count == 1 and state.stashes.records[1].next_action == 1
+    assert state.stashes.records[1].cache_id == record.cache_id
+    lua.globals().modxml_gamma_ap_stashes.ready = lua.eval("function() return true end")
+    poll(game, engine)
+    assert engine.spawn_calls == len(record.actions) and engine.map_calls > 0
+    game.load_state(saved_state(lua, game))
+    poll(game, engine)
+    assert engine.spawn_calls == len(record.actions)
 
 
 def test_disabled_unbound_and_bounded_receipts_are_refused(lua):

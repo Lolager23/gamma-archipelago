@@ -1,5 +1,24 @@
 # Verification record
 
+## Stash marker crash correction: 19 November 2026
+
+Branch `codex/fix-stash-marker-crash` isolates the reported `gamma_ap_loot`
+missing-node assertion from the separate notice-timing work. Two new regressions
+**failed** against main: querying the DXML document root skipped insertion, and
+a registered-but-unready hook still allowed a native marker call. The corrected
+patch verifies all four definitions and gates both new receipts and saved plans.
+
+The complete verifier **passed** 1,051 covered Python/Lua tests, 57 untraced
+generator/server tests and seven Node tests (1,115 total). This includes 568 Lua
+tests, 100% measured Python lines/branches and 100% owned Lua executable lines.
+Lua branch coverage is not measured. A separate standalone LuaJIT probe using
+the inspected installed DXML and SLAXML parsers also **passed** root selection,
+all four definitions, idempotence and native-node preservation; engine globals
+were stubbed and no game was launched. Current-head Windows/Linux CI results are
+recorded in the PR; native kill/reward/marker acceptance remains **not run**. This source-only
+increment does not deploy, launch the game or alter the current AP session,
+saves, local developer panel or normal installation.
+
 ## Startup join notices: 19 November 2026
 
 Branch `codex/startup-notifications` adds an optional authenticated-player
