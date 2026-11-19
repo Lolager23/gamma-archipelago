@@ -21,6 +21,8 @@ orange cache claim: native pickup/use is vetoed and direct grants are returned t
 the ground until that claim grants permission. The solver removes the ordinary
 Sakharov acquisition event in this mode and requires the local cache claim for
 psi-gated access. With the category off, native acquisition remains unchanged.
+The native pickup guard also applies to psi-only locks, resetting the binder's
+reused flags before each dispatch so a rejected helmet cannot block later loot.
 An uncalibrated helmet retains its native limited protection; it does not satisfy
 the calibrated goal. AP does not turn it into calibrated protection.
 
@@ -39,7 +41,7 @@ post-merge playtests. Native ALife encounters and task/NPC availability are not
 guaranteed by a solver reachability result. No game launch or deployment is part
 of this matrix.
 
-The complete verifier passes 521 covered regression/integration tests and eight
+The complete verifier passes 581 covered regression/integration tests and eight
 untraced cases (six 1,000-seed presets and two real-server sessions). Every
 independent coverage gate passes. The matrix also covers 231 category singles/
 pairs and 60 full-option goal seeds. Engine acceptance remains not run.
