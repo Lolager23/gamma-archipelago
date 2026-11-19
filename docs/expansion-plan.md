@@ -1,9 +1,9 @@
 # Expanded randomiser: staged checklist
 
-Updated **19 November 2026**, against implementation head `3dd0b26` and the live
-GitHub PR states. All thirty implementation increments exist as stacked draft
-PRs, with the local generator web app in PR #35. They are implemented in source;
-expanded deployment and in-game acceptance are not recorded as complete.
+Updated **19 November 2026**, after the individual reviews and merges of PRs
+#2–#35, through merged implementation `ddb9ee8`. All thirty core increments and
+the local generator are merged in source. This checklist/audit reconciliation is
+PR #36. Expanded deployment and in-game acceptance remain pending.
 
 Checkboxes below describe the action on that line: **implemented**, **automated
 test passed**, or **in-game acceptance recorded**. A checked implementation or
@@ -25,37 +25,38 @@ on its stated evidence basis.
 | 7 — balance/release | Six presets, 6,000-seed matrix, recovery/package hardening and private candidate | Playthrough balance, performance, install/upgrade/removal, independent review and release gates |
 | Additional — local generator | Presets, catalogues, estimates, YAML/seed downloads and browser recovery tested | Playtime calibration against real runs; general engine acceptance is separate |
 
-Latest complete automation: **690 tests passed** (653 covered Python/Lua,
+Latest complete automation: **756 tests passed** (719 covered Python/Lua,
 32 untraced generator/server, five Node frontend). All owned Python runtime
 modules measured 100% lines/branches; Lua executable-line gates passed, without
 a Lua branch or numeric JavaScript coverage claim. Windows/Linux push and PR
-checks passed at `3dd0b26`. See the [verification record](verification-record.md)
+checks passed on every reviewed implementation head. See the
+[verification record](verification-record.md), [merge audit](merge-review-record.md)
 and [PR #35 checks](https://github.com/Lolager23/gamma-archipelago/pull/35/checks).
 
-As checked on this date, only foundation PR #1 is merged. Implementation/tooling
-PRs #2–#35 remain open drafts. PR #3 (MCM) and #4 (plan) precede Steps 01–30
-(#5–#34); #35 adds the local
-web app. Probe PR #2 is a separate draft; its relevant findings/history already
-enter the stack through Step 02. Use the [exact PR index](implementation-status.md).
+Foundation PR #1 had already merged. PRs #2–#35 were subsequently reviewed,
+fixed where needed, fully verified and merged individually into main. PR #3
+(MCM) and #4 (plan) precede Steps 01–30 (#5–#34); #35 adds the local web app.
+Probe PR #2 remains a separately packaged diagnostic component. The audit records
+reviewed heads, merge commits and fixes. Use the [exact PR index](implementation-status.md).
 
 ## What is next
 
-1. Review the MCM/planning prerequisites #3/#4, then the implementation PRs in
-   stack order (#5 onward). Review and merge are still outstanding; this status
-   update does not authorize or perform them.
-2. After each merge, close the development game/client/server, back up the entire
+1. When Owen is ready for acceptance, close the development game/client/server,
+   back up the entire
    appdata/profile/configuration trees, and deploy matching world/client/add-on
    revisions only into the isolated development installation. Follow the
    [development guide](development-guide.md), using MO2 and fresh Loner/Cordon
    acceptance saves. Do not reuse the normal multiplayer installation or saves.
-3. Start with pilot recovery/callback evidence, then PDA incoming/outgoing/self
+2. Start with pilot recovery/callback evidence, then PDA incoming/outgoing/self
    messages. Continue through exploration, activity checks, rewards, locks/travel
    and goals using each step's acceptance document. Record commit, seed/preset,
    baseline, result and evidence; fix failures with reproducing regressions.
-4. Complete the release matrix: two fresh MVP runs, a real in-game mixed
+3. Complete the release matrix: two fresh MVP runs, a real in-game mixed
    multiworld, every alternate goal, migration/recovery and performance. A goal
    demonstrated during an MVP run can also supply that goal's evidence.
-5. Close the review/licence/compatibility gates before any public v1 decision.
+4. Fix acceptance failures on focused branches with reproducing regressions,
+   then rerun the affected native acceptance against the matching bundle.
+5. Close the independent human review/licence/compatibility gates before any public v1 decision.
    The existing archive is a private, unaccepted candidate, not a public release.
 
 Owen reserved engine verification for after each merge and requested no further
@@ -64,8 +65,8 @@ not infer that a feature is already installed from its source implementation.
 
 ## Remaining implementation/polish and supported limits
 
-No numbered core implementation branch remains unstarted. Follow-up coding is
-driven by review and the open acceptance cases, with these limits explicit:
+No numbered core implementation branch remains unstarted or unmerged. Follow-up
+coding is driven by the open acceptance cases, with these limits explicit:
 
 - [ ] Complete the original PDA localization/article/plural polish. Current
   transfer templates are English; full localized grammar is not implemented.
