@@ -6,7 +6,12 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 
 from .discovery import configured_location_ids, normalize_exclusions
-from .expansion_settings import EXPANSION_DEFAULTS, EXPANSION_LIMITS, LEGACY_CHECK_DEFAULTS
+from .expansion_settings import (
+    EXPANSION_DEFAULTS,
+    EXPANSION_LIMITS,
+    LEGACY_CHECK_DEFAULTS,
+    LEGACY_REWARD_DEFAULTS,
+)
 from .protocol import validate_session_key
 
 CHECK_OPTIONS = (
@@ -28,6 +33,7 @@ CHECK_OPTIONS = (
     "checks_faction_standing",
 )
 REWARD_OPTIONS = (
+    "rewards_progressive_tools",
     "rewards_loot_stashes",
     "rewards_progression_stashes",
     "rewards_quest_keys",
@@ -97,6 +103,7 @@ SUPPORTED_CHECKS = frozenset(
 )
 SUPPORTED_REWARDS: frozenset[str] = frozenset(
     {
+        "rewards_progressive_tools",
         "rewards_loot_stashes",
         "rewards_progression_stashes",
         "rewards_faction_reputation",
@@ -192,7 +199,9 @@ class SeedConfiguration:
         values = self.to_values()
         if not self.discovery_exclusions:
             values.pop("discovery_exclusions")
-        for name, default in (EXPANSION_DEFAULTS | LEGACY_CHECK_DEFAULTS).items():
+        for name, default in (
+            EXPANSION_DEFAULTS | LEGACY_CHECK_DEFAULTS | LEGACY_REWARD_DEFAULTS
+        ).items():
             if values[name] == default:
                 values.pop(name)
         if self.pda_tracker == 1:
@@ -204,7 +213,13 @@ class SeedConfiguration:
 
 
 def build_configuration(values: Mapping[str, object]) -> SeedConfiguration:
-    values = {"discovery_exclusions": [], **EXPANSION_DEFAULTS, **LEGACY_CHECK_DEFAULTS, **values}
+    values = {
+        "discovery_exclusions": [],
+        **EXPANSION_DEFAULTS,
+        **LEGACY_CHECK_DEFAULTS,
+        **LEGACY_REWARD_DEFAULTS,
+        **values,
+    }
     if "pda_tracker" not in values:
         values = {**values, "pda_tracker": 1}
     if "zone_unlock_travel" not in values:

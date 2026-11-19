@@ -19,7 +19,12 @@ from gamma_archipelago.configuration import (  # noqa: E402
     QUANTITY_OPTIONS,
     REWARD_OPTIONS,
 )
-from gamma_archipelago.expansion_settings import EXPANSION_LIMITS  # noqa: E402
+from gamma_archipelago.expansion_settings import (  # noqa: E402
+    EXPANSION_DEFAULTS,
+    EXPANSION_LIMITS,
+    LEGACY_CHECK_DEFAULTS,
+    LEGACY_REWARD_DEFAULTS,
+)
 from gamma_archipelago.paths import require_safe_child  # noqa: E402
 
 
@@ -200,6 +205,16 @@ def generate_catalogues() -> None:
     lines.extend(f'    ["{name}"] = {limit},' for name, limit in sorted(limits.items()))
     lines.append("}")
     lines.extend(tracker_lines(catalogue))
+    config_defaults = {
+        "zone_unlock_travel": 0,
+        "pda_tracker": 1,
+        **EXPANSION_DEFAULTS,
+        **LEGACY_CHECK_DEFAULTS,
+        **LEGACY_REWARD_DEFAULTS,
+    }
+    lines.append("config_defaults = {")
+    lines.extend(f'    ["{name}"]={value},' for name, value in sorted(config_defaults.items()))
+    lines.append("}")
     require_safe_child(ROOT, "mod/gamedata/scripts/gamma_ap_catalog.script").write_text(
         "\n".join(lines) + "\n", encoding="utf-8", newline="\n"
     )

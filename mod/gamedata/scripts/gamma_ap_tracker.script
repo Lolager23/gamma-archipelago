@@ -51,6 +51,8 @@ local function blocked(state, row, regions, psi)
             if not regions[where] then return "Global activity: unlock the remaining Zone routes" end
         end
     end
+    if config.rewards_progressive_tools == 1 and row.category == "checks_gear_upgrades"
+        and gamma_ap_workshop.tools_level(state) < 3 then return "Expert tool permission required" end
     local group = equipment[row.category]
     if group and config["starting_"..group] == 2 and not state.unlocks["gear_"..group] then
         return "Equipment permission required: " .. group
@@ -102,6 +104,9 @@ function snapshot(state, total, problem, psi)
     for where in pairs(gamma_ap_catalog.lab_levels) do
         local visited = state.visited_maps[gamma_ap_catalog.location_by_level[where]]
         result.progression[#result.progression+1] = (visited and "Visited: " or "Unvisited: ") .. gamma_ap_catalog.tracker_regions[where]
+    end
+    if options(state).rewards_progressive_tools == 1 then
+        result.progression[#result.progression+1] = "Progressive tools: "..gamma_ap_workshop.tools_level(state).."/3"
     end
     table.sort(result.progression)
     return result

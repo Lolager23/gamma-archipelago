@@ -42,6 +42,12 @@ rosters. The world/client share a pure configured selection; the game adapter
 persists only distinct source IDs in central save state. Generated Lua metadata
 keeps selection and observation mappings aligned with published IDs.
 
+[Progressive tools](progressive-tools.md) derive their tier directly from applied
+receipts. Native workshop wrappers receive an explicit state getter, validate the
+supported entry points before installation, and delegate permitted actions to
+their captured native methods. The AP world and PDA use matching conservative
+upgrade requirements; physical supplies remain owned by the ordinary game.
+
 ## State and failure boundaries
 
 The AP server owns completed location checks and the ordered item history. The

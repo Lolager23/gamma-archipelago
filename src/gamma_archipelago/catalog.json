@@ -962,6 +962,14 @@
       "category": "rewards_zone_keys",
       "permission": "zone_y04_pole",
       "level": "y04_pole"
+    },
+    {
+      "id": 28051801,
+      "name": "Progressive Tools",
+      "category": "rewards_progressive_tools",
+      "classification": "progression",
+      "effect": "progressive_tools",
+      "copies": 3
     }
   ],
   "locations": [

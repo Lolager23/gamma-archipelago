@@ -21,6 +21,7 @@ from .presets import presets
 from .web_estimates import ASSUMPTIONS, estimate_playtime
 
 LABELS = {
+    "rewards_progressive_tools": "Progressive workshop tools",
     "checks_shops": "Named trader purchases",
     "checks_faction_standing": "Faction goodwill milestones",
     "checks_maps": "Map arrivals",
@@ -126,7 +127,9 @@ def preview(values: Mapping[str, object], assumptions: Mapping[str, object]) -> 
             )
     item_ids = enabled_item_ids(configuration.rewards, configuration.gear)
     rewards = [dict(row) for row in data["items"] if row["id"] in item_ids]
-    required = sum(row["classification"] == "progression" for row in rewards)
+    required = sum(
+        row.get("copies", 1) for row in rewards if row["classification"] == "progression"
+    )
     if required > len(checks):
         raise ValueError("The selected check pool cannot hold required progression rewards")
     counts = Counter(row["category"] for row in checks)

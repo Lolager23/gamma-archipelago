@@ -75,6 +75,7 @@ end
 
 local function apply_reward(section)
     if type(section) == "number" then
+        if gamma_ap_catalog.item_effects[section] == "progressive_tools" then return true end
         if gamma_ap_catalog.gear_rewards[section] then return gamma_ap_gear_locks.receive(state, section) end
         if gamma_ap_catalog.item_effects[section] == "unlock" then
             state.unlocks[gamma_ap_catalog.permissions[section]] = true
@@ -114,6 +115,8 @@ function actor_on_update()
     local zones_ready, zone_error = gamma_ap_zone_keys.install(function() return state end)
     if configuration and configuration.expanded and configuration.options.rewards_zone_keys == 1
         and not zones_ready then report_error(zone_error); return end
+    local workshop_ready, workshop_error = gamma_ap_workshop.install(configuration,function() return state end)
+    if not workshop_ready then report_error(workshop_error); return end
     register_task_hook()
     local supported, support_error = gamma_ap_tasks.supported(configuration)
     if not supported then report_error(support_error); return end
