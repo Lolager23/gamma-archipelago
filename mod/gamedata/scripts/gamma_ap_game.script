@@ -244,6 +244,7 @@ function save_state(data)
 end
 
 function load_state(data)
+    gamma_ap_readiness.reset()
     if data.gamma_archipelago_v1 ~= nil then
         local ran, valid, reason = pcall(gamma_ap_save_validation.validate, data.gamma_archipelago_v1)
         if not ran or not valid then
@@ -275,6 +276,7 @@ function load_state(data)
 end
 
 function on_game_start()
+    gamma_ap_readiness.reset()
     state = gamma_ap_state.new_state()
     known_receipts = 0
     gamma_ap_scouting.reset()
@@ -297,6 +299,9 @@ function on_game_start()
         else report_error(reason) end
     end
     RegisterScriptCallback("actor_on_update", actor_on_update)
+    RegisterScriptCallback("on_loading_screen_key_prompt", gamma_ap_readiness.reset)
+    RegisterScriptCallback("on_loading_screen_dismissed", gamma_ap_readiness.dismissed)
+    RegisterScriptCallback("actor_on_net_destroy", gamma_ap_readiness.reset)
     RegisterScriptCallback("save_state", save_state)
     RegisterScriptCallback("load_state", load_state)
     RegisterScriptCallback("actor_on_interaction", actor_on_interaction)
