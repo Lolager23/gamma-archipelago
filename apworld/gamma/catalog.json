@@ -402,6 +402,272 @@
         "pri_a16_mlr_copy"
       ],
       "radius_metres": 50
+    },
+    {
+      "id": 28052201,
+      "name": "First Mutant Kill: Bloodsucker",
+      "level": "Menu",
+      "category": "checks_mutant_first_kills",
+      "key": "bloodsucker"
+    },
+    {
+      "id": 28052202,
+      "name": "First Mutant Kill: Boar",
+      "level": "Menu",
+      "category": "checks_mutant_first_kills",
+      "key": "boar"
+    },
+    {
+      "id": 28052203,
+      "name": "First Mutant Kill: Burer",
+      "level": "Menu",
+      "category": "checks_mutant_first_kills",
+      "key": "burer"
+    },
+    {
+      "id": 28052204,
+      "name": "First Mutant Kill: Cat",
+      "level": "Menu",
+      "category": "checks_mutant_first_kills",
+      "key": "cat"
+    },
+    {
+      "id": 28052205,
+      "name": "First Mutant Kill: Chimera",
+      "level": "Menu",
+      "category": "checks_mutant_first_kills",
+      "key": "chimera"
+    },
+    {
+      "id": 28052206,
+      "name": "First Mutant Kill: Controller",
+      "level": "Menu",
+      "category": "checks_mutant_first_kills",
+      "key": "controller"
+    },
+    {
+      "id": 28052207,
+      "name": "First Mutant Kill: Blind Dog",
+      "level": "Menu",
+      "category": "checks_mutant_first_kills",
+      "key": "dog"
+    },
+    {
+      "id": 28052208,
+      "name": "First Mutant Kill: Flesh",
+      "level": "Menu",
+      "category": "checks_mutant_first_kills",
+      "key": "flesh"
+    },
+    {
+      "id": 28052209,
+      "name": "First Mutant Kill: Fracture",
+      "level": "Menu",
+      "category": "checks_mutant_first_kills",
+      "key": "fracture"
+    },
+    {
+      "id": 28052210,
+      "name": "First Mutant Kill: Pseudogiant",
+      "level": "Menu",
+      "category": "checks_mutant_first_kills",
+      "key": "gigant"
+    },
+    {
+      "id": 28052211,
+      "name": "First Mutant Kill: Pseudodog",
+      "level": "Menu",
+      "category": "checks_mutant_first_kills",
+      "key": "pseudodog"
+    },
+    {
+      "id": 28052212,
+      "name": "First Mutant Kill: Psy Dog",
+      "level": "Menu",
+      "category": "checks_mutant_first_kills",
+      "key": "psy_dog"
+    },
+    {
+      "id": 28052213,
+      "name": "First Mutant Kill: Rat",
+      "level": "Menu",
+      "category": "checks_mutant_first_kills",
+      "key": "rat"
+    },
+    {
+      "id": 28052214,
+      "name": "First Mutant Kill: Snork",
+      "level": "Menu",
+      "category": "checks_mutant_first_kills",
+      "key": "snork"
+    },
+    {
+      "id": 28052215,
+      "name": "First Mutant Kill: Tushkano",
+      "level": "Menu",
+      "category": "checks_mutant_first_kills",
+      "key": "tushkano"
+    },
+    {
+      "id": 28052216,
+      "name": "First Mutant Kill: Zombie",
+      "level": "Menu",
+      "category": "checks_mutant_first_kills",
+      "key": "zombie"
+    },
+    {
+      "id": 28052217,
+      "name": "First Mutant Kill: Karlik",
+      "level": "Menu",
+      "category": "checks_mutant_first_kills",
+      "key": "karlik"
+    },
+    {
+      "id": 28052218,
+      "name": "First Mutant Kill: Psysucker",
+      "level": "Menu",
+      "category": "checks_mutant_first_kills",
+      "key": "psysucker"
+    },
+    {
+      "id": 28052219,
+      "name": "First Mutant Kill: Lurker",
+      "level": "Menu",
+      "category": "checks_mutant_first_kills",
+      "key": "lurker"
+    },
+    {
+      "id": 28052220,
+      "name": "First Mutant Kill: Poltergeist",
+      "level": "Menu",
+      "category": "checks_mutant_first_kills",
+      "key": "poltergeist"
+    },
+    {
+      "id": 28052221,
+      "name": "First Mutant Kill: Pyrogeist",
+      "level": "Menu",
+      "category": "checks_mutant_first_kills",
+      "key": "pyrogeist"
+    },
+    {
+      "id": 28052222,
+      "name": "First Mutant Kill: Pseudogeist",
+      "level": "Menu",
+      "category": "checks_mutant_first_kills",
+      "key": "pseudogeist"
+    },
+    {
+      "id": 28052223,
+      "name": "First Mutant Kill: Borya",
+      "level": "Menu",
+      "category": "checks_mutant_first_kills",
+      "key": "borya"
+    },
+    {
+      "id": 28052224,
+      "name": "First Mutant Kill: Bibliotekar",
+      "level": "Menu",
+      "category": "checks_mutant_first_kills",
+      "key": "bibliotekar"
+    },
+    {
+      "id": 28052225,
+      "name": "First Mutant Kill: Jumping Pseudogiant",
+      "level": "Menu",
+      "category": "checks_mutant_first_kills",
+      "key": "gigant_jumper"
+    },
+    {
+      "id": 28052301,
+      "name": "First Faction Kill: Loners",
+      "level": "Menu",
+      "category": "checks_faction_first_kills",
+      "key": "stalker"
+    },
+    {
+      "id": 28052302,
+      "name": "First Faction Kill: Bandits",
+      "level": "Menu",
+      "category": "checks_faction_first_kills",
+      "key": "bandit"
+    },
+    {
+      "id": 28052303,
+      "name": "First Faction Kill: Duty",
+      "level": "Menu",
+      "category": "checks_faction_first_kills",
+      "key": "dolg"
+    },
+    {
+      "id": 28052304,
+      "name": "First Faction Kill: Freedom",
+      "level": "Menu",
+      "category": "checks_faction_first_kills",
+      "key": "freedom"
+    },
+    {
+      "id": 28052305,
+      "name": "First Faction Kill: Clear Sky",
+      "level": "Menu",
+      "category": "checks_faction_first_kills",
+      "key": "csky"
+    },
+    {
+      "id": 28052306,
+      "name": "First Faction Kill: Ecologists",
+      "level": "Menu",
+      "category": "checks_faction_first_kills",
+      "key": "ecolog"
+    },
+    {
+      "id": 28052307,
+      "name": "First Faction Kill: Mercenaries",
+      "level": "Menu",
+      "category": "checks_faction_first_kills",
+      "key": "killer"
+    },
+    {
+      "id": 28052308,
+      "name": "First Faction Kill: Military",
+      "level": "Menu",
+      "category": "checks_faction_first_kills",
+      "key": "army"
+    },
+    {
+      "id": 28052309,
+      "name": "First Faction Kill: Monolith",
+      "level": "Menu",
+      "category": "checks_faction_first_kills",
+      "key": "monolith"
+    },
+    {
+      "id": 28052310,
+      "name": "First Faction Kill: Renegades",
+      "level": "Menu",
+      "category": "checks_faction_first_kills",
+      "key": "renegade"
+    },
+    {
+      "id": 28052311,
+      "name": "First Faction Kill: Sin",
+      "level": "Menu",
+      "category": "checks_faction_first_kills",
+      "key": "greh"
+    },
+    {
+      "id": 28052312,
+      "name": "First Faction Kill: UNISG",
+      "level": "Menu",
+      "category": "checks_faction_first_kills",
+      "key": "isg"
+    },
+    {
+      "id": 28052313,
+      "name": "First Faction Kill: Zombified",
+      "level": "Menu",
+      "category": "checks_faction_first_kills",
+      "key": "zombied"
     }
   ],
   "content_inventory": {
@@ -445,8 +711,6 @@
       "fake_start"
     ],
     "remaining_rosters": [
-      "mutant_species",
-      "stalker_factions",
       "artefacts",
       "task_types",
       "equipment_tiers",
@@ -778,5 +1042,42 @@
       "l04_darkvalley",
       "y04_pole"
     ]
-  ]
+  ],
+  "mutant_classes": {
+    "SM_BLOOD": "bloodsucker",
+    "SM_BOARW": "boar",
+    "SM_BURER": "burer",
+    "SM_CAT_S": "cat",
+    "SM_CHIMS": "chimera",
+    "SM_CONTR": "controller",
+    "SM_DOG_S": "dog",
+    "SM_FLESH": "flesh",
+    "SM_IZLOM": "fracture",
+    "SM_GIANT": "gigant",
+    "SM_P_DOG": "pseudodog",
+    "SM_DOG_P": "psy_dog",
+    "SM_RAT": "rat",
+    "SM_SNORK": "snork",
+    "SM_TUSHK": "tushkano",
+    "SM_ZOMBI": "zombie",
+    "SM_KARLIK": "karlik",
+    "SM_PSYSUCKER": "psysucker",
+    "SM_LURKER": "lurker",
+    "SM_POLTER_G": "poltergeist",
+    "SM_PYRO_G": "pyrogeist",
+    "SM_PSEUDO_G": "pseudogeist",
+    "SM_POLTR": "poltergeist"
+  },
+  "mutant_sections": {
+    "borya": "borya",
+    "bibliotekar": "bibliotekar",
+    "gigant_jumper": "gigant_jumper"
+  },
+  "milestones": {
+    "checks_kill_milestones": {
+      "base_id": 28100000,
+      "maximum": 10000,
+      "name": "Defeat {count} Enemies"
+    }
+  }
 }

@@ -62,17 +62,17 @@ def test_wrong_seed_and_impossible_receipt_count_leave_state_unchanged():
 
 
 def test_seed_manifest_is_bound_and_rejects_disabled_or_changed_checks():
-    from gamma_archipelago.catalog import ALL_LOCATION_IDS
+    from gamma_archipelago.catalog import ALL_LOCATION_IDS, MAP_LOCATION_IDS
 
     session = SessionCoordinator(KEY)
     disabled = next(iter(ALL_LOCATION_IDS - LOCATION_IDS))
     with pytest.raises(ProtocolError, match="disabled"):
         session.observe_game(GameSnapshot(KEY, 0, frozenset({disabled}), False))
-    for invalid in (frozenset(), frozenset({42})):
+    for invalid in (frozenset(), frozenset({42}), ALL_LOCATION_IDS):
         with pytest.raises(ProtocolError, match="Unsupported"):
             session.bind_locations(invalid)
-    session.bind_locations(ALL_LOCATION_IDS)
-    session.bind_locations(ALL_LOCATION_IDS)
-    session.accept_confirmed(ALL_LOCATION_IDS)
+    session.bind_locations(MAP_LOCATION_IDS)
+    session.bind_locations(MAP_LOCATION_IDS)
+    session.accept_confirmed(MAP_LOCATION_IDS)
     with pytest.raises(ProtocolError, match="changed"):
         session.bind_locations(LOCATION_IDS)

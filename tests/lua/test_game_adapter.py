@@ -20,6 +20,8 @@ def load_game(lua):
         getFS = function() return {update_path=function() return engine.root end} end
         printf = function(format, value) engine.logs[#engine.logs+1]=string.format(format,value) end
         RegisterScriptCallback = function(name,callback) engine.callbacks[name]=callback end
+        engine.story_ids={}
+        get_object_story_id=function(id) return engine.story_ids[id] end
         alife_create_item = function(section,actor)
             if engine.fail_reward then return nil end
             engine.created[#engine.created+1]=section
@@ -64,6 +66,11 @@ def test_callbacks_polling_save_restore_and_initial_inventory(lua):
         "save_state",
         "load_state",
         "actor_on_interaction",
+        "npc_on_death_callback",
+        "monster_on_death_callback",
+        "monster_on_hit_callback",
+        "npc_on_net_spawn",
+        "monster_on_net_spawn",
     }
     set_incoming(engine)
     module.actor_on_update()

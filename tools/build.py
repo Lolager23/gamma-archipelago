@@ -33,6 +33,24 @@ def generate_catalogues() -> None:
     lines.extend(["}", "location_ids = {"])
     lines.extend(f"    {loc['id']}," for loc in catalogue["locations"])
     lines.append("}")
+    milestone = catalogue["milestones"]["checks_kill_milestones"]
+    lines.append(f"kill_milestone_base = {milestone['base_id']}")
+    lines.append(f"kill_milestone_maximum = {milestone['maximum']}")
+    for table_name in ("mutant_classes", "mutant_sections"):
+        lines.append(table_name + " = {")
+        lines.extend(f'    ["{key}"] = "{value}",' for key, value in catalogue[table_name].items())
+        lines.append("}")
+    for category, table_name in (
+        ("checks_mutant_first_kills", "mutant_locations"),
+        ("checks_faction_first_kills", "faction_locations"),
+    ):
+        lines.append(table_name + " = {")
+        lines.extend(
+            f'    ["{loc["key"]}"] = {loc["id"]},'
+            for loc in catalogue["locations"]
+            if loc["category"] == category
+        )
+        lines.append("}")
     lines.append("pilot_ids = {[28052001]=true, [28052002]=true, [28052003]=true}")
     lines.append("location_categories = {")
     lines.extend(f'    [{loc["id"]}] = "{loc["category"]}",' for loc in catalogue["locations"])

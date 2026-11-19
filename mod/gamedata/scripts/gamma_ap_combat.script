@@ -1,0 +1,70 @@
+-- Actor-attributed deaths, canonical species/factions and bounded cumulative kills.
+
+function copy(progress)
+    local result = {kills=0, seen={}, thresholds={}}
+    if not progress then return result end
+    result.kills = progress.kills
+    for key, value in pairs(progress.seen) do result.seen[key] = value end
+    for _, number in ipairs(progress.thresholds) do result.thresholds[#result.thresholds+1] = number end
+    return result
+end
+
+function configure(progress, configuration)
+    progress.thresholds = {}
+    if configuration and configuration.expanded
+        and configuration.options.checks_kill_milestones == 1 then
+        for _, number in ipairs(configuration.thresholds.kill_milestones) do
+            progress.thresholds[#progress.thresholds+1] = number
+        end
+    end
+end
+
+local function identity(victim)
+    return tostring(victim:id()) .. ":" .. victim:name()
+end
+
+function spawned(state, victim)
+    if victim and victim:alive() then state.combat.seen[identity(victim)] = nil end
+end
+
+local function species(section)
+    for prefix, name in pairs(gamma_ap_catalog.mutant_sections) do
+        if section == prefix or section:sub(1, #prefix + 1) == prefix .. "_" then return name end
+    end
+    local kind = ini_sys:r_string_ex(section, "kind")
+    local class = ini_sys:r_string_ex(section, "class")
+    if class == "SM_DOG_F" or class == "AI_PHANT" or class == "AI_CROW" then return nil, true end
+    return gamma_ap_catalog.mutant_classes[kind] or gamma_ap_catalog.mutant_classes[class]
+end
+
+function observe(state, category, victim, killer)
+    if not state.session_key or not state.expanded or not db.actor or not db.actor:alive()
+        or not victim or victim:alive() or not killer or killer:id() ~= db.actor:id()
+        or victim:id() == db.actor:id() then return end
+    local location_id
+    if category == "mutant" then
+        local name, excluded = species(victim:section())
+        if excluded then return end
+        location_id = gamma_ap_catalog.mutant_locations[name]
+    else
+        -- Conservatively exclude every story-identified NPC, not just a fragile name list.
+        if get_object_story_id(victim:id()) then return end
+        local faction = victim:character_community()
+        if faction == "army_npc" then faction = "army"
+        elseif faction == "greh_npc" then faction = "greh" end
+        location_id = gamma_ap_catalog.faction_locations[faction]
+    end
+    if location_id and state.enabled_checks[location_id] then state.checks[location_id] = true end
+    local progress = state.combat
+    local limit = progress.thresholds[#progress.thresholds] or 0
+    if progress.kills >= limit then return end
+    local key = identity(victim)
+    if progress.seen[key] then return end
+    progress.seen[key] = true
+    progress.kills = progress.kills + 1
+    for _, threshold in ipairs(progress.thresholds) do
+        if progress.kills >= threshold then
+            state.checks[gamma_ap_catalog.kill_milestone_base + threshold] = true
+        end
+    end
+end

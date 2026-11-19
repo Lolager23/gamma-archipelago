@@ -30,7 +30,7 @@ class SessionCoordinator:
     locations_bound: bool = False
 
     def bind_locations(self, locations: frozenset[int]) -> None:
-        if not locations or not locations <= ALL_LOCATION_IDS:
+        if not locations or len(locations) > MAX_ITEMS or not locations <= ALL_LOCATION_IDS:
             raise ProtocolError("Unsupported seed check manifest")
         if self.locations_bound and locations != self.allowed_locations:
             raise ProtocolError("Seed check manifest changed within the same session")

@@ -7,7 +7,7 @@ from BaseClasses import Item, ItemClassification, Location, Region, Tutorial
 from Options import OptionError
 from worlds.AutoWorld import WebWorld, World
 
-from gamma_archipelago.catalog import LOCATION_IDS
+from gamma_archipelago.catalog import KILL_MILESTONE_BASE, LOCATION_IDS, LOCATION_NAMES
 from gamma_archipelago.configuration import OPTION_NAMES, SeedConfiguration, build_configuration
 
 from .options import GammaOptions
@@ -46,7 +46,7 @@ class GammaWorld(World):
     options: GammaOptions
     configuration: SeedConfiguration
     item_name_to_id = {item["name"]: item["id"] for item in _catalog["items"]}
-    location_name_to_id = {location["name"]: location["id"] for location in _catalog["locations"]}
+    location_name_to_id = LOCATION_NAMES
 
     def generate_early(self) -> None:
         try:
@@ -74,17 +74,23 @@ class GammaWorld(World):
         for location in _catalog["locations"]:
             if location["category"] not in self.configuration.checks:
                 continue
-            region = regions[location["level"]]
+            region = regions.get(location["level"], menu)
             region.locations.append(
                 GammaLocation(self.player, location["name"], location["id"], region)
             )
+        if "checks_kill_milestones" in self.configuration.checks:
+            for count in self.configuration.kill_milestones:
+                menu.locations.append(
+                    GammaLocation(
+                        self.player, f"Defeat {count} Enemies", KILL_MILESTONE_BASE + count, menu
+                    )
+                )
 
     def create_items(self) -> None:
-        self.multiworld.itempool.extend(self.create_item(name) for name in self.item_name_to_id)
-        extra = len(self.multiworld.get_locations(self.player)) - len(self.item_name_to_id)
-        self.multiworld.itempool.extend(
-            self.create_item(self.get_filler_item_name()) for _ in range(extra)
-        )
+        names = list(self.item_name_to_id)
+        for index in range(len(self.multiworld.get_locations(self.player))):
+            name = names[index] if index < len(names) else self.get_filler_item_name()
+            self.multiworld.itempool.append(self.create_item(name))
 
     def set_rules(self) -> None:
         self.multiworld.completion_condition[self.player] = lambda state: all(
