@@ -32,6 +32,7 @@ def lua():
         "quest_keys",
         "gear_locks",
         "zone_keys",
+        "travel",
         "stashes",
         "state",
         "settlements",

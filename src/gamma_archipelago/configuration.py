@@ -65,6 +65,7 @@ OPTION_NAMES = (
         "no_starting_weapons",
         "kill_milestones",
         "side_task_milestones",
+        "zone_unlock_travel",
     )
 )
 SUPPORTED_CHECKS = frozenset(
@@ -140,6 +141,7 @@ class SeedConfiguration:
     no_starting_weapons: int
     kill_milestones: tuple[int, ...]
     side_task_milestones: tuple[int, ...]
+    zone_unlock_travel: int
 
     def to_values(self) -> dict[str, object]:
         return {
@@ -151,15 +153,21 @@ class SeedConfiguration:
             "no_starting_weapons": self.no_starting_weapons,
             "kill_milestones": list(self.kill_milestones),
             "side_task_milestones": list(self.side_task_milestones),
+            "zone_unlock_travel": self.zone_unlock_travel,
         }
 
     @property
     def digest(self) -> str:
-        encoded = json.dumps(self.to_values(), sort_keys=True, separators=(",", ":"))
+        values = self.to_values()
+        if not self.zone_unlock_travel:
+            values.pop("zone_unlock_travel")  # Preserve pre-travel configuration identities.
+        encoded = json.dumps(values, sort_keys=True, separators=(",", ":"))
         return hashlib.sha256(encoded.encode("ascii")).hexdigest()
 
 
 def build_configuration(values: Mapping[str, object]) -> SeedConfiguration:
+    if "zone_unlock_travel" not in values:
+        values = {**values, "zone_unlock_travel": 0}
     if set(values) != set(OPTION_NAMES):
         raise ConfigurationError("Configuration must contain exactly the documented option names")
     checks = frozenset(name for name in CHECK_OPTIONS if _integer(values, name, 1))
@@ -170,6 +178,9 @@ def build_configuration(values: Mapping[str, object]) -> SeedConfiguration:
         raise ConfigurationError("Quest keys require checks outside their locked story chains")
     if "rewards_zone_keys" in rewards and "checks_maps" not in checks:
         raise ConfigurationError("Zone keys require map checks for a guaranteed exploration route")
+    travel = _integer(values, "zone_unlock_travel", 1)
+    if travel and "rewards_zone_keys" not in rewards:
+        raise ConfigurationError("Unlock travel requires zone keys")
     goal = GOALS[_integer(values, "goal", len(GOALS) - 1)]
     gear = {name: _integer(values, name, 2) for name in GEAR_OPTIONS}
     no_weapons = _integer(values, "no_starting_weapons", 1)
@@ -197,6 +208,7 @@ def build_configuration(values: Mapping[str, object]) -> SeedConfiguration:
         no_weapons,
         _thresholds(values["kill_milestones"]),
         _thresholds(values["side_task_milestones"]),
+        travel,
     )
 
 

@@ -1608,4 +1608,5 @@ config_limits = {
     ["starting_pda"] = 2,
     ["starting_tools"] = 2,
     ["starting_utilities"] = 2,
+    ["zone_unlock_travel"] = 1,
 }

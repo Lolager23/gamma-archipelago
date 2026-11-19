@@ -44,7 +44,7 @@ def test_configuration_rejects_partial_unknown_repeated_and_invalid_values(lua, 
 def test_configuration_requires_threshold_lists_and_caps_their_length(lua):
     module = lua.globals().gamma_ap_configuration
     lines = VALID.splitlines()
-    assert_lua_error(module.parse(VALID.replace("end|44", "end|43"), KEY, CONFIG.digest))
+    assert_lua_error(module.parse(VALID.replace(lines[-1], "end|0"), KEY, CONFIG.digest))
     records = [line for line in lines[3:-1] if not line.startswith("threshold|kill_milestones|")]
     missing = "\n".join([*lines[:3], *records, f"end|{len(records)}", ""])
     assert_lua_error(module.parse(missing, KEY, CONFIG.digest))
@@ -65,3 +65,12 @@ def test_v2_incoming_requires_a_well_formed_configuration_identity(lua):
     assert protocol.parse_incoming(valid).configuration_key == CONFIG.digest
     assert_lua_error(protocol.parse_incoming(valid.replace(CONFIG.digest, "bad")))
     assert_lua_error(protocol.parse_incoming(valid.replace("configuration|", "wrong|")))
+
+
+def test_pre_travel_configuration_defaults_the_optional_field_without_changing_identity(lua):
+    lines = [
+        line for line in VALID.splitlines() if not line.startswith("option|zone_unlock_travel|")
+    ]
+    lines[-1] = f"end|{len(lines) - 4}"
+    parsed = lua.globals().gamma_ap_configuration.parse("\n".join(lines) + "\n", KEY, CONFIG.digest)
+    assert parsed.options.zone_unlock_travel == 0

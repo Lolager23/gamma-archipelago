@@ -12,6 +12,17 @@ function on_mcm_load()
                 type = "button",
                 functor = {gamma_ap_actions.spawn_basic_tools},
             },
+            {id="preview_unlock_travel", type="button", functor={preview_travel}},
+            {id="take_unlock_travel", type="button", functor={take_travel}},
         },
     }
+end
+
+
+function preview_travel()
+    return gamma_ap_game.preview_unlock_travel()
+end
+
+function take_travel()
+    return gamma_ap_game.take_unlock_travel()
 end

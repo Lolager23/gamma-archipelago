@@ -183,6 +183,7 @@ def generate_catalogues() -> None:
         **dict.fromkeys(QUANTITY_OPTIONS, 100),
         "goal": len(GOALS) - 1,
         "no_starting_weapons": 1,
+        "zone_unlock_travel": 1,
     }
     lines.append("config_limits = {")
     lines.extend(f'    ["{name}"] = {limit},' for name, limit in sorted(limits.items()))
