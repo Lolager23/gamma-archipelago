@@ -84,6 +84,11 @@ def set_goal_rule(world, catalog):
         world.multiworld.completion_condition[world.player] = lambda state: state.has(
             "Living Legend Complete", world.player
         )
+    elif world.configuration.goal == "all_x_labs":
+        world.multiworld.completion_condition[world.player] = lambda state: (
+            state.has("Calibrated Psi Protection", world.player)
+            and all(state.can_reach_region(level, world.player) for level in catalog["x_labs"])
+        )
     else:
         world.multiworld.completion_condition[world.player] = lambda state: all(
             state.can_reach_region(row["level"], world.player)

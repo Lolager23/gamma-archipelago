@@ -182,6 +182,13 @@ item_categories = {
     [28051731] = "rewards_zone_keys",
     [28051732] = "rewards_zone_keys",
 }
+lab_levels = {
+    ["l04u_labx18"] = true,
+    ["l08u_brainlab"] = true,
+    ["l10u_bunker"] = true,
+    ["labx8"] = true,
+    ["l13u_warlab"] = true,
+}
 zone_keys = {
     ["k00_marsh"] = "zone_k00_marsh",
     ["l02_garbage"] = "zone_l02_garbage",

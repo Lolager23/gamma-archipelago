@@ -3314,9 +3314,7 @@
     "excluded_levels": [
       "fake_start"
     ],
-    "remaining_rosters": [
-      "x_labs"
-    ],
+    "remaining_rosters": [],
     "artefact_scope": {
       "source": "active GAMMA anomaly-zone spawn roster",
       "types": 66,
@@ -3952,5 +3950,12 @@
     "lttz_oa_rogue": "operation_afterglow",
     "lttz_oa_stitch": "operation_afterglow",
     "lttz_oa_loose_ends": "operation_afterglow"
-  }
+  },
+  "x_labs": [
+    "l04u_labx18",
+    "l08u_brainlab",
+    "l10u_bunker",
+    "labx8",
+    "l13u_warlab"
+  ]
 }

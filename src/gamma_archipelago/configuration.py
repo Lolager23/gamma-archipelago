@@ -98,7 +98,14 @@ SUPPORTED_REWARDS: frozenset[str] = frozenset(
     }
 )
 SUPPORTED_GOALS = frozenset(
-    {"pilot_tour", "psi_protection", "brain_scorcher", "meet_strelok", "living_legend"}
+    {
+        "pilot_tour",
+        "psi_protection",
+        "brain_scorcher",
+        "meet_strelok",
+        "living_legend",
+        "all_x_labs",
+    }
 )
 
 

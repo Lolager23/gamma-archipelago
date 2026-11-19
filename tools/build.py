@@ -36,6 +36,8 @@ def generate_catalogues() -> None:
     lines.extend(
         f'    [{item["id"]}] = "{item.get("category", "")}",' for item in catalogue["items"]
     )
+    lines.extend(["}", "lab_levels = {"])
+    lines.extend(f'    ["{level}"] = true,' for level in catalogue["x_labs"])
     lines.extend(["}", "zone_keys = {"])
     lines.extend(
         f'    ["{item["level"]}"] = "{item["permission"]}",'

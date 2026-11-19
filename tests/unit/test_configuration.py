@@ -30,55 +30,12 @@ def test_default_configuration_is_immutable_and_deterministically_serialized():
     assert len(configuration.digest) == 64
 
 
-@pytest.mark.parametrize(
-    "name",
-    tuple(
-        name
-        for name in CHECK_OPTIONS
-        if name
-        not in {
-            "checks_maps",
-            "checks_settlements",
-            "checks_mutant_first_kills",
-            "checks_faction_first_kills",
-            "checks_kill_milestones",
-            "checks_artefacts",
-            "checks_quest_types",
-            "checks_story_milestones",
-            "checks_side_task_milestones",
-            "checks_gear_upgrades",
-            "checks_armour_tiers",
-            "checks_weapon_tiers",
-            "checks_knife_tiers",
-            "checks_rank_milestones",
-        }
-    )
-    + tuple(
-        name
-        for name in REWARD_OPTIONS
-        if name
-        not in {
-            "rewards_loot_stashes",
-            "rewards_progression_stashes",
-            "rewards_faction_reputation",
-            "rewards_stat_levels",
-            "rewards_quest_keys",
-            "rewards_starting_gear_unlocks",
-            "rewards_zone_keys",
-        }
-    ),
-)
-def test_unimplemented_adapters_are_never_silently_enabled(name):
-    values = defaults()
-    values[name] = 1
-    with pytest.raises(ConfigurationError, match="Not implemented"):
-        build_configuration(values)
+def test_all_requested_check_reward_and_goal_adapters_are_available():
+    from gamma_archipelago.configuration import SUPPORTED_CHECKS, SUPPORTED_GOALS, SUPPORTED_REWARDS
 
-
-@pytest.mark.parametrize("goal", range(5, len(GOALS)))
-def test_unimplemented_goals_do_not_fall_back_to_the_pilot(goal):
-    with pytest.raises(ConfigurationError, match="Not implemented"):
-        build_configuration({**defaults(), "goal": goal})
+    assert set(CHECK_OPTIONS) == SUPPORTED_CHECKS
+    assert set(REWARD_OPTIONS) == SUPPORTED_REWARDS
+    assert set(GOALS) == SUPPORTED_GOALS
 
 
 @pytest.mark.parametrize(

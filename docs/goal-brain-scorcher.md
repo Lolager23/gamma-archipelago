@@ -15,4 +15,3 @@ Full verifier: 506 covered tests plus two real-server cases; all coverage gates
 pass. Tests separate entry/key state from shutdown, reject non-boolean/missing
 facts, retain reload completion and fill keyed seeds. Engine switch/goal acceptance
 is not run, reserved for Owen after merge. No launch or deployment occurred.
-

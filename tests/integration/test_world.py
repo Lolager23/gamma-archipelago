@@ -438,3 +438,21 @@ def test_living_legend_goal_has_a_distinct_terminal_event_after_the_full_route()
     assert event.item.name == "Living Legend Complete"
     assert multiworld.worlds[1].fill_slot_data()["goal"] == "living_legend"
     assert multiworld.can_beat_game()
+
+
+def test_all_labs_goal_has_a_frozen_roster_and_does_not_require_map_checks():
+    for maps in (0, 1):
+        options = {"goal": 5, "checks_maps": maps, "checks_settlements": 1}
+        multiworld = setup_multiworld(GammaWorld, seed=26, options=options)
+        distribute_items_restrictive(multiworld)
+        assert multiworld.worlds[1].fill_slot_data()["goal"] == "all_x_labs"
+        assert multiworld.can_beat_game()
+    catalog = json.loads((ROOT / "src/gamma_archipelago/catalog.json").read_text())
+    assert set(catalog["x_labs"]) == {
+        "l04u_labx18",
+        "l08u_brainlab",
+        "l10u_bunker",
+        "labx8",
+        "l13u_warlab",
+    }
+    assert catalog["content_inventory"]["remaining_rosters"] == []
