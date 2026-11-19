@@ -15,8 +15,8 @@ Alternate goals use outgoing protocol 2, selected by the validated configuration
 Pilot protocol 1 retains its three-map validation. An alternate victory can be
 reported without pilot checks; mismatched protocol/goal selection is rejected.
 
-Regression generation exposed circular key placement in maps-only zone-key seeds.
-Zone keys now use a guaranteed local exploration chain: shuffle the reachable
+Zone keys retain the guaranteed local exploration chain from step 20, which
+corrected circular placement in map-only seeds: shuffle the reachable
 frontier and place its key in the previous visited map's first-arrival check.
 Return paths allow backtracking to any already-open frontier. Yantar precedes
 psi-gated maps. Every key remains an AP receipt/check, but zone keys are local to

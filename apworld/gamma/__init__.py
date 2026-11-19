@@ -182,9 +182,6 @@ class GammaWorld(World):
     def pre_fill(self) -> None:
         place_zone_keys(self, _catalog)
 
-    def pre_fill(self) -> None:
-        place_zone_keys(self, _catalog)
-
     def fill_slot_data(self) -> dict[str, object]:
         return {
             "schema_version": 3,
