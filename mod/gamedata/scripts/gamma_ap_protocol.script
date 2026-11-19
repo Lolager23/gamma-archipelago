@@ -14,25 +14,33 @@ function parse_incoming(content)
     for line in content:gmatch("([^\n]*)\n") do
         lines[#lines + 1] = line:gsub("\r$", "")
     end
-    if #lines < 3 or lines[1] ~= "GAMMA_AP_IN|1" then
+    if #lines < 3 or (lines[1] ~= "GAMMA_AP_IN|1" and lines[1] ~= "GAMMA_AP_IN|2") then
         return nil, "Unsupported incoming protocol"
     end
     local key = lines[2]:match("^session|([0-9a-f]+)$")
     if not key or #key ~= 64 then return nil, "Invalid session identity" end
+    local first_item, configuration_key = 3, nil
+    if lines[1] == "GAMMA_AP_IN|2" then
+        configuration_key = lines[3]:match("^configuration|([0-9a-f]+)$")
+        if not configuration_key or #configuration_key ~= 64 then
+            return nil, "Invalid configuration identity"
+        end
+        first_item = 4
+    end
     local count = canonical_number(lines[#lines]:match("^end|(.*)$"))
-    if not count or count > 4000 or count ~= #lines - 3 then
+    if not count or count > 4000 or count ~= #lines - first_item then
         return nil, "Incoming trailer does not match item history"
     end
     local items = {}
-    for line_index = 3, #lines - 1 do
+    for line_index = first_item, #lines - 1 do
         local index_text, id_text = lines[line_index]:match("^item|([^|]+)|([^|]+)$")
         local index, item_id = canonical_number(index_text), canonical_number(id_text)
-        if index ~= line_index - 3 or not gamma_ap_catalog.item_sections[item_id] then
+        if index ~= line_index - first_item or not gamma_ap_catalog.item_sections[item_id] then
             return nil, "Unknown item or nonsequential item history"
         end
         items[#items + 1] = item_id
     end
-    return { session_key = key, items = items }
+    return { session_key = key, items = items, configuration_key=configuration_key }
 end
 
 function encode_outgoing(state)

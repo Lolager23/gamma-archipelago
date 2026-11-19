@@ -52,6 +52,18 @@ local function read_confirmed(key)
     return gamma_ap_protocol.parse_confirmed(content, key)
 end
 
+local function read_configuration(incoming)
+    if not incoming.configuration_key then return nil end
+    local path, reason = bridge_path("configuration.txt")
+    if not path then return nil, reason end
+    local file = io.open(path, "rb")
+    if not file then return nil, "Start the matching companion before loading this configured seed" end
+    local content = file:read(131073)
+    local closed = file:close()
+    if not closed then return nil, "Configuration read close failed" end
+    return gamma_ap_configuration.parse(content, incoming.session_key, incoming.configuration_key)
+end
+
 local function give_item(section)
     local object = alife_create_item(section, db.actor)
     if not object then return false end
@@ -68,6 +80,12 @@ function actor_on_update()
     if not incoming then report_error(reason); return end
     local confirmed, confirmed_error = read_confirmed(incoming.session_key)
     if not confirmed then report_error(confirmed_error); return end
+    local configuration, configuration_error = read_configuration(incoming)
+    if incoming.configuration_key and not configuration then report_error(configuration_error); return end
+    local bound, bind_error = gamma_ap_state.bind_session(state, incoming)
+    if not bound then report_error(bind_error); return end
+    local ready, loadout_error = gamma_ap_loadout.apply(state, configuration)
+    if not ready then report_error(loadout_error); return end
     local success, delivery_error = gamma_ap_state.apply_pending(state, incoming, give_item)
     if not success then report_error(delivery_error); return end
     gamma_ap_state.merge_confirmed(state, confirmed)
@@ -84,7 +102,11 @@ function save_state(data)
 end
 
 function load_state(data)
+    local prepared, configuration_key = state.loadout_prepared, state.configuration_key
     state = gamma_ap_state.copy_state(data.gamma_archipelago_v1 or gamma_ap_state.new_state())
+    if not data.gamma_archipelago_v1 and prepared then
+        state.loadout_prepared, state.configuration_key = true, configuration_key
+    end
     next_poll = 0
     last_error = nil
 end
@@ -93,6 +115,14 @@ function on_game_start()
     state = gamma_ap_state.new_state()
     next_poll = 0
     last_error = nil
+    local incoming = read_incoming()
+    if incoming and incoming.configuration_key then
+        local configuration, reason = read_configuration(incoming)
+        if configuration then
+            local prepared, error = gamma_ap_loadout.prepare(state, configuration)
+            if not prepared then report_error(error) end
+        else report_error(reason) end
+    end
     RegisterScriptCallback("actor_on_update", actor_on_update)
     RegisterScriptCallback("save_state", save_state)
     RegisterScriptCallback("load_state", load_state)

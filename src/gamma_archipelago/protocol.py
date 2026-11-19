@@ -29,11 +29,16 @@ def _number(value: str) -> int:
     return int(value)
 
 
-def encode_incoming(session_key: str, item_ids: tuple[int, ...]) -> str:
+def encode_incoming(
+    session_key: str, item_ids: tuple[int, ...], configuration_key: str | None = None
+) -> str:
     validate_session_key(session_key)
     if len(item_ids) > MAX_ITEMS or any(item_id not in ITEM_SECTIONS for item_id in item_ids):
         raise ProtocolError("Incoming history contains too many items or an unsupported item")
-    lines = ["GAMMA_AP_IN|1", f"session|{session_key}"]
+    lines = [f"GAMMA_AP_IN|{2 if configuration_key is not None else 1}", f"session|{session_key}"]
+    if configuration_key is not None:
+        validate_session_key(configuration_key)
+        lines.append(f"configuration|{configuration_key}")
     lines.extend(f"item|{index}|{item_id}" for index, item_id in enumerate(item_ids))
     lines.append(f"end|{len(item_ids)}")
     return "\n".join(lines) + "\n"

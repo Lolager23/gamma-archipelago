@@ -31,7 +31,7 @@ def test_world_uses_real_upstream_types_and_catalogue():
     assert world.create_item("Medkit").classification == ItemClassification.filler
     assert world.get_filler_item_name() == "Bandage"
     slot_data = world.fill_slot_data()
-    assert slot_data["schema_version"] == 1 and slot_data["pilot"] is True
+    assert slot_data["schema_version"] == 2 and slot_data["pilot"] is False
     assert slot_data["goal"] == "visit_all_pilot_regions"
     assert slot_data["configuration"] == world.configuration.to_values()
     assert slot_data["configuration_key"] == world.configuration.digest

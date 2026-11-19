@@ -35,6 +35,9 @@ def test_packages_are_reproducible_and_load_from_apworld(tmp_path):
                 "actions",
                 "mcm",
                 "notifications",
+                "configuration",
+                "equipment",
+                "loadout",
             )
         } | {"gamedata/configs/text/eng/st_gamma_archipelago.xml"}
     with ZipFile(outputs[2]) as archive:

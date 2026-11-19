@@ -74,8 +74,8 @@ class GammaWorld(World):
 
     def fill_slot_data(self) -> dict[str, object]:
         return {
-            "schema_version": 1,
-            "pilot": True,
+            "schema_version": 2,
+            "pilot": False,
             "goal": "visit_all_pilot_regions",
             "configuration": self.configuration.to_values(),
             "configuration_key": self.configuration.digest,

@@ -10,6 +10,7 @@ from gamma_archipelago.configuration import (
     ConfigurationError,
     build_configuration,
     defaults,
+    encode_configuration,
 )
 from gamma_archipelago.protocol import ProtocolError
 from gamma_archipelago.session import SessionCoordinator
@@ -67,15 +68,25 @@ def test_configuration_names_values_and_empty_pools_are_validated(change):
 
 
 @pytest.mark.parametrize("name", GEAR_OPTIONS + QUANTITY_OPTIONS + ("no_starting_weapons",))
-def test_restricted_start_modes_wait_for_their_engine_adapter(name):
-    with pytest.raises(ConfigurationError, match="Restricted"):
-        build_configuration({**defaults(), name: 1})
+def test_initial_omission_and_quantity_options_are_supported(name):
+    configuration = build_configuration({**defaults(), name: 1})
+    assert configuration.to_values()[name] == 1
 
 
 def test_ap_locked_equipment_requires_its_unlock_reward_pool():
     with pytest.raises(ConfigurationError, match="require rewards_starting_gear_unlocks"):
         build_configuration({**defaults(), "starting_pda": 2, "no_starting_weapons": 1})
     with pytest.raises(ConfigurationError, match="Not implemented"):
+        build_configuration({**defaults(), "starting_pda": 2, "rewards_starting_gear_unlocks": 1})
+
+
+def test_permission_locks_wait_for_the_permission_adapter_even_with_a_reward_pool(monkeypatch):
+    from gamma_archipelago import configuration
+
+    monkeypatch.setattr(
+        configuration, "SUPPORTED_REWARDS", frozenset({"rewards_starting_gear_unlocks"})
+    )
+    with pytest.raises(ConfigurationError, match="Restricted"):
         build_configuration({**defaults(), "starting_pda": 2, "rewards_starting_gear_unlocks": 1})
 
 
@@ -95,3 +106,23 @@ def test_session_configuration_cannot_change_without_changing_the_session():
     configured.bind_configuration("b" * 64)
     with pytest.raises(ProtocolError):
         configured.bind_configuration("invalid")
+
+
+def test_wire_configuration_is_deterministic_and_item_v2_references_its_identity(tmp_path):
+    from gamma_archipelago.bridge import FileBridge
+    from gamma_archipelago.protocol import encode_incoming
+
+    configuration = build_configuration({**defaults(), "no_starting_weapons": 1})
+    assert dict(configuration.gear)["starting_firearms"] == 1
+    assert dict(configuration.gear)["starting_melee"] == 1
+    expected = encode_configuration("a" * 64, configuration)
+    bridge = FileBridge(tmp_path, allowed_root=tmp_path)
+    bridge.write_configuration("a" * 64, configuration)
+    bridge.write_history("a" * 64, (), configuration.digest)
+    assert (bridge.directory / "configuration.txt").read_text() == expected
+    assert expected.startswith(
+        f"GAMMA_AP_CONFIG|1\nsession|{'a' * 64}\ndigest|{configuration.digest}\n"
+    )
+    assert (bridge.directory / "incoming.txt").read_text().startswith("GAMMA_AP_IN|2\n")
+    with pytest.raises(ProtocolError):
+        encode_incoming("a" * 64, (), "bad")

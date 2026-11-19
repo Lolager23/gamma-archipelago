@@ -5,6 +5,8 @@ import json
 from collections.abc import Mapping
 from dataclasses import dataclass
 
+from .protocol import validate_session_key
+
 CHECK_OPTIONS = (
     "checks_maps",
     "checks_settlements",
@@ -68,7 +70,7 @@ OPTION_NAMES = (
 SUPPORTED_CHECKS = frozenset({"checks_maps"})
 SUPPORTED_REWARDS: frozenset[str] = frozenset()
 SUPPORTED_GOALS = frozenset({"pilot_tour"})
-SUPPORTED_START_MODES = frozenset({0})
+SUPPORTED_START_MODES = frozenset({0, 1})
 
 
 class ConfigurationError(ValueError):
@@ -152,9 +154,7 @@ def build_configuration(values: Mapping[str, object]) -> SeedConfiguration:
         raise ConfigurationError(
             f"Not implemented in this build: {sorted(unavailable)}; goal={goal}"
         )
-    if any(mode not in SUPPORTED_START_MODES for mode in gear.values()) or any(
-        amount != 100 for _, amount in quantities
-    ):
+    if any(mode not in SUPPORTED_START_MODES for mode in gear.values()):
         raise ConfigurationError("Restricted starting loadouts are not implemented in this build")
     return SeedConfiguration(
         checks,
@@ -166,3 +166,15 @@ def build_configuration(values: Mapping[str, object]) -> SeedConfiguration:
         _thresholds(values["kill_milestones"]),
         _thresholds(values["side_task_milestones"]),
     )
+
+
+def encode_configuration(session_key: str, configuration: SeedConfiguration) -> str:
+    validate_session_key(session_key)
+    lines = ["GAMMA_AP_CONFIG|1", f"session|{session_key}", f"digest|{configuration.digest}"]
+    for name, value in sorted(configuration.to_values().items()):
+        if isinstance(value, list):
+            lines.extend(f"threshold|{name}|{number}" for number in value)
+        else:
+            lines.append(f"option|{name}|{value}")
+    lines.append(f"end|{len(lines) - 3}")
+    return "\n".join(lines) + "\n"

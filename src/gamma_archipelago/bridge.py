@@ -4,6 +4,7 @@ import os
 from pathlib import Path
 
 from .catalog import MAX_SNAPSHOT_BYTES
+from .configuration import SeedConfiguration, encode_configuration
 from .notifications import (
     MAX_ACK_BYTES,
     Notice,
@@ -28,8 +29,10 @@ class FileBridge:
         self.directory = require_safe_child(self.game_root, "appdata/archipelago")
         self.directory.mkdir(parents=True, exist_ok=True)
 
-    def write_history(self, session_key: str, item_ids: tuple[int, ...]) -> None:
-        content = encode_incoming(session_key, item_ids)
+    def write_history(
+        self, session_key: str, item_ids: tuple[int, ...], configuration_key: str | None = None
+    ) -> None:
+        content = encode_incoming(session_key, item_ids, configuration_key)
         self._write_atomic("incoming", content)
 
     def _write_atomic(self, name: str, content: str) -> None:
@@ -54,6 +57,9 @@ class FileBridge:
 
     def write_confirmed(self, session_key: str, location_ids: frozenset[int]) -> None:
         self._write_atomic("confirmed_checks", encode_confirmed(session_key, location_ids))
+
+    def write_configuration(self, session_key: str, configuration: SeedConfiguration) -> None:
+        self._write_atomic("configuration", encode_configuration(session_key, configuration))
 
     def read_game(self, session_key: str) -> GameSnapshot | None:
         source = require_safe_child(self.game_root, "appdata/archipelago/outgoing.txt")

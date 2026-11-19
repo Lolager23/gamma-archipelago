@@ -28,6 +28,7 @@ def connected_context(slot_data=None):
         write_history=lambda *_: None,
         write_notices=lambda *_: None,
         write_confirmed=lambda *_: None,
+        write_configuration=lambda *_: None,
         read_game=lambda _: None,
     )
     context = adapter.GammaContext(bridge=bridge)
@@ -62,6 +63,24 @@ async def test_seed_configuration_is_validated_and_bound_before_bridge_publicati
         context.on_package("Connected", {"slot_data": {**slot, "configuration_key": "b" * 64}})
     with pytest.raises(ProtocolError, match="changed"):
         context.on_package("Connected", {"slot_data": {"schema_version": 1, "pilot": True}})
+
+
+@run_async
+async def test_v2_requires_configuration_and_legacy_cannot_apply_restrictions():
+    from gamma_archipelago.configuration import build_configuration, defaults
+
+    configuration = build_configuration({**defaults(), "starting_pda": 1})
+    slot = {
+        "schema_version": 2,
+        "pilot": False,
+        "configuration": configuration.to_values(),
+        "configuration_key": configuration.digest,
+    }
+    context = connected_context(slot)
+    assert context.require_configuration is True
+    assert context.session.configuration_key == configuration.digest
+    with pytest.raises(ProtocolError, match="schema 2"):
+        connected_context({**slot, "schema_version": 1, "pilot": True})
 
 
 @run_async

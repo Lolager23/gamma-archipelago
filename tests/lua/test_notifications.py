@@ -2,6 +2,7 @@ import pytest
 
 from gamma_archipelago.notifications import Notice, decode_acknowledgements, encode_notices
 
+from .assertions import assert_lua_error
 from .test_game_adapter import load_game, saved_state, set_incoming
 
 KEY = "a" * 64
@@ -67,22 +68,22 @@ def test_notification_waits_for_actual_delivery_and_does_not_repeat_after_reload
 )
 def test_malformed_or_wrong_session_sidecars_are_refused_before_display(lua, content):
     result = lua.globals().gamma_ap_notifications.parse(content, KEY)
-    assert result[0] is None
+    assert_lua_error(result)
 
 
 def test_duplicate_identity_and_invalid_receipt_fields_are_refused(lua):
     line = "notice|r:0|1|61"
     duplicates = f"GAMMA_AP_NOTICES|1\nsession|{KEY}\n{line}\n{line}\nend|2\n"
     module = lua.globals().gamma_ap_notifications
-    assert module.parse(duplicates, KEY)[0] is None
+    assert_lua_error(module.parse(duplicates, KEY))
     for bad in ["4001", "01", "bad"]:
-        assert module.parse(duplicates.replace("|1|61", f"|{bad}|61"), KEY)[0] is None
+        assert_lua_error(module.parse(duplicates.replace("|1|61", f"|{bad}|61"), KEY))
     for identity in ["r:4000", "s:01:2:3", "s:1:01:3", "s:1:2:01", "bad"]:
-        assert module.encode_ack(KEY, lua.table_from({identity: True}))[0] is None
-    assert module.encode_ack(KEY, lua.table_from({"r:0": False}))[0] is None
-    assert module.encode_ack(KEY, lua.table_from({1: True}))[0] is None
+        assert_lua_error(module.encode_ack(KEY, lua.table_from({identity: True})))
+    assert_lua_error(module.encode_ack(KEY, lua.table_from({"r:0": False})))
+    assert_lua_error(module.encode_ack(KEY, lua.table_from({1: True})))
     many = {f"s:{index}:2:3": True for index in range(8001)}
-    assert module.encode_ack(KEY, lua.table_from(many))[0] is None
+    assert_lua_error(module.encode_ack(KEY, lua.table_from(many)))
 
 
 def test_notification_file_failures_never_reapply_a_reward(lua):

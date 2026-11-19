@@ -1,7 +1,8 @@
 -- The sole owner of this save's AP state. Files and engine calls are injected.
 
 function new_state()
-    return { session_key = nil, received_count = 0, checks = {}, applied_items = {}, notices_seen = {} }
+    return { session_key = nil, received_count = 0, checks = {}, applied_items = {}, notices_seen = {},
+        configuration_key=nil, loadout_prepared=false, loadout_initialized=false, starting_pda_mode=0 }
 end
 
 function copy_state(state)
@@ -11,6 +12,11 @@ function copy_state(state)
     for key, value in pairs(state.checks) do result.checks[key] = value end
     for key, value in pairs(state.applied_items) do result.applied_items[key] = value end
     for key, value in pairs(state.notices_seen or {}) do result.notices_seen[key] = value end
+    result.configuration_key = state.configuration_key
+    result.loadout_prepared = state.loadout_prepared == true
+    result.loadout_initialized = state.loadout_initialized == true
+    result.starting_pda_mode = state.starting_pda_mode or 0
+    result.loadout_plan = gamma_ap_loadout.copy_plan(state.loadout_plan)
     return result
 end
 

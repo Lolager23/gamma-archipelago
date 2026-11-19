@@ -1,0 +1,137 @@
+-- Initial omissions run once before AP rewards; later inventory is never swept.
+
+local function restricted(options)
+    for name, value in pairs(options) do
+        if name:sub(1, 9) == "starting_" then
+            local quantity = name == "starting_ammo" or name == "starting_medicine"
+                or name == "starting_food" or name == "starting_money"
+            if (quantity and value ~= 100) or (not quantity and value ~= 0) then return true end
+        end
+    end
+    return options.no_starting_weapons == 1
+end
+
+local function omitted(options, group)
+    return group and ((options["starting_" .. group] or 0) > 0
+        and group ~= "ammo" and group ~= "medicine" and group ~= "food"
+        or (group == "explosives" and options.no_starting_weapons == 1))
+end
+
+function prepare(state, configuration)
+    if not restricted(configuration.options) then return true end
+    local config = axr_main.config
+    if not config:r_value("character_creation", "new_game_faction", 3) then
+        return false, "Restricted AP loadouts require a fresh character"
+    end
+    local loadout = config:r_value("character_creation", "new_game_loadout", 3)
+    local keep = {}
+    for section in (loadout or ""):gmatch("[^,]+") do
+        section = section:match("^%s*(.-)%s*$")
+        if not omitted(configuration.options, gamma_ap_equipment.group(section)) then
+            keep[#keep + 1] = section
+        end
+    end
+    config:w_value("character_creation", "new_game_loadout", table.concat(keep, ","))
+    state.loadout_prepared = true
+    state.configuration_key = configuration.digest
+    return true
+end
+
+local function make_plan(options)
+    local inventory, totals = {}, {}
+    db.actor:iterate_inventory(function(_, object)
+        inventory[#inventory + 1] = object
+        totals[object:section()] = (totals[object:section()] or 0) + 1
+    end, db.actor)
+    table.sort(inventory, function(a, b) return a:id() < b:id() end)
+    local plan, used = {actions={}, money=math.floor(db.actor:money() * options.starting_money / 100)}, {}
+    for _, object in ipairs(inventory) do
+        local section = object:section()
+        local group = gamma_ap_equipment.group(section)
+        local target = nil
+        if omitted(options, group) then target = 0
+        elseif group == "ammo" then
+            target = math.floor(object:ammo_get_count() * options.starting_ammo / 100)
+            if target == object:ammo_get_count() then target = nil end
+        elseif group == "food" or group == "medicine" then
+            used[section] = (used[section] or 0) + 1
+            if used[section] > math.floor(totals[section] * options["starting_" .. group] / 100) then
+                target = 0
+            end
+        end
+        if target ~= nil then
+            plan.actions[#plan.actions + 1] = {id=object:id(), section=section, target=target, done=false}
+        end
+    end
+    return plan
+end
+
+local function perform(action)
+    if action.done then return true end
+    local object = level.object_by_id(action.id)
+    if not object then action.done = true; return true end
+    if object:section() ~= action.section then return false, "Starter item identity changed" end
+    if action.target == 0 then
+        local ok, released = pcall(alife_release, object)
+        if not ok or not released then return false, "Cannot remove restricted starter item" end
+    else
+        local ok = pcall(function() object:ammo_set_count(action.target) end)
+        if not ok or object:ammo_get_count() ~= action.target then
+            return false, "Cannot adjust starting ammunition"
+        end
+    end
+    action.done = true
+    return true
+end
+
+function apply(state, configuration)
+    if not configuration then return true end -- Legacy v1 seed: never alter inventory.
+    if state.configuration_key and state.configuration_key ~= configuration.digest then
+        return false, "This save uses another AP configuration"
+    end
+    state.configuration_key = configuration.digest
+    state.starting_pda_mode = configuration.options.starting_pda
+    if state.loadout_initialized then return true end
+    if not restricted(configuration.options) then state.loadout_initialized = true; return true end
+    if not state.loadout_prepared then return false, "Restricted AP loadouts require a fresh character" end
+    if axr_main.config:r_value("character_creation", "new_game_faction", 3) then
+        return false, "Waiting for the original starting loadout grant"
+    end
+    state.loadout_plan = state.loadout_plan or make_plan(configuration.options)
+    local work = 0
+    for _, action in ipairs(state.loadout_plan.actions) do
+        if not action.done then
+            if work >= 32 then return false, "Applying starting equipment restrictions" end
+            local ok, reason = perform(action)
+            if not ok then return false, reason end
+            work = work + 1
+        end
+    end
+    local ok = pcall(function()
+        local current = db.actor:money()
+        if current > state.loadout_plan.money then db.actor:give_money(state.loadout_plan.money - current) end
+    end)
+    if not ok then return false, "Cannot adjust starting money" end
+    state.loadout_initialized, state.loadout_plan = true, nil
+    return true
+end
+
+function copy_plan(plan)
+    if not plan then return nil end
+    local result = {money=plan.money, actions={}}
+    for _, action in ipairs(plan.actions) do
+        result.actions[#result.actions + 1] = {
+            id=action.id, section=action.section, target=action.target, done=action.done,
+        }
+    end
+    return result
+end
+
+function pda_available(state)
+    if not state.starting_pda_mode or state.starting_pda_mode == 0 then return true end
+    local found = false
+    db.actor:iterate_inventory(function(_, object)
+        if gamma_ap_equipment.group(object:section()) == "pda" then found = true end
+    end, db.actor)
+    return found
+end
