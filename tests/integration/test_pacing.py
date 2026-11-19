@@ -159,6 +159,18 @@ def test_zone_route_refuses_when_all_reachable_map_checks_are_reserved():
         world.pre_fill()
 
 
+@pytest.mark.parametrize("precollected", [False, True])
+def test_zone_route_refuses_nonlocal_keys_only_when_they_remain_in_the_pool(precollected):
+    starting = ("Zone Key: Garbage",) if precollected else ()
+    _, world = started_world({"rewards_zone_keys": 1}, starting)
+    world.options.non_local_items.value = {"Zone Key: Garbage"}
+    if precollected:
+        world.pre_fill()
+    else:
+        with pytest.raises(OptionError, match="must remain local"):
+            world.pre_fill()
+
+
 @pytest.mark.parametrize("mode", [0, 1, 2])
 def test_actual_seed_reports_are_optional_and_spoilers_require_explicit_choice(tmp_path, mode):
     multiworld = setup_multiworld(
