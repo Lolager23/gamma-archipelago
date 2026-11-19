@@ -1,31 +1,76 @@
 # Branch-by-branch work
 
-Branches are sequential by default. Each includes tests and documentation for its
-own behaviour. Branches 01–03 establish feasibility; do not call them the MVP.
+On 19 November 2026 the user authorised implementing this roadmap as a PR stack:
+each numbered step gets its own branch/PR based on the preceding step. Existing
+prerequisites are stacked as PR #3 (MCM) → PR #4 (plan), preserving history.
+Each implementation PR records its preceding PR, automated results and remaining
+live acceptance. Draft status does not imply completion. Do not merge or release
+the stack automatically.
+
+Each branch includes tests and documentation for its
+own behaviour. The [expanded checklist](expansion-plan.md) defines category
+options, exact proposed triggers, rewards, notification wording and exit criteria.
+The rows below are PR-sized increments; they are not completed implementations.
+
+## Existing work
+
+| Branch | Recorded state on 18 November 2026 |
+|---|---|
+| `codex/archipelago-integration` | Foundation merged through PR #1. Three-check pilot exists. |
+| `codex/game-callback-probes` | Draft PR #2; inspect its actual evidence and remaining probes before merging. |
+| `codex/archipelago-mcm` | Draft PR #3; menu/button and ordinary reload confirmed by the user. Live server/game evidence confirms two pilot checks/rewards; third-map acceptance closed by the user on 19 November based on shared trigger code. |
+| `codex/expanded-randomiser-plan` | Documentation and verification only; no category, goal or notification implementation. |
+
+Do not merge these branches implicitly. Notifications depend on the foundation;
+MCM controls additionally depend on PR #3. Probe findings can inform later work
+without importing every experimental script into the shipped add-on.
+
+## Planned increments
 
 | Order | Branch | Deliverable and acceptance |
 |---|---|---|
-| 00 | `main` bootstrap | Charter, standards, plans, identity and isolated-environment record |
-| 01 | `codex/archipelago-integration` | Buildable pilot `.apworld`, CommonClient bridge, Lua entry point, finite pilot checks, deployment guard, automated tests and first PR |
-| 02 | `codex/game-callback-probes` | Measured task/stash/artefact/level hooks, clean mod-enable/disable and inventory-delivery evidence |
-| 03 | `codex/session-recovery` | Wrong-seed protection, offline checks, ordered receipts, crash/save-rollback policy and regression matrix |
-| 04 | `codex/check-catalogue` | Stable IDs for curated finite checks; duplicate and cancellation rules |
-| 05 | `codex/progression-items` | Toolkits/detectors/protection pool; replacement of normal acquisition paths |
-| 06 | `codex/access-rules` | Matching world/game gates; no self-locks, alternate routes covered |
-| 07 | `codex/mvp-goal` | One complete story goal and final completion packet verified in-game |
-| 08 | `codex/multiworld-validation` | 1,000 seeds, actual mixed-game session, two full runs, meaningful failure evidence |
-| 09 | `codex/status-and-recovery-ui` | Clear connection, waiting, delivery and recovery status; useful PDA/notification behaviour |
-| 10 | `codex/mvp-release` | Clean package install, player guides, compatibility matrix and reproducible experimental release |
-| 11 | `codex/expanded-checks` | Additional proven regions/check types, each option tested independently |
-| 12 | `codex/equipment-unlocks-spike` | Investigate permanent equipment/workshop permissions; keep/drop decision |
-| 13 | `codex/transition-randomiser-spike` | Investigate connected, returnable shuffled Zone transitions |
-| 14 | `codex/traps-and-deathlink-spike` | Opt-in, bounded effects; verify death/load and NPC failure cases |
-| 15 | `codex/xrrazom-spike` | Separate test installation; decide host authority, slots and reward ownership; multiplayer originals remain protected |
-| 16 | `codex/expanded-goals` | Supported faction/start/goal options with fresh logic and playthrough tests |
-| 17 | `codex/release-hardening` | Compatibility, performance, migration, clean-machine tests and independent review |
-| 18 | `codex/version-one-release` | Final chosen-scope acceptance, tagged packages, checksums, licences and maintenance guide |
+| 01 | `codex/pilot-acceptance` | Stage 0: third-map trigger and ordinary reload accepted by the user. Remaining work: capture third reward/goal, older-save recovery and reconnect; distinguish acceptance from captured evidence. |
+| 02 | `codex/content-hook-inventory` | Stage 0: finite map/settlement/species/faction/artefact/task/equipment/rank/lab rosters; callback arguments and active mod winners. Reuse reviewed PR #2 findings. |
+| 03 | `codex/pda-reward-messages` | Stage 1: versioned sender/recipient metadata, applied-reward notices and server-confirmed outgoing notices; self-transfer deduplication and real mixed-game proof. |
+| 04 | `codex/session-recovery` | Stage 1: durable checks, ordered receipts, notification cursors, AP server restart and measured save/rollback policy for each reward kind. |
+| 05 | `codex/category-options` | Stage 2: independent check/reward options, goal choice, preset YAML, slot manifest, invalid combination and pool-size validation. Unsupported options fail clearly. |
+| 06 | `codex/starting-loadout-options` | Stage 2: independent initial equipment/supply omissions, No Starting Weapons preset, faction/custom-loadout handling and initialization before AP rewards; later earned gear survives reload. |
+| 07 | `codex/all-map-checks` | Stage 2: every supported map; preserve pilot IDs, use real regions and test actual level identifiers. |
+| 08 | `codex/settlement-checks` | Stage 2: every major hub's verified entry volume, no duplicate checks on overlap/load/re-entry. |
+| 09 | `codex/combat-checks` | Stage 3: separate first-mutant/first-faction options and bounded kill totals; actor attribution, victim identity and save/reload tests. |
+| 10 | `codex/artefact-checks` | Stage 3: every supported artefact type, canonical variants and acquisition provenance; no drop/pickup farm. |
+| 11 | `codex/task-checks` | Stage 3: quest types, bounded side-task totals and story milestones; completion/failure/cancellation and task-instance deduplication. |
+| 12 | `codex/equipment-checks` | Stage 3: separate upgrade, armour, weapon and knife options with explicit tier manifests and actual equip/upgrade evidence. |
+| 13 | `codex/rank-checks` | Stage 3: active rank thresholds, monotonic milestones and downgrade/load regressions. |
+| 14 | `codex/loot-stash-rewards` | Stage 4: white coordinates, finite quality/calibre loot tables, stable contents and one-claim recovery. |
+| 15 | `codex/progression-stash-rewards` | Stage 4: orange coordinates, guaranteed progression contents and world rules for local stash claims. |
+| 16 | `codex/reputation-rewards` | Stage 4: bounded faction bonuses and actual trader-tier eligibility; no forced hostility/alliance changes. |
+| 17 | `codex/skill-level-rewards` | Stage 4: supported Haruka/GAMMA adapter, caps, recalculation and saved levels; absent/incompatible mod refusal. |
+| 18 | `codex/quest-progression-keys` | Stage 5: persistent quest permissions, ordinary-source replacement and matching world/game prerequisites. |
+| 19 | `codex/starting-gear-unlocks` | Stage 5: optional AP-locked detector/PDA/weapons/other durable gear, seventh reward toggle, usable baseline grants, pending PDA messages and no self-locks; combined restricted-start tests. |
+| 20 | `codex/zone-access-keys` | Stage 5: every normal/extra/scripted route, safe starting access, return paths and no self-locks. |
+| 21 | `codex/zone-unlock-travel` | Stage 5: one optional safe-settlement trip per unlock, persistent consumption and protection/hostile-hub checks. |
+| 22 | `codex/goal-psi-protection` | Stage 6: qualifying usable protection, calibration and access prerequisites; actual completion packet. |
+| 23 | `codex/goal-brain-scorcher` | Stage 6: verified shutdown state and game/solver prerequisites. |
+| 24 | `codex/goal-meet-strelok` | Stage 6: canonical encounter completion, distinct from Living Legend completion. |
+| 25 | `codex/goal-living-legend` | Stage 6: terminal chain event, task/NPC prerequisites and supported faction/start rules. |
+| 26 | `codex/goal-all-x-labs` | Stage 6: frozen lab roster, actual entry checks and reachability/protection. |
+| 27 | `codex/configuration-and-balance` | Stage 7: individual/pairwise/full presets, 1,000 seeds per preset, adversarial gate/goal combinations and no impossible item pools. |
+| 28 | `codex/multiworld-acceptance` | Stage 7: two fresh MVP runs, one successful run per goal, real mixed-game transfers and all recovery/notification cases. |
+| 29 | `codex/release-hardening` | Stage 7: compatibility, performance, migration, clean install/uninstall, independent review, docs and licence audit. |
+| 30 | `codex/version-one-release` | Supported requested categories/goals, reproducible packages, checksums, tagged release and maintenance guide. Explicit release approval required. |
 
-If an increment becomes too large, split it by observable behaviour and update this
-table. A spike must not become an unreviewable implementation branch. Keep the
-first PR open until its own stated acceptance is met; later work is not silently
-folded into it. No automatic merges or public releases.
+For this authorised implementation stack, start each branch from the preceding
+step and target that branch in its PR. Name the dependency and preserve published
+history. Retarget after merges when instructed; do not mix a new feature into an
+existing unrelated PR. Stash, reputation and skill
+work have separate adapters but still use the same receipt/state authority.
+
+If an increment becomes too large, split it by observable behaviour and update
+this table. Every feature branch includes its own option tests and live acceptance;
+the final matrix does not postpone basic validation until the end. No automatic
+merges or public releases.
+
+Transition shuffling, equipment licences beyond these rewards, traps/DeathLink
+and xrRazom co-op remain separate exploratory branches after the supported scope.
+They must not delay or silently replace the requested checks, rewards and goals.

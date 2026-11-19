@@ -11,6 +11,7 @@ is protected throughout development.
 
 - [Agent instructions](AGENTS.md): repository working rules drawn from the documents below.
 - [Execution plan](docs/execution-plan.md): investigation through release.
+- [Expanded checklist](docs/expansion-plan.md): requested check/reward toggles, PDA messages and five alternate goals.
 - [Branch roadmap](docs/branch-roadmap.md): ordered, reviewable increments.
 - [Randomisation design](docs/randomisation-plan.md): candidates, MVP, exploration and completion.
 - [Coding standard](docs/coding-standard.md): clarity, ownership and test requirements.

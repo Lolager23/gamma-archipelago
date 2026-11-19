@@ -8,6 +8,13 @@ repeatable release process. Develop and test it without altering the established
 multiplayer installation. This is a staged project, not a commitment that every
 proposed feature is technically possible.
 
+The 18 November expansion request is specified in the
+[expanded checklist](expansion-plan.md). Its stages 0–7 and the revised
+[branch roadmap](branch-roadmap.md) are the current detailed implementation
+sequence. The stages below describe the original project lifecycle and retain
+its baseline, reliability and release gates. They do not reduce the newly
+requested feature scope to the original three-check pilot.
+
 ## Stage 0: preserve and establish the baseline
 
 Back up the full existing Anomaly `appdata`, MO2 profiles, `overwrite` and launch
@@ -57,8 +64,11 @@ Exit: the MVP checklist is satisfied with no unresolved progression blockers.
 
 ## Stage 4: broaden and investigate
 
-Expand regions, story goals and optional checks in separate branches. Research
-equipment licences, map access, traps, DeathLink and xrRazom interaction as spikes.
+Implement the requested independent check/reward categories and five goal choices
+through the expanded checklist's small branches. Map/quest access and stash,
+reputation and skill rewards are requested work with explicit feasibility gates.
+Research additional equipment licences, transition shuffling, traps, DeathLink
+and xrRazom interaction as separate spikes.
 Each spike has a question, time boundary, evidence and keep/drop decision. Features
 that break saves or create excessive logic assumptions remain optional or are cut.
 

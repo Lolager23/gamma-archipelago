@@ -16,6 +16,7 @@ documents for the part of the task they own:
 | [Git workflow](docs/git-workflow.md) | Personal identity, commits, branches, reviews and releases |
 | [Architecture](docs/architecture.md) | Component responsibilities and state ownership |
 | [Execution plan](docs/execution-plan.md) | Stages, investigations and acceptance evidence |
+| [Expanded checklist](docs/expansion-plan.md) | Requested category options, PDA messages, reward contracts and staged acceptance |
 | [Branch roadmap](docs/branch-roadmap.md) | Increment boundaries and branch dependencies |
 | [Randomisation plan](docs/randomisation-plan.md) | Candidate content, MVP and final product goals |
 | [Development environment](docs/development-environment.md) | Backups, isolation, installation and restore |
