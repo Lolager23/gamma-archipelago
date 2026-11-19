@@ -11,7 +11,7 @@ The rows below are PR-sized increments; they are not completed implementations.
 |---|---|
 | `codex/archipelago-integration` | Foundation merged through PR #1. Three-check pilot exists. |
 | `codex/game-callback-probes` | Draft PR #2; inspect its actual evidence and remaining probes before merging. |
-| `codex/archipelago-mcm` | Draft PR #3; deployed menu/button confirmed by the user. Live server/game evidence confirms two pilot checks/rewards. |
+| `codex/archipelago-mcm` | Draft PR #3; menu/button and ordinary reload confirmed by the user. Live server/game evidence confirms two pilot checks/rewards; third-map acceptance closed by the user on 19 November based on shared trigger code. |
 | `codex/expanded-randomiser-plan` | Documentation and verification only; no category, goal or notification implementation. |
 
 Do not merge these branches implicitly. Notifications depend on the foundation;
@@ -22,7 +22,7 @@ without importing every experimental script into the shipped add-on.
 
 | Order | Branch | Deliverable and acceptance |
 |---|---|---|
-| 01 | `codex/pilot-acceptance` | Stage 0: third check/reward, actual goal, controlled save/load and reconnect; record failures honestly. |
+| 01 | `codex/pilot-acceptance` | Stage 0: third-map trigger and ordinary reload accepted by the user. Remaining work: capture third reward/goal, older-save recovery and reconnect; distinguish acceptance from captured evidence. |
 | 02 | `codex/content-hook-inventory` | Stage 0: finite map/settlement/species/faction/artefact/task/equipment/rank/lab rosters; callback arguments and active mod winners. Reuse reviewed PR #2 findings. |
 | 03 | `codex/pda-reward-messages` | Stage 1: versioned sender/recipient metadata, applied-reward notices and server-confirmed outgoing notices; self-transfer deduplication and real mixed-game proof. |
 | 04 | `codex/session-recovery` | Stage 1: durable checks, ordered receipts, notification cursors, AP server restart and measured save/rollback policy for each reward kind. |

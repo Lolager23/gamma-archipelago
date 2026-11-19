@@ -1,5 +1,19 @@
 # Verification record
 
+## Acceptance update: 19 November 2026
+
+The user confirmed game reloading and third-map validation. On follow-up, the
+user explicitly accepted the third-map trigger on the basis that it shares the
+working trigger code and instructed that it be marked complete. Ordinary game
+save/reload and third-map acceptance are therefore closed by user confirmation.
+
+This is an acceptance decision, not a new captured Cordon server event. The
+available server log still records Garbage/Rostok and two awards; the latest
+game snapshot reports two applied items. No Cordon/Medkit or pilot-goal packet
+was independently captured in this update. Preserve that distinction when
+reporting observed results. Older-save rollback, client/server restart, network
+recovery and wrong-session tests remain separate acceptance cases.
+
 ## Live pilot observation: 18 November 2026, 23:34 UTC
 
 The user reported that the triggers and rewards work. Independently inspected
@@ -11,7 +25,7 @@ observations do not imply that this documentation branch implements that PR.
 |---|---|---|
 | Rostok: First Arrival, ID 28052003 | One recorded Bandage award; present in persisted server checks | Game log records `Received bandage`; acknowledged receipt history includes item 28051003 |
 | Garbage: First Arrival, ID 28052002 | One recorded Basic Toolkit award; present in persisted server checks | Game log records `Received itm_basickit`; acknowledged receipt history includes item 28051001 |
-| Cordon: First Arrival, ID 28052001 | Not present in the inspected server check set | Not independently verified in this session |
+| Cordon: First Arrival, ID 28052001 | Not present in the inspected server check set | Third-map acceptance closed by the user on 19 November based on shared trigger code; no independent Cordon capture |
 
 The persisted AP server history contains two items. The outgoing game snapshot
 reports two applied receipts, Garbage/Rostok checks and `goal|0`. Incoming history
@@ -125,9 +139,11 @@ to the local Python/C-backed YAML interaction described in the development guide
   the user authorised the required GitHub `workflow` scope. Hosted run evidence
   is linked from [PR #1](https://github.com/Lolager23/gamma-archipelago/pull/1/checks);
   inspect the current head's results separately from the local results above.
-- Independently verify the Cordon check, remaining Medkit and pilot completion.
-- Controlled game save/reload, client/server restart, disconnect and wrong-session
-  checks from the development guide, using disposable development saves.
+- Ordinary game save/reload and third-map acceptance are complete by user
+  confirmation; see the acceptance update above for the evidence basis.
+- Independently capture the remaining Medkit delivery and pilot completion.
+- Older-save rollback, client/server restart, disconnect and wrong-session checks
+  from the development guide, using disposable development saves.
 - Verify transfer and player attribution in a live mixed-game multiworld.
 - Measured crash/rollback recovery policy before MVP.
 - Every expanded category, PDA message and alternate goal remains planned until

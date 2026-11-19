@@ -14,8 +14,11 @@ messages now. Keep the existing local pilot running on its present schema.
 - [x] The server's on-disk save contains both checks and both item receipts;
   the game's outgoing bridge acknowledges two applied items.
 - [x] User confirmed the MCM toolkit button and live checks/rewards work.
-- [ ] Independently verify Cordon, the third reward and the pilot goal packet.
-- [ ] Record controlled game save/reload, older-save rollback and client reconnect.
+- [x] Third-map acceptance closed by the user on 19 November, based on the
+  shared working trigger code; an independent Cordon server capture is not claimed.
+- [x] Ordinary game save/reload validated by the user on 19 November.
+- [ ] Independently capture the third reward and pilot goal packet.
+- [ ] Record older-save rollback and client/server reconnect/restart cases.
 
 These observations are from the deployed `a7995ef` add-on on the MCM branch;
 they are not new functionality in this documentation branch. The detailed
@@ -239,7 +242,9 @@ callback arguments and save behaviour have been observed in the installed build.
 
 ### Stage 0: close the pilot and inventory compatibility
 
-- [ ] Verify the third check/reward, goal packet and actual save/reload.
+- [x] Third-map trigger and ordinary game save/reload accepted by the user;
+  see the verification record for confirmation versus captured evidence.
+- [ ] Independently capture the remaining reward and actual goal packet.
 - [ ] Verify disconnect/reconnect and wrong-seed refusal in a disposable dev save.
 - [ ] Record the exact GAMMA/engine/AP/mod baseline and active MO2 file winners.
 - [ ] Classify existing third-party script errors; resolve those affecting a
