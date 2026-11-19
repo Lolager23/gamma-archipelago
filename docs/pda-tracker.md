@@ -51,12 +51,14 @@ directions, psi/equipment/quest/combat requirements, filters, page bounds, tab
 delegate preservation, idempotent XML insertion and update throttling. The full
 verifier and current-head Windows/Linux CI are required before delivery.
 
-The full local verifier passed: 788 covered Python/Lua tests, 32 untraced
-generator/server tests and five Node tests (825 total). Every owned Python runtime
+The full local verifier passed: 789 covered Python/Lua tests, 32 untraced
+generator/server tests and five Node tests (826 total). Every owned Python runtime
 module measured 100% lines/branches; all measured Lua executable lines were covered.
 Lua branch coverage is not measured. The preset files include the new option and
 the six-preset, 6,000-seed matrix remains required. Reports/checksums are retained
 outside Git and by CI. Native acceptance below remains separate.
+The Lua collector walks nested class tables with cycle/depth bounds; a regression
+proves that an unexecuted UI method contributes missing executable lines.
 
 Native verification is **not run**, reserved for Owen: confirm AP and existing tabs
 at supported aspect ratios, text wrapping and all page controls, real progression

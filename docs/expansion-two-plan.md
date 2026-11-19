@@ -82,7 +82,7 @@ not measure walking, repair or random-spawn waiting.
 
 | Step | Source and automation | Native |
 |---|---|---|
-| 31 | Implemented; full verifier passed (825 tests) | Not run |
+| 31 | Implemented; full verifier passed (826 tests) | Not run |
 | 32 | Not implemented | Not run |
 | 33 | Not implemented | Not run |
 | 34 | Not implemented | Not run |
