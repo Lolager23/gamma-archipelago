@@ -23,7 +23,7 @@ def run_async(test):
     return wrapped
 
 
-def connected_context():
+def connected_context(slot_data=None):
     bridge = SimpleNamespace(
         write_history=lambda *_: None,
         write_notices=lambda *_: None,
@@ -35,8 +35,33 @@ def connected_context():
     context.team = 0
     context.slot = 1
     context.server = object()
-    context.on_package("Connected", {"slot_data": {"schema_version": 1, "pilot": True}})
+    context.on_package(
+        "Connected", {"slot_data": slot_data or {"schema_version": 1, "pilot": True}}
+    )
     return context
+
+
+@run_async
+async def test_seed_configuration_is_validated_and_bound_before_bridge_publication():
+    from gamma_archipelago.configuration import build_configuration, defaults
+
+    configuration = build_configuration(defaults())
+    slot = {
+        "schema_version": 1,
+        "pilot": True,
+        "configuration": configuration.to_values(),
+        "configuration_key": configuration.digest,
+    }
+    context = connected_context(slot)
+    assert context.session.configuration_key == configuration.digest
+    context.on_package("Connected", {"slot_data": slot})
+    for values in [[], {"unknown": 1}]:
+        with pytest.raises(ProtocolError, match="[Cc]onfiguration"):
+            context.on_package("Connected", {"slot_data": {**slot, "configuration": values}})
+    with pytest.raises(ProtocolError, match="digest"):
+        context.on_package("Connected", {"slot_data": {**slot, "configuration_key": "b" * 64}})
+    with pytest.raises(ProtocolError, match="changed"):
+        context.on_package("Connected", {"slot_data": {"schema_version": 1, "pilot": True}})
 
 
 @run_async

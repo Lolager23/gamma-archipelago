@@ -7,6 +7,10 @@ Each implementation PR records its preceding PR, automated results and remaining
 live acceptance. Draft status does not imply completion. Do not merge or release
 the stack automatically.
 
+The user subsequently reserved live game verification for themselves after each
+merge. Do not launch/load GAMMA automatically; implement the full stack with
+source-backed adapters, automated checks and explicit not-run engine acceptance.
+
 Each branch includes tests and documentation for its
 own behaviour. The [expanded checklist](expansion-plan.md) defines category
 options, exact proposed triggers, rewards, notification wording and exit criteria.

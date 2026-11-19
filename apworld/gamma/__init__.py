@@ -4,7 +4,12 @@ import json
 from importlib.resources import files
 
 from BaseClasses import Item, ItemClassification, Location, Region, Tutorial
+from Options import OptionError
 from worlds.AutoWorld import WebWorld, World
+
+from gamma_archipelago.configuration import OPTION_NAMES, SeedConfiguration, build_configuration
+
+from .options import GammaOptions
 
 _catalog = json.loads(files(__package__).joinpath("catalog.json").read_text(encoding="utf-8"))
 
@@ -36,8 +41,17 @@ class GammaWorld(World):
     game = _catalog["game"]
     web = GammaWeb()
     required_client_version = (0, 6, 8)
+    options_dataclass = GammaOptions
+    options: GammaOptions
+    configuration: SeedConfiguration
     item_name_to_id = {item["name"]: item["id"] for item in _catalog["items"]}
     location_name_to_id = {location["name"]: location["id"] for location in _catalog["locations"]}
+
+    def generate_early(self) -> None:
+        try:
+            self.configuration = build_configuration(self.options.as_dict(*OPTION_NAMES))
+        except ValueError as error:
+            raise OptionError(str(error)) from error
 
     def create_item(self, name: str) -> GammaItem:
         definition = next(item for item in _catalog["items"] if item["name"] == name)
@@ -58,8 +72,14 @@ class GammaWorld(World):
             state.can_reach_location(name, self.player) for name in self.location_name_to_id
         )
 
-    def fill_slot_data(self) -> dict[str, str | int | bool]:
-        return {"schema_version": 1, "pilot": True, "goal": "visit_all_pilot_regions"}
+    def fill_slot_data(self) -> dict[str, object]:
+        return {
+            "schema_version": 1,
+            "pilot": True,
+            "goal": "visit_all_pilot_regions",
+            "configuration": self.configuration.to_values(),
+            "configuration_key": self.configuration.digest,
+        }
 
     def get_filler_item_name(self) -> str:
         return "Bandage"
