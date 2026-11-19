@@ -33,6 +33,11 @@ def generate_catalogues() -> None:
     lines.extend(["}", "location_ids = {"])
     lines.extend(f"    {loc['id']}," for loc in catalogue["locations"])
     lines.append("}")
+    lines.append("rank_locations = {")
+    for loc in catalogue["locations"]:
+        if loc["category"] == "checks_rank_milestones":
+            lines.append(f'    {{id={loc["id"]}, name="{loc["key"]}", minimum={loc["minimum"]}}},')
+    lines.append("}")
     for name in ("armour_kinds", "weapon_kinds", "knives"):
         lines.append(name + " = {")
         for key, value in catalogue["equipment"][name].items():

@@ -281,6 +281,24 @@ location_ids = {
     28052734,
     28052735,
     28052736,
+    28052801,
+    28052802,
+    28052803,
+    28052804,
+    28052805,
+    28052806,
+    28052807,
+    28052808,
+}
+rank_locations = {
+    {id=28052801, name="novice", minimum=0},
+    {id=28052802, name="trainee", minimum=3999},
+    {id=28052803, name="experienced", minimum=5999},
+    {id=28052804, name="professional", minimum=9999},
+    {id=28052805, name="veteran", minimum=15999},
+    {id=28052806, name="expert", minimum=23999},
+    {id=28052807, name="master", minimum=34999},
+    {id=28052808, name="legend", minimum=49999},
 }
 armour_kinds = {
     ["o_light"] = 1,
@@ -1099,6 +1117,14 @@ location_categories = {
     [28052734] = "checks_gear_upgrades",
     [28052735] = "checks_gear_upgrades",
     [28052736] = "checks_gear_upgrades",
+    [28052801] = "checks_rank_milestones",
+    [28052802] = "checks_rank_milestones",
+    [28052803] = "checks_rank_milestones",
+    [28052804] = "checks_rank_milestones",
+    [28052805] = "checks_rank_milestones",
+    [28052806] = "checks_rank_milestones",
+    [28052807] = "checks_rank_milestones",
+    [28052808] = "checks_rank_milestones",
 }
 settlements = {
     ["esc_smart_terrain_2_12"] = {id=28052101, level="l01_escape", radius=50},

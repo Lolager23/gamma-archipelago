@@ -41,10 +41,10 @@ def test_world_uses_real_upstream_types_and_catalogue():
     )
 
 
-def test_world_generation_rejects_unsupported_options_instead_of_ignoring_them():
+def test_world_generation_rejects_invalid_options_instead_of_ignoring_them():
     world = generate(123).worlds[1]
-    world.options.checks_rank_milestones.value = 1
-    with pytest.raises(OptionError, match="Not implemented"):
+    world.options.kill_milestones.value = [10, 10]
+    with pytest.raises(OptionError, match="strictly increasing"):
         world.generate_early()
 
 
@@ -177,5 +177,15 @@ def test_equipment_categories_generate_independently(category, count):
     multiworld = setup_multiworld(GammaWorld, seed=12, options={"checks_maps": 0, category: 1})
     distribute_items_restrictive(multiworld)
     assert len(multiworld.get_locations()) == count
+    assert all(location.item for location in multiworld.get_locations())
+    assert multiworld.can_beat_game()
+
+
+def test_rank_category_generates_exactly_the_eight_supported_ranks():
+    multiworld = setup_multiworld(
+        GammaWorld, seed=13, options={"checks_maps": 0, "checks_rank_milestones": 1}
+    )
+    distribute_items_restrictive(multiworld)
+    assert len(multiworld.get_locations()) == 8
     assert all(location.item for location in multiworld.get_locations())
     assert multiworld.can_beat_game()
