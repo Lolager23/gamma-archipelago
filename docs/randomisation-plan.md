@@ -85,9 +85,10 @@ Separate initial omission from a durable AP permission lock. Omitted gear can be
 found normally; AP-locked gear requires a matching unlock reward and documented
 usable baseline equipment. Consumables use quantity/omission settings. Generation
 validates early access, enabled reward categories, pool size and protection needs.
-No-PDA starts keep the AP client/bridge working and queue PDA-only messages until
-restoration. Initialize only once, before AP rewards; never strip earned gear on
-reload. The expanded checklist specifies the full contract and acceptance cases.
+No-PDA starts keep the AP client/bridge and Archipelago broadcasts working.
+PDA-only screens remain restricted. Initialize only once, before AP rewards;
+never strip earned gear on reload. The expanded checklist specifies the full
+contract and acceptance cases.
 
 ## Goal choices and messages
 

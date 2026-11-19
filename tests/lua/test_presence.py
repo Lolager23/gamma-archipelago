@@ -1,9 +1,11 @@
 import pytest
 
+from gamma_archipelago.notifications import Notice, encode_notices
 from gamma_archipelago.presence import encode_presence
 
 from .assertions import assert_lua_error
 from .test_game_adapter import load_game, saved_state, set_incoming
+from .test_loadout import configured_game
 
 KEY, CONFIG, EPOCH = "a" * 64, "b" * 64, "c" * 16
 PATH = "D:/AnomalyAP/appdata/archipelago\\presence.txt"
@@ -97,7 +99,7 @@ def test_missing_unsafe_or_malformed_translation_falls_back_to_english(lua, temp
     assert engine.news[1] == "{player} Name joined the Archipelago."
 
 
-def test_translation_retry_clock_reset_and_pda_deferral(lua):
+def test_translation_retry_and_clock_reset(lua):
     game, engine, module = setup(lua)
     lua.execute('game={translate_string=function() return "Bienvenue {player}." end}')
     tick(game, engine, 1)
@@ -111,15 +113,48 @@ def test_translation_retry_clock_reset_and_pda_deferral(lua):
     engine.files[PATH] = packet(4)
     assert module.poll(saved_state(lua, game).gamma_archipelago_v1, 0) is True
     assert len(engine.news) == 2
-    engine.now = 3000
-    module.reset()
-    lua.execute("gamma_ap_loadout.pda_available=function() return false end")
-    tick(game, engine, 5)
-    tick(game, engine, 6)
-    assert len(engine.news) == 2
-    lua.execute("gamma_ap_loadout.pda_available=function() return true end")
-    tick(game, engine, 7)
-    assert len(engine.news) == 3
+
+
+@pytest.mark.parametrize("pda_mode", [1, 2])
+def test_join_and_transfer_broadcasts_work_without_a_pda_and_do_not_replay(lua, pda_mode):
+    game, engine, configuration = configured_game(
+        lua, starting_pda=pda_mode, rewards_starting_gear_unlocks=int(pda_mode == 2)
+    )
+    lua.execute("""
+        engine.news={}
+        db.actor.give_game_news=function(self,title,text)
+            engine.news[#engine.news+1]=text
+        end
+    """)
+    game.on_game_start()
+    engine.creation.new_game_faction = None
+    notice_path = "D:/AnomalyAP/appdata/archipelago\\notices.txt"
+    engine.files[notice_path] = encode_notices(
+        KEY,
+        (
+            Notice("r:0", 1, "Friend gave you a Bandage"),
+            Notice("s:1:2:42", 0, "You unlocked access for Friend"),
+        ),
+    )
+    engine.files[PATH] = packet(1, configuration=configuration.digest)
+    game.actor_on_update()
+    state = saved_state(lua, game).gamma_archipelago_v1
+    assert not lua.globals().gamma_ap_loadout.pda_available(state)
+    tick(game, engine, 2, configuration=configuration.digest)
+    assert list(engine.news.values()) == [
+        "Friend gave you a Bandage",
+        "You unlocked access for Friend",
+        "Оуэн joined the Archipelago.",
+    ]
+    assert len(engine.created) == 1
+    game.load_state(saved_state(lua, game))
+    tick(game, engine, 3, configuration=configuration.digest)
+    tick(game, engine, 4, configuration=configuration.digest)
+    assert len(engine.news) == 4 and len(engine.created) == 1
+    if pda_mode == 1:
+        lua.globals().add_item(100, "pda", "D_PDA", "i_device", 0)
+        tick(game, engine, 5, configuration=configuration.digest)
+        assert len(engine.news) == 4 and len(engine.created) == 1
 
 
 @pytest.mark.parametrize(

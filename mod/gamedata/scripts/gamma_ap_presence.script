@@ -60,7 +60,7 @@ function poll(state, now)
     if not closed then return false,"Presence read close failed" end
     local frame,reason = parse(content,state.session_key,state.configuration_key)
     if not frame then return false,reason end
-    if not observe(frame,now) or not gamma_ap_loadout.pda_available(state) then return true end
+    if not observe(frame,now) then return true end
     local shown = pcall(function()
         db.actor:give_game_news("Archipelago",join_text(frame.player),"ui_inGame2_D_Svyazist",0,5000)
     end)

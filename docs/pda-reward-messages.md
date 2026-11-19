@@ -1,7 +1,8 @@
 # PDA reward messages
 
 The companion preserves player and item labels and publishes optional notices to
-the game's PDA news API. English examples:
+the game's news API. Archipelago broadcasts appear without owning a PDA,
+including when the starting PDA is omitted or AP-locked. English examples:
 
 - `Friend gave you "Basic Toolkit".`
 - `Friend unlocked your "Zone Access".`
@@ -24,8 +25,8 @@ from the authoritative catalogue. Do not hand-edit the generated English file.
 
 To add a translation, copy the string table into the game's appropriate language
 directory, retaining stable string IDs. Translate complete sentences and reward
-labels. Each transfer sentence must contain exactly one `{player}` and one `{item}`; their
-order can change. Do not add PDA markup, controls or other placeholders. Missing,
+labels. Each transfer sentence must contain exactly one `{player}` and one
+`{item}`; their order can change. Do not add PDA markup, controls or other placeholders. Missing,
 malformed or unsafe translations fall back to English. Missing reward translations
 use the companion's canonical label. Foreign-game reward labels remain upstream
 data-package text, even if an ID matches a GAMMA item. Names are never translated.
@@ -47,9 +48,9 @@ The game waits to observe an advancing heartbeat before showing the join message
 A static file left by a stopped companion cannot announce a new connection.
 The notice appears once per game load and per observed reconnect, including a
 new companion epoch or a heartbeat resuming after more than five seconds. Clock
-rollback resets this transient presentation cache. No-PDA seeds defer the message
-until the PDA becomes available and the heartbeat advances again. Failed display
-retries on a later heartbeat. Wrong-session/configuration, partial, malformed and
+rollback resets this transient presentation cache. PDA ownership does not gate
+the broadcast. Failed display retries on a later heartbeat.
+Wrong-session/configuration, partial, malformed and
 unsafe snapshots are refused. Old companions simply show no join message.
 
 No save schema, published IDs, receipt handling or generation logic changes.
@@ -65,8 +66,8 @@ native PDA rendering remain in-game acceptance for the user.
 Incoming notices use receipt identities and wait for the save's applied-item
 count. Outgoing notices use source location, recipient and item, from real server
 ItemSend confirmation and the durable recovery journal. Self-awards show only the
-incoming notice. Notices never create inventory objects. No-PDA settings defer
-display without blocking reward application. Successful display identities are
+incoming notice. Notices never create inventory objects. No-PDA settings do not
+delay broadcasts or reward application. Successful display identities are
 saved separately; failed display cannot repeat item application.
 
 The optional `notices.txt` sidecar now supports semantic version 2:
@@ -105,13 +106,13 @@ malformed semantic records, saved identity replay and real server transfers.
 Lua executable-line coverage is measured; Lua branch coverage is not measured.
 
 Native acceptance is **not run** and reserved for the user: check all four English
-sentences, self-awards, absent PDA/deferred news, reconnect and ordinary save/load;
+sentences, self-awards, broadcasts without a PDA, reconnect and ordinary save/load;
 confirm readable history/icons/fonts. A translation pack additionally needs its
 own selected-language and missing-key fallback checks. Automated coverage and real
 AP traffic do not establish engine rendering.
 
 Startup-message acceptance additionally needs a live connected game load,
-disconnect/reconnect, no-PDA deferral and a cached sidecar while the companion is
+disconnect/reconnect, no-PDA broadcasts and a cached sidecar while the companion is
 stopped. These native checks are **not run**. Automated tests exercise their
 equivalent decisions with a mocked engine and actual AP connection/reconnection
 traffic separately.
