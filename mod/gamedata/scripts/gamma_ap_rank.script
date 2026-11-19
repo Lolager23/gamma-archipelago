@@ -1,0 +1,27 @@
+-- Match the installed script rank intervals, then retain a monotonic high-water mark.
+
+function poll(state, configuration)
+    if not state.session_key or not state.expanded or not configuration
+        or not configuration.expanded or configuration.options.checks_rank_milestones ~= 1 then
+        return true
+    end
+    if not ranks or type(ranks.get_rank_interval) ~= "function" then
+        return false, "Rank checks require the installed rank interval API"
+    end
+    for _, definition in ipairs(gamma_ap_catalog.rank_locations) do
+        local ok, interval = pcall(ranks.get_rank_interval, definition.name)
+        if not ok or type(interval) ~= "table" or interval[1] ~= definition.minimum then
+            return false, "Installed rank thresholds differ from this seed's supported baseline"
+        end
+    end
+    local ok, value = pcall(function() return db.actor:character_rank() end)
+    if not ok or type(value) ~= "number" or value < 0 or value > 2147483647
+        or value ~= math.floor(value) then return false, "Cannot read a valid actor rank" end
+    state.rank_highest = math.max(state.rank_highest, value)
+    for _, definition in ipairs(gamma_ap_catalog.rank_locations) do
+        if state.rank_highest >= definition.minimum and state.enabled_checks[definition.id] then
+            state.checks[definition.id] = true
+        end
+    end
+    return true
+end

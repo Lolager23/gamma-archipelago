@@ -104,6 +104,8 @@ function actor_on_update()
     state.enabled_checks = enabled
     gamma_ap_combat.configure(state.combat, configuration)
     gamma_ap_tasks.configure(state.tasks, configuration)
+    local ranked, rank_error = gamma_ap_rank.poll(state, configuration)
+    if not ranked then report_error(rank_error); return end
     local success, delivery_error = gamma_ap_state.apply_pending(state, incoming, give_item)
     if not success then report_error(delivery_error); return end
     gamma_ap_state.merge_confirmed(state, confirmed)

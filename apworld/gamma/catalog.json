@@ -2265,6 +2265,70 @@
       "category": "checks_gear_upgrades",
       "key": "armour",
       "threshold": 5
+    },
+    {
+      "id": 28052801,
+      "name": "Reach Stalker Rank: Novice",
+      "level": "Menu",
+      "category": "checks_rank_milestones",
+      "key": "novice",
+      "minimum": 0
+    },
+    {
+      "id": 28052802,
+      "name": "Reach Stalker Rank: Trainee",
+      "level": "Menu",
+      "category": "checks_rank_milestones",
+      "key": "trainee",
+      "minimum": 3999
+    },
+    {
+      "id": 28052803,
+      "name": "Reach Stalker Rank: Experienced",
+      "level": "Menu",
+      "category": "checks_rank_milestones",
+      "key": "experienced",
+      "minimum": 5999
+    },
+    {
+      "id": 28052804,
+      "name": "Reach Stalker Rank: Professional",
+      "level": "Menu",
+      "category": "checks_rank_milestones",
+      "key": "professional",
+      "minimum": 9999
+    },
+    {
+      "id": 28052805,
+      "name": "Reach Stalker Rank: Veteran",
+      "level": "Menu",
+      "category": "checks_rank_milestones",
+      "key": "veteran",
+      "minimum": 15999
+    },
+    {
+      "id": 28052806,
+      "name": "Reach Stalker Rank: Expert",
+      "level": "Menu",
+      "category": "checks_rank_milestones",
+      "key": "expert",
+      "minimum": 23999
+    },
+    {
+      "id": 28052807,
+      "name": "Reach Stalker Rank: Master",
+      "level": "Menu",
+      "category": "checks_rank_milestones",
+      "key": "master",
+      "minimum": 34999
+    },
+    {
+      "id": 28052808,
+      "name": "Reach Stalker Rank: Legend",
+      "level": "Menu",
+      "category": "checks_rank_milestones",
+      "key": "legend",
+      "minimum": 49999
     }
   ],
   "content_inventory": {
@@ -2308,7 +2372,6 @@
       "fake_start"
     ],
     "remaining_rosters": [
-      "ranks",
       "x_labs"
     ],
     "artefact_scope": {

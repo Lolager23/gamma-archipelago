@@ -50,6 +50,7 @@ def test_default_configuration_is_immutable_and_deterministically_serialized():
             "checks_armour_tiers",
             "checks_weapon_tiers",
             "checks_knife_tiers",
+            "checks_rank_milestones",
         }
     )
     + REWARD_OPTIONS,

@@ -6,6 +6,7 @@ function new_state()
         expanded=false, enabled_checks=enabled_locations(nil), visited_maps={},
         combat=gamma_ap_combat.copy(nil), tasks=gamma_ap_tasks.copy(nil),
         equipment=gamma_ap_equipment_checks.copy(nil),
+        rank_highest=-1,
         artefact_sources={}, applying_reward=false }
 end
 
@@ -47,6 +48,7 @@ function copy_state(state)
     result.combat = gamma_ap_combat.copy(state.combat)
     result.tasks = gamma_ap_tasks.copy(state.tasks)
     result.equipment = gamma_ap_equipment_checks.copy(state.equipment)
+    result.rank_highest = state.rank_highest or -1
     for id, source in pairs(state.artefact_sources or {}) do result.artefact_sources[id] = source end
     for id, value in pairs(state.visited_maps or {}) do result.visited_maps[id] = value end
     if state.enabled_checks then
