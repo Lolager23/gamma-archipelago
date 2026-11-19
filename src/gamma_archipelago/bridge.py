@@ -21,6 +21,7 @@ from .protocol import (
     encode_confirmed,
     encode_incoming,
 )
+from .scouting import MAX_SCOUT_BYTES, ScoutedReward, decode_requests, encode_scouted
 
 
 class FileBridge:
@@ -37,6 +38,31 @@ class FileBridge:
     ) -> None:
         content = encode_incoming(session_key, item_ids, configuration_key)
         self._write_atomic("incoming", content)
+
+    def read_scout_requests(
+        self, key: str, configuration: str, allowed: frozenset[int]
+    ) -> frozenset[int]:
+        source = require_safe_child(self.game_root, "appdata/archipelago/scout_requests.txt")
+        try:
+            with source.open("r", encoding="ascii") as stream:
+                content = stream.read(MAX_SCOUT_BYTES + 1)
+        except FileNotFoundError:
+            return frozenset()
+        except UnicodeDecodeError as error:
+            raise ProtocolError("Scouting requests must be ASCII data") from error
+        return decode_requests(content, key, configuration, allowed)
+
+    def write_scouted(
+        self,
+        key: str,
+        configuration: str,
+        epoch: str,
+        sequence: int,
+        rewards: tuple[ScoutedReward, ...],
+    ) -> None:
+        self._write_atomic(
+            "scouted_items", encode_scouted(key, configuration, epoch, sequence, rewards)
+        )
 
     def _write_atomic(self, name: str, content: str) -> None:
         destination = require_safe_child(self.game_root, f"appdata/archipelago/{name}.txt")

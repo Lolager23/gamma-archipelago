@@ -4,7 +4,7 @@ local equipment = {checks_artefacts="detector", checks_armour_tiers="outfit",
     checks_weapon_tiers="firearms", checks_knife_tiers="melee"}
 local combat = {checks_mutant_first_kills=true, checks_faction_first_kills=true,
     checks_kill_milestones=true}
-PAGE_SIZE = 6
+PAGE_SIZE = 4
 
 local function options(state)
     return state.configuration and state.configuration.options or {}

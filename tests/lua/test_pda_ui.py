@@ -74,6 +74,33 @@ def test_disabled_and_unbound_views_do_not_retain_previous_seed_rows(lua):
     assert "matching AP" in window.summary.text
 
 
+def test_scout_selection_and_next_milestone_rewards_are_displayed_from_metadata(lua):
+    module = load_ui(lua)
+    state = state_for(lua)
+    current = view(lua, state)
+    current.scouted = lua.table_from({28052001: lua.table(item="Toolkit", player="Friend")})
+    current.previews = lua.table_from(
+        [
+            lua.table(id=28052001, label="Next side-task reward"),
+            lua.table(id=28052002, label="Next faction-standing reward"),
+        ]
+    )
+    requested = []
+
+    def request(identity):
+        requested.append(identity)
+        return True, "Requested"
+
+    lua.globals().gamma_ap_game = lua.table(tracker_view=lambda: current, request_scout=request)
+    window = module.get_ui()
+    assert "Toolkit -> Friend" in window.details.text
+    assert "Waiting for scouting data" in window.progress.text
+    window.callbacks["select"]()
+    window.callbacks["scout"]()
+    assert requested == [28052002]
+    assert "Requested" in window.summary.text
+
+
 def test_dxml_adds_one_tab_without_replacing_existing_tabs_and_is_idempotent(lua):
     module = lua.globals().load_ap_module(
         str(ROOT / "mod/gamedata/scripts/modxml_gamma_ap_pda.script")

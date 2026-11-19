@@ -20,6 +20,8 @@ from .presets import presets
 from .web_estimates import ASSUMPTIONS, estimate_playtime
 
 LABELS = {
+    "checks_shops": "Named trader purchases",
+    "checks_faction_standing": "Faction goodwill milestones",
     "checks_maps": "Map arrivals",
     "checks_settlements": "Major settlements",
     "checks_mutant_first_kills": "First mutant kills",

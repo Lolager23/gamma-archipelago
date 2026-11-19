@@ -3272,6 +3272,66 @@
       "category": "checks_rank_milestones",
       "key": "legend",
       "minimum": 49999
+    },
+    {
+      "id": 28052901,
+      "name": "Shop: First Purchase from Sidorovich",
+      "level": "l01_escape",
+      "category": "checks_shops",
+      "key": "esc_m_trader",
+      "missable": true
+    },
+    {
+      "id": 28052902,
+      "name": "Shop: First Purchase from Barman",
+      "level": "l05_bar",
+      "category": "checks_shops",
+      "key": "bar_visitors_barman_stalker_trader",
+      "missable": true
+    },
+    {
+      "id": 28052903,
+      "name": "Shop: First Purchase from Sakharov",
+      "level": "l08_yantar",
+      "category": "checks_shops",
+      "key": "yan_stalker_sakharov",
+      "missable": true
+    },
+    {
+      "id": 28052911,
+      "name": "Faction Standing: 500 Goodwill",
+      "level": "Menu",
+      "category": "checks_faction_standing",
+      "key": "500",
+      "minimum": 500,
+      "missable": true
+    },
+    {
+      "id": 28052912,
+      "name": "Faction Standing: 1000 Goodwill",
+      "level": "Menu",
+      "category": "checks_faction_standing",
+      "key": "1000",
+      "minimum": 1000,
+      "missable": true
+    },
+    {
+      "id": 28052913,
+      "name": "Faction Standing: 2000 Goodwill",
+      "level": "Menu",
+      "category": "checks_faction_standing",
+      "key": "2000",
+      "minimum": 2000,
+      "missable": true
+    },
+    {
+      "id": 28052914,
+      "name": "Faction Standing: 3000 Goodwill",
+      "level": "Menu",
+      "category": "checks_faction_standing",
+      "key": "3000",
+      "minimum": 3000,
+      "missable": true
     }
   ],
   "content_inventory": {
@@ -3867,9 +3927,18 @@
     "esc_treasure_9": "l01_escape"
   },
   "quest_key_requirements": {
-    "living_legend": ["living_legend"],
-    "mortal_sin": ["living_legend", "mortal_sin"],
-    "operation_afterglow": ["living_legend", "mortal_sin", "operation_afterglow"]
+    "living_legend": [
+      "living_legend"
+    ],
+    "mortal_sin": [
+      "living_legend",
+      "mortal_sin"
+    ],
+    "operation_afterglow": [
+      "living_legend",
+      "mortal_sin",
+      "operation_afterglow"
+    ]
   },
   "quest_gates": {
     "lttz_ll_find_doctor": "living_legend",
@@ -3962,5 +4031,13 @@
     "l10u_bunker",
     "labx8",
     "l13u_warlab"
+  ],
+  "faction_standing_factions": [
+    "stalker",
+    "csky",
+    "dolg",
+    "freedom",
+    "ecolog",
+    "killer"
   ]
 }

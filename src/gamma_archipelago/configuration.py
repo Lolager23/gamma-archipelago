@@ -5,6 +5,7 @@ import json
 from collections.abc import Mapping
 from dataclasses import dataclass
 
+from .expansion_settings import EXPANSION_DEFAULTS, EXPANSION_LIMITS, LEGACY_CHECK_DEFAULTS
 from .protocol import validate_session_key
 
 CHECK_OPTIONS = (
@@ -22,6 +23,8 @@ CHECK_OPTIONS = (
     "checks_side_task_milestones",
     "checks_story_milestones",
     "checks_rank_milestones",
+    "checks_shops",
+    "checks_faction_standing",
 )
 REWARD_OPTIONS = (
     "rewards_loot_stashes",
@@ -68,6 +71,7 @@ OPTION_NAMES = (
         "zone_unlock_travel",
         "pda_tracker",
     )
+    + tuple(EXPANSION_LIMITS)
 )
 SUPPORTED_CHECKS = frozenset(
     {
@@ -85,6 +89,8 @@ SUPPORTED_CHECKS = frozenset(
         "checks_weapon_tiers",
         "checks_knife_tiers",
         "checks_rank_milestones",
+        "checks_shops",
+        "checks_faction_standing",
     }
 )
 SUPPORTED_REWARDS: frozenset[str] = frozenset(
@@ -156,6 +162,10 @@ class SeedConfiguration:
     side_task_milestones: tuple[int, ...]
     zone_unlock_travel: int
     pda_tracker: int = 1
+    expansion: tuple[tuple[str, int], ...] = ()
+
+    def option(self, name: str) -> int:
+        return dict(self.expansion).get(name, EXPANSION_DEFAULTS[name])
 
     def to_values(self) -> dict[str, object]:
         return {
@@ -163,6 +173,7 @@ class SeedConfiguration:
             **{name: int(name in self.rewards) for name in REWARD_OPTIONS},
             **dict(self.gear),
             **dict(self.quantities),
+            **{name: self.option(name) for name in EXPANSION_LIMITS},
             "goal": GOALS.index(self.goal),
             "no_starting_weapons": self.no_starting_weapons,
             "kill_milestones": list(self.kill_milestones),
@@ -174,6 +185,9 @@ class SeedConfiguration:
     @property
     def digest(self) -> str:
         values = self.to_values()
+        for name, default in (EXPANSION_DEFAULTS | LEGACY_CHECK_DEFAULTS).items():
+            if values[name] == default:
+                values.pop(name)
         if self.pda_tracker == 1:
             values.pop("pda_tracker")  # Presentation default preserves existing seed identities.
         if not self.zone_unlock_travel:
@@ -183,6 +197,7 @@ class SeedConfiguration:
 
 
 def build_configuration(values: Mapping[str, object]) -> SeedConfiguration:
+    values = {**EXPANSION_DEFAULTS, **LEGACY_CHECK_DEFAULTS, **values}
     if "pda_tracker" not in values:
         values = {**values, "pda_tracker": 1}
     if "zone_unlock_travel" not in values:
@@ -231,6 +246,9 @@ def build_configuration(values: Mapping[str, object]) -> SeedConfiguration:
         _thresholds(values["side_task_milestones"]),
         travel,
         _integer(values, "pda_tracker", 1),
+        tuple(
+            (name, _integer(values, name, maximum)) for name, maximum in EXPANSION_LIMITS.items()
+        ),
     )
 
 

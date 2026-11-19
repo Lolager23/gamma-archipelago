@@ -42,6 +42,9 @@ def test_packages_are_reproducible_and_load_from_apworld(tmp_path):
                 "notice_text",
                 "tracker",
                 "pda",
+                "scout_protocol",
+                "scouting",
+                "services",
                 "notifications",
                 "configuration",
                 "equipment",
@@ -98,7 +101,7 @@ assert str(GammaWorld.zip_path).endswith('gamma.apworld'), GammaWorld.zip_path
 container = APWorldContainer(str(GammaWorld.zip_path))
 container.read()
 assert container.world_version == Utils.Version(1, 0, 0)
-assert len(GammaWorld.location_name_to_id) == 20249
+assert len(GammaWorld.location_name_to_id) == 20256
 import worlds.gamma.client
 import gamma_archipelago
 assert str(gamma_archipelago.__file__).startswith(sys.argv[1]), gamma_archipelago.__file__

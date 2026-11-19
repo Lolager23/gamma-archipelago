@@ -83,6 +83,16 @@ function validate(state)
             return false, "AP save contains an invalid completed check"
         end
     end
+    if state.scout_requests ~= nil then
+        if type(state.scout_requests) ~= "table" then return false,"Invalid saved scouting requests" end
+        local count = 0
+        for id,value in pairs(state.scout_requests) do
+            count = count+1
+            if not valid_check(id) or value ~= true or count > 512 or key == nil then
+                return false,"Invalid saved scouting request identity"
+            end
+        end
+    end
     local permissions = {calibrated_psi=true}
     for _,name in pairs(gamma_ap_catalog.permissions) do permissions[name] = true end
     if state.unlocks ~= nil then

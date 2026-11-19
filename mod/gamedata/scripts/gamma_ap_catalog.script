@@ -718,6 +718,13 @@ location_ids = {
     28052806,
     28052807,
     28052808,
+    28052901,
+    28052902,
+    28052903,
+    28052911,
+    28052912,
+    28052913,
+    28052914,
 }
 rank_locations = {
     {id=28052801, name="novice", minimum=0},
@@ -1554,6 +1561,13 @@ location_categories = {
     [28052806] = "checks_rank_milestones",
     [28052807] = "checks_rank_milestones",
     [28052808] = "checks_rank_milestones",
+    [28052901] = "checks_shops",
+    [28052902] = "checks_shops",
+    [28052903] = "checks_shops",
+    [28052911] = "checks_faction_standing",
+    [28052912] = "checks_faction_standing",
+    [28052913] = "checks_faction_standing",
+    [28052914] = "checks_faction_standing",
 }
 settlements = {
     ["esc_smart_terrain_2_12"] = {id=28052101, level="l01_escape", radius=50},
@@ -1582,6 +1596,7 @@ config_limits = {
     ["checks_armour_tiers"] = 1,
     ["checks_artefacts"] = 1,
     ["checks_faction_first_kills"] = 1,
+    ["checks_faction_standing"] = 1,
     ["checks_gear_upgrades"] = 1,
     ["checks_kill_milestones"] = 1,
     ["checks_knife_tiers"] = 1,
@@ -1590,12 +1605,14 @@ config_limits = {
     ["checks_quest_types"] = 1,
     ["checks_rank_milestones"] = 1,
     ["checks_settlements"] = 1,
+    ["checks_shops"] = 1,
     ["checks_side_task_milestones"] = 1,
     ["checks_story_milestones"] = 1,
     ["checks_weapon_tiers"] = 1,
     ["goal"] = 5,
     ["no_starting_weapons"] = 1,
     ["pda_tracker"] = 1,
+    ["reward_previews"] = 1,
     ["rewards_faction_reputation"] = 1,
     ["rewards_loot_stashes"] = 1,
     ["rewards_progression_stashes"] = 1,
@@ -1603,6 +1620,7 @@ config_limits = {
     ["rewards_starting_gear_unlocks"] = 1,
     ["rewards_stat_levels"] = 1,
     ["rewards_zone_keys"] = 1,
+    ["scouting_mode"] = 2,
     ["starting_ammo"] = 100,
     ["starting_backpack"] = 2,
     ["starting_detector"] = 2,
@@ -1868,6 +1886,13 @@ tracker_checks = {
     [28052806]={name="Reach Stalker Rank: Expert",region="Menu",category="checks_rank_milestones",key="expert", quests={}},
     [28052807]={name="Reach Stalker Rank: Master",region="Menu",category="checks_rank_milestones",key="master", quests={}},
     [28052808]={name="Reach Stalker Rank: Legend",region="Menu",category="checks_rank_milestones",key="legend", quests={}},
+    [28052901]={name="Shop: First Purchase from Sidorovich",region="l01_escape",category="checks_shops",key="esc_m_trader", quests={}},
+    [28052902]={name="Shop: First Purchase from Barman",region="l05_bar",category="checks_shops",key="bar_visitors_barman_stalker_trader", quests={}},
+    [28052903]={name="Shop: First Purchase from Sakharov",region="l08_yantar",category="checks_shops",key="yan_stalker_sakharov", quests={}},
+    [28052911]={name="Faction Standing: 500 Goodwill",region="Menu",category="checks_faction_standing",key="500", quests={}},
+    [28052912]={name="Faction Standing: 1000 Goodwill",region="Menu",category="checks_faction_standing",key="1000", quests={}},
+    [28052913]={name="Faction Standing: 2000 Goodwill",region="Menu",category="checks_faction_standing",key="2000", quests={}},
+    [28052914]={name="Faction Standing: 3000 Goodwill",region="Menu",category="checks_faction_standing",key="3000", quests={}},
 }
 tracker_regions = {
     ["k00_marsh"]="Great Swamps",
@@ -2091,4 +2116,23 @@ tracker_item_names = {
 tracker_milestones = {
     checks_kill_milestones="Defeat {count} Enemies",
     checks_side_task_milestones="Complete {count} Side Tasks",
+}
+shop_locations = {
+    ["esc_m_trader"]=28052901,
+    ["bar_visitors_barman_stalker_trader"]=28052902,
+    ["yan_stalker_sakharov"]=28052903,
+}
+faction_standing_locations = {
+    [500]=28052911,
+    [1000]=28052912,
+    [2000]=28052913,
+    [3000]=28052914,
+}
+faction_standing_factions = {
+    "stalker",
+    "csky",
+    "dolg",
+    "freedom",
+    "ecolog",
+    "killer",
 }

@@ -2,6 +2,7 @@
 
 import asyncio
 import logging
+import secrets
 from argparse import Namespace
 from contextlib import suppress
 from typing import Any
@@ -28,6 +29,8 @@ from gamma_archipelago.paths import DEFAULT_GAME_ROOT
 from gamma_archipelago.protocol import ProtocolError, validate_id_manifest
 from gamma_archipelago.session import SessionCoordinator, make_session_key
 
+from .scouting import poll as poll_scouting
+
 logger = logging.getLogger("Client")
 
 
@@ -50,6 +53,10 @@ class GammaContext(CommonContext):
         self.configuration: SeedConfiguration | None = None
         self.require_configuration = False
         self.expanded = False
+        self.scouting_sent: set[int] = set()
+        self.scouting_hints: set[int] = set()
+        self.scouting_epoch = secrets.token_hex(8)
+        self.scouting_sequence = 0
 
     async def server_auth(self, password_requested: bool = False) -> None:
         if password_requested and not self.password:
@@ -143,6 +150,10 @@ class GammaContext(CommonContext):
                     self.session.session_key, self.configuration, self.expanded
                 )
             self.scout_requested.clear()
+            self.scouting_sent.clear()
+            self.scouting_hints.clear()
+            self.scouting_epoch = secrets.token_hex(8)
+            self.scouting_sequence = 0
         if command in ("Connected", "RoomUpdate") and self.session:
             self.session.accept_confirmed(frozenset(self.checked_locations))
             self.bridge.write_confirmed(self.session.session_key, frozenset(self.checked_locations))
@@ -221,12 +232,14 @@ class GammaContext(CommonContext):
         self.bridge.write_notices(self.session.session_key, tuple(self.session.notices.values()))
         snapshot = self.bridge.read_game(self.session.session_key)
         if snapshot is None:
+            await poll_scouting(self)
             return
         checked = self.session.observe_game(snapshot)
         packets = [{"cmd": "LocationChecks", "locations": list(checked)}]
         if snapshot.goal_complete:
             packets.append({"cmd": "StatusUpdate", "status": ClientStatus.CLIENT_GOAL})
         await self.send_msgs(packets)
+        await poll_scouting(self)
 
 
 async def watch_game(context: GammaContext) -> None:

@@ -195,8 +195,40 @@ class PdaTracker(DefaultOnToggle):
     display_name = "Archipelago PDA tracker"
 
 
+class ScoutingMode(Choice):
+    """Disable scouting, reveal rewards locally, or also create persistent AP location hints."""
+
+    display_name = "PDA scouting and location hints"
+    option_disabled = 0
+    option_local = 1
+    option_shared_hints = 2
+    default = 0
+
+
+class RewardPreviews(Toggle):
+    """Show the actual next side-task and faction-standing check reward in the PDA."""
+
+    display_name = "Next milestone reward previews"
+
+
+class ChecksShops(Toggle):
+    """One paid purchase check at each supported named trader; never one per repeat purchase."""
+
+    display_name = "Checks: Shops"
+
+
+class ChecksFactionStanding(Toggle):
+    """Finite goodwill thresholds reached with any supported non-hostile faction."""
+
+    display_name = "Checks: Faction standing"
+
+
 @dataclass
 class GammaOptions(PerGameCommonOptions):
+    checks_shops: ChecksShops
+    checks_faction_standing: ChecksFactionStanding
+    scouting_mode: ScoutingMode
+    reward_previews: RewardPreviews
     checks_maps: ChecksMaps
     checks_settlements: ChecksSettlements
     checks_mutant_first_kills: ChecksMutantFirstKills

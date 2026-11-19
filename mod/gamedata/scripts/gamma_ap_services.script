@@ -1,0 +1,38 @@
+-- Finite purchases/standing milestones; no repeatable AP item farming.
+function traded(state, item, sold, money)
+    if not state.session_key or not state.expanded or state.configuration.options.checks_shops ~= 1 then return true end
+    if not item or sold ~= false or type(money) ~= "number" or money ~= math.floor(money)
+        or money <= 0 or money > 2147483647 then return true end
+    local ok, name = pcall(function()
+        local npc = mob_trade.GetTalkingNpc()
+        return npc and get_object_story_id(npc:id())
+    end)
+    if not ok then return false,"Cannot resolve the current named trader" end
+    local id = name and gamma_ap_catalog.shop_locations[name]
+    if id and state.enabled_checks[id] then state.checks[id] = true end
+    return true
+end
+
+function poll(state)
+    if not state.session_key or not state.expanded or state.configuration.options.checks_faction_standing ~= 1 then return true end
+    local ok, best = pcall(function()
+        local result = 0
+        for _,faction in ipairs(gamma_ap_catalog.faction_standing_factions) do
+            local hostile = game_relations.is_factions_enemies(faction,character_community(db.actor))
+            if type(hostile) ~= "boolean" then error("Invalid hostility query") end
+            if not hostile then
+                local goodwill = relation_registry.community_goodwill(faction,db.actor:id())
+                if type(goodwill) ~= "number" or goodwill ~= math.floor(goodwill) or math.abs(goodwill) > 2147483647 then
+                    error("Invalid goodwill query")
+                end
+                result = math.max(result,goodwill)
+            end
+        end
+        return result
+    end)
+    if not ok then return false,"Faction-standing checks require supported native goodwill/hostility APIs" end
+    for threshold,id in pairs(gamma_ap_catalog.faction_standing_locations) do
+        if best >= threshold and state.enabled_checks[id] then state.checks[id] = true end
+    end
+    return true
+end

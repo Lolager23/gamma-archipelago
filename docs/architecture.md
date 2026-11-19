@@ -31,6 +31,12 @@ checks or acknowledge rewards. Its native tab wrapper delegates all other sectio
 and uses DXML to extend the existing profile layout. No network work runs in UI
 refresh or the game update loop.
 
+Optional [scouting](scouting-and-services.md) uses separate bounded request and
+metadata snapshots. The save owns request IDs; the companion owns server-sourced
+item/recipient metadata and its heartbeat. This channel cannot apply receipts or
+complete checks. Shop and standing callbacks delegate to a finite service-check
+module and mutate only the central game state.
+
 ## State and failure boundaries
 
 The AP server owns completed location checks and the ordered item history. The

@@ -3,7 +3,7 @@
 import json
 from importlib.resources import files
 
-from BaseClasses import Item, ItemClassification, Location, Region, Tutorial
+from BaseClasses import Item, ItemClassification, Location, LocationProgressType, Region, Tutorial
 from Options import OptionError
 from worlds.AutoWorld import WebWorld, World
 
@@ -103,6 +103,8 @@ class GammaWorld(World):
                 continue
             region = regions.get(location["level"], menu)
             check = GammaLocation(self.player, location["name"], location["id"], region)
+            if location.get("missable"):
+                check.progress_type = LocationProgressType.EXCLUDED
             if location.get("tasks") and "rewards_quest_keys" in self.configuration.rewards:
                 permission = _catalog["quest_gates"][location["tasks"][0]]
                 key_names = tuple(
