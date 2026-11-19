@@ -168,9 +168,15 @@ def build_configuration(values: Mapping[str, object]) -> SeedConfiguration:
     )
 
 
-def encode_configuration(session_key: str, configuration: SeedConfiguration) -> str:
+def encode_configuration(
+    session_key: str, configuration: SeedConfiguration, expanded: bool = False
+) -> str:
     validate_session_key(session_key)
-    lines = ["GAMMA_AP_CONFIG|1", f"session|{session_key}", f"digest|{configuration.digest}"]
+    lines = [
+        f"GAMMA_AP_CONFIG|{2 if expanded else 1}",
+        f"session|{session_key}",
+        f"digest|{configuration.digest}",
+    ]
     for name, value in sorted(configuration.to_values().items()):
         if isinstance(value, list):
             lines.extend(f"threshold|{name}|{number}" for number in value)

@@ -43,6 +43,29 @@ def connected_context(slot_data=None):
 
 
 @run_async
+async def test_expanded_seed_manifest_is_checked_before_bridge_publication():
+    from gamma_archipelago.catalog import ALL_LOCATION_IDS
+    from gamma_archipelago.configuration import build_configuration, defaults
+
+    configuration = build_configuration(defaults())
+    slot = {
+        "schema_version": 3,
+        "pilot": False,
+        "configuration": configuration.to_values(),
+        "configuration_key": configuration.digest,
+        "location_ids": sorted(ALL_LOCATION_IDS),
+    }
+    context = connected_context(slot)
+    assert context.bridge.allowed_locations == ALL_LOCATION_IDS
+    assert context.session.allowed_locations == ALL_LOCATION_IDS
+    for manifest in ([], sorted(LOCATION_IDS), [42], None):
+        with pytest.raises(ProtocolError, match="manifest"):
+            connected_context({**slot, "location_ids": manifest})
+    with pytest.raises(ProtocolError, match="pilot world"):
+        connected_context({**slot, "schema_version": 3.0})
+
+
+@run_async
 async def test_seed_configuration_is_validated_and_bound_before_bridge_publication():
     from gamma_archipelago.configuration import build_configuration, defaults
 

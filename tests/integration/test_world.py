@@ -31,7 +31,7 @@ def test_world_uses_real_upstream_types_and_catalogue():
     assert world.create_item("Medkit").classification == ItemClassification.filler
     assert world.get_filler_item_name() == "Bandage"
     slot_data = world.fill_slot_data()
-    assert slot_data["schema_version"] == 2 and slot_data["pilot"] is False
+    assert slot_data["schema_version"] == 3 and slot_data["pilot"] is False
     assert slot_data["goal"] == "visit_all_pilot_regions"
     assert slot_data["configuration"] == world.configuration.to_values()
     assert slot_data["configuration_key"] == world.configuration.digest
@@ -52,7 +52,7 @@ def test_one_thousand_pilot_seeds_are_fully_filled_and_beatable():
     for seed in range(1000):
         multiworld = generate(seed)
         locations = multiworld.get_locations(1)
-        assert len(locations) == 3
+        assert len(locations) == 33
         assert {location.item.name for location in locations} == set(ITEM_NAMES)
         assert multiworld.can_beat_game()
         assert all(multiworld.state.can_reach(location) for location in locations)

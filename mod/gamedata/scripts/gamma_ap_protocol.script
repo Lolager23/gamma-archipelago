@@ -48,12 +48,16 @@ function encode_outgoing(state)
         "received|" .. tostring(state.received_count) }
     local count = 0
     for _, id in ipairs(gamma_ap_catalog.location_ids) do
-        if state.checks[id] then
+        if state.checks[id] and (state.expanded or gamma_ap_catalog.pilot_ids[id]) then
             count = count + 1
             lines[#lines + 1] = "check|" .. tostring(id)
         end
     end
-    lines[#lines + 1] = "goal|" .. (count == #gamma_ap_catalog.location_ids and "1" or "0")
+    local complete = true
+    for id in pairs(gamma_ap_catalog.pilot_ids) do
+        if not state.checks[id] then complete = false end
+    end
+    lines[#lines + 1] = "goal|" .. (complete and "1" or "0")
     lines[#lines + 1] = "end|" .. tostring(count)
     return table.concat(lines, "\n") .. "\n"
 end

@@ -12,6 +12,11 @@ ITEM_EFFECTS: dict[int, str] = {item["id"]: item.get("effect", "item") for item 
 LOCATION_NAMES: dict[str, int] = {
     location["name"]: location["id"] for location in _data["locations"]
 }
-LOCATION_IDS = frozenset(LOCATION_NAMES.values())
+ALL_LOCATION_IDS = frozenset(LOCATION_NAMES.values())
+# Public compatibility default for version 1/2 three-map seeds.
+LOCATION_IDS = frozenset({28052001, 28052002, 28052003})
+LEVELS: dict[str, str] = {level["id"]: level["name"] for level in _data["levels"]}
+MAP_LOCATIONS: dict[str, int] = {loc["level"]: loc["id"] for loc in _data["locations"]}
+CONNECTIONS: tuple[tuple[str, str], ...] = tuple(tuple(pair) for pair in _data["connections"])
 MAX_ITEMS = 4000
 MAX_SNAPSHOT_BYTES = 131072

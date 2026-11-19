@@ -4,7 +4,7 @@ import hashlib
 import json
 from dataclasses import dataclass, field
 
-from .catalog import ITEM_SECTIONS, LOCATION_IDS, MAX_ITEMS
+from .catalog import ALL_LOCATION_IDS, ITEM_SECTIONS, LOCATION_IDS, MAX_ITEMS
 from .notifications import MAX_NOTICES, Notice, validate_notice
 from .protocol import GameSnapshot, ProtocolError, validate_session_key
 
@@ -26,6 +26,15 @@ class SessionCoordinator:
     notices: dict[str, Notice] = field(default_factory=dict)
     configuration_key: str | None = None
     configuration_bound: bool = False
+    allowed_locations: frozenset[int] = LOCATION_IDS
+    locations_bound: bool = False
+
+    def bind_locations(self, locations: frozenset[int]) -> None:
+        if not locations or not locations <= ALL_LOCATION_IDS:
+            raise ProtocolError("Unsupported seed check manifest")
+        if self.locations_bound and locations != self.allowed_locations:
+            raise ProtocolError("Seed check manifest changed within the same session")
+        self.allowed_locations, self.locations_bound = locations, True
 
     def bind_configuration(self, key: str | None) -> None:
         if key is not None:
@@ -41,7 +50,7 @@ class SessionCoordinator:
         self.notices[notice.identity] = notice
 
     def accept_confirmed(self, checked: frozenset[int]) -> None:
-        if not checked <= LOCATION_IDS:
+        if not checked <= self.allowed_locations:
             raise ProtocolError("Server confirmed an unsupported location")
         self.checked_locations.update(checked)
 
@@ -57,5 +66,7 @@ class SessionCoordinator:
             raise ProtocolError("Refusing a game save from another session")
         if snapshot.received_count > len(self.item_ids):
             raise ProtocolError("Game has acknowledged items that the server has not supplied")
+        if not snapshot.checked_locations <= self.allowed_locations:
+            raise ProtocolError("Game reported a location disabled in this seed")
         self.checked_locations.update(snapshot.checked_locations)
         return tuple(sorted(self.checked_locations))

@@ -64,7 +64,7 @@ assert str(GammaWorld.zip_path).endswith('gamma.apworld'), GammaWorld.zip_path
 container = APWorldContainer(str(GammaWorld.zip_path))
 container.read()
 assert container.world_version == Utils.Version(0, 1, 0)
-assert len(GammaWorld.location_name_to_id) == 3
+assert len(GammaWorld.location_name_to_id) == 33
 import worlds.gamma.client
 """
     subprocess.run(
