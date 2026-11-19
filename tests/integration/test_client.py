@@ -221,13 +221,19 @@ async def test_named_incoming_and_foreign_outgoing_notices_deduplicate_self_tran
     context.player_names.update({1: "Owen", 2: "Friend"})
     context.slot_info[2] = NetworkSlot("Friend", "Foreign Game", 1)
     context.item_names.update_game("Foreign Game", {"Moon Key": 42})
+    context.location_names.update_game("Foreign Game", {"Friend's Check": 3})
+    context.location_names.update_game(context.game, {"Synthetic Check": 99})
     context.items_received = [NetworkItem(ITEMS[0], 3, 2)]
     context.on_package("ReceivedItems", {})
-    assert context.session.notices["r:0"].text == 'Friend gave you "Basic Toolkit".'
+    assert context.session.notices["r:0"].text == (
+        'Friend gave you "Basic Toolkit" by completing "Friend\'s Check".'
+    )
     transfer = {"type": "ItemSend", "receiving": 2, "item": NetworkItem(42, 99, 1)}
     context.on_package("PrintJSON", transfer)
     context.on_package("PrintJSON", transfer)
-    assert context.session.notices["s:99:2:42"].text == 'You sent "Moon Key" to Friend.'
+    assert context.session.notices["s:99:2:42"].text == (
+        'You sent "Moon Key" to Friend by completing "Synthetic Check".'
+    )
     context.on_package("PrintJSON", {**transfer, "receiving": 1})
     context.on_package("PrintJSON", {**transfer, "type": "Hint"})
     context.on_package("PrintJSON", {**transfer, "item": None})
@@ -255,7 +261,9 @@ async def test_reconstructs_confirmed_outgoing_notices_after_a_new_client_connec
     assert not context.session.notices  # Data package is not ready yet.
     context.item_names.update_game("Foreign Game", {"Moon Key": 42})
     context.on_package("DataPackage", {})
-    assert context.session.notices[f"s:{location}:2:42"].text == 'You sent "Moon Key" to Friend.'
+    assert context.session.notices[f"s:{location}:2:42"].text == (
+        'You sent "Moon Key" to Friend by entering Cordon.'
+    )
     context.locations_info[99] = NetworkItem(42, 99, 2)
     context.on_package("LocationInfo", {})
     assert len(context.session.notices) == 1  # Unchecked scouts never announce a transfer.

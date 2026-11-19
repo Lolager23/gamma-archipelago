@@ -25,11 +25,12 @@ from gamma_archipelago.configuration import (
 )
 from gamma_archipelago.discovery import configured_location_ids
 from gamma_archipelago.notice_text import clean_label
-from gamma_archipelago.notifications import transfer_notice
 from gamma_archipelago.paths import DEFAULT_GAME_ROOT
 from gamma_archipelago.protocol import ProtocolError, validate_id_manifest, validate_session_key
 from gamma_archipelago.session import SessionCoordinator, make_session_key
 
+from .notices import received as received_notices
+from .notices import sent as sent_notice
 from .scouting import poll as poll_scouting
 
 logger = logging.getLogger("Client")
@@ -187,41 +188,10 @@ class GammaContext(CommonContext):
                     self.sent_notice(item, item.player)
 
     def received_notices(self) -> None:
-        if self.session is None:
-            return
-        for index, item in enumerate(self.items_received):
-            name = self.item_names.lookup_in_game(item.item)
-            if name.startswith("Unknown item"):
-                continue
-            self.session.add_notice(
-                transfer_notice(
-                    f"r:{index}",
-                    index + 1,
-                    self.player_names.get(item.player, f"Player {item.player}"),
-                    name,
-                    item_id=item.item,
-                    game=GAME,
-                    outgoing=False,
-                )
-            )
+        received_notices(self)
 
     def sent_notice(self, item: NetworkItem, recipient: int) -> None:
-        if self.session is None or recipient not in self.slot_info:
-            return
-        name = self.item_names.lookup_in_slot(item.item, recipient)
-        if name.startswith("Unknown item"):
-            return
-        self.session.add_notice(
-            transfer_notice(
-                f"s:{item.location}:{recipient}:{item.item}",
-                0,
-                self.player_names.get(recipient, f"Player {recipient}"),
-                name,
-                item_id=item.item,
-                game=self.slot_info[recipient].game,
-                outgoing=True,
-            )
-        )
+        sent_notice(self, item, recipient)
 
     def publish_presence(self) -> None:
         self.presence_sequence += 1

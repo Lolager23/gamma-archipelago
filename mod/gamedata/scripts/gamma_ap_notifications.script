@@ -31,18 +31,28 @@ local function hex_text(hex, maximum)
     return text
 end
 
-local function record(line, semantic)
+local function record(line, version)
     local id, receipt, hex
-    if semantic then
+    if version ~= 1 then
         local kind, player, item, local_id
-        id, receipt, kind, player, item, local_id = line:match("^notice|([^|]+)|([^|]+)|([^|]+)|([0-9a-f]+)|([0-9a-f]+)|([^|]+)$")
+        local cause_kind, cause_value
+        if version == 3 then
+            id,receipt,kind,player,item,local_id,cause_kind,cause_value = line:match("^notice|([^|]+)|([^|]+)|([^|]+)|([0-9a-f]+)|([0-9a-f]+)|([^|]+)|([^|]+)|([0-9a-f]*)$")
+            if cause_kind == "none" then
+                if cause_value ~= "" then return nil end
+                cause_kind,cause_value = nil,nil
+            elseif cause_kind then cause_value = hex_text(cause_value,384) end
+        else
+            id, receipt, kind, player, item, local_id = line:match("^notice|([^|]+)|([^|]+)|([^|]+)|([0-9a-f]+)|([0-9a-f]+)|([^|]+)$")
+        end
         if id then
             player, item = hex_text(player,384), hex_text(item,384)
             local_id = gamma_ap_protocol.canonical_number(local_id)
-            if not gamma_ap_notice_text.valid(kind,player,item,local_id)
+            if not gamma_ap_notice_text.valid(kind,player,item,local_id,cause_kind,cause_value)
                 or (kind:sub(1,5) == "sent_") ~= (id:sub(1,2) == "s:") then return nil end
             return {id=id, receipt=gamma_ap_protocol.canonical_number(receipt), kind=kind,
-                player=player, item=item, local_item_id=local_id}
+                player=player, item=item, local_item_id=local_id,
+                cause_kind=cause_kind,cause_value=cause_value}
         end
         id, receipt, hex = line:match("^notice|([^|]+)|([^|]+)|text|([0-9a-f]+)$")
     else
@@ -59,7 +69,8 @@ function parse(content, key)
     end
     local lines = {}
     for line in content:gmatch("([^\n]*)\n") do lines[#lines + 1] = line end
-    if #lines < 3 or (lines[1] ~= "GAMMA_AP_NOTICES|1" and lines[1] ~= "GAMMA_AP_NOTICES|2")
+    local version = tonumber((lines[1] or ""):match("^GAMMA_AP_NOTICES|([123])$"))
+    if #lines < 3 or not version
         or lines[2] ~= "session|" .. key then
         return nil, "Notice protocol or session mismatch"
     end
@@ -69,7 +80,7 @@ function parse(content, key)
     end
     local result, ids = {}, {}
     for index = 3, #lines - 1 do
-        local notice = record(lines[index], lines[1] == "GAMMA_AP_NOTICES|2")
+        local notice = record(lines[index], version)
         if not notice then return nil, "Malformed notice record" end
         local id, receipt = notice.id, notice.receipt
         if not id or not valid_id(id) or ids[id] or not receipt or receipt > 4000 then

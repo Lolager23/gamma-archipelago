@@ -75,12 +75,21 @@ def test_semantic_snapshot_supports_mixed_legacy_records_and_foreign_id_collisio
 
 
 def test_generated_reference_covers_exactly_templates_and_catalogue_rewards():
-    from gamma_archipelago.notice_text import ENGLISH_TEMPLATES, JOIN_TEMPLATE
+    from gamma_archipelago.notice_causes import CAUSE_TEMPLATES, cause_for_check, value_key
+    from gamma_archipelago.notice_text import CAUSAL_TEMPLATES, ENGLISH_TEMPLATES, JOIN_TEMPLATE
 
     catalogue = json.loads((ROOT / "src/gamma_archipelago/catalog.json").read_text())
     xml = ElementTree.parse(ROOT / "mod/gamedata/configs/text/eng/st_gamma_ap_notices.xml")
     actual = {node.attrib["id"]: node.findtext("text") for node in xml.getroot()}
     expected = {"gamma_ap_notice_" + key: value for key, value in ENGLISH_TEMPLATES.items()}
+    expected.update(
+        {"gamma_ap_notice_" + key + "_cause": value for key, value in CAUSAL_TEMPLATES.items()}
+    )
+    expected.update({"gamma_ap_cause_" + key: value for key, value in CAUSE_TEMPLATES.items()})
+    for row in catalogue["locations"]:
+        cause = cause_for_check(row["id"], row["name"])
+        if cause.kind not in {"check", "source"}:
+            expected[value_key(cause)] = cause.value
     expected["gamma_ap_notice_joined"] = JOIN_TEMPLATE
     expected.update({f"gamma_ap_reward_{row['id']}": row["name"] for row in catalogue["items"]})
     assert actual == expected

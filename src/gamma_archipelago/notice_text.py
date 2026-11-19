@@ -3,6 +3,7 @@
 from dataclasses import dataclass
 
 from .catalog import ITEM_IDS
+from .notice_causes import CAUSE_TEMPLATES, CheckCause
 from .protocol import ProtocolError
 
 JOIN_TEMPLATE = "{player} joined the Archipelago."
@@ -13,6 +14,7 @@ ENGLISH_TEMPLATES = {
     "sent_item": 'You sent "{item}" to {player}.',
     "sent_unlock": 'You unlocked "{item}" for {player}.',
 }
+CAUSAL_TEMPLATES = {kind: text[:-1] + " {cause}." for kind, text in ENGLISH_TEMPLATES.items()}
 
 
 @dataclass(frozen=True)
@@ -21,6 +23,7 @@ class TransferMessage:
     player: str
     item: str
     local_item_id: int = 0
+    cause: CheckCause | None = None
 
 
 def clean_label(value: str) -> str:
@@ -35,7 +38,16 @@ def clean_label(value: str) -> str:
 def validate_transfer(message: TransferMessage) -> None:
     if type(message.kind) is not str or message.kind not in ENGLISH_TEMPLATES:
         raise ProtocolError("Unknown PDA transfer kind")
-    for label in (message.player, message.item):
+    labels: tuple[str, ...] = (message.player, message.item)
+    if message.cause is not None:
+        if (
+            not isinstance(message.cause, CheckCause)
+            or type(message.cause.kind) is not str
+            or message.cause.kind not in CAUSE_TEMPLATES
+        ):
+            raise ProtocolError("Unknown PDA check cause")
+        labels += (message.cause.value,)
+    for label in labels:
         if type(label) is not str or not label or clean_label(label) != label:
             raise ProtocolError("Transfer labels must be bounded sanitized text")
     if type(message.local_item_id) is not int or (
@@ -47,4 +59,9 @@ def validate_transfer(message: TransferMessage) -> None:
 def render_english(message: TransferMessage) -> str:
     validate_transfer(message)
     # str.format substitutes values once: braces inside a slot/item label remain data.
-    return ENGLISH_TEMPLATES[message.kind].format(player=message.player, item=message.item)
+    fields = {"player": message.player, "item": message.item}
+    templates = ENGLISH_TEMPLATES
+    if message.cause is not None:
+        fields["cause"] = CAUSE_TEMPLATES[message.cause.kind].format(value=message.cause.value)
+        templates = CAUSAL_TEMPLATES
+    return templates[message.kind].format(**fields)

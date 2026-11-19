@@ -25,6 +25,7 @@ from gamma_archipelago.expansion_settings import (  # noqa: E402
     LEGACY_CHECK_DEFAULTS,
     LEGACY_REWARD_DEFAULTS,
 )
+from gamma_archipelago.notice_causes import CAUSE_TEMPLATES  # noqa: E402
 from gamma_archipelago.paths import require_safe_child  # noqa: E402
 
 
@@ -205,6 +206,11 @@ def generate_catalogues() -> None:
     lines.extend(f'    ["{name}"] = {limit},' for name, limit in sorted(limits.items()))
     lines.append("}")
     lines.extend(tracker_lines(catalogue))
+    lines.append("notice_cause_templates = {")
+    lines.extend(
+        f"    [{json.dumps(key)}]={json.dumps(value)}," for key, value in CAUSE_TEMPLATES.items()
+    )
+    lines.append("}")
     config_defaults = {
         "zone_unlock_travel": 0,
         "pda_tracker": 1,
