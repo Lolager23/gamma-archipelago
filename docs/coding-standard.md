@@ -14,6 +14,9 @@ the deployable Lua add-on under `mod/gamedata/scripts`, and tests under `tests`.
 Use `tools` for build, verification and deployment commands. Game-generated files
 belong outside the source tree. Test paths should mirror the code they exercise.
 
+Keep the optional diagnostic add-on in `probes/gamedata/scripts`, packaged separately
+from `mod`. Diagnostics must not send AP checks or automatically grant rewards.
+
 Use lower_snake_case for files, functions and variables, PascalCase for Python
 types and UPPER_SNAKE_CASE for constants. Keep Archipelago's required framework
 names where an extension point dictates them. Prefix game scripts `gamma_ap_`.

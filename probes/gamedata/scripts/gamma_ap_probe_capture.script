@@ -1,0 +1,30 @@
+-- Bounded diagnostic values only; no game objects, saves or filesystem access.
+
+local LIMIT = 256
+
+function new_capture()
+    return {sequence=0, limit=LIMIT}
+end
+
+function clean(value)
+    if value == nil then return "-" end
+    local text = tostring(value):gsub("[^A-Za-z0-9_.:/%-]", "_"):sub(1, 96)
+    if text == "" then return "-" end
+    return text
+end
+
+function record(capture, clock_ms, event, level_name, a, b, c)
+    if capture.sequence >= capture.limit then return nil end
+    capture.sequence = capture.sequence + 1
+    return table.concat({"GAMMA_AP_PROBE", "1", tostring(capture.sequence),
+        tostring(clock_ms), clean(event), clean(level_name), clean(a), clean(b), clean(c)}, "|")
+end
+
+function restore_marker(saved)
+    if saved == nil then return 0, "missing" end
+    if type(saved) ~= "table" or saved.schema ~= 1 or type(saved.marker) ~= "number"
+        or saved.marker < 0 or saved.marker > 1000000 or saved.marker % 1 ~= 0 then
+        return 0, "invalid"
+    end
+    return saved.marker, "restored"
+end

@@ -12,7 +12,9 @@ the commit or release actually used, since documentation and main branches chang
 - [Current official archive metadata](https://www.mediafire.com/api/1.5/folder/get_content.php?folder_key=agyul0e6fbban&content_type=files&response_format=json).
 - [Anomaly 1.5.3 official download](https://www.moddb.com/mods/stalker-anomaly/downloads/stalker-anomaly-153).
 - [Monolith engine source](https://github.com/themrdemonized/xray-monolith).
-- [Engine Lua extensions and documentation](https://github.com/themrdemonized/STALKER-Anomaly-modded-exes).
+- [Archived engine Lua extension reference](https://github.com/themrdemonized/STALKER-Anomaly-modded-exes).
+- [Inspected Monolith callback extension](https://github.com/themrdemonized/xray-monolith/blob/7289a03f19a3cc712d9fc4cf6122345984c8c094/gamedata/scripts/callbacks_gameobject.script).
+- [MO2 saved profile priority and duplicate handling](https://github.com/ModOrganizer2/modorganizer/blob/master/src/profile.cpp).
 - [Anomaly community scripting guide](https://github.com/robE127/stalker-anomaly-modding-guide).
 
 The installed and extracted `axr_main.script`, game callback registration and

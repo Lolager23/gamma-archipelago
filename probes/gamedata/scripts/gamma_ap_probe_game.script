@@ -1,0 +1,119 @@
+-- Separate opt-in MO2 diagnostic add-on. Never sends checks or consumes AP items.
+
+local capture = gamma_ap_probe_capture.new_capture()
+local enabled = false
+local registrations = {}
+local next_poll = 0
+local last_level = nil
+local save_marker = 0
+local reward_attempted = false
+
+local function allowed()
+    local root = getFS():update_path("$app_data_root$", "")
+    return enabled and root:gsub("\\", "/"):lower():gsub("/+$", "") == "d:/anomalyap/appdata"
+end
+
+local function emit(event, a, b, c)
+    if not allowed() then return end
+    local line = gamma_ap_probe_capture.record(capture, time_global(), event, level.name(), a, b, c)
+    if line then printf("%s", line) end
+end
+
+local function object_value(object, method)
+    if object == nil then return "unavailable" end
+    local ok, value = pcall(function() return object[method](object) end)
+    if not ok then return "unavailable" end
+    return value
+end
+
+function actor_on_first_update()
+    emit("first_update")
+end
+
+function actor_on_update()
+    if not allowed() or not db.actor or not db.actor:alive() then return end
+    local now = time_global()
+    if now < next_poll then return end
+    next_poll = now + 500
+    local current = level.name()
+    if current ~= last_level then
+        emit("level", last_level, current)
+        last_level = current
+    end
+end
+
+function actor_on_item_take(item)
+    if not allowed() or item == nil then return end
+    local section = object_value(item, "section")
+    emit("item", section, object_value(item, "id"))
+    local ok, artefact = pcall(IsArtefact, item)
+    if not ok then emit("error", "artefact_classifier"); return end
+    if artefact then emit("artefact", section, object_value(item, "id"), "take") end
+end
+
+function actor_on_item_take_from_box(box, item)
+    if not allowed() then return end
+    emit("box", object_value(box, "id"), object_value(box, "name"), object_value(item, "section"))
+end
+
+function actor_on_task_callback(task_object, state, manager, task_id)
+    if not allowed() then return end
+    local id = task_id or object_value(task_object, "get_id")
+    local status = "other"
+    if state == task.completed then status = "completed"
+    elseif state == task.fail then status = "failed" end
+    local entry = manager and manager.task_info and manager.task_info[id]
+    emit("task", id, status, entry and entry.cancelled_by_actor or false)
+end
+
+function save_state(data)
+    if not allowed() then return end
+    save_marker = save_marker + 1
+    data.gamma_ap_probe_v1 = {schema=1, marker=save_marker}
+    emit("save", save_marker)
+end
+
+function load_state(data)
+    if not allowed() then return end
+    local outcome
+    save_marker, outcome = gamma_ap_probe_capture.restore_marker(data.gamma_ap_probe_v1)
+    next_poll = 0
+    last_level = nil
+    emit("load", save_marker, outcome)
+end
+
+function try_reward()
+    if not allowed() or not db.actor or not db.actor:alive() or reward_attempted then return false end
+    reward_attempted = true
+    local ok, object = pcall(alife_create_item, "bandage", db.actor)
+    local created = ok and object ~= nil and object ~= false
+    emit("reward", "bandage", created and "created" or "failed")
+    return created
+end
+
+function stop()
+    if not enabled then return end
+    emit("stopped")
+    enabled = false
+    for name, callback in pairs(registrations) do UnregisterScriptCallback(name, callback) end
+    registrations = {}
+end
+
+function on_game_start()
+    stop()
+    enabled = true
+    if not allowed() then enabled = false; return end
+    capture = gamma_ap_probe_capture.new_capture()
+    next_poll, last_level, save_marker, reward_attempted = 0, nil, 0, false
+    registrations = {
+        actor_on_first_update=actor_on_first_update, actor_on_update=actor_on_update,
+        actor_on_item_take=actor_on_item_take, actor_on_item_take_from_box=actor_on_item_take_from_box,
+        save_state=save_state, load_state=load_state,
+    }
+    local extension = rawget(_G, "callbacks_gameobject")
+    local task_hook = type(extension) == "table" and type(extension.task_callback) == "function"
+    if task_hook then registrations.actor_on_task_callback = actor_on_task_callback end
+    for name, callback in pairs(registrations) do RegisterScriptCallback(name, callback) end
+    emit("started", "callback-probes")
+    emit("task_hook", task_hook and "available" or "missing")
+end
