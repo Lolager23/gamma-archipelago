@@ -82,3 +82,22 @@ def test_installation_changes_during_read_require_a_fresh_inventory(tmp_path, mo
     with pytest.raises(ValueError, match="changed"):
         inspect_sources(tmp_path / "game", mo2, "DEV")
     assert reads == [modlist, modlist]
+
+
+def test_compatibility_inventory_exposes_enabled_consumers_with_disabled_providers(tmp_path):
+    game, mo2 = tmp_path / "game", tmp_path / "mo2"
+    write(mo2, "profiles/DEV/modlist.txt", "+compatibility\n-provider\n")
+    pairs = (
+        ("a_faction_prices.script", "faction_stocks.script"),
+        ("mags_patches.script", "magazine_binder.script"),
+        ("zz_ui_inventory_better_stats_bars.script", "better_stats_bars_mcm.script"),
+    )
+    for consumer, provider in pairs:
+        write(mo2, "mods/compatibility/gamedata/scripts/" + consumer, "-- consumer")
+        write(mo2, "mods/provider/gamedata/scripts/" + provider, "-- disabled provider")
+    write(mo2, "mods/compatibility/gamedata/scripts/zzz_mspizza_godis_zoomcalc.script", "/*")
+    report = inspect_sources(game, mo2, "DEV")
+    for consumer, provider in pairs:
+        assert report["files"][consumer]["ordered_candidates"][0]["source"] == "compatibility"
+        assert report["files"][provider]["ordered_candidates"] == []
+    assert report["files"]["zzz_mspizza_godis_zoomcalc.script"]["runtime_winner"] == "not verified"
