@@ -11,7 +11,8 @@ local shutdown event. It respects zone entrances and ordinary Sakharov/orange
 cache acquisition routes. No shutdown info is granted by AP rewards. Story mode
 is not required for the standalone device goal.
 
-Full verifier: 507 covered tests plus two real-server cases; all coverage gates
+Full verifier: 506 covered tests plus two real-server cases; all coverage gates
 pass. Tests separate entry/key state from shutdown, reject non-boolean/missing
 facts, retain reload completion and fill keyed seeds. Engine switch/goal acceptance
 is not run, reserved for Owen after merge. No launch or deployment occurred.
+

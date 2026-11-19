@@ -16,7 +16,7 @@ def add_goal_events(world, regions, location_type, item_type):
             )
         )
         regions["l08_yantar"].locations.append(claim)
-    if world.configuration.goal in {"brain_scorcher", "meet_strelok"}:
+    if world.configuration.goal in {"brain_scorcher", "meet_strelok", "living_legend"}:
         shutdown = location_type(
             world.player, "Shut Down Brain Scorcher", None, regions["l10u_bunker"]
         )
@@ -25,7 +25,7 @@ def add_goal_events(world, regions, location_type, item_type):
             item_type("Brain Scorcher Disabled", ItemClassification.progression, None, world.player)
         )
         regions["l10u_bunker"].locations.append(shutdown)
-    if world.configuration.goal == "meet_strelok":
+    if world.configuration.goal in {"meet_strelok", "living_legend"}:
         encounter = location_type(
             world.player, "Conclude Strelok's First Conversation", None, regions["pripyat"]
         )
@@ -50,6 +50,21 @@ def add_goal_events(world, regions, location_type, item_type):
             item_type("Met Strelok", ItemClassification.progression, None, world.player)
         )
         regions["pripyat"].locations.append(encounter)
+    if world.configuration.goal == "living_legend":
+        finish = location_type(
+            world.player, "Return After Living Legend", None, regions["l01_escape"]
+        )
+        finish.access_rule = lambda state: (
+            state.has("Met Strelok", world.player)
+            and all(
+                state.can_reach_region(region.name, world.player)
+                for region in world.multiworld.get_regions(world.player)
+            )
+        )
+        finish.place_locked_item(
+            item_type("Living Legend Complete", ItemClassification.progression, None, world.player)
+        )
+        regions["l01_escape"].locations.append(finish)
 
 
 def set_goal_rule(world, catalog):
@@ -64,6 +79,10 @@ def set_goal_rule(world, catalog):
     elif world.configuration.goal == "meet_strelok":
         world.multiworld.completion_condition[world.player] = lambda state: state.has(
             "Met Strelok", world.player
+        )
+    elif world.configuration.goal == "living_legend":
+        world.multiworld.completion_condition[world.player] = lambda state: state.has(
+            "Living Legend Complete", world.player
         )
     else:
         world.multiworld.completion_condition[world.player] = lambda state: all(
