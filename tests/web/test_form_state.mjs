@@ -80,3 +80,16 @@ test("seed validation handles zero and both sides of the 64-bit boundary without
   ])
     assert.equal(validSeed(value), false);
 });
+
+test("quota exclusions and custom thresholds remain draft choices when profiles resolve previews", () => {
+  const preset={discovery_exclusions:["mutant:dog"],kill_milestones:[10,25],grind_profile:0};
+  const form=new DraftConfiguration();
+  form.selectPreset(preset);
+  form.options.discovery_exclusions.push("faction:stalker");
+  form.edit("grind_profile",1);
+  assert.equal(form.accept(form.revision,{configuration:{kill_milestones:[5,15,30]}}),true);
+  assert.deepEqual(form.options.kill_milestones,[10,25]);
+  assert.deepEqual(preset.discovery_exclusions,["mutant:dog"]);
+  form.edit("grind_profile",0);
+  assert.deepEqual(form.options.kill_milestones,[10,25]);
+});

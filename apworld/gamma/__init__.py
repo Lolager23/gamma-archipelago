@@ -15,9 +15,14 @@ from gamma_archipelago.catalog import (
 )
 from gamma_archipelago.configuration import OPTION_NAMES, SeedConfiguration, build_configuration
 from gamma_archipelago.discovery import configured_location_ids
+from gamma_archipelago.pool_budget import PoolBudget
 
 from .goals import add_goal_events, set_goal_rule
+from .identity import generation_identity
+from .opening import place_opening
 from .options import GammaOptions
+from .pool import build_pool
+from .preview import write_preview
 from .rules import apply_access_rules
 from .zone_fill import place_zone_keys
 
@@ -53,6 +58,8 @@ class GammaWorld(World):
     required_client_version = (0, 6, 8)
     options_dataclass = GammaOptions
     options: GammaOptions
+    pool_budget: PoolBudget
+    opening_placements: list[dict[str, str]]
     configuration: SeedConfiguration
     item_name_to_id = {item["name"]: item["id"] for item in _catalog["items"]}
     location_name_to_id = LOCATION_NAMES
@@ -144,80 +151,21 @@ class GammaWorld(World):
                 )
 
     def create_items(self) -> None:
-        required = [
-            item["name"]
-            for item in _catalog["items"]
-            for _ in range(item.get("copies", 1))
-            if item.get("classification") == "progression"
-            and item.get("category") in self.configuration.rewards
-            and (
-                "group" not in item
-                or dict(self.configuration.gear)["starting_" + item["group"]] == 2
-            )
-        ]
-        names = [item["name"] for item in _catalog["items"] if "category" not in item]
-        stashes = [
-            item["name"]
-            for item in _catalog["items"]
-            if item.get("category")
-            in {
-                "rewards_loot_stashes",
-                "rewards_faction_reputation",
-                "rewards_stat_levels",
-                "rewards_supply_medical",
-                "rewards_supply_maintenance",
-                "rewards_supply_ammunition",
-                "rewards_supply_expedition",
-            }
-            and item.get("category") in self.configuration.rewards
-        ]
-        weights = {item["name"]: item.get("filler_weight", 1) for item in _catalog["items"]}
-        enabled = bool(stashes)
-        count = len(self.multiworld.get_unfilled_locations(self.player))
-        if len(required) > count:
-            raise OptionError("The selected check pool cannot hold required progression rewards")
-        convenience = 0
-        if "rewards_convenience" in self.configuration.rewards:
-            eligible = sum(
-                location.progress_type != LocationProgressType.EXCLUDED
-                for location in self.multiworld.get_unfilled_locations(self.player)
-            )
-            convenience = min(3, eligible - len(required))
-            if convenience < 1:
-                raise OptionError(
-                    "Convenience rewards need a reliable check after required progression"
-                )
-        self.multiworld.itempool.extend(
-            self.create_item("Carry Capacity +5 kg") for _ in range(convenience)
-        )
-        self.multiworld.itempool.extend(self.create_item(name) for name in required)
-        for index in range(count - len(required) - convenience):
-            if enabled and (index == 0 or (index > 3 and self.random.randrange(3) == 0)):
-                chances = [weights[name] for name in stashes]
-                name = (
-                    self.random.choices(stashes, weights=chances, k=1)[0]
-                    if any(chance != 1 for chance in chances)
-                    else self.random.choice(stashes)
-                )
-            else:
-                supply_index = index - int(enabled)
-                name = (
-                    names[supply_index]
-                    if supply_index < len(names)
-                    else self.get_filler_item_name()
-                )
-            self.multiworld.itempool.append(self.create_item(name))
+        build_pool(self, _catalog)
 
     def set_rules(self) -> None:
         apply_access_rules(self, _catalog)
         set_goal_rule(self, _catalog)
 
     def pre_fill(self) -> None:
+        place_opening(self, _catalog)
         place_zone_keys(self, _catalog)
 
     def fill_slot_data(self) -> dict[str, object]:
+        identity = generation_identity(self)
         return {
-            "schema_version": 3,
+            "schema_version": 4 if identity else 3,
+            **({"generation_identity": identity} if identity else {}),
             "pilot": False,
             "goal": "visit_all_pilot_regions"
             if self.configuration.goal == "pilot_tour"
@@ -236,3 +184,6 @@ class GammaWorld(World):
 
     def get_filler_item_name(self) -> str:
         return "Bandage"
+
+    def generate_output(self, output_directory: str) -> None:
+        write_preview(self, output_directory)

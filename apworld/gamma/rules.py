@@ -78,6 +78,14 @@ def apply_access_rules(world: "GammaWorld", catalog: dict[str, Any]) -> None:
             "checks_faction_first_kills",
             "checks_kill_milestones",
         }
+        readiness = world.configuration.option("combat_logic")
+        if combat and readiness:
+            groups = ("firearms",) if readiness == 1 else ("firearms", "outfit", "helmet")
+            names.extend(
+                "Equipment Unlock: " + group.title()
+                for group in groups
+                if gear["starting_" + group] == 2
+            )
 
         def activity(
             state,

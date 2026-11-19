@@ -1,6 +1,11 @@
 """Additional bounded settings; legacy values preserve pre-expansion seed identities."""
 
 EXPANSION_LIMITS = {
+    "opening_policy": 1,
+    "access_pacing": 1,
+    "combat_logic": 2,
+    "grind_profile": 3,
+    "generation_preview": 2,
     "supply_ammo_calibre": 4,
     "permission_supplies": 1,
     "scouting_mode": 2,

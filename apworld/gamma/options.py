@@ -9,6 +9,7 @@ from Options import (
     OptionSet,
     PerGameCommonOptions,
     Range,
+    StartInventoryPool,
     Toggle,
 )
 
@@ -137,6 +138,55 @@ class RewardsConvenience(Toggle):
     """Up to three bounded carry-capacity rewards using the supported keyed weight API."""
 
     display_name = "Rewards: Convenience"
+
+
+class OpeningPolicy(Choice):
+    """Protect local Cordon equipment permissions, or retain legacy/challenge placement."""
+
+    display_name = "Opening protection"
+    option_legacy_or_challenge = 0
+    option_protected = 1
+    default = 0
+
+
+class AccessPacing(Choice):
+    """Existing randomized zone frontier, or prioritize reachable major hubs."""
+
+    display_name = "Zone access pacing"
+    option_random_frontier = 0
+    option_hubs_first = 1
+    default = 0
+
+
+class CombatLogic(Choice):
+    """Conservative AP permission assumptions; never a guarantee of native equipment condition."""
+
+    display_name = "Combat readiness logic"
+    option_any_weapon = 0
+    option_firearm = 1
+    option_firearm_and_protection = 2
+    default = 0
+
+
+class GrindProfile(Choice):
+    """Resolve kill/side-task thresholds from a profile, or retain custom lists."""
+
+    display_name = "Grind thresholds"
+    option_custom = 0
+    option_short = 1
+    option_standard = 2
+    option_extended = 3
+    default = 0
+
+
+class GenerationPreview(Choice):
+    """Optional JSON report in the generated archive; placements explicitly reveal spoilers."""
+
+    display_name = "Generation preview report"
+    option_disabled = 0
+    option_summary = 1
+    option_spoiler_placements = 2
+    default = 0
 
 
 class PermissionSupplies(Toggle):
@@ -348,6 +398,12 @@ class OptionalCheckPolicy(Choice):
 
 @dataclass
 class GammaOptions(PerGameCommonOptions):
+    opening_policy: OpeningPolicy
+    access_pacing: AccessPacing
+    combat_logic: CombatLogic
+    grind_profile: GrindProfile
+    generation_preview: GenerationPreview
+    start_inventory_from_pool: StartInventoryPool
     rewards_convenience: RewardsConvenience
     supply_ammo_calibre: SupplyAmmoCalibre
     rewards_supply_medical: RewardsSupplyMedical

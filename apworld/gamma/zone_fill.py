@@ -30,7 +30,18 @@ def place_zone_keys(world: "GammaWorld", catalog: dict[str, Any]) -> None:
         for item in world.multiworld.itempool
         if item.player == world.player and item.name in levels
     }
+    held = {item.name for item in world.multiworld.precollected_items[world.player]}
+    held_levels = {level for name, level in levels.items() if name in held}
     while keys:
+        changed = True
+        while changed:
+            before = len(visited)
+            for a, b in catalog["connections"]:
+                if a in visited and b in held_levels:
+                    visited.add(b)
+                if b in visited and a in held_levels:
+                    visited.add(a)
+            changed = len(visited) > before
         frontier = sorted(
             {
                 target
@@ -46,9 +57,23 @@ def place_zone_keys(world: "GammaWorld", catalog: dict[str, Any]) -> None:
         )
         if not frontier:
             raise OptionError("Zone-key graph cannot reach every remaining destination")
-        target = world.random.choice(frontier)
+        if world.configuration.option("access_pacing"):
+            hubs = ("l02_garbage", "l05_bar", "l08_yantar", "l03_agroprom", "l06_rostok")
+            favored = [level for level in hubs if level in frontier]
+            target = favored[0] if favored else world.random.choice(frontier)
+        else:
+            target = world.random.choice(frontier)
         item = keys.pop(target)
         location = world.multiworld.get_location(checks[previous], world.player)
+        if location.item is not None:
+            free = [
+                world.multiworld.get_location(checks[level], world.player)
+                for level in sorted(visited)
+                if world.multiworld.get_location(checks[level], world.player).item is None
+            ]
+            if not free:
+                raise OptionError("Zone route has no unreserved reachable map check")
+            location = free[0]
         location.place_locked_item(item)
         world.multiworld.itempool.remove(item)
         visited.add(target)

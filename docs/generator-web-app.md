@@ -22,7 +22,11 @@ required. Node 20 or later is used only for development syntax checks; Python
 serves the app and executes generation. The runtime is deliberately separate
 from live sessions and the verification runtime.
 
-Choose one of six presets, edit categories/loadout/goal, and review validation.
+Choose one of nine presets, edit categories/loadout/goal, and review validation.
+Short, standard (initial selection) and extended presets add protected openings.
+The tracker/discovery/pacing controls expose hints, next-reward previews, distinct
+quotas, exclusions and independent access/combat/grind assumptions. See
+[generation pacing](generation-pacing.md) for limits and the actual-seed report.
 Milestones accept strictly increasing comma-separated totals. Configuration
 validation and catalogue projection call the same Python core as the APWorld;
 the browser does not maintain a second generation model. Invalid or undersized

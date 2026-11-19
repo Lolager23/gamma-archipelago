@@ -74,6 +74,33 @@ export function loadoutOptions(metadata, options, change) {
   );
 }
 
+export function advancedOptions(metadata, options, change) {
+  $("advanced-options").replaceChildren(...metadata.advanced.map(({key,label,maximum,choices}) => {
+    const row = element("label",label);
+    const input = document.createElement(choices ? "select" : "input");
+    input.setAttribute("aria-label", label);
+    if (choices) choices.forEach((text,index) => input.add(new Option(text,index)));
+    else { input.type="number"; input.min=0; input.max=maximum; input.step=1; }
+    input.dataset.option=key; input.dataset.advanced="true"; input.value=options[key];
+    input.addEventListener("change",() => change(key,input.value==="" ? null : Number(input.value)));
+    row.append(input); return row;
+  }));
+  $("discovery-exclusions").replaceChildren(...metadata.discovery_types.map(({token}) => {
+    const option = new Option(token.replaceAll("_"," "),token);
+    option.selected=options.discovery_exclusions.includes(token); return option;
+  }));
+}
+
+export function syncAdvanced(options) {
+  document.querySelectorAll("[data-advanced]").forEach((node) => {
+    node.value=options[node.dataset.option];
+    const match=node.dataset.option.match(/^(mutant|faction|artefact)_discovery_count$/);
+    node.disabled=Boolean(match) && options[`${match[1]}_discovery_mode`]===0;
+  });
+  $("kill-milestones").disabled=options.grind_profile>0;
+  $("task-milestones").disabled=options.grind_profile>0;
+}
+
 const assumptionLabels = {
   pace_percent: ["Time multiplier", "%"],
   map_minutes: ["Travel per map", "min"],
@@ -163,6 +190,11 @@ export function showRoster(result, metadata) {
 }
 
 export function showSummary(result, metadata, options) {
+  $("budget-preview").textContent = result ? JSON.stringify({
+    kind:result.preview_kind, budget:result.pool_budget,
+    opening_permissions:result.opening_permissions, thresholds:result.resolved_thresholds,
+    discovery:result.discovery_rosters, notes:result.notes,
+  },null,2) : "Fix the configuration to calculate its budget.";
   const goal = metadata.goals.find((row) => row.value === Number(options.goal));
   $("goal-summary").textContent = goal.label;
   $("summary-copy").textContent =

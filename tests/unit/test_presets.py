@@ -4,7 +4,7 @@ from gamma_archipelago.presets import presets
 
 def test_presets_are_independent_valid_configurations_with_safe_supply_defaults():
     first, second = presets(), presets()
-    assert len(first) == 6
+    assert len(first) == 9
     for name, values in first.items():
         assert build_configuration(values).to_values() == values
         assert values["starting_food"] == 100

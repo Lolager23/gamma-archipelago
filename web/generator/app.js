@@ -5,6 +5,8 @@ import {
   assumptionOptions,
   showRoster,
   showSummary,
+  advancedOptions,
+  syncAdvanced,
 } from "./ui.js";
 import {
   DraftConfiguration,
@@ -98,6 +100,7 @@ function changeOption(key, value) {
 }
 
 function renderGear() {
+  syncAdvanced(form.options);
   document.querySelectorAll("#gear-options select").forEach((node) => {
     const key = node.dataset.option;
     const overridden =
@@ -116,6 +119,7 @@ function loadPreset() {
   categoryOptions("check-options", metadata.checks, options, changeOption);
   categoryOptions("reward-options", metadata.rewards, options, changeOption);
   loadoutOptions(metadata, options, changeOption);
+  advancedOptions(metadata, options, changeOption);
   renderGear();
   $("goal").value = options.goal;
   $("kill-milestones").value = options.kill_milestones.join(", ");
@@ -159,6 +163,8 @@ async function download(path) {
 }
 
 function bindControls() {
+  $("discovery-exclusions").addEventListener("change",() =>
+    changeOption("discovery_exclusions",Array.from($("discovery-exclusions").selectedOptions,node=>node.value)));
   $("preset").addEventListener("change", loadPreset);
   $("goal").addEventListener("change", () =>
     changeOption("goal", Number($("goal").value)),
@@ -239,7 +245,7 @@ async function start() {
         ),
       ),
     );
-    $("preset").value = "mvp";
+    $("preset").value = "standard";
     metadata.goals.forEach((row) =>
       $("goal").add(new Option(row.label, row.value)),
     );

@@ -234,6 +234,14 @@ def build_configuration(values: Mapping[str, object]) -> SeedConfiguration:
         **LEGACY_REWARD_DEFAULTS,
         **values,
     }
+    grind = _integer(values, "grind_profile", 3)
+    if grind:
+        kills, tasks = (
+            ((5, 15, 30), (1, 3, 6)),
+            ((10, 25, 50, 100), (5, 10, 20, 40)),
+            ((25, 75, 150, 250), (10, 25, 50, 75)),
+        )[grind - 1]
+        values = {**values, "kill_milestones": list(kills), "side_task_milestones": list(tasks)}
     if "pda_tracker" not in values:
         values = {**values, "pda_tracker": 1}
     if "zone_unlock_travel" not in values:

@@ -26,7 +26,7 @@ from gamma_archipelago.configuration import (
 from gamma_archipelago.discovery import configured_location_ids
 from gamma_archipelago.notifications import transfer_notice
 from gamma_archipelago.paths import DEFAULT_GAME_ROOT
-from gamma_archipelago.protocol import ProtocolError, validate_id_manifest
+from gamma_archipelago.protocol import ProtocolError, validate_id_manifest, validate_session_key
 from gamma_archipelago.session import SessionCoordinator, make_session_key
 
 from .scouting import poll as poll_scouting
@@ -71,14 +71,21 @@ class GammaContext(CommonContext):
             if type(version) is not int or not (
                 (version == 1 and slot_data.get("pilot") is True)
                 or (
-                    version in (2, 3)
+                    version in (2, 3, 4)
                     and slot_data.get("pilot") is False
                     and "configuration" in slot_data
                 )
             ):
                 self.session = None
                 raise ProtocolError("This client requires the GAMMA integration pilot world")
-            key = make_session_key(self.server_seed_name, self.team, self.slot)
+            seed_identity = self.server_seed_name
+            if version == 4:
+                fingerprint = slot_data.get("generation_identity")
+                validate_session_key(fingerprint)
+                seed_identity += "|generation|" + fingerprint
+            elif "generation_identity" in slot_data:
+                raise ProtocolError("Generation identity requires schema 4")
+            key = make_session_key(seed_identity, self.team, self.slot)
             if self.session and self.session.session_key != key:
                 raise ProtocolError("Restart the companion client before changing seed or slot")
             configuration_key = None
@@ -103,7 +110,7 @@ class GammaContext(CommonContext):
                     or any(mode == 2 for _, mode in self.configuration.gear)
                 ):
                     raise ProtocolError("Expanded checks and rewards require schema 3")
-            self.expanded = version == 3
+            self.expanded = version in (3, 4)
             allowed = configured_location_ids(self.configuration) if self.expanded else LOCATION_IDS
             if self.expanded:
                 validate_id_manifest(slot_data.get("location_ids"), allowed, "check")
@@ -133,7 +140,7 @@ class GammaContext(CommonContext):
             self.bridge.pilot_goal = (
                 self.configuration is None or self.configuration.goal == "pilot_tour"
             )
-            self.require_configuration = version in (2, 3)
+            self.require_configuration = version in (2, 3, 4)
             self.bridge.configuration_key = (
                 configuration_key if self.require_configuration else None
             )

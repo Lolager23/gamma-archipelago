@@ -73,6 +73,13 @@ progression or replace the native modifier system.
 
 ## State and failure boundaries
 
+[Generation pacing](generation-pacing.md) keeps a pure shared pool budget separate
+from upstream item creation and placement. Opening reservations and zone routing
+run before general fill. Optional actual-seed reports are generated after fill;
+settings previews contain no placements. Common AP constraints and starting items
+use a canonical generation identity in slot schema 4, while legacy schemas keep
+their original session keys.
+
 The AP server owns completed location checks and the ordered item history. The
 client holds a validated mirror for replay; the save owns the last item actually
 applied in that saved game. The bridge includes a unique seed/slot session key.
