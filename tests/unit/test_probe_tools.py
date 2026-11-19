@@ -24,7 +24,7 @@ def test_probe_cli_uses_its_own_checkout_before_an_unrelated_install(tmp_path, t
     assert "usage:" in result.stdout
 
 
-@pytest.mark.parametrize("component,count", [("pilot", 7), ("probes", 2)])
+@pytest.mark.parametrize("component,count", [("pilot", 7), ("probes", 3)])
 def test_deployer_copies_each_component_to_a_separate_mod(tmp_path, monkeypatch, component, count):
     monkeypatch.setattr(deploy_mod, "DEFAULT_MO2_ROOT", tmp_path)
     monkeypatch.setattr(sys, "argv", ["deploy_mod.py", "--component", component])
@@ -34,10 +34,15 @@ def test_deployer_copies_each_component_to_a_separate_mod(tmp_path, monkeypatch,
     source_root = deploy_mod.ROOT / ("mod" if component == "pilot" else "probes")
     for target in installed:
         original = source_root / "gamedata/scripts" / target.name
+        if target.name == "gamma_ap_paths.script":
+            original = deploy_mod.ROOT / "mod/gamedata/scripts" / target.name
         assert target.read_bytes() == original.read_bytes()
         assert target.stat().st_nlink == 1 and target.stat().st_ino != original.stat().st_ino
     if component == "probes":
-        assert all("gamma_ap_probe_" in path.name for path in installed)
+        assert all(
+            "gamma_ap_probe_" in path.name or path.name == "gamma_ap_paths.script"
+            for path in installed
+        )
     else:
         assert all("gamma_ap_probe_" not in path.name for path in installed)
 

@@ -12,6 +12,21 @@ Owned source is under `probes/gamedata/scripts`. `tools/build.py` produces
 namespace is `gamma_ap_probe_`; its only saved value is the diagnostic marker in
 `gamma_ap_probe_v1`, separate from the pilot's receipt namespace.
 
+In the implementation stack, Step 02 incorporates PR #2's tooling and includes
+the same pure `gamma_ap_paths` module in both independently installable archives.
+This fixes the engine's `bin/..` appdata spelling without depending on the pilot
+add-on being enabled. The deployment regression verifies independent copied files
+for both components. The source inventory also watches news, skill, rank,
+statistics, transition, PDA and character-creation script candidates.
+
+The authoritative catalogue now contains 33 source-inventoried map IDs from the
+installed Anomaly `game_levels.ltx`, excluding `fake_start`. This does not enable
+extra checks or assert live entry into every map. Remaining content rosters and
+runtime callback observations are explicitly pending in the catalogue. The
+configuration archive was read into private tooling storage; no game assets are
+committed. Step 02's engine acceptance remains open until probe evidence is recorded;
+merging the implementation does not mark those checks passed.
+
 The add-on registers only when appdata resolves by the engine to
 `D:/AnomalyAP/appdata`. Every callback and manual reward attempt rechecks that
 root. Deployment uses the same Python path/link guards as the pilot. Do not run
@@ -86,8 +101,11 @@ Keep the machine-specific JSON inventory outside Git.
 ## Live run procedure
 
 1. Confirm successful installer completion, expected game paths and an isolated
-   baseline GAMMA launch. Copy the fresh profile to `Archipelago DEV`, enabling
-   profile-specific saves and settings. Retain the baseline save and log.
+   baseline GAMMA launch. Copy the fresh profile to `Archipelago DEV`. The installed
+   game plugin does not support profile-local saves: isolation comes from the
+   separate `D:/AnomalyAP/appdata` tree, not the MO2 save checkbox. Use the documented
+   development launch/configuration and retain the full folder backup, baseline
+   save and log. Owen performs the game run after merge; do not launch it automatically.
 2. Build and deploy only the diagnostic add-on:
 
    ```powershell
