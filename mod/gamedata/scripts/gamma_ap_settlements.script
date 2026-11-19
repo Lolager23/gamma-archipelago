@@ -1,0 +1,13 @@
+-- The base smart-terrain update emits smarts callbacks within 50 metres.
+
+function observe(state, kind, object, name, level_name)
+    if not state.session_key or not state.expanded or kind ~= "smarts" then return end
+    local definition = gamma_ap_catalog.settlements[name]
+    if not definition or not state.enabled_checks[definition.id] then return end
+    if level_name ~= definition.level or not object or not object.online
+        or object:name() ~= name then return end
+    local distance = object.dist_to_actor
+    if type(distance) ~= "number" or distance ~= distance or distance < 0
+        or distance > definition.radius then return end
+    state.checks[definition.id] = true
+end

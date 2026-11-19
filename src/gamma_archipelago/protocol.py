@@ -81,6 +81,6 @@ def decode_outgoing(
     if lines[-1] != f"end|{len(checks)}":
         raise ProtocolError("Snapshot trailer does not match its check count")
     goal = lines[-2] == "goal|1"
-    if goal and not frozenset(checks) >= LOCATION_IDS:
+    if goal and allowed_locations >= LOCATION_IDS and not frozenset(checks) >= LOCATION_IDS:
         raise ProtocolError("Pilot completion requires every pilot location")
     return GameSnapshot(session_key, received_count, frozenset(checks), goal)

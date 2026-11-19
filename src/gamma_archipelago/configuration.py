@@ -67,7 +67,7 @@ OPTION_NAMES = (
         "side_task_milestones",
     )
 )
-SUPPORTED_CHECKS = frozenset({"checks_maps"})
+SUPPORTED_CHECKS = frozenset({"checks_maps", "checks_settlements"})
 SUPPORTED_REWARDS: frozenset[str] = frozenset()
 SUPPORTED_GOALS = frozenset({"pilot_tour"})
 SUPPORTED_START_MODES = frozenset({0, 1})

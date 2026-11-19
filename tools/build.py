@@ -25,11 +25,24 @@ def generate_catalogues() -> None:
     lines.append("item_sections = {")
     lines.extend(f'    [{item["id"]}] = "{item["section"]}",' for item in catalogue["items"])
     lines.extend(["}", "location_by_level = {"])
-    lines.extend(f'    ["{loc["level"]}"] = {loc["id"]},' for loc in catalogue["locations"])
+    lines.extend(
+        f'    ["{loc["level"]}"] = {loc["id"]},'
+        for loc in catalogue["locations"]
+        if loc["category"] == "checks_maps"
+    )
     lines.extend(["}", "location_ids = {"])
     lines.extend(f"    {loc['id']}," for loc in catalogue["locations"])
     lines.append("}")
     lines.append("pilot_ids = {[28052001]=true, [28052002]=true, [28052003]=true}")
+    lines.append("location_categories = {")
+    lines.extend(f'    [{loc["id"]}] = "{loc["category"]}",' for loc in catalogue["locations"])
+    lines.extend(["}", "settlements = {"])
+    for loc in catalogue["locations"]:
+        for smart in loc.get("smarts", []):
+            lines.append(
+                f'    ["{smart}"] = {{id={loc["id"]}, level="{loc["level"]}", radius=50}},'
+            )
+    lines.append("}")
     limits = {
         **dict.fromkeys(CHECK_OPTIONS + REWARD_OPTIONS, 1),
         **dict.fromkeys(GEAR_OPTIONS, 2),

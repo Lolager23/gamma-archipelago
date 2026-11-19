@@ -38,6 +38,7 @@ def test_packages_are_reproducible_and_load_from_apworld(tmp_path):
                 "configuration",
                 "equipment",
                 "loadout",
+                "settlements",
             )
         } | {"gamedata/configs/text/eng/st_gamma_archipelago.xml"}
     with ZipFile(outputs[2]) as archive:
@@ -64,7 +65,7 @@ assert str(GammaWorld.zip_path).endswith('gamma.apworld'), GammaWorld.zip_path
 container = APWorldContainer(str(GammaWorld.zip_path))
 container.read()
 assert container.world_version == Utils.Version(0, 1, 0)
-assert len(GammaWorld.location_name_to_id) == 33
+assert len(GammaWorld.location_name_to_id) == 51
 import worlds.gamma.client
 """
     subprocess.run(

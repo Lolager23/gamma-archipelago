@@ -16,7 +16,17 @@ ALL_LOCATION_IDS = frozenset(LOCATION_NAMES.values())
 # Public compatibility default for version 1/2 three-map seeds.
 LOCATION_IDS = frozenset({28052001, 28052002, 28052003})
 LEVELS: dict[str, str] = {level["id"]: level["name"] for level in _data["levels"]}
-MAP_LOCATIONS: dict[str, int] = {loc["level"]: loc["id"] for loc in _data["locations"]}
+MAP_LOCATIONS: dict[str, int] = {
+    loc["level"]: loc["id"] for loc in _data["locations"] if loc["category"] == "checks_maps"
+}
+MAP_LOCATION_IDS = frozenset(MAP_LOCATIONS.values())
+LOCATION_CATEGORIES: dict[int, str] = {loc["id"]: loc["category"] for loc in _data["locations"]}
 CONNECTIONS: tuple[tuple[str, str], ...] = tuple(tuple(pair) for pair in _data["connections"])
 MAX_ITEMS = 4000
 MAX_SNAPSHOT_BYTES = 131072
+
+
+def enabled_location_ids(checks: frozenset[str]) -> frozenset[int]:
+    return frozenset(
+        identity for identity, category in LOCATION_CATEGORIES.items() if category in checks
+    )

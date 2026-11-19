@@ -1,4 +1,5 @@
-from gamma_archipelago.catalog import ALL_LOCATION_IDS, LOCATION_IDS, MAP_LOCATIONS
+from gamma_archipelago.catalog import LOCATION_IDS, MAP_LOCATIONS
+from gamma_archipelago.catalog import MAP_LOCATION_IDS as ALL_LOCATION_IDS
 from gamma_archipelago.configuration import build_configuration, defaults, encode_configuration
 from gamma_archipelago.protocol import decode_outgoing, encode_confirmed
 
@@ -11,6 +12,9 @@ def test_every_real_level_records_once_and_fake_or_unknown_levels_do_not(lua):
     state = module.new_state()
     state.session_key = KEY
     state.expanded = True
+    state.enabled_checks = module.enabled_locations(
+        lua.table(expanded=True, options=lua.table(checks_maps=1))
+    )
     for level in [*MAP_LOCATIONS, *MAP_LOCATIONS, "fake_start", "missing"]:
         module.check_level(state, level)
     snapshot = decode_outgoing(
