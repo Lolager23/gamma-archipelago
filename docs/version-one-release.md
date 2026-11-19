@@ -20,8 +20,8 @@ The preparer performs only local file operations and Git reads.
 
 | Gate | Current state |
 |---|---|
-| Thirty implementation increments as stacked draft PRs | Implemented; see the PR index |
-| Local verifier, coverage, real AP loading/server and seed matrix | Passed: 608 tests; see verification record |
+| Thirty implementation increments with reviewable PRs | Implemented; see the PR index |
+| Local verifier, coverage, real AP loading/server and seed matrix | Passed at PR #34 review: 674 tests; see verification record |
 | Windows and Linux CI | Check current PR head, not an older green revision |
 | Per-merge engine checks, two MVP playthroughs and every alternate goal | Not run for expanded scope |
 | Engine performance and mod interactions | Not run |

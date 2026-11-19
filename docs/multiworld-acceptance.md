@@ -7,7 +7,8 @@ actual loopback websocket traffic. Checks/items, cross-slot transfers, goal
 packets, named notices, older acknowledgements and durable server restart are
 verified against the server's actual saved state.
 
-Game snapshots in this harness are synthetic. These are eight additional server
+Game snapshots in this harness are synthetic and carry protocol 3's exact settings
+digest, matching the updated add-on. These are eight additional server
 cases, not eight in-game playthroughs. Engine callback, reward and goal adapters
 have separate mocked Lua regressions; they are not mislabeled as live engine
 evidence. Owen explicitly reserved engine verification for each PR after merge.
@@ -41,7 +42,7 @@ expanded engine rows are **not run**. The user's earlier pilot reload and third-
 acceptance remain recorded in the existing verification record; that acceptance
 does not stand in for all expanded categories or a complete goal playthrough.
 
-Automated result: the full verifier passes 521 covered tests and 16 untraced
+Automated result: the full verifier passes 581 covered tests and 16 untraced
 cases: six 1,000-seed presets, two pilot server cases and eight expanded server
 cases. All independent coverage gates pass. The full 257-check slots require
 several 64-scout recovery polls; the harness explicitly drives every batch.
