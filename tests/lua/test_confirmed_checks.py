@@ -2,6 +2,7 @@ import pytest
 
 from gamma_archipelago.protocol import decode_outgoing, encode_confirmed
 
+from .assertions import assert_lua_error
 from .test_game_adapter import load_game, saved_state, set_incoming
 
 KEY = "a" * 64
@@ -39,7 +40,7 @@ def test_server_confirmed_visits_survive_loading_a_save_without_those_visits(lua
     ],
 )
 def test_confirmed_packets_do_not_accept_partial_foreign_or_unknown_progress(lua, content):
-    assert lua.globals().gamma_ap_protocol.parse_confirmed(content, KEY)[0] is None
+    assert_lua_error(lua.globals().gamma_ap_protocol.parse_confirmed(content, KEY))
 
 
 def test_confirmed_read_failure_does_not_apply_pending_items(lua):

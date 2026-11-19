@@ -76,6 +76,7 @@ end
 function poll(state)
     local root = gamma_ap_paths.appdata_root(getFS():update_path("$app_data_root$", ""))
     if not root then return false, "PDA notices require the isolated appdata root" end
+    if not gamma_ap_loadout.pda_available(state) then return true end
     local file = io.open(root .. "archipelago\\notices.txt", "rb")
     if not file then return true end -- Older clients have no notice sidecar.
     local content = file:read(131073)

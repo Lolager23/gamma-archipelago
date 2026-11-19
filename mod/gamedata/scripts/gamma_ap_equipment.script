@@ -1,0 +1,23 @@
+-- Use engine class/kind metadata, never weight or price, for equipment groups.
+
+function group(section)
+    local class = ini_sys:r_string_ex(section, "class") or ""
+    local kind = ini_sys:r_string_ex(section, "kind") or ""
+    if class == "D_PDA" then return "pda" end
+    if class:sub(1, 4) == "DET_" then return "detector" end
+    if class == "WP_BINOC" or section == "device_flashlight" or section == "device_torch" then
+        return "utilities"
+    end
+    if class == "WP_KNIFE" or kind == "w_melee" then return "melee" end
+    if class == "G_F1" or class == "G_RGD5" or kind == "w_explosive" then return "explosives" end
+    if class == "AMMO" or kind == "w_ammo" or section:sub(1, 5) == "ammo_" then return "ammo" end
+    if class:sub(1, 3) == "WP_" or kind:sub(1, 2) == "w_" then return "firearms" end
+    if class == "E_HLMET" or kind == "o_helmet" then return "helmet" end
+    if class == "EQ_BAKPK" or kind == "i_backpack" then return "backpack" end
+    if class == "E_STLK" or kind:sub(1, 2) == "o_" then return "outfit" end
+    if kind == "i_medical" then return "medicine" end
+    if kind == "i_food" or kind == "i_drink" then return "food" end
+    if kind == "i_tool" or kind == "i_repair" then return "tools" end
+    if kind == "i_device" then return "utilities" end
+    return nil -- Unclassified inventory is preserved.
+end

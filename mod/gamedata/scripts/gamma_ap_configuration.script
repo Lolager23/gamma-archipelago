@@ -1,0 +1,45 @@
+-- Companion-validated configuration, bound to the digest in the v2 item snapshot.
+
+function parse(content, key, digest)
+    if type(content) ~= "string" or #content > 131072 or content:sub(-1) ~= "\n" then
+        return nil, "Incomplete or oversized configuration snapshot"
+    end
+    local lines = {}
+    for line in content:gmatch("([^\n]*)\n") do lines[#lines + 1] = line end
+    if #lines < 4 or lines[1] ~= "GAMMA_AP_CONFIG|1" or lines[2] ~= "session|" .. key
+        or lines[3] ~= "digest|" .. digest then
+        return nil, "Configuration protocol, session or digest mismatch"
+    end
+    local count = gamma_ap_protocol.canonical_number(lines[#lines]:match("^end|(.*)$"))
+    if not count or count ~= #lines - 4 or count > 128 then
+        return nil, "Configuration record count mismatch"
+    end
+    local result = {digest=digest, options={}, thresholds={kill_milestones={}, side_task_milestones={}}}
+    for index = 4, #lines - 1 do
+        local name, number = lines[index]:match("^option|([a-z_]+)|(%d+)$")
+        if name then
+            local value = gamma_ap_protocol.canonical_number(number)
+            local maximum = gamma_ap_catalog.config_limits[name]
+            if not value or not maximum or value > maximum or result.options[name] ~= nil then
+                return nil, "Unknown, duplicate or invalid configuration option"
+            end
+            result.options[name] = value
+        else
+            name, number = lines[index]:match("^threshold|([a-z_]+)|(%d+)$")
+            local values = name and result.thresholds[name]
+            local value = gamma_ap_protocol.canonical_number(number)
+            if not values or not value or value < 1 or value > 10000 or #values >= 20
+                or (#values > 0 and values[#values] >= value) then
+                return nil, "Invalid milestone configuration"
+            end
+            values[#values + 1] = value
+        end
+    end
+    for name in pairs(gamma_ap_catalog.config_limits) do
+        if result.options[name] == nil then return nil, "Configuration option is missing" end
+    end
+    if #result.thresholds.kill_milestones == 0 or #result.thresholds.side_task_milestones == 0 then
+        return nil, "Configuration milestone list is missing"
+    end
+    return result
+end

@@ -15,7 +15,16 @@ def lua():
     runtime.execute("jit.off(); jit.flush()")
     runtime.execute(lua_coverage.TRACE_SETUP)
     loader = runtime.globals().load_ap_module
-    for name in ("catalog", "paths", "protocol", "state", "notifications"):
+    for name in (
+        "catalog",
+        "paths",
+        "protocol",
+        "configuration",
+        "equipment",
+        "loadout",
+        "state",
+        "notifications",
+    ):
         path = ROOT / "mod/gamedata/scripts" / f"gamma_ap_{name}.script"
         runtime.globals()[f"gamma_ap_{name}"] = loader(str(path))
     yield runtime

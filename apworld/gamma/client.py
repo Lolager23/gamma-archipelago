@@ -11,7 +11,12 @@ from NetUtils import ClientStatus, NetworkItem
 
 from gamma_archipelago.bridge import FileBridge
 from gamma_archipelago.catalog import GAME
-from gamma_archipelago.configuration import ConfigurationError, build_configuration
+from gamma_archipelago.configuration import (
+    ConfigurationError,
+    SeedConfiguration,
+    build_configuration,
+    defaults,
+)
 from gamma_archipelago.notifications import Notice, is_unlock, reward_message
 from gamma_archipelago.paths import DEFAULT_GAME_ROOT
 from gamma_archipelago.protocol import ProtocolError
@@ -36,6 +41,8 @@ class GammaContext(CommonContext):
         self.session: SessionCoordinator | None = None
         self.last_error: str | None = None
         self.scout_requested: set[int] = set()
+        self.configuration: SeedConfiguration | None = None
+        self.require_configuration = False
 
     async def server_auth(self, password_requested: bool = False) -> None:
         if password_requested and not self.password:
@@ -46,25 +53,40 @@ class GammaContext(CommonContext):
     def on_package(self, command: str, arguments: dict[str, Any]) -> None:
         if command == "Connected":
             slot_data = arguments.get("slot_data", {})
-            if slot_data.get("schema_version") != 1 or slot_data.get("pilot") is not True:
+            version = slot_data.get("schema_version")
+            if not (
+                (version == 1 and slot_data.get("pilot") is True)
+                or (
+                    version == 2
+                    and slot_data.get("pilot") is False
+                    and "configuration" in slot_data
+                )
+            ):
                 self.session = None
                 raise ProtocolError("This client requires the GAMMA integration pilot world")
             key = make_session_key(self.server_seed_name, self.team, self.slot)
             if self.session and self.session.session_key != key:
                 raise ProtocolError("Restart the companion client before changing seed or slot")
             configuration_key = None
+            self.configuration = None
             if "configuration" in slot_data:
                 values = slot_data["configuration"]
                 if not isinstance(values, dict):
                     raise ProtocolError("Generation configuration must be an object")
                 try:
-                    configuration_key = build_configuration(values).digest
+                    self.configuration = build_configuration(values)
+                    configuration_key = self.configuration.digest
                 except ConfigurationError as error:
                     raise ProtocolError(f"Invalid generation configuration: {error}") from error
                 if slot_data.get("configuration_key") != configuration_key:
                     raise ProtocolError("Generation configuration digest does not match")
+                if version == 1 and self.configuration.to_values() != defaults():
+                    raise ProtocolError("Expanded configuration requires schema 2")
             self.session = self.session or SessionCoordinator(key)
             self.session.bind_configuration(configuration_key)
+            self.require_configuration = version == 2
+            if version == 2:
+                self.bridge.write_configuration(self.session.session_key, self.configuration)
             self.scout_requested.clear()
         if command in ("Connected", "RoomUpdate") and self.session:
             self.session.accept_confirmed(frozenset(self.checked_locations))
@@ -73,7 +95,10 @@ class GammaContext(CommonContext):
             if command == "ReceivedItems":
                 self.session.accept_history(tuple(item.item for item in self.items_received))
                 self.received_notices()
-            self.bridge.write_history(self.session.session_key, self.session.item_ids)
+            required_config = self.session.configuration_key if self.require_configuration else None
+            self.bridge.write_history(
+                self.session.session_key, self.session.item_ids, required_config
+            )
         if command == "PrintJSON" and self.session:
             item = arguments.get("item")
             recipient = arguments.get("receiving")

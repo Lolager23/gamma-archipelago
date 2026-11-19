@@ -2,10 +2,19 @@
 
 import hashlib
 import json
+import sys
 from pathlib import Path
 from zipfile import ZIP_DEFLATED, ZipFile, ZipInfo
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "src"))
+from gamma_archipelago.configuration import (  # noqa: E402
+    CHECK_OPTIONS,
+    GEAR_OPTIONS,
+    GOALS,
+    QUANTITY_OPTIONS,
+    REWARD_OPTIONS,
+)
 
 
 def generate_catalogues() -> None:
@@ -19,6 +28,16 @@ def generate_catalogues() -> None:
     lines.extend(f'    ["{loc["level"]}"] = {loc["id"]},' for loc in catalogue["locations"])
     lines.extend(["}", "location_ids = {"])
     lines.extend(f"    {loc['id']}," for loc in catalogue["locations"])
+    lines.append("}")
+    limits = {
+        **dict.fromkeys(CHECK_OPTIONS + REWARD_OPTIONS, 1),
+        **dict.fromkeys(GEAR_OPTIONS, 2),
+        **dict.fromkeys(QUANTITY_OPTIONS, 100),
+        "goal": len(GOALS) - 1,
+        "no_starting_weapons": 1,
+    }
+    lines.append("config_limits = {")
+    lines.extend(f'    ["{name}"] = {limit},' for name, limit in sorted(limits.items()))
     lines.append("}")
     (ROOT / "mod/gamedata/scripts/gamma_ap_catalog.script").write_text(
         "\n".join(lines) + "\n", encoding="utf-8", newline="\n"
