@@ -51,3 +51,9 @@ Native verification is **not run**, reserved for Owen: species/faction attributi
 contained artefact aliases, death callbacks, excluded targets, quota saturation,
 PDA refresh and ordinary/older-save reload. No deployment, game launch or installed
 game changes are included.
+
+The complete verifier passed: 883 covered tests, 35 untraced generator/server
+tests and five Node tests (923 total), including 60 filled full-progression seeds
+using all three quota groups and service policies. Owned Python runtime modules
+reached 100% measured line/branch coverage; Lua reached 100% measured executable
+lines. Lua branch coverage is not measured.

@@ -84,7 +84,7 @@ not measure walking, repair or random-spawn waiting.
 |---|---|---|
 | 31 | Implemented; full verifier passed (826 tests) | Not run |
 | 32 | Implemented; full verifier passed (895 tests) | Not run |
-| 33 | Not implemented | Not run |
+| 33 | Implemented; full verifier passed (923 tests) | Not run |
 | 34 | Not implemented | Not run |
 | 35 | Not implemented | Not run |
 | 36 | Not implemented | Not run |
