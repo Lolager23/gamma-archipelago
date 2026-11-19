@@ -65,8 +65,10 @@ local function read_configuration(incoming)
 end
 
 local function give_item(section)
-    local object = alife_create_item(section, db.actor)
-    if not object then return false end
+    state.applying_reward = true
+    local ok, object = pcall(alife_create_item, section, db.actor)
+    state.applying_reward = false
+    if not ok or not object then return false end
     printf("[GAMMA AP] Received %s", section)
     return true
 end
@@ -122,6 +124,14 @@ function creature_spawned(victim)
     gamma_ap_combat.spawned(state, victim)
 end
 
+function actor_on_item_take(item)
+    gamma_ap_collection.observe(state, item, "ownership")
+end
+
+function actor_on_item_take_from_box(box, item)
+    gamma_ap_collection.observe(state, item, "container")
+end
+
 function save_state(data)
     data.gamma_archipelago_v1 = gamma_ap_state.copy_state(state)
 end
@@ -157,5 +167,7 @@ function on_game_start()
     RegisterScriptCallback("monster_on_hit_callback", monster_on_hit_callback)
     RegisterScriptCallback("npc_on_net_spawn", creature_spawned)
     RegisterScriptCallback("monster_on_net_spawn", creature_spawned)
+    RegisterScriptCallback("actor_on_item_take", actor_on_item_take)
+    RegisterScriptCallback("actor_on_item_take_from_box", actor_on_item_take_from_box)
     printf("[GAMMA AP] Pilot loaded; multiplayer roots are forbidden")
 end

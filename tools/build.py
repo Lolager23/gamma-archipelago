@@ -33,6 +33,11 @@ def generate_catalogues() -> None:
     lines.extend(["}", "location_ids = {"])
     lines.extend(f"    {loc['id']}," for loc in catalogue["locations"])
     lines.append("}")
+    lines.append("artefact_locations = {")
+    for loc in catalogue["locations"]:
+        if loc["category"] == "checks_artefacts":
+            lines.extend(f'    ["{alias}"] = {loc["id"]},' for alias in loc["aliases"])
+    lines.append("}")
     milestone = catalogue["milestones"]["checks_kill_milestones"]
     lines.append(f"kill_milestone_base = {milestone['base_id']}")
     lines.append(f"kill_milestone_maximum = {milestone['maximum']}")

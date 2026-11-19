@@ -43,7 +43,7 @@ def test_world_uses_real_upstream_types_and_catalogue():
 
 def test_world_generation_rejects_unsupported_options_instead_of_ignoring_them():
     world = generate(123).worlds[1]
-    world.options.checks_artefacts.value = 1
+    world.options.checks_quest_types.value = 1
     with pytest.raises(OptionError, match="Not implemented"):
         world.generate_early()
 
@@ -93,6 +93,7 @@ def test_category_manifests_pools_and_reachability(maps, settlements, count):
         ("checks_mutant_first_kills", 25),
         ("checks_faction_first_kills", 13),
         ("checks_kill_milestones", 3),
+        ("checks_artefacts", 66),
     ],
 )
 def test_combat_categories_and_custom_milestones_generate_exactly(category, count):
