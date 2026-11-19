@@ -25,7 +25,7 @@ from gamma_archipelago.configuration import (
 )
 from gamma_archipelago.notifications import Notice, is_unlock, reward_message
 from gamma_archipelago.paths import DEFAULT_GAME_ROOT
-from gamma_archipelago.protocol import ProtocolError
+from gamma_archipelago.protocol import ProtocolError, validate_id_manifest
 from gamma_archipelago.session import SessionCoordinator, make_session_key
 
 logger = logging.getLogger("Client")
@@ -106,19 +106,30 @@ class GammaContext(CommonContext):
                 if self.expanded
                 else LOCATION_IDS
             )
-            if self.expanded and slot_data.get("location_ids") != sorted(allowed):
-                raise ProtocolError("Seed check manifest does not match this client build")
+            if self.expanded:
+                validate_id_manifest(slot_data.get("location_ids"), allowed, "check")
             item_ids = (
-                enabled_item_ids(self.configuration.rewards)
+                enabled_item_ids(self.configuration.rewards, self.configuration.gear)
                 if self.expanded
                 else frozenset(ITEM_SECTIONS)
             )
-            if "item_ids" in slot_data and slot_data["item_ids"] != sorted(item_ids):
-                raise ProtocolError("Seed item manifest does not match this client build")
+            if "item_ids" in slot_data:
+                legacy = (
+                    enabled_item_ids(self.configuration.rewards)
+                    if self.expanded
+                    else frozenset(ITEM_SECTIONS)
+                )
+                manifest = slot_data["item_ids"]
+                expected = legacy if manifest == sorted(legacy) else item_ids
+                validate_id_manifest(manifest, expected, "item")
             self.session = self.session or SessionCoordinator(key)
             self.session.bind_configuration(configuration_key)
             self.session.bind_locations(allowed)
             self.session.bind_items(item_ids)
+            # A seed name/team/slot may be reused with different settings. Clear
+            # client-owned notices before exposing its new configuration/history.
+            # Game-owned acknowledgements remain the save's responsibility.
+            self.bridge.reset_notices(key)
             self.bridge.allowed_locations = allowed
             self.bridge.pilot_goal = (
                 self.configuration is None or self.configuration.goal == "pilot_tour"

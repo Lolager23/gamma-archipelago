@@ -456,3 +456,16 @@ def test_all_labs_goal_has_a_frozen_roster_and_does_not_require_map_checks():
         "l13u_warlab",
     }
     assert catalog["content_inventory"]["remaining_rosters"] == []
+
+
+def test_disconnected_zone_catalogue_fails_clearly_before_placing_a_key():
+    from test.general import gen_steps
+    from worlds.gamma.zone_fill import place_zone_keys
+
+    multiworld = setup_multiworld(
+        GammaWorld, options={"rewards_zone_keys": 1}, steps=gen_steps[:-1]
+    )
+    catalog = json.loads((ROOT / "src/gamma_archipelago/catalog.json").read_text())
+    catalog["connections"] = []
+    with pytest.raises(OptionError, match="cannot reach"):
+        place_zone_keys(multiworld.worlds[1], catalog)

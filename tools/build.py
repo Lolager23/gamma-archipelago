@@ -198,18 +198,38 @@ def generate_catalogues() -> None:
 def package(
     source: Path, destination: Path, prefix: str = "", extras: dict[str, Path] | None = None
 ) -> None:
-    entries = {
-        prefix + path.relative_to(source).as_posix(): path
-        for path in source.rglob("*")
-        if path.is_file() and "__pycache__" not in path.parts
-    }
+    if source.is_symlink() or source.is_junction():
+        raise ValueError("Package sources cannot contain filesystem links")
+    if not source.is_dir():
+        raise ValueError("Package source directory is missing")
+    entries = {}
+    for path in source.rglob("*"):
+        if "__pycache__" in path.parts:
+            continue
+        if path.is_symlink() or path.is_junction():
+            raise ValueError("Package sources cannot contain filesystem links")
+        if path.is_file():
+            validate_package_file(path)
+            entries[prefix + path.relative_to(source).as_posix()] = path
     entries.update(extras or {})
+    for path in entries.values():
+        validate_package_file(path)
     with ZipFile(destination, "w", compression=ZIP_DEFLATED) as archive:
         for name, path in sorted(entries.items()):
             info = ZipInfo(name, date_time=(2026, 1, 1, 0, 0, 0))
             info.compress_type = ZIP_DEFLATED
+            info.create_system = 3
             info.external_attr = 0o644 << 16
-            archive.writestr(info, path.read_bytes())
+            # All allowed payloads are owned UTF-8 source/text. Normalize checkout
+            # line endings so Windows and Linux package the same content.
+            archive.writestr(info, path.read_text(encoding="utf-8").encode("utf-8"))
+
+
+def validate_package_file(path: Path) -> None:
+    if path.is_symlink() or path.is_junction() or path.stat().st_nlink > 1:
+        raise ValueError("Package files must be independent copies, without links")
+    if path.suffix not in {".py", ".json", ".script", ".xml", ".md", ".txt"}:
+        raise ValueError(f"Unexpected package source type: {path.suffix}")
 
 
 def main() -> None:
@@ -218,12 +238,27 @@ def main() -> None:
     destination.mkdir(exist_ok=True)
     packages = [
         destination / name
-        for name in ("gamma.apworld", "gamma-archipelago-mo2.zip", "gamma-archipelago-probes.zip")
+        for name in (
+            "gamma.apworld",
+            "gamma-archipelago-mo2.zip",
+            "gamma-archipelago-probes.zip",
+            "gamma-archipelago-client.zip",
+        )
     ]
     package(ROOT / "apworld/gamma", packages[0], "gamma/")
     package(ROOT / "mod", packages[1])
     shared_path = "gamedata/scripts/gamma_ap_paths.script"
     package(ROOT / "probes", packages[2], extras={shared_path: ROOT / "mod" / shared_path})
+    package(
+        ROOT / "src/gamma_archipelago",
+        packages[3],
+        "gamma_archipelago/",
+        extras={
+            "GammaArchipelagoClient.py": ROOT / "tools/packaged_client.py",
+            "GAMMA-README.md": ROOT / "docs/portable-client.md",
+            "GAMMA-requirements-ap.txt": ROOT / "requirements-ap.txt",
+        },
+    )
     hashes = [f"{hashlib.sha256(path.read_bytes()).hexdigest()}  {path.name}" for path in packages]
     (destination / "SHA256SUMS").write_text("\n".join(hashes) + "\n", encoding="ascii")
     print("Built deterministic AP world and MO2 add-on packages.")

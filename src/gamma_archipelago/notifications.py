@@ -39,7 +39,7 @@ def clean_label(value: str) -> str:
 
 def is_unlock(item_id: int, game: str) -> bool:
     """Foreign progression flags do not imply equipment/permission semantics."""
-    return game == GAME and ITEM_EFFECTS.get(item_id) == "unlock"
+    return game == GAME and ITEM_EFFECTS.get(item_id) in {"unlock", "skill"}
 
 
 def reward_message(player: str, item: str, *, unlock: bool, outgoing: bool) -> str:

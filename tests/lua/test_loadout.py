@@ -36,7 +36,7 @@ def configured_game(lua, **values):
         db.actor.money=function() return engine.money end
         db.actor.give_money=function(self,amount)
             if engine.fail_money then error('money failed') end
-            engine.money=engine.money+amount
+            if not engine.ignore_money then engine.money=engine.money+amount end
         end
         alife_release=function(object)
             if engine.fail_release=='error' then error('release failed') end
@@ -133,7 +133,7 @@ def test_normal_config_and_legacy_saves_keep_all_inventory(lua):
 
 
 @pytest.mark.parametrize(
-    "failure", ["release_false", "release_error", "ammo", "ammo_ignored", "money"]
+    "failure", ["release_false", "release_error", "ammo", "ammo_ignored", "money", "money_ignored"]
 )
 def test_retry_uses_original_targets_instead_of_repeatedly_halving_inventory(lua, failure):
     game, engine, _ = configured_game(lua, starting_detector=1, starting_ammo=50, starting_money=50)
@@ -145,12 +145,14 @@ def test_retry_uses_original_targets_instead_of_repeatedly_halving_inventory(lua
         engine.fail_ammo = True
     elif failure == "ammo_ignored":
         engine.ignore_ammo = True
+    elif failure == "money_ignored":
+        engine.ignore_money = True
     else:
         engine.fail_money = True
     game.actor_on_update()
     assert not len(engine.created)
     engine.fail_release = False
-    engine.fail_ammo = engine.ignore_ammo = engine.fail_money = False
+    engine.fail_ammo = engine.ignore_ammo = engine.fail_money = engine.ignore_money = False
     stored = saved_state(lua, game)
     assert stored.gamma_archipelago_v1.loadout_plan is not None
     game.load_state(stored)
@@ -158,6 +160,19 @@ def test_retry_uses_original_targets_instead_of_repeatedly_halving_inventory(lua
     game.actor_on_update()
     assert engine.objects[7].amount == 50 and engine.money == 500
     assert len(engine.created) == 1
+
+
+def test_starting_money_retry_preserves_a_lower_natural_balance(lua):
+    game, engine, _ = configured_game(lua, starting_money=50)
+    game.on_game_start()
+    engine.creation.new_game_faction = None
+    engine.fail_money = True
+    game.actor_on_update()
+    assert not len(engine.created)
+    engine.fail_money, engine.money = False, 100
+    engine.now += 500
+    game.actor_on_update()
+    assert engine.money == 100 and len(engine.created) == 1
 
 
 def test_large_starter_loadout_is_bounded_and_reused_ids_are_never_deleted(lua):

@@ -19,8 +19,17 @@ class GameSnapshot:
 
 
 def validate_session_key(value: str) -> None:
-    if re.fullmatch(r"[0-9a-f]{64}", value) is None:
+    if type(value) is not str or re.fullmatch(r"[0-9a-f]{64}", value) is None:
         raise ProtocolError("Session key must contain 64 lowercase hexadecimal characters")
+
+
+def validate_id_manifest(value: object, expected: frozenset[int], label: str) -> None:
+    if (
+        type(value) is not list
+        or any(type(identity) is not int for identity in value)
+        or value != sorted(expected)
+    ):
+        raise ProtocolError(f"Seed {label} manifest does not match this client build")
 
 
 def _number(value: str) -> int:
@@ -33,7 +42,9 @@ def encode_incoming(
     session_key: str, item_ids: tuple[int, ...], configuration_key: str | None = None
 ) -> str:
     validate_session_key(session_key)
-    if len(item_ids) > MAX_ITEMS or any(item_id not in ITEM_IDS for item_id in item_ids):
+    if len(item_ids) > MAX_ITEMS or any(
+        type(item_id) is not int or item_id not in ITEM_IDS for item_id in item_ids
+    ):
         raise ProtocolError("Incoming history contains too many items or an unsupported item")
     lines = [f"GAMMA_AP_IN|{2 if configuration_key is not None else 1}", f"session|{session_key}"]
     if configuration_key is not None:
@@ -46,7 +57,11 @@ def encode_incoming(
 
 def encode_confirmed(session_key: str, location_ids: frozenset[int]) -> str:
     validate_session_key(session_key)
-    if len(location_ids) > MAX_ITEMS or not location_ids <= ALL_LOCATION_IDS:
+    if (
+        len(location_ids) > MAX_ITEMS
+        or any(type(identity) is not int for identity in location_ids)
+        or not location_ids <= ALL_LOCATION_IDS
+    ):
         raise ProtocolError("Confirmed checks contain an unsupported location")
     lines = ["GAMMA_AP_CONFIRMED|1", f"session|{session_key}"]
     lines.extend(f"check|{identity}" for identity in sorted(location_ids))

@@ -27,6 +27,7 @@ def connected_context(slot_data=None):
     bridge = SimpleNamespace(
         write_history=lambda *_: None,
         write_notices=lambda *_: None,
+        reset_notices=lambda *_: None,
         write_confirmed=lambda *_: None,
         write_configuration=lambda *_: None,
         read_game=lambda _: None,
@@ -414,6 +415,33 @@ async def test_selected_alternate_goal_configures_the_bridge_goal_protocol():
 
 
 @run_async
+async def test_legacy_equipment_manifest_keeps_only_selected_permissions_enabled():
+    from gamma_archipelago.catalog import MAP_LOCATION_IDS, enabled_item_ids
+    from gamma_archipelago.configuration import build_configuration, defaults
+
+    configuration = build_configuration(
+        {**defaults(), "starting_pda": 2, "rewards_starting_gear_unlocks": 1}
+    )
+    selected = enabled_item_ids(configuration.rewards, configuration.gear)
+    slot = {
+        "schema_version": 3,
+        "pilot": False,
+        "configuration": configuration.to_values(),
+        "configuration_key": configuration.digest,
+        "location_ids": sorted(MAP_LOCATION_IDS),
+    }
+    for manifest in (sorted(selected), sorted(enabled_item_ids(configuration.rewards))):
+        context = connected_context({**slot, "item_ids": manifest})
+        assert context.session.allowed_items == selected
+        with pytest.raises(ProtocolError, match="unsupported item"):
+            context.session.accept_history((28051601,))
+    with pytest.raises(ProtocolError, match="manifest"):
+        connected_context(
+            {**slot, "location_ids": [float(value) for value in sorted(MAP_LOCATION_IDS)]}
+        )
+
+
+@run_async
 async def test_reused_seed_identity_rejects_old_configuration_game_snapshots(tmp_path):
     from gamma_archipelago.bridge import FileBridge
     from gamma_archipelago.catalog import MAP_LOCATION_IDS
@@ -454,3 +482,40 @@ async def test_reused_seed_identity_rejects_old_configuration_game_snapshots(tmp
         "cmd": "LocationChecks",
         "locations": [28052001],
     }
+
+
+@run_async
+async def test_connection_clears_old_notices_before_publishing_new_settings(tmp_path):
+    from gamma_archipelago.bridge import FileBridge
+    from gamma_archipelago.catalog import MAP_LOCATION_IDS
+    from gamma_archipelago.configuration import build_configuration, defaults
+    from gamma_archipelago.notifications import Notice, encode_notices
+
+    bridge = FileBridge(tmp_path, allowed_root=tmp_path)
+    key = make_session_key("reused-seed", 0, 1)
+    bridge.write_notices(key, (Notice("s:28052001:2:42", 0, "Old transfer"),))
+    acknowledgements = bridge.directory / "notices_ack.txt"
+    acknowledgements.write_text("old incomplete acknowledgements")
+    original = bridge.write_configuration
+
+    def publish(*args):
+        assert (bridge.directory / "notices.txt").read_text() == encode_notices(key, ())
+        original(*args)
+
+    bridge.write_configuration = publish
+    context = adapter.GammaContext(bridge=bridge)
+    context.server_seed_name, context.team, context.slot = "reused-seed", 0, 1
+    configuration = build_configuration({**defaults(), "starting_money": 50})
+    context.on_package(
+        "Connected",
+        {
+            "slot_data": {
+                "schema_version": 3,
+                "pilot": False,
+                "configuration": configuration.to_values(),
+                "configuration_key": configuration.digest,
+                "location_ids": sorted(MAP_LOCATION_IDS),
+            }
+        },
+    )
+    assert acknowledgements.read_text() == "old incomplete acknowledgements"

@@ -110,11 +110,12 @@ function apply(state, configuration)
             work = work + 1
         end
     end
-    local ok = pcall(function()
+    local ok, confirmed = pcall(function()
         local current = db.actor:money()
         if current > state.loadout_plan.money then db.actor:give_money(state.loadout_plan.money - current) end
+        return db.actor:money() <= state.loadout_plan.money
     end)
-    if not ok then return false, "Cannot adjust starting money" end
+    if not ok or not confirmed then return false, "Cannot adjust starting money" end
     state.loadout_initialized, state.loadout_plan = true, nil
     return true
 end

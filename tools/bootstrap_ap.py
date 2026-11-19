@@ -26,7 +26,14 @@ def main() -> None:
         destination == protected
         or destination.is_relative_to(protected)
         or protected.is_relative_to(destination)
-        for protected in (source, ROOT, Path("D:/Anomaly").resolve(), Path("D:/GAMMA").resolve())
+        for protected in (
+            source,
+            ROOT,
+            Path("D:/Anomaly").resolve(),
+            Path("D:/GAMMA").resolve(),
+            Path("D:/AnomalyAP").resolve(),
+            Path("D:/GAMMAAP").resolve(),
+        )
     ):
         raise SystemExit("Runtime destination must be separate from upstream and project source")
     destination.mkdir(parents=True, exist_ok=True)
@@ -42,6 +49,9 @@ def main() -> None:
         shutil.copytree(arguments.source / "worlds" / name, worlds / name, dirs_exist_ok=True)
     generate_catalogues()
     shutil.copytree(ROOT / "apworld/gamma", worlds / "gamma", dirs_exist_ok=True)
+    shutil.copytree(
+        ROOT / "src/gamma_archipelago", destination / "gamma_archipelago", dirs_exist_ok=True
+    )
     (destination / "user").mkdir(exist_ok=True)
     print(f"Pinned Archipelago runtime prepared at {destination}")
 

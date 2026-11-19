@@ -1,9 +1,14 @@
 """Guarantee a local exploration chain without asking general fill to break cycles."""
 
+from typing import TYPE_CHECKING, Any
+
 from Options import OptionError
 
+if TYPE_CHECKING:
+    from . import GammaWorld
 
-def place_zone_keys(world, catalog):
+
+def place_zone_keys(world: "GammaWorld", catalog: dict[str, Any]) -> None:
     if "rewards_zone_keys" not in world.configuration.rewards:
         return
     visited = {"l01_escape"}
@@ -39,6 +44,8 @@ def place_zone_keys(world, catalog):
                 )
             }
         )
+        if not frontier:
+            raise OptionError("Zone-key graph cannot reach every remaining destination")
         target = world.random.choice(frontier)
         item = keys.pop(target)
         location = world.multiworld.get_location(checks[previous], world.player)

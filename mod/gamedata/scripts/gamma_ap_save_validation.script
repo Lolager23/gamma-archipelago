@@ -1,0 +1,97 @@
+-- Refuse damaged AP state before copying it or acknowledging another reward.
+MAX_ENTRIES = 500000
+
+local function integer(value, minimum, maximum)
+    return type(value) == "number" and value == math.floor(value)
+        and value >= minimum and value <= maximum
+end
+
+local function plain(value, active, budget, depth)
+    local kind = type(value)
+    if kind == "number" then return value == value and math.abs(value) < 1e15 end
+    if kind == "string" then return #value <= 4096 end
+    if kind == "boolean" then return true end
+    if kind ~= "table" or depth > 16 or active[value] or getmetatable(value) ~= nil then return false end
+    active[value] = true
+    for key,child in pairs(value) do
+        budget.remaining = budget.remaining - 1
+        if budget.remaining < 0 or (type(key) ~= "string" and not integer(key, 0, 2147483647))
+            or not plain(child, active, budget, depth+1) then return false end
+    end
+    active[value] = nil
+    return true
+end
+
+local function valid_check(id)
+    return gamma_ap_catalog.location_categories[id] ~= nil
+        or integer(id, gamma_ap_catalog.kill_milestone_base+1,
+            gamma_ap_catalog.kill_milestone_base+gamma_ap_catalog.kill_milestone_maximum)
+        or integer(id, gamma_ap_catalog.side_task_milestone_base+1,
+            gamma_ap_catalog.side_task_milestone_base+gamma_ap_catalog.side_task_milestone_maximum)
+end
+
+local function valid_stashes(stashes, received)
+    if stashes == nil then return true end
+    if type(stashes) ~= "table" then return false end
+    if type(stashes.order) ~= "table" or type(stashes.records) ~= "table" then return false end
+    local seen = {}
+    for _,receipt in ipairs(stashes.order) do
+        local record = stashes.records[receipt]
+        if not integer(receipt, 1, math.min(4000, received+1)) or seen[receipt] or type(record) ~= "table" then return false end
+        seen[receipt] = true
+        local sections = gamma_ap_catalog.stash_contents[record.item_id]
+        local expected_level = gamma_ap_catalog.stash_containers[record.cache_name]
+        if not sections or not integer(record.cache_id, 1, 65534)
+            or not expected_level or expected_level ~= record.level
+            or type(record.actions) ~= "table" or #record.actions ~= #sections
+            or not integer(record.next_action, 1, #sections+1) then return false end
+        for index,section in ipairs(sections) do
+            if type(record.actions[index]) ~= "table" or record.actions[index].section ~= section then return false end
+        end
+    end
+    for receipt in pairs(stashes.records) do if not seen[receipt] then return false end end
+    return true
+end
+
+function validate(state)
+    if type(state) ~= "table" or state.refused_save == true
+        or (state.schema_version ~= nil and state.schema_version ~= 1) then
+        return false, "Unsupported or previously refused AP save state; restore a valid backup"
+    end
+    if not plain(state, {}, {remaining=MAX_ENTRIES}, 0) then
+        return false, "AP save state is not bounded plain data; restore a valid backup"
+    end
+    local key = state.session_key
+    if key ~= nil and (type(key) ~= "string" or #key ~= 64 or key:find("[^0-9a-f]")) then
+        return false, "AP save session identity is invalid"
+    end
+    if not integer(state.received_count, 0, 4000) or type(state.applied_items) ~= "table"
+        or #state.applied_items ~= state.received_count or type(state.checks) ~= "table" then
+        return false, "AP save receipt structure is invalid"
+    end
+    if key == nil and (state.received_count > 0 or next(state.checks) or state.goal_complete == true) then
+        return false, "AP save progress is missing its session identity"
+    end
+    for index=1,state.received_count do
+        if not gamma_ap_catalog.item_effects[state.applied_items[index]] then return false, "AP save contains an unknown reward" end
+    end
+    for index in pairs(state.applied_items) do
+        if not integer(index, 1, state.received_count) then return false, "AP save receipt indices are invalid" end
+    end
+    for id,value in pairs(state.checks) do
+        if not integer(id, 1, 2147483647) or not valid_check(id) or value ~= true then
+            return false, "AP save contains an invalid completed check"
+        end
+    end
+    local permissions = {calibrated_psi=true}
+    for _,name in pairs(gamma_ap_catalog.permissions) do permissions[name] = true end
+    if state.unlocks ~= nil then
+        if type(state.unlocks) ~= "table" then return false, "AP save permissions are invalid" end
+        for name,value in pairs(state.unlocks) do
+            if not permissions[name] or value ~= true then return false, "AP save permissions are invalid" end
+        end
+        if key == nil and next(state.unlocks) then return false, "AP save permissions are missing their session identity" end
+    end
+    if not valid_stashes(state.stashes, state.received_count) then return false, "AP save stash plans are invalid" end
+    return true
+end

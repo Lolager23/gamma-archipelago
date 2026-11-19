@@ -12,8 +12,8 @@ parser.add_argument("--ap-root", type=Path, default=Path("D:/GAMMAAPTools/ap-run
 arguments, upstream_arguments = parser.parse_known_args()
 runtime = arguments.ap_root.resolve()
 os.environ["SKIP_REQUIREMENTS_UPDATE"] = "1"
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 sys.path.insert(0, str(runtime))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 import Utils  # noqa: E402
 
 Utils.user_path.cached_path = str(runtime / "user")
