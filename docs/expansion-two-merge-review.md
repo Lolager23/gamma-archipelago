@@ -24,7 +24,7 @@ commits; the final hardening PR contains this review record itself.
 | [#45](https://github.com/Lolager23/gamma-archipelago/pull/45) | Permission supplies | Cursor recovery, uncertainty refusal, delayed permissions, callback feedback and conflict validation reviewed |
 | [#46](https://github.com/Lolager23/gamma-archipelago/pull/46) | Supply packages | Contents/calibres, useful weights, repeatable receipts and partial-plan recovery reviewed |
 | [#47](https://github.com/Lolager23/gamma-archipelago/pull/47) | Carry rewards | Active keyed API, additive cap, idempotent retries, rollback and preservation of other modifiers reviewed |
-| [#48](https://github.com/Lolager23/gamma-archipelago/pull/48) | Generation/pacing | Fixed optional opening locality/item-rule bypass; budgets, starting inventory, identity and spoiler reports reviewed |
+| [#48](https://github.com/Lolager23/gamma-archipelago/pull/48) | Generation/pacing | Fixed opening/route placement constraints; budgets, starting inventory, identity and spoiler reports reviewed |
 | [#49](https://github.com/Lolager23/gamma-archipelago/pull/49) | Combined hardening | Combined real generation/server tests, mocked recovery and this documentation reconciliation |
 
 ## Corrections and compatibility
@@ -42,6 +42,11 @@ reproduced that bypass. The reservation now finds a permitted placement, tries
 the fallback supply or skips the optional reservation. Required opening
 permissions retain explicit conflict/self-lock refusal. Another 150 filled seeds
 cover precollected Radar/X16/X19 keys with psi progression.
+
+Remaining zone-route keys also bypassed explicit non-local settings through their
+forced local placements. A regression reproduced the conflict. Generation now
+refuses that configuration before placing route keys; a companion positive case
+confirms already-precollected keys need no placement and remain supported.
 
 Both corrections preserve published IDs, receipt order and save schemas. The
 delivery prerequisite conflict was resolved by retaining both roster-aware
