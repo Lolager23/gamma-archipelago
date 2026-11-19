@@ -42,3 +42,11 @@ quantities, calibre usefulness, economy, partial delivery/reload and PDA status.
 Weights and contents are initial tuning values, not measured balance results.
 No game launch, deployment, installed-game write or developer-panel change is
 included.
+
+The final stable-source complete verifier passed: 938 covered tests, 38 untraced
+generator/server tests and five Node tests (981 total), including 100 filled
+package/minimal-pool seeds. Owned Python runtime modules reached 100% measured
+line/branch coverage; Lua reached 100% measured executable lines. Lua branch
+coverage is not measured. The workbench correctly refused an earlier stale
+runtime after a base-doc merge restored checkout line endings; the final run
+rebuilt the matching runtime and passed the actual web generation tests.
