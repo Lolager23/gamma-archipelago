@@ -1,0 +1,43 @@
+-- Use GAMMA's namespaced additive modifier; never overwrite another mod's weight.
+local KEY = "gamma_archipelago_carry"
+local owned, last_actor, last_bonus = false,nil,nil
+
+function bonus(state)
+    local count = 0
+    for _,id in ipairs(state.applied_items) do
+        if gamma_ap_catalog.item_effects[id] == "convenience" then count=count+1 end
+    end
+    return math.min(3,count)*5
+end
+
+local function apply(amount)
+    if amount == 0 and not owned then return true end
+    if last_actor == db.actor and last_bonus == amount then return true end
+    local ok,result = pcall(function()
+        if type(weight.add_weight) ~= "function" or type(weight.remove_weight) ~= "function" then error("Unsupported weight API") end
+        if amount == 0 then weight.remove_weight(KEY); return true end
+        owned = true -- A throwing delegate may already have added the keyed value.
+        return weight.add_weight(KEY,amount,true)
+    end)
+    if not ok or result ~= true then return false,"Carry reward requires GAMMA's supported keyed weight API; receipt remains pending" end
+    owned,last_actor,last_bonus = amount > 0,db.actor,amount
+    return true
+end
+
+function poll(state)
+    local enabled = not state.refused_save and state.session_key and state.configuration
+        and state.configuration.options.rewards_convenience == 1
+    return apply(enabled and bonus(state) or 0)
+end
+
+function receive(state, id)
+    if not state.session_key or not state.configuration or state.configuration.options.rewards_convenience ~= 1
+        or not state.allowed_items[id] or gamma_ap_catalog.item_effects[id] ~= "convenience" then
+        return false,"Carry reward is disabled for this receipt"
+    end
+    return apply(math.min(15,bonus(state)+5))
+end
+
+function reset()
+    last_actor,last_bonus = nil,nil
+end

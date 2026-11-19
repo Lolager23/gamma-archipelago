@@ -176,8 +176,22 @@ class GammaWorld(World):
         count = len(self.multiworld.get_unfilled_locations(self.player))
         if len(required) > count:
             raise OptionError("The selected check pool cannot hold required progression rewards")
+        convenience = 0
+        if "rewards_convenience" in self.configuration.rewards:
+            eligible = sum(
+                location.progress_type != LocationProgressType.EXCLUDED
+                for location in self.multiworld.get_unfilled_locations(self.player)
+            )
+            convenience = min(3, eligible - len(required))
+            if convenience < 1:
+                raise OptionError(
+                    "Convenience rewards need a reliable check after required progression"
+                )
+        self.multiworld.itempool.extend(
+            self.create_item("Carry Capacity +5 kg") for _ in range(convenience)
+        )
         self.multiworld.itempool.extend(self.create_item(name) for name in required)
-        for index in range(count - len(required)):
+        for index in range(count - len(required) - convenience):
             if enabled and (index == 0 or (index > 3 and self.random.randrange(3) == 0)):
                 chances = [weights[name] for name in stashes]
                 name = (

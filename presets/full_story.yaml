@@ -25,6 +25,7 @@
     "rewards_supply_maintenance": 1,
     "rewards_supply_ammunition": 1,
     "rewards_supply_expedition": 1,
+    "rewards_convenience": 1,
     "rewards_workshop_access": 1,
     "rewards_recipe_access": 1,
     "rewards_progressive_tools": 1,

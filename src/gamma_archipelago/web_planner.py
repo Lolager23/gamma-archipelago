@@ -21,6 +21,7 @@ from .presets import presets
 from .web_estimates import ASSUMPTIONS, estimate_playtime
 
 LABELS = {
+    "rewards_convenience": "Bounded carry capacity",
     "rewards_supply_medical": "Medical Supply Package",
     "rewards_supply_maintenance": "Maintenance Supply Package",
     "rewards_supply_ammunition": "Ammunition Supply Package",
