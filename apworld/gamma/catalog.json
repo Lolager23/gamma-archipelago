@@ -436,6 +436,18 @@
         "ammo_12x70_buck",
         "ammo_12x70_buck"
       ]
+    },
+    {
+      "id": 28051201,
+      "name": "Progression Stash: Calibrated Psi Helmet",
+      "classification": "progression",
+      "effect": "progression_stash",
+      "category": "rewards_progression_stashes",
+      "contents": [
+        "good_psy_helmet"
+      ],
+      "cache": "esc_treasure_3",
+      "level": "l01_escape"
     }
   ],
   "locations": [

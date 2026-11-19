@@ -74,6 +74,19 @@ class GammaWorld(World):
             regions[level["id"]] = region
             self.multiworld.regions.append(region)
         menu.connect(regions["l01_escape"])
+        if "rewards_progression_stashes" in self.configuration.rewards:
+            claim = GammaLocation(
+                self.player, "Claim Cordon Psi Stash", None, regions["l01_escape"]
+            )
+            claim.access_rule = lambda state: state.has(
+                "Progression Stash: Calibrated Psi Helmet", self.player
+            )
+            claim.place_locked_item(
+                GammaItem(
+                    "Calibrated Psi Protection", ItemClassification.progression, None, self.player
+                )
+            )
+            regions["l01_escape"].locations.append(claim)
         for source, destination in _catalog["connections"]:
             regions[source].connect(regions[destination])
             regions[destination].connect(regions[source])
@@ -110,6 +123,12 @@ class GammaWorld(World):
                 )
 
     def create_items(self) -> None:
+        required = [
+            item["name"]
+            for item in _catalog["items"]
+            if item.get("category") == "rewards_progression_stashes"
+            and "rewards_progression_stashes" in self.configuration.rewards
+        ]
         names = [item["name"] for item in _catalog["items"] if "category" not in item]
         stashes = [
             item["name"]
@@ -117,7 +136,11 @@ class GammaWorld(World):
             if item.get("category") == "rewards_loot_stashes"
         ]
         enabled = "rewards_loot_stashes" in self.configuration.rewards
-        for index in range(len(self.multiworld.get_locations(self.player))):
+        count = len(self.multiworld.get_unfilled_locations(self.player))
+        if len(required) > count:
+            raise OptionError("The selected check pool cannot hold required progression rewards")
+        self.multiworld.itempool.extend(self.create_item(name) for name in required)
+        for index in range(count - len(required)):
             if enabled and (index == 0 or (index > 3 and self.random.randrange(3) == 0)):
                 name = self.random.choice(stashes)
             else:
@@ -144,7 +167,9 @@ class GammaWorld(World):
             "configuration": self.configuration.to_values(),
             "configuration_key": self.configuration.digest,
             "location_ids": sorted(
-                location.address for location in self.multiworld.get_locations(self.player)
+                location.address
+                for location in self.multiworld.get_locations(self.player)
+                if location.address is not None
             ),
             "item_ids": sorted(enabled_item_ids(self.configuration.rewards)),
         }
