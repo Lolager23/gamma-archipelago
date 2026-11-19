@@ -25,9 +25,9 @@ def main() -> None:
             _, local, _, remote = line.split()
             if local == "0" * 40:
                 continue
-            revisions = (
-                [local, "--not", "--remotes"] if remote == "0" * 40 else [f"{remote}..{local}"]
-            )
+            # Already-published server merges can have GitHub's committer identity.
+            # Check newly introduced commits, consistently for new/existing branches.
+            revisions = [local, "--not", "--remotes"]
             for record in git(
                 "log", "--format=%H%x09%an <%ae>%x09%cn <%ce>", *revisions
             ).splitlines():
