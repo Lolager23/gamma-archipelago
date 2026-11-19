@@ -85,7 +85,10 @@ local function perform(action)
 end
 
 function apply(state, configuration)
-    if not configuration then return true end -- Legacy v1 seed: never alter inventory.
+    if not configuration then
+        if state.configuration_key then return false, "Configured save requires its matching companion configuration" end
+        return true -- Legacy v1 seed: never alter inventory.
+    end
     if state.configuration_key and state.configuration_key ~= configuration.digest then
         return false, "This save uses another AP configuration"
     end
