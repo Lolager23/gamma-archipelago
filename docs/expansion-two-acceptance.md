@@ -16,7 +16,7 @@ head's CI rather than importing a green result from its parent.
 | 37 | [#46](https://github.com/Lolager23/gamma-archipelago/pull/46) | Medical, maintenance, calibre-specific ammunition and expedition packages |
 | 38 | [#47](https://github.com/Lolager23/gamma-archipelago/pull/47) | Capped additive carry capacity through GAMMA's keyed API |
 | 39 | [#48](https://github.com/Lolager23/gamma-archipelago/pull/48) | Budget, protected openings, pacing settings, presets and generation reports |
-| 40 | `codex/expansion-two-hardening` | Combined generation/server/recovery regressions and evidence reconciliation |
+| 40 | [#49](https://github.com/Lolager23/gamma-archipelago/pull/49) | Combined generation/server/recovery regressions and evidence reconciliation |
 
 ## Automation and limits
 
