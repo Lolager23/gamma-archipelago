@@ -1,7 +1,8 @@
 import pytest
 
-from gamma_archipelago.catalog import enabled_item_ids, enabled_location_ids
+from gamma_archipelago.catalog import enabled_item_ids
 from gamma_archipelago.configuration import build_configuration, defaults
+from gamma_archipelago.discovery import configured_location_ids
 from gamma_archipelago.presets import presets
 from gamma_archipelago.web_estimates import ASSUMPTIONS, estimate_playtime
 from gamma_archipelago.web_planner import metadata, player_document, preview
@@ -15,11 +16,7 @@ def test_metadata_and_all_presets_match_authoritative_catalogues():
     for values in presets().values():
         configuration = build_configuration(values)
         result = preview(values, {})
-        assert {row["id"] for row in result["checks"]} == enabled_location_ids(
-            configuration.checks,
-            configuration.kill_milestones,
-            configuration.side_task_milestones,
-        )
+        assert {row["id"] for row in result["checks"]} == configured_location_ids(configuration)
         assert {row["id"] for row in result["rewards"]} == enabled_item_ids(
             configuration.rewards, configuration.gear
         )

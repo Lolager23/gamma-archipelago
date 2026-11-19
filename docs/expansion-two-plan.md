@@ -90,7 +90,7 @@ not measure walking, repair or random-spawn waiting.
 | 36 | Implemented; full verifier passed (968 tests) | Not run |
 | 37 | Implemented; full verifier passed (981 tests) | Not run |
 | 38 | Implemented; full verifier passed (988 tests) | Not run |
-| 39 | Not implemented | Not run; calibration pending |
+| 39 | Implemented; full verifier passed (1,034 tests) | Not run; calibration pending |
 | 40 | Not implemented | Not run; release gates remain |
 
 Research references inspected 19 November 2026, used as design ideas rather than

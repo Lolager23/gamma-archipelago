@@ -63,6 +63,14 @@ local function blocked(state, row, regions, psi)
         and not state.unlocks.gear_firearms and not state.unlocks.gear_melee then
         return "A firearm or melee permission is required"
     end
+    if combat[row.category] and (config.combat_logic or 0) > 0 then
+        local groups = config.combat_logic == 1 and {"firearms"} or {"firearms","outfit","helmet"}
+        for _,name in ipairs(groups) do
+            if config["starting_"..name] == 2 and not state.unlocks["gear_"..name] then
+                return "Combat equipment permission required: "..name
+            end
+        end
+    end
     if config.rewards_quest_keys == 1 then
         for _, key in ipairs(row.quests) do
             if not state.unlocks[key] then return gamma_ap_catalog.tracker_permissions[key] .. " required" end

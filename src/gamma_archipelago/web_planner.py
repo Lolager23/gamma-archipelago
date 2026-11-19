@@ -16,8 +16,11 @@ from .configuration import (
     REWARD_OPTIONS,
     build_configuration,
 )
-from .discovery import configured_location_ids
+from .discovery import SOURCES, configured_location_ids
+from .opening import opening_permissions
+from .pool_budget import budget_pool
 from .presets import presets
+from .settings_ui import advanced_options
 from .web_estimates import ASSUMPTIONS, estimate_playtime
 
 LABELS = {
@@ -77,6 +80,12 @@ def metadata() -> dict[str, object]:
     reward_counts = Counter(row.get("category") for row in data["items"])
     return {
         "game": GAME,
+        "advanced": advanced_options(),
+        "discovery_types": [
+            {"token": token, "group": group}
+            for group, roster in SOURCES.items()
+            for token in roster
+        ],
         "presets": presets(),
         "checks": [
             dict(key=key, label=LABELS[key], count=check_counts[key]) for key in CHECK_OPTIONS
@@ -134,14 +143,25 @@ def preview(values: Mapping[str, object], assumptions: Mapping[str, object]) -> 
             )
     item_ids = enabled_item_ids(configuration.rewards, configuration.gear)
     rewards = [dict(row) for row in data["items"] if row["id"] in item_ids]
-    required = sum(
-        row.get("copies", 1) for row in rewards if row["classification"] == "progression"
-    )
-    if required > len(checks):
-        raise ValueError("The selected check pool cannot hold required progression rewards")
+    budget = budget_pool(configuration, ids)
+    required = len(budget.required)
     counts = Counter(row["category"] for row in checks)
     return {
         "configuration": configuration.to_values(),
+        "preview_kind": "settings_only",
+        "pool_budget": budget.report(),
+        "opening_permissions": list(opening_permissions(configuration, {})),
+        "resolved_thresholds": {
+            "kills": list(configuration.kill_milestones),
+            "side_tasks": list(configuration.side_task_milestones),
+        },
+        "discovery_rosters": {
+            group: {
+                "qualifying": len(set(roster) - set(configuration.discovery_exclusions)),
+                "excluded": sorted(set(roster) & set(configuration.discovery_exclusions)),
+            }
+            for group, roster in SOURCES.items()
+        },
         "digest": configuration.digest,
         "checks": checks,
         "rewards": rewards,
@@ -154,7 +174,10 @@ def preview(values: Mapping[str, object], assumptions: Mapping[str, object]) -> 
         "estimates": estimate_playtime(configuration, counts, assumptions),
         "notes": [
             "Reward types are eligible IDs, not guaranteed quantities. Each check holds one item.",
-            "Progression permissions occur once; remaining slots use randomized supply rewards.",
+            "Required progression is budgeted first; progressive tools need three copies.",
+            "Missable exclusions accept filler only. Convenience has a capped useful allocation.",
+            "Protected opening reserves reliable Cordon checks for a fresh Loner/Cordon start.",
+            "Settings preview only. Actual-seed JSON is optional; placement mode reveals spoilers.",
             "Zone keys stay local; other rewards can cross players in a multiworld.",
             "Local goal events do not consume network checks or reward slots.",
             "Fresh Loner/Cordon saves are the baseline. Expanded engine testing is pending.",

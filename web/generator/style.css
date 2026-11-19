@@ -13,6 +13,14 @@
     sans-serif;
   font-size: 16px;
 }
+#budget-preview {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-height: 400px;
+  overflow: auto;
+  font-size: 12px;
+}
+#discovery-exclusions { width: 100%; min-height: 150px; }
 * {
   box-sizing: border-box;
 }
