@@ -87,6 +87,30 @@ def test_invalid_saved_discovery_state_is_refused(lua, change):
     assert progress(lua, game).refused_save
 
 
+@pytest.mark.parametrize("excluded", [False, True])
+def test_saved_discoveries_cannot_include_disabled_or_excluded_types(lua, excluded):
+    token, source = next(iter(SOURCES["mutant"].items()))
+    game, _, _ = discovery_game(
+        lua,
+        checks_mutant_first_kills=int(excluded),
+        mutant_discovery_mode=1,
+        mutant_discovery_count=2,
+        discovery_exclusions=[token] if excluded else [],
+    )
+    state = progress(lua, game)
+    state.discoveries[source] = True
+    game.load_state(lua.table(gamma_archipelago_v1=state))
+    assert progress(lua, game).refused_save
+
+
+def test_saved_discovery_validation_requires_a_well_shaped_configuration(lua):
+    module = lua.globals().gamma_ap_discovery
+    seen = lua.table_from({next(iter(SOURCES["mutant"].values())): True})
+    assert not module.validate(seen, KEY, None)
+    assert not module.validate(seen, KEY, lua.table())
+    assert not module.validate(seen, KEY, lua.table(options=lua.table(), exclusions=7))
+
+
 def test_legacy_state_migration_disabled_types_and_session_validation(lua):
     game, _, _ = discovery_game(lua)
     state = progress(lua, game)

@@ -8,6 +8,11 @@ and [preset matrix](configuration-and-balance.md). Owen performs engine acceptan
 after each merge; do not launch/load the game automatically. Always use the
 isolated development MO2 launcher for actual playtests.
 
+For baseline script failures, use the dated
+[GAMMA compatibility investigation](gamma-compatibility-investigation.md) and
+`tools/inspect_probe_sources.py`. Candidate presence and source compilation do not
+establish the engine's loaded winner or in-game compatibility.
+
 The complete verifier includes a covered regression pass plus untraced runs for
 6,000 preset seeds and ten actual server cases. Game snapshots in server tests
 are synthetic. Local events do not consume network check slots.
