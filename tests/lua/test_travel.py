@@ -122,3 +122,13 @@ def test_preview_uses_native_settlement_translation_with_a_readable_fallback(lua
     lua.globals().game.translate_string = lua.eval("function(name) return name end")
     assert game.preview_unlock_travel() is True
     assert "Rookie Village" in list(engine.travel_news.values())[-1]
+
+
+@pytest.mark.parametrize("vertex", [1.5, float("nan"), "10"])
+def test_invalid_settlement_vertex_refuses_travel_without_consuming_the_key_trip(lua, vertex):
+    game, engine = travel_game(lua)
+    engine.hub.m_level_vertex_id = vertex
+    assert game.preview_unlock_travel() is True
+    assert game.take_unlock_travel() is False
+    assert engine.travels == 0
+    assert not progress(lua, game).travel_used.l02_garbage

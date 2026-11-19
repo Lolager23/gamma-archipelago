@@ -5,6 +5,27 @@ from .test_gear_locks import gear_game
 from .test_stashes import poll, progress, stash_game
 
 
+@pytest.mark.parametrize("item", [0, 10**10, 2**53 - 1, -(2**53 - 1)])
+def test_saved_foreign_notice_identity_survives_validation_and_reload(lua, item):
+    from gamma_archipelago.notifications import decode_acknowledgements
+
+    game, engine = load_game(lua)
+    set_incoming(engine)
+    game.actor_on_update()
+    saved = saved_state(lua, game)
+    state = saved.gamma_archipelago_v1
+    identity = f"s:28052001:2:{item}"
+    state.notices_seen[identity] = True
+    assert lua.globals().gamma_ap_save_validation.validate(state) is True
+    game.load_state(saved)
+    restored = progress(lua, game)
+    assert not restored.refused_save and restored.notices_seen[identity] is True
+    encoded = lua.globals().gamma_ap_notifications.encode_ack(
+        restored.session_key, restored.notices_seen
+    )
+    assert decode_acknowledgements(encoded, restored.session_key) == {identity}
+
+
 @pytest.mark.parametrize(
     "mutation",
     [

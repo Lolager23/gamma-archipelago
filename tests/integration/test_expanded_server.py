@@ -30,8 +30,9 @@ async def until(predicate):
 def write_snapshot(client, *, received=0):
     allowed = sorted(client.session.allowed_locations)
     lines = [
-        f"GAMMA_AP_OUT|{1 if client.bridge.pilot_goal else 2}",
+        "GAMMA_AP_OUT|3",
         f"session|{client.session.session_key}",
+        f"configuration|{client.configuration.digest}",
         f"received|{received}",
     ]
     lines.extend(f"check|{identity}" for identity in allowed)

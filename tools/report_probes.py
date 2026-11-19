@@ -8,7 +8,11 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from gamma_archipelago.paths import DEFAULT_GAME_ROOT, require_isolated_root, require_safe_child  # noqa: E402
+from gamma_archipelago.paths import (  # noqa: E402
+    DEFAULT_GAME_ROOT,
+    require_isolated_root,
+    require_safe_child,
+)
 from gamma_archipelago.probe_report import summarize  # noqa: E402
 
 

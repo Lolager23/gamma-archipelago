@@ -21,6 +21,18 @@ persists as a refused save marker: it cannot silently clear receipts and bind to
 another seed. Restore a valid full backup or start a fresh character. This does
 not repair arbitrary native game-save corruption or validate third-party state.
 
+Starting-money reductions are confirmed against the saved absolute target before
+initialization or AP rewards continue. An ignored native setter remains pending;
+retries preserve a lower naturally spent balance instead of refunding it.
+Foreign notice identities also survive validation/save/load at the full signed
+53-bit AP bounds without numeric conversion or rounding.
+
+After validated connection, the companion atomically clears its notice snapshot
+before publishing configuration/history. This prevents stale notices from a
+reused seed identity reaching a fresh save. Game-owned acknowledgements are not
+overwritten; normal saved deduplication and authoritative notice reconstruction
+remain in place.
+
 Confirmed stash/baseline creation markers can finish their pending action without
 recreating the object. Unknown creation side effects still block automatic retry.
 There remains no engine transaction between creation and saving. Older-save
@@ -61,7 +73,7 @@ performance. Engine performance, all post-merge game acceptance and independent
 human code review remain **not run**. See [licence review](licence-review.md) for
 the remaining owner decision before public distribution.
 
-The complete verifier passes 587 covered tests plus 16 untraced cases (6,000
+The complete verifier passes 653 covered tests plus 16 untraced cases (6,000
 preset seeds and ten real-server cases). Every owned measured Python runtime
 module has 100% lines/branches and Lua executable lines measure 100%. Lua branch
 coverage is not measured. Packages rebuild identically; text line endings and ZIP
