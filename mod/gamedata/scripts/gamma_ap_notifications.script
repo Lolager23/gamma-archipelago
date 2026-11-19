@@ -2,16 +2,26 @@
 
 local MAX_NOTICES = 8000
 
+local function valid_item_id(text)
+    -- Compare canonical decimal strings to preserve AP's exact signed 53-bit IDs.
+    local magnitude = text:gsub("^%-", "")
+    if magnitude == "0" and text ~= "0" then return false end
+    if #magnitude > 16 or (magnitude ~= "0" and not magnitude:match("^[1-9]%d*$")) then
+        return false
+    end
+    return #magnitude < 16 or magnitude <= "9007199254740991"
+end
+
 local function valid_id(id)
     local received = id:match("^r:(%d+)$")
     if received then
         local number = gamma_ap_protocol.canonical_number(received)
         return number ~= nil and number < 4000
     end
-    local location, slot, item = id:match("^s:(%d+):(%d+):(%d+)$")
+    local location, slot, item = id:match("^s:(%d+):(%d+):(%-?%d+)$")
     return gamma_ap_protocol.canonical_number(location) ~= nil
         and gamma_ap_protocol.canonical_number(slot) ~= nil
-        and gamma_ap_protocol.canonical_number(item) ~= nil
+        and valid_item_id(item)
 end
 
 function parse(content, key)

@@ -10,7 +10,10 @@ stat increments from the native skill tables. It preserves accumulated experienc
 and raises it to at least the completed level's threshold. Strength, Endurance
 and Survival call their explicit native recalculation functions; Scavenging is
 read directly by native consumers. Failure retries the same values, avoiding a
-second level. Haruka continues to own ordinary XP, stat effects and its save data;
+second level. Every retry validates the current native schema. Once the saved
+target level exists, retries only recalculate effects, preserving XP, later levels
+and stat changes earned during normal play. Reapplying a target also preserves
+any higher accumulated XP. Haruka owns ordinary XP, stat effects and its save data;
 AP owns only its receipt plans. A capped reward is consumed without exceeding 15.
 
 Full verifier: 464 covered tests and two real-server cases, all per-module gates

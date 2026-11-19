@@ -126,11 +126,18 @@ class GammaContext(CommonContext):
             self.session.bind_configuration(configuration_key)
             self.session.bind_locations(allowed)
             self.session.bind_items(item_ids)
+            # A seed name/team/slot may be reused with different settings. Clear
+            # client-owned notices before exposing its new configuration/history.
+            # Game-owned acknowledgements remain the save's responsibility.
+            self.bridge.reset_notices(key)
             self.bridge.allowed_locations = allowed
             self.bridge.pilot_goal = (
                 self.configuration is None or self.configuration.goal == "pilot_tour"
             )
             self.require_configuration = version in (2, 3)
+            self.bridge.configuration_key = (
+                configuration_key if self.require_configuration else None
+            )
             if self.require_configuration:
                 self.bridge.write_configuration(
                     self.session.session_key, self.configuration, self.expanded

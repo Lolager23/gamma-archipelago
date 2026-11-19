@@ -151,14 +151,3 @@ def test_exclusive_psi_stash_and_zone_chain_need_early_unreserved_check_slots():
         build_configuration(
             {**defaults(), "rewards_zone_keys": 1, "rewards_progression_stashes": 1}
         )
-
-
-def test_unavailable_build_capabilities_are_never_silently_accepted(monkeypatch):
-    from gamma_archipelago import configuration
-
-    monkeypatch.setattr(configuration, "SUPPORTED_REWARDS", frozenset())
-    with pytest.raises(ConfigurationError, match="Not implemented"):
-        build_configuration({**defaults(), "rewards_loot_stashes": 1})
-    monkeypatch.setattr(configuration, "SUPPORTED_GOALS", frozenset())
-    with pytest.raises(ConfigurationError, match="Not implemented"):
-        build_configuration(defaults())

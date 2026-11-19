@@ -88,7 +88,12 @@ def test_real_generation_server_item_delivery_and_reconnect(tmp_path, mixed_game
                         [{"cmd": "LocationChecks", "locations": list(server.locations[quest.slot])}]
                     )
                 key = client.session.session_key
-                outgoing = ["GAMMA_AP_OUT|1", f"session|{key}", "received|0"]
+                outgoing = [
+                    "GAMMA_AP_OUT|3",
+                    f"session|{key}",
+                    f"configuration|{client.configuration.digest}",
+                    "received|0",
+                ]
                 outgoing.extend(f"check|{value}" for value in sorted(LOCATION_IDS))
                 outgoing.extend(["goal|1", f"end|{len(LOCATION_IDS)}", ""])
                 (bridge.directory / "outgoing.txt").write_text(

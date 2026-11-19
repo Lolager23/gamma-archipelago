@@ -30,6 +30,7 @@ class FileBridge:
         self.directory.mkdir(parents=True, exist_ok=True)
         self.allowed_locations = LOCATION_IDS
         self.pilot_goal = True
+        self.configuration_key: str | None = None
 
     def write_history(
         self, session_key: str, item_ids: tuple[int, ...], configuration_key: str | None = None
@@ -45,6 +46,10 @@ class FileBridge:
             stream.flush()
             os.fsync(stream.fileno())
         os.replace(temporary, destination)
+
+    def reset_notices(self, session_key: str) -> None:
+        """Remove stale client notices before publishing a connected seed's data."""
+        self._write_atomic("notices", encode_notices(session_key, ()))
 
     def write_notices(self, session_key: str, notices: tuple[Notice, ...]) -> None:
         source = require_safe_child(self.game_root, "appdata/archipelago/notices_ack.txt")
@@ -77,5 +82,9 @@ class FileBridge:
         except UnicodeDecodeError as exc:
             raise ProtocolError("Game snapshot must be ASCII data") from exc
         return decode_outgoing(
-            content, session_key, self.allowed_locations, pilot_goal=self.pilot_goal
+            content,
+            session_key,
+            self.allowed_locations,
+            pilot_goal=self.pilot_goal,
+            configuration_key=self.configuration_key,
         )

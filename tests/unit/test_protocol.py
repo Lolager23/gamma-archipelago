@@ -95,3 +95,32 @@ def test_alternate_goal_wire_is_bound_to_its_selected_goal_instead_of_pilot_chec
     bridge.pilot_goal = False
     (bridge.directory / "outgoing.txt").write_text(content)
     assert bridge.read_game(KEY).goal_complete
+
+
+@pytest.mark.parametrize("pilot_goal", [True, False])
+def test_configured_snapshots_bind_the_digest_before_accepting_checks_or_goals(pilot_goal):
+    digest = "b" * 64
+    content = (
+        outgoing(checks=LOCATION_IDS, goal=1)
+        .replace("GAMMA_AP_OUT|1", "GAMMA_AP_OUT|3")
+        .replace(f"session|{KEY}\n", f"session|{KEY}\nconfiguration|{digest}\n")
+    )
+    snapshot = decode_outgoing(content, KEY, configuration_key=digest, pilot_goal=pilot_goal)
+    assert snapshot.checked_locations == LOCATION_IDS and snapshot.goal_complete
+    for invalid in (
+        content.replace(digest, "c" * 64),
+        content.replace(f"configuration|{digest}\n", ""),
+        content.replace("configuration|", "settings|"),
+        content.replace("received|0", f"configuration|{digest}\nreceived|0"),
+        outgoing(),
+    ):
+        with pytest.raises(ProtocolError):
+            decode_outgoing(invalid, KEY, configuration_key=digest, pilot_goal=pilot_goal)
+    with pytest.raises(ProtocolError):
+        decode_outgoing(content, KEY)
+
+
+@pytest.mark.parametrize("digest", ["", "x" * 64, "A" * 64])
+def test_configured_snapshot_expected_digest_is_validated(digest):
+    with pytest.raises(ProtocolError):
+        decode_outgoing(outgoing(), KEY, configuration_key=digest)

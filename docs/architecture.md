@@ -25,6 +25,11 @@ client holds a validated mirror for replay; the save owns the last item actually
 applied in that saved game. The bridge includes a unique seed/slot session key.
 A save must never attach silently to a different key.
 
+Configured outgoing snapshots also carry the exact settings digest. The companion
+requires that digest before accepting checks, receipts or victory, including when
+the same seed name/team/slot is reused with different options. See the
+[bridge protocol](bridge-protocol.md) for the wire formats and bundle upgrades.
+
 Keep received items pending until the game can apply them. A successful file write
 does not mean an item has been applied. An item batch with a gap is rejected and
 requires resynchronisation. Duplicate history with different contents is an error.
