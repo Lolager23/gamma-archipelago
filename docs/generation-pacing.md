@@ -68,6 +68,9 @@ The new `short`, `standard` and `extended` presets use protected openings. Exist
 six presets retain legacy settings. Hubs-first route priority is Garbage, Rostok,
 Yantar, Agroprom and Wild Territory when reachable. Precollected zone keys expand
 the reachable frontier without duplicating the removed keys.
+Remaining route keys must be local: conflicting `non_local_items` settings fail
+explicitly before placement. Already precollected keys need no placement and do
+not create that conflict.
 
 ## Previews and compatibility
 
