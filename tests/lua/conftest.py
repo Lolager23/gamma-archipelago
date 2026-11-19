@@ -28,6 +28,7 @@ def lua():
         "equipment_checks",
         "rank",
         "reputation",
+        "skills",
         "stashes",
         "state",
         "settlements",

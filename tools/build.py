@@ -36,6 +36,12 @@ def generate_catalogues() -> None:
     lines.extend(
         f'    [{item["id"]}] = "{item.get("category", "")}",' for item in catalogue["items"]
     )
+    lines.extend(["}", "skill_rewards = {"])
+    lines.extend(
+        f'    [{item["id"]}] = "{item["skill"]}",'
+        for item in catalogue["items"]
+        if item.get("effect") == "skill"
+    )
     lines.extend(["}", "reputation_rewards = {"])
     for item in catalogue["items"]:
         if item.get("effect") == "reputation":

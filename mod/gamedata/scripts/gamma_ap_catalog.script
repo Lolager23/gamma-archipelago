@@ -44,6 +44,10 @@ item_effects = {
     [28051306] = "reputation",
     [28051307] = "reputation",
     [28051308] = "reputation",
+    [28051401] = "skill",
+    [28051402] = "skill",
+    [28051403] = "skill",
+    [28051404] = "skill",
 }
 item_categories = {
     [28051001] = "",
@@ -85,6 +89,16 @@ item_categories = {
     [28051306] = "rewards_faction_reputation",
     [28051307] = "rewards_faction_reputation",
     [28051308] = "rewards_faction_reputation",
+    [28051401] = "rewards_stat_levels",
+    [28051402] = "rewards_stat_levels",
+    [28051403] = "rewards_stat_levels",
+    [28051404] = "rewards_stat_levels",
+}
+skill_rewards = {
+    [28051401] = "strength",
+    [28051402] = "endurance",
+    [28051403] = "survival",
+    [28051404] = "scavenging",
 }
 reputation_rewards = {
     [28051301] = {faction="stalker", bonus=250, cap=3000},

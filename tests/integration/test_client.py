@@ -131,10 +131,18 @@ async def test_configured_stash_item_manifests_and_history_are_validated():
         "configuration": configuration.to_values(),
         "configuration_key": configuration.digest,
         "location_ids": sorted(MAP_LOCATION_IDS),
-        "item_ids": sorted(ITEM_IDS - {28051201, *range(28051301, 28051309)}),
+        "item_ids": sorted(
+            ITEM_IDS - {28051201, *range(28051301, 28051309), *range(28051401, 28051405)}
+        ),
     }
     context = connected_context(slot)
-    custom = next(iter(ITEM_IDS - set(ITEM_SECTIONS) - {28051201, *range(28051301, 28051309)}))
+    custom = next(
+        iter(
+            ITEM_IDS
+            - set(ITEM_SECTIONS)
+            - {28051201, *range(28051301, 28051309), *range(28051401, 28051405)}
+        )
+    )
     context.items_received = [NetworkItem(custom, 1, 2)]
     context.on_package("ReceivedItems", {})
     assert context.session.item_ids == (custom,)

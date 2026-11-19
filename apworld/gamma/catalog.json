@@ -528,6 +528,38 @@
       "faction": "bandit",
       "bonus": 250,
       "cap": 3000
+    },
+    {
+      "id": 28051401,
+      "name": "Skill Level: Strength",
+      "classification": "useful",
+      "effect": "skill",
+      "category": "rewards_stat_levels",
+      "skill": "strength"
+    },
+    {
+      "id": 28051402,
+      "name": "Skill Level: Endurance",
+      "classification": "useful",
+      "effect": "skill",
+      "category": "rewards_stat_levels",
+      "skill": "endurance"
+    },
+    {
+      "id": 28051403,
+      "name": "Skill Level: Survival",
+      "classification": "useful",
+      "effect": "skill",
+      "category": "rewards_stat_levels",
+      "skill": "survival"
+    },
+    {
+      "id": 28051404,
+      "name": "Skill Level: Scavenging",
+      "classification": "useful",
+      "effect": "skill",
+      "category": "rewards_stat_levels",
+      "skill": "scavenging"
     }
   ],
   "locations": [

@@ -74,6 +74,9 @@ end
 
 local function apply_reward(section)
     if type(section) == "number" then
+        if gamma_ap_catalog.item_effects[section] == "skill" then
+            return gamma_ap_skills.receive(state, section)
+        end
         if gamma_ap_catalog.item_effects[section] == "reputation" then
             return gamma_ap_reputation.receive(state, section)
         end

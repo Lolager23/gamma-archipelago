@@ -57,7 +57,12 @@ def test_default_configuration_is_immutable_and_deterministically_serialized():
         name
         for name in REWARD_OPTIONS
         if name
-        not in {"rewards_loot_stashes", "rewards_progression_stashes", "rewards_faction_reputation"}
+        not in {
+            "rewards_loot_stashes",
+            "rewards_progression_stashes",
+            "rewards_faction_reputation",
+            "rewards_stat_levels",
+        }
     ),
 )
 def test_unimplemented_adapters_are_never_silently_enabled(name):
