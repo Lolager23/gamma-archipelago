@@ -75,6 +75,7 @@ end
 
 local function grant_reward(section)
     if type(section) == "number" then
+        if gamma_ap_catalog.item_effects[section] == "convenience" then return gamma_ap_convenience.receive(state,section) end
         if gamma_ap_catalog.item_effects[section] == "progressive_tools" then return true end
         if gamma_ap_catalog.gear_rewards[section] then return gamma_ap_gear_locks.receive(state, section) end
         if gamma_ap_catalog.item_effects[section] == "unlock" then
@@ -109,11 +110,13 @@ local function apply_reward(section)
 end
 
 function actor_on_update()
-    if state.refused_save then report_error("AP save is refused; restore a valid backup"); return end
     if not db.actor or not db.actor:alive() then return end
     local now = time_global()
     if now < next_poll then return end
     next_poll = now + 500
+    local carried,carry_error = gamma_ap_convenience.poll(state)
+    if not carried then report_error(carry_error); return end
+    if state.refused_save then report_error("AP save is refused; restore a valid backup"); return end
     local incoming, reason = read_incoming()
     if not incoming then report_error(reason); return end
     local configuration, configuration_error = read_configuration(incoming)
@@ -272,6 +275,7 @@ function on_game_start()
     state = gamma_ap_state.new_state()
     known_receipts = 0
     gamma_ap_scouting.reset()
+    gamma_ap_convenience.reset()
     next_poll = 0
     last_error = nil
     task_hook_registered = false

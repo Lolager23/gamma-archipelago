@@ -31,7 +31,12 @@ def _valid_identity(value: str) -> bool:
 
 def is_unlock(item_id: int, game: str) -> bool:
     """Foreign progression flags do not imply equipment/permission semantics."""
-    return game == GAME and ITEM_EFFECTS.get(item_id) in {"unlock", "skill", "progressive_tools"}
+    return game == GAME and ITEM_EFFECTS.get(item_id) in {
+        "unlock",
+        "skill",
+        "progressive_tools",
+        "convenience",
+    }
 
 
 def reward_message(player: str, item: str, *, unlock: bool, outgoing: bool) -> str:

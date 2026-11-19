@@ -15,6 +15,7 @@ EXPANSION_LIMITS = {
 }
 EXPANSION_DEFAULTS = dict.fromkeys(EXPANSION_LIMITS, 0)
 LEGACY_REWARD_DEFAULTS = {
+    "rewards_convenience": 0,
     "rewards_supply_medical": 0,
     "rewards_supply_maintenance": 0,
     "rewards_supply_ammunition": 0,

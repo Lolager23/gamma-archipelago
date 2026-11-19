@@ -1243,6 +1243,14 @@
         "water_drink",
         "bandage"
       ]
+    },
+    {
+      "id": 28051911,
+      "name": "Carry Capacity +5 kg",
+      "category": "rewards_convenience",
+      "classification": "useful",
+      "effect": "convenience",
+      "copies": 3
     }
   ],
   "locations": [

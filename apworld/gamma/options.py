@@ -133,6 +133,12 @@ class RewardsSupplyExpedition(Toggle):
     display_name = "rewards supply expedition"
 
 
+class RewardsConvenience(Toggle):
+    """Up to three bounded carry-capacity rewards using the supported keyed weight API."""
+
+    display_name = "Rewards: Convenience"
+
+
 class PermissionSupplies(Toggle):
     """Attach one-time bounded supplies to supported permission receipts; default off."""
 
@@ -342,6 +348,7 @@ class OptionalCheckPolicy(Choice):
 
 @dataclass
 class GammaOptions(PerGameCommonOptions):
+    rewards_convenience: RewardsConvenience
     supply_ammo_calibre: SupplyAmmoCalibre
     rewards_supply_medical: RewardsSupplyMedical
     rewards_supply_maintenance: RewardsSupplyMaintenance

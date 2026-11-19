@@ -66,6 +66,11 @@ ammunition calibre is seed configuration. A package receipt grants its contents
 without a permanent permission, while receipt ordering and completion still
 belong to the same central save coordinator.
 
+[Convenience carry rewards](convenience-rewards.md) derive their bounded effect
+from applied receipts and reconcile one namespaced entry through the active GAMMA
+weight API. Their local cache tracks engine application only; it does not own
+progression or replace the native modifier system.
+
 ## State and failure boundaries
 
 The AP server owns completed location checks and the ordered item history. The

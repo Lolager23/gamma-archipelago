@@ -111,6 +111,9 @@ function snapshot(state, total, problem, psi)
     if options(state).rewards_progressive_tools == 1 then
         result.progression[#result.progression+1] = "Progressive tools: "..gamma_ap_workshop.tools_level(state).."/3"
     end
+    if options(state).rewards_convenience == 1 then
+        result.progression[#result.progression+1] = "AP carry permission: +"..gamma_ap_convenience.bonus(state).." kg (cap 15 kg)"
+    end
     if result.delivery then result.progression[#result.progression+1] = result.delivery end
     local coordinates,claimed = 0,0
     for _,record in pairs(state.stashes.records) do
