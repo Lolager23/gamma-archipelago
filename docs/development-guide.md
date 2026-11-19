@@ -63,6 +63,11 @@ workflow permissions. Check both job results on the PR before declaring CI passe
 packaged. The Lua and AP world catalogue copies are generated from
 `src/gamma_archipelago/catalog.json`; edit that source rather than either copy.
 
+The separately packaged `dist/gamma-archipelago-probes.zip` contains only the
+opt-in diagnostic add-on. See [callback probes](callback-probes.md) for deployment,
+source inventory, logs and the remaining in-game acceptance. It is not part of
+the normal pilot package.
+
 Wait for the official GAMMA installer to finish before deployment. Create the
 `Archipelago DEV` MO2 profile as a copy of the fresh development default and enable
 profile-specific saves and settings. The following command copies the add-on
