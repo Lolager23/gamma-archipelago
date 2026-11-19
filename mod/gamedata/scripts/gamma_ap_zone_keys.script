@@ -1,0 +1,99 @@
+-- Guard the engine's authoritative M_CHANGE_LEVEL packet, including extra routes.
+local packet_wrapper = nil
+local script_wrapper = nil
+local get_state = nil
+local storage_cursor = nil
+
+local function enabled(state)
+    return state.configuration and state.configuration.expanded
+        and state.configuration.options.rewards_zone_keys == 1
+end
+
+function allowed(state, destination)
+    if not enabled(state) then return true end
+    if destination == "l01_escape" then return true end
+    local permission = gamma_ap_catalog.zone_keys[destination]
+    return permission ~= nil and state.unlocks[permission] == true
+end
+
+local function destination(gvid)
+    local graph = game_graph()
+    if not graph:valid_vertex_id(gvid) then return nil end
+    return alife():level_name(graph:vertex(gvid):level_id())
+end
+
+function validate_start(state)
+    if not enabled(state) or next(state.visited_maps) or level.name() == "l01_escape" then return true end
+    return false, "Zone-key seeds require a fresh Cordon start; this character began elsewhere"
+end
+
+function poll(state)
+    if not enabled(state) or not db.storage then return true end
+    if storage_cursor and not db.storage[storage_cursor] then storage_cursor = nil end
+    for _=1,128 do
+        local id,entry = next(db.storage, storage_cursor)
+        storage_cursor = id
+        if not id then break end
+        local object = entry.object
+        if object and IsLevelChanger(object) then
+            local ok, data = pcall(utils_stpk.get_level_changer_data, alife_object(id))
+            if not ok or not data then return false, "Cannot inspect native transition destination" end
+            local permitted = allowed(state, destination(data.dest_game_vertex_id))
+            if state.zone_disabled[id] and state.zone_disabled[id] ~= object:name() then
+                state.zone_disabled[id] = nil
+            end
+            if not permitted and object:is_level_changer_enabled() then
+                object:enable_level_changer(false)
+                state.zone_disabled[id] = object:name()
+            elseif permitted and state.zone_disabled[id] then
+                object:enable_level_changer(true)
+                state.zone_disabled[id] = nil
+            end
+        end
+    end
+    return true
+end
+
+function install(state_reader)
+    get_state = state_reader
+    if type(CALifeUpdateManager__on_before_change_level) ~= "function" or type(ChangeLevel) ~= "function" then
+        return false, "Zone keys require the native transition packet and scripted travel hooks"
+    end
+    if CALifeUpdateManager__on_before_change_level ~= packet_wrapper then
+        local delegate = CALifeUpdateManager__on_before_change_level
+        packet_wrapper = function(packet)
+            local state = get_state()
+            if enabled(state) then
+                packet:r_seek(2)
+                local target = destination(packet:r_u16())
+                packet:r_seek(2)
+                if not allowed(state, target) then
+                    -- Native engine changes cannot be cancelled here. Redirect
+                    -- before native save/cleanup to the current safe actor position.
+                    local actor = db.actor
+                    packet:w_begin(13)
+                    packet:w_u16(actor:game_vertex_id())
+                    packet:w_u32(actor:level_vertex_id())
+                    packet:w_vec3(actor:position())
+                    packet:w_vec3(vector():set(0, actor:direction():getH(), 0))
+                    packet:r_seek(2)
+                    printf("[GAMMA AP] Destination locked; remaining in the current zone")
+                end
+            end
+            return delegate(packet)
+        end
+        _G.CALifeUpdateManager__on_before_change_level = packet_wrapper
+    end
+    if ChangeLevel ~= script_wrapper then
+        local delegate = ChangeLevel
+        script_wrapper = function(pos, lvid, gvid, ...)
+            if not allowed(get_state(), destination(gvid)) then
+                printf("[GAMMA AP] Scripted travel requires a zone key")
+                return false
+            end
+            return delegate(pos, lvid, gvid, ...)
+        end
+        _G.ChangeLevel = script_wrapper
+    end
+    return true
+end

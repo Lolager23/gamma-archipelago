@@ -48,6 +48,7 @@ def test_packages_are_reproducible_and_load_from_apworld(tmp_path):
                 "skills",
                 "quest_keys",
                 "gear_locks",
+                "zone_keys",
                 "stashes",
             )
         } | {
