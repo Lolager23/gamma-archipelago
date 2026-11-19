@@ -1,5 +1,36 @@
 # Verification record
 
+## Generator extended QA and fixes: 19 November 2026
+
+The full verifier passed **653 covered + 32 untraced Python/Lua tests**, plus
+**five Node frontend regressions**: 690 tests total. All owned Python runtime
+modules reached 100% measured lines and branches, and existing Lua executable-line
+gates passed. Lua branch and numeric JavaScript coverage are not measured.
+
+Browser testing reproduced No Starting Weapons permanently overwriting normal
+firearms/melee choices. The fix preserves draft state separately from normalized
+previews. On/off controls and a downloaded YAML now restore the original modes.
+Pending/invalid edits clear old totals. Reserved player names now block downloads,
+and exported names match upstream trimming. Incomplete JSON bodies are refused;
+timeouts and nesting limits return bounded errors. Brackets/escapes in strings
+remain valid. A backend-stop test also found a stale connected banner, now fixed;
+restart plus another edit recovered the existing draft and generation controls.
+
+All six presets passed browser count checks. Six presets times two boundary
+seeds generated exact preview IDs, reward IDs and settings. Three repeated-seed
+cases reproduced placements/settings. Two actual concurrent HTTP requests
+produced one seed and one busy refusal; a later request succeeded. The complete
+suite also retains 6,000 preset seeds, category/goal matrices, ten real-server
+cases, packaged-client/APWorld loading and reproducible-package checks.
+
+A browser download using the maximum 64-bit seed succeeded. Search/no-match,
+custom/duplicate milestones, invalid seed/name controls, lock restoration and
+server recovery were exercised. Private logs are under `D:/GAMMAAPTools` as
+`web-qa-reproductions.log`, `web-qa-real-generation.log` and
+`web-qa-full-verification.log`; the browser image is
+`diagnostics/generator-qa.jpg`. No game launch, save change, mod deployment,
+merge or public/hosted publication occurred. The app remains local-only.
+
 ## Generator web app: 19 November 2026
 
 The complete verifier passed with 645 covered tests and 17 untraced

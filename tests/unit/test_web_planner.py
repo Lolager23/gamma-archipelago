@@ -53,6 +53,16 @@ def test_player_document_normalizes_starting_gear_without_mutating_inputs():
     assert values["starting_firearms"] == 0
 
 
+@pytest.mark.parametrize("name", ["Archipelago", "archipelago", " Archipelago "])
+def test_reserved_server_name_is_rejected_before_upstream_generation(name):
+    with pytest.raises(ValueError, match="reserved"):
+        player_document(name, defaults())
+
+
+def test_exported_name_matches_the_trimmed_upstream_slot_name():
+    assert player_document(" Owen ", defaults())["name"] == "Owen"
+
+
 @pytest.mark.parametrize("name", ASSUMPTIONS)
 def test_playtime_assumptions_reject_invalid_types_and_bounds(name):
     configuration = build_configuration(defaults())

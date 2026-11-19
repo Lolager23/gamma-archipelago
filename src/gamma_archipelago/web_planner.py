@@ -87,8 +87,11 @@ def metadata() -> dict[str, object]:
 def player_document(name: object, values: Mapping[str, object]) -> dict[str, object]:
     if not isinstance(name, str) or not re.fullmatch(r"[A-Za-z0-9_ -]{1,16}", name):
         raise ValueError("Player name: use 1–16 letters, numbers, spaces, underscores or hyphens")
-    if not name.strip():
+    name = name.strip()
+    if not name:
         raise ValueError("Player name cannot be blank")
+    if name.casefold() == "archipelago":
+        raise ValueError("Player name Archipelago is reserved for the server")
     configuration = build_configuration(values)
     return {
         "name": name,

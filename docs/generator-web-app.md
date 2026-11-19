@@ -5,6 +5,8 @@ checks and eligible reward types, exports a player YAML and generates a real see
 ZIP through the pinned Archipelago runtime. It does not start GAMMA, MultiServer
 or the companion, change saves, or deploy anything into either game installation.
 
+The requested scope is local-only. No hosted copy or external account is required.
+
 ## Start
 
 From this branch's checkout, with the documented Python 3.12 environment:
@@ -26,6 +28,12 @@ validation and catalogue projection call the same Python core as the APWorld;
 the browser does not maintain a second generation model. Invalid or undersized
 progression pools block exports/generation rather than silently changing options.
 
+The form keeps your draft choices separate from the canonical preview. No Starting
+Weapons temporarily overrides firearms/melee choices; turning it off restores
+them. New edits invalidate old totals and late responses cannot replace a newer
+draft. If the backend stops, generation is disabled and the page reports it;
+after restarting it, change a setting to retry without losing the draft.
+
 The preview distinguishes check/reward slots, distinct eligible item IDs and
 required progression quantities. Random supply types can repeat or be absent
 from a particular seed. Local progression events are excluded from check counts.
@@ -34,6 +42,8 @@ Searching filters enabled checks or eligible rewards by name, category or region
 ## Generate and use
 
 Enter a 1–16 character player name and an unsigned 64-bit decimal seed number.
+Names are trimmed to match upstream slot naming. Archipelago is reserved for the
+server and is rejected before generation, including case variants.
 Generate downloads the actual upstream seed archive, including a spoiler.
 The request snapshots the current settings, so later edits do not change an
 in-flight run. There is one generator at a time, with a 180-second timeout.
@@ -71,7 +81,10 @@ headers, requires bounded JSON requests and never accepts filesystem paths or
 shell commands from the browser. It deliberately exposes no LAN listener, CORS
 access, game controls or arbitrary file downloads. A local user owns the process;
 it is not an Internet-facing server. Source is split into catalogue projection,
-playtime estimates, generation execution, HTTP transport and two browser modules.
+playtime estimates, generation execution, HTTP transport and three browser modules.
+Incomplete request bodies are rejected, stalled bodies time out after five
+seconds, and JSON nesting is capped at 16 levels before decoding. Quoted brackets
+and escaped quotes do not count as nesting.
 
 Regression tests exercise every preset's IDs, dynamic milestone IDs, invalid
 options/pool sizes/names/assumptions/seeds, generation failures/timeouts/busy state,
@@ -79,6 +92,13 @@ runtime mismatch and real HTTP export/rejection paths. An untraced integration
 case generates and inspects a real AP seed ZIP. Python per-module line and branch
 coverage gates still apply. Browser interaction evidence is separate from these
 tests and from GAMMA acceptance.
+
+The expanded web matrix checks all six presets at seed 0 and the maximum 64-bit
+seed against exact generated IDs/settings, repeated-seed placements, concurrent
+HTTP generation refusal and subsequent recovery. Five Node built-in regression
+tests exercise draft/preview isolation, stale responses, preset copies, names and
+seed bounds. They run with the complete verifier; no frontend test dependencies
+or numeric JavaScript coverage claim are introduced.
 
 The nested HTTP handler is kept together to make request/response ownership
 explicit. Its factory exceeds the 40-line guideline because it defines the small

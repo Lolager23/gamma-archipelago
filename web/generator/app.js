@@ -5,15 +5,18 @@ import {
   assumptionOptions,
   showRoster,
   showSummary,
-} from "/ui.js";
+} from "./ui.js";
+import {
+  DraftConfiguration,
+  playerNameError,
+  validSeed,
+} from "./form_state.js";
 
 let metadata,
-  options,
   assumptions,
-  result = null,
-  revision = 0,
   timer,
   generating = false;
+const form = new DraftConfiguration();
 
 async function request(path, body) {
   const response = await fetch(path, {
@@ -30,7 +33,7 @@ async function request(path, body) {
 
 function body() {
   return {
-    options,
+    options: form.options,
     assumptions,
     name: $("player").value,
     seed: $("seed").value,
@@ -38,18 +41,15 @@ function body() {
 }
 
 function enableActions() {
-  const nameValid =
-    /^[A-Za-z0-9_ -]{1,16}$/.test($("player").value) &&
-    $("player").value.trim();
-  const seed = $("seed").value;
-  const seedValid =
-    /^\d{1,20}$/.test(seed) && BigInt(seed) <= 18446744073709551615n;
-  $("export").disabled = !result || !nameValid || generating;
-  $("generate").disabled = !result || !nameValid || !seedValid || generating;
-  if (result) {
+  const nameError = playerNameError($("player").value);
+  const seedValid = validSeed($("seed").value);
+  $("export").disabled = !form.result || nameError || generating;
+  $("generate").disabled =
+    !form.result || nameError || !seedValid || generating;
+  if (form.result) {
     $("validation").className = "validation";
-    $("validation").textContent = !nameValid
-      ? "Use a player name of 1–16 letters, numbers, spaces, underscores or hyphens."
+    $("validation").textContent = nameError
+      ? nameError
       : !seedValid
         ? "Enter a seed from 0 to 18446744073709551615."
         : "Configuration valid. Ready to generate.";
@@ -60,47 +60,63 @@ async function refresh(expected) {
   try {
     const response = await request("/api/preview", body());
     const data = await response.json();
-    if (expected !== revision) return;
-    result = data;
-    options = data.configuration;
-    document.querySelectorAll("#gear-options select").forEach((node) => {
-      node.value = options[node.dataset.option];
-    });
+    if (!form.accept(expected, data)) return;
+    renderGear();
     $("connection").textContent =
       "Connected to your local Archipelago planner.";
     enableActions();
   } catch (error) {
-    if (expected !== revision) return;
-    result = null;
+    if (expected !== form.revision) return;
+    form.result = null;
+    if (error instanceof TypeError) {
+      $("connection").textContent =
+        "Local planner is unavailable. Restart it, then change a setting to retry.";
+    }
     $("validation").className = "validation error";
     $("validation").textContent = error.message;
     enableActions();
   }
-  showSummary(result, metadata, options);
-  showRoster(result, metadata);
+  showSummary(form.result, metadata, form.options);
+  showRoster(form.result, metadata);
 }
 
 function schedule() {
   clearTimeout(timer);
-  revision += 1;
-  result = null;
   enableActions();
   $("validation").textContent = "Checking settings…";
   $("preset-status").textContent = "Custom configuration";
-  const current = revision;
+  showSummary(null, metadata, form.options);
+  showRoster(null, metadata);
+  const current = form.revision;
   timer = setTimeout(() => refresh(current), 150);
 }
 
 function changeOption(key, value) {
-  options[key] = value;
+  form.edit(key, value);
+  renderGear();
   schedule();
 }
 
+function renderGear() {
+  document.querySelectorAll("#gear-options select").forEach((node) => {
+    const key = node.dataset.option;
+    const overridden =
+      Boolean(form.options.no_starting_weapons) &&
+      ["starting_firearms", "starting_melee"].includes(key);
+    node.value = overridden
+      ? Math.max(1, form.options[key])
+      : form.options[key];
+    node.disabled = overridden;
+  });
+}
+
 function loadPreset() {
-  options = structuredClone(metadata.presets[$("preset").value]);
+  form.selectPreset(metadata.presets[$("preset").value]);
+  const options = form.options;
   categoryOptions("check-options", metadata.checks, options, changeOption);
   categoryOptions("reward-options", metadata.rewards, options, changeOption);
   loadoutOptions(metadata, options, changeOption);
+  renderGear();
   $("goal").value = options.goal;
   $("kill-milestones").value = options.kill_milestones.join(", ");
   $("task-milestones").value = options.side_task_milestones.join(", ");
@@ -174,9 +190,11 @@ function bindControls() {
     $("seed").value = String(crypto.getRandomValues(new Uint32Array(1))[0]);
     enableActions();
   });
-  $("search").addEventListener("input", () => showRoster(result, metadata));
+  $("search").addEventListener("input", () =>
+    showRoster(form.result, metadata),
+  );
   $("roster-kind").addEventListener("change", () =>
-    showRoster(result, metadata),
+    showRoster(form.result, metadata),
   );
   $("export").addEventListener("click", () => download("/api/yaml"));
   $("generate").addEventListener("click", () => download("/api/generate"));
@@ -233,6 +251,7 @@ async function start() {
     );
     assumptionOptions(metadata.assumptions, assumptions, (key, value) => {
       assumptions[key] = value;
+      form.invalidate();
       schedule();
     });
     bindControls();

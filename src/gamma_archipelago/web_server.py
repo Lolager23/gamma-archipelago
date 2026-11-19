@@ -14,12 +14,37 @@ ASSETS = {
     "/style.css": "style.css",
     "/app.js": "app.js",
     "/ui.js": "ui.js",
+    "/form_state.js": "form_state.js",
 }
 TYPES = {".html": "text/html", ".css": "text/css", ".js": "text/javascript"}
 
 
+def check_json_depth(payload: bytes) -> None:
+    """Bound nesting before the JSON decoder, without counting quoted brackets."""
+    depth = 0
+    quoted = escaped = False
+    for byte in payload:
+        if quoted:
+            if escaped:
+                escaped = False
+            elif byte == 92:
+                escaped = True
+            elif byte == 34:
+                quoted = False
+        elif byte == 34:
+            quoted = True
+        elif byte in (91, 123):
+            depth += 1
+            if depth > 16:
+                raise ValueError("JSON nesting cannot exceed 16 levels")
+        elif byte in (93, 125):
+            depth -= 1
+
+
 def make_handler(assets: Path, generator: SeedGenerator) -> type[BaseHTTPRequestHandler]:
     class Handler(BaseHTTPRequestHandler):
+        body_timeout_seconds = 5.0
+
         def log_message(self, format: str, *args: Any) -> None:
             pass  # Requests contain configuration data; do not log their contents.
 
@@ -71,7 +96,15 @@ def make_handler(assets: Path, generator: SeedGenerator) -> type[BaseHTTPRequest
             size = int(self.headers.get("Content-Length", "0"))
             if not 1 <= size <= 65536:
                 raise ValueError("Request must contain 1–65536 bytes")
-            value = json.loads(self.rfile.read(size))
+            self.connection.settimeout(self.body_timeout_seconds)
+            try:
+                payload = self.rfile.read(size)
+            except TimeoutError as error:
+                raise ValueError("Request body timed out before it was complete") from error
+            if len(payload) != size:
+                raise ValueError("Request body was incomplete; send the complete JSON document")
+            check_json_depth(payload)
+            value = json.loads(payload)
             if not isinstance(value, dict) or not isinstance(value.get("options"), dict):
                 raise ValueError("Provide an options object")
             if not isinstance(value.get("assumptions", {}), dict):
