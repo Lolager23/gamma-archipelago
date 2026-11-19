@@ -20,9 +20,12 @@ service layer is needed.
 
 Optional PDA notices carry semantic transfer fields; the game adapter renders
 whole-sentence string-table templates in the selected language with English
-fallback. This presentation channel owns no item-application state. Its version 2
-sidecar retains version 1 acknowledgement/save identities and accepts old text
-sidecars. See [PDA messages](pda-reward-messages.md) for coordinated bundle upgrades.
+fallback. This presentation channel owns no item-application state. Version 3
+adds source-check causes while reading versions 1/2 and retaining version-1
+acknowledgement/save identities. A pure catalogue projection describes GAMMA
+checks; the CommonClient notice adapter resolves the finder slot's game and
+data-package metadata. The game translates the sentence, cause and owned value.
+See [PDA messages](pda-reward-messages.md) for coordinated bundle upgrades.
 
 An optional live-presence sidecar supplies the authenticated slot name and an
 advancing connection heartbeat for startup/reconnect PDA notices. Its transient

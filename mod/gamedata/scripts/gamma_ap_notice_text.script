@@ -16,35 +16,55 @@ local function translated(key)
     if ok and text ~= key then return text end
 end
 
-function valid(kind, player, item, local_id)
+function valid(kind, player, item, local_id, cause_kind, cause_value)
+    local cause_valid = cause_kind == nil and cause_value == nil
+        or gamma_ap_catalog.notice_cause_templates[cause_kind] ~= nil and plain(cause_value,384)
     return templates[kind] ~= nil and plain(player, 384) and plain(item, 384)
         and (local_id == 0 or gamma_ap_catalog.item_effects[local_id] ~= nil)
+        and cause_valid
 end
 
-local function valid_template(text)
+local function valid_template(text, fields)
     if not plain(text, 512) then return false end
-    local player, item, unknown = 0, 0, false
+    local counts, unknown = {}, false
     local remaining = text:gsub("{([^{}]*)}", function(key)
-        if key == "player" then player = player + 1
-        elseif key == "item" then item = item + 1
-        else unknown = true end
+        if fields[key] == nil then unknown = true end
+        counts[key] = (counts[key] or 0)+1
         return ""
     end)
-    return player == 1 and item == 1 and not unknown and not remaining:find("[{}]")
+    for key in pairs(fields) do if counts[key] ~= 1 then return false end end
+    return not unknown and not remaining:find("[{}]")
+end
+
+local function render_template(key, fallback, fields)
+    local template = translated(key)
+    if not valid_template(template,fields) then template = fallback end
+    local text = template:gsub("{([a-z_]+)}", function(name) return fields[name] end)
+    return text
 end
 
 function render(notice)
     if not notice.kind then return notice.text end -- Older client sidecar.
     local fallback = templates[notice.kind]
-    local template = translated("gamma_ap_notice_" .. notice.kind)
-    if not valid_template(template) then template = fallback end
     local item = notice.item
     if notice.local_item_id ~= 0 then
         local label = translated("gamma_ap_reward_" .. notice.local_item_id)
         if plain(label, 384) then item = label end
     end
     local fields = {player=notice.player, item=item}
+    local key = "gamma_ap_notice_" .. notice.kind
+    if notice.cause_kind then
+        key = key .. "_cause"
+        fallback = fallback:sub(1,-2) .. " {cause}."
+        local value = notice.cause_value
+        if notice.cause_kind ~= "check" and notice.cause_kind ~= "source" then
+            local hex = value:gsub(".",function(char) return string.format("%02x",char:byte()) end)
+            local label = translated("gamma_ap_cause_value_"..notice.cause_kind.."_"..hex)
+            if plain(label,384) then value = label end
+        end
+        fields.cause = render_template("gamma_ap_cause_"..notice.cause_kind,
+            gamma_ap_catalog.notice_cause_templates[notice.cause_kind],{value=value})
+    end
     -- One pass; a label containing {item} or a pattern character stays literal.
-    local text = template:gsub("{([a-z_]+)}", function(key) return fields[key] end)
-    return text
+    return render_template(key,fallback,fields)
 end

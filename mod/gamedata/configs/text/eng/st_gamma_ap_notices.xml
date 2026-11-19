@@ -1,19 +1,1192 @@
 <?xml version="1.0" encoding="utf-8"?>
 <string_table>
+    <string id="gamma_ap_cause_armour">
+        <text>by reaching the "{value}" armour tier</text>
+    </string>
+    <string id="gamma_ap_cause_armour_upgrades">
+        <text>by installing {value} armour upgrades</text>
+    </string>
+    <string id="gamma_ap_cause_armour_upgrades_one">
+        <text>by installing {value} armour upgrade</text>
+    </string>
+    <string id="gamma_ap_cause_artefact">
+        <text>by finding "{value}"</text>
+    </string>
+    <string id="gamma_ap_cause_artefact_types">
+        <text>by finding {value} distinct artefact types</text>
+    </string>
+    <string id="gamma_ap_cause_artefact_types_one">
+        <text>by finding {value} distinct artefact type</text>
+    </string>
+    <string id="gamma_ap_cause_check">
+        <text>by completing "{value}"</text>
+    </string>
+    <string id="gamma_ap_cause_enter">
+        <text>by entering {value}</text>
+    </string>
+    <string id="gamma_ap_cause_faction">
+        <text>by defeating a member of faction "{value}" for the first time</text>
+    </string>
+    <string id="gamma_ap_cause_faction_types">
+        <text>by defeating members of {value} distinct factions</text>
+    </string>
+    <string id="gamma_ap_cause_faction_types_one">
+        <text>by defeating a member of {value} distinct faction</text>
+    </string>
+    <string id="gamma_ap_cause_firearm_upgrades">
+        <text>by installing {value} firearm upgrades</text>
+    </string>
+    <string id="gamma_ap_cause_firearm_upgrades_one">
+        <text>by installing {value} firearm upgrade</text>
+    </string>
+    <string id="gamma_ap_cause_kill_one">
+        <text>by killing {value} hostile</text>
+    </string>
+    <string id="gamma_ap_cause_kill_total">
+        <text>by killing {value} hostiles</text>
+    </string>
+    <string id="gamma_ap_cause_knife">
+        <text>by reaching knife tier {value}</text>
+    </string>
+    <string id="gamma_ap_cause_mutant">
+        <text>by killing a mutant of type "{value}" for the first time</text>
+    </string>
+    <string id="gamma_ap_cause_mutant_types">
+        <text>by killing {value} distinct mutant types</text>
+    </string>
+    <string id="gamma_ap_cause_mutant_types_one">
+        <text>by killing {value} distinct mutant type</text>
+    </string>
+    <string id="gamma_ap_cause_quest">
+        <text>by completing a task of type "{value}"</text>
+    </string>
+    <string id="gamma_ap_cause_rank">
+        <text>for reaching {value} rank</text>
+    </string>
+    <string id="gamma_ap_cause_shop">
+        <text>by making your first purchase from {value}</text>
+    </string>
+    <string id="gamma_ap_cause_side_one">
+        <text>by completing {value} side task</text>
+    </string>
+    <string id="gamma_ap_cause_side_total">
+        <text>by completing {value} side tasks</text>
+    </string>
+    <string id="gamma_ap_cause_source">
+        <text>from "{value}"</text>
+    </string>
+    <string id="gamma_ap_cause_standing">
+        <text>by reaching {value} faction goodwill</text>
+    </string>
+    <string id="gamma_ap_cause_story">
+        <text>by completing "{value}"</text>
+    </string>
+    <string id="gamma_ap_cause_value_armour_45786f736b656c65746f6e202f204e6f736f726f67">
+        <text>Exoskeleton / Nosorog</text>
+    </string>
+    <string id="gamma_ap_cause_value_armour_4865617679">
+        <text>Heavy</text>
+    </string>
+    <string id="gamma_ap_cause_value_armour_4c69676874">
+        <text>Light</text>
+    </string>
+    <string id="gamma_ap_cause_value_armour_4d656469756d202f20536369656e7469666963">
+        <text>Medium / Scientific</text>
+    </string>
+    <string id="gamma_ap_cause_value_armour_upgrades_33">
+        <text>3</text>
+    </string>
+    <string id="gamma_ap_cause_value_armour_upgrades_35">
+        <text>5</text>
+    </string>
+    <string id="gamma_ap_cause_value_armour_upgrades_one_31">
+        <text>1</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_41746f6d">
+        <text>Atom</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_42616c6c">
+        <text>Ball</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_426174">
+        <text>Bat</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_42617474657279">
+        <text>Battery</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_426561636f6e">
+        <text>Beacon</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_426c61636b20416e67656c">
+        <text>Black Angel</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_426c61636b205370726179">
+        <text>Black Spray</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_42726163656c6574">
+        <text>Bracelet</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_427562626c65">
+        <text>Bubble</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_43656c6c">
+        <text>Cell</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_436861696e">
+        <text>Chain</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_436c6177">
+        <text>Claw</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_436f636f6f6e">
+        <text>Cocoon</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_436f6d70617373">
+        <text>Compass</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_4372797374616c">
+        <text>Crystal</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_4465617468204c616d70">
+        <text>Death Lamp</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_447261676f6e277320457965">
+        <text>Dragon's Eye</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_456c656374726f6e">
+        <text>Electron</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_456d707479">
+        <text>Empty</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_457965">
+        <text>Eye</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_4669726562616c6c">
+        <text>Fireball</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_46697265666c79">
+        <text>Firefly</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_466c616d65">
+        <text>Flame</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_466c617368">
+        <text>Flash</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_466f756e7461696e">
+        <text>Fountain</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_46756c6c20456d707479">
+        <text>Full Empty</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_47656e657261746f72">
+        <text>Generator</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_476f6c6466697368">
+        <text>Goldfish</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_477261706573">
+        <text>Grapes</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_4772617669">
+        <text>Gravi</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_4865617274">
+        <text>Heart</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_4865617274206f6620746865204f61736973">
+        <text>Heart of the Oasis</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_497463686572">
+        <text>Itcher</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_4a656c6c7966697368">
+        <text>Jellyfish</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_4b6f6c6f626f6b">
+        <text>Kolobok</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_4c616d70">
+        <text>Lamp</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_4c6f62737465722045796573">
+        <text>Lobster Eyes</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_4d616d612773204265616473">
+        <text>Mama's Beads</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_4d656174204368756e6b">
+        <text>Meat Chunk</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_4d6564616c">
+        <text>Medal</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_4d69736572277320536b756c6c">
+        <text>Miser's Skull</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_4d6f6f6e">
+        <text>Moon</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_4d6f6f6e6c69676874">
+        <text>Moonlight</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_4d6f7373">
+        <text>Moss</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_4e6967687473746172">
+        <text>Nightstar</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_5068616e746f6d2053746172">
+        <text>Phantom Star</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_50696e">
+        <text>Pin</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_52696e67">
+        <text>Ring</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_53616e6473746f6e65">
+        <text>Sandstone</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_53636172">
+        <text>Scar</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_536572617068696d">
+        <text>Seraphim</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_5368656c6c">
+        <text>Shell</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_5369676e6574">
+        <text>Signet</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_536e6f77666c616b65">
+        <text>Snowflake</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_536f756c">
+        <text>Soul</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_536f757270757373">
+        <text>Sourpuss</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_537061726b6c6572">
+        <text>Sparkler</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_5370696b65">
+        <text>Spike</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_53706f6e6765">
+        <text>Sponge</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_53746f6e6520426c6f6f64">
+        <text>Stone Blood</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_53746f6e6520466c6f776572">
+        <text>Stone Flower</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_53756e">
+        <text>Sun</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_54617065776f726d">
+        <text>Tapeworm</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_54686973746c65">
+        <text>Thistle</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_566f6c617420456d6572616c64">
+        <text>Volat Emerald</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_5772656e63686564">
+        <text>Wrenched</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_3130">
+        <text>10</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_3131">
+        <text>11</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_3132">
+        <text>12</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_3133">
+        <text>13</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_3134">
+        <text>14</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_3135">
+        <text>15</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_3136">
+        <text>16</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_3137">
+        <text>17</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_3138">
+        <text>18</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_3139">
+        <text>19</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_32">
+        <text>2</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_3230">
+        <text>20</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_3231">
+        <text>21</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_3232">
+        <text>22</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_3233">
+        <text>23</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_3234">
+        <text>24</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_3235">
+        <text>25</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_3236">
+        <text>26</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_3237">
+        <text>27</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_3238">
+        <text>28</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_3239">
+        <text>29</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_33">
+        <text>3</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_3330">
+        <text>30</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_3331">
+        <text>31</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_3332">
+        <text>32</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_3333">
+        <text>33</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_3334">
+        <text>34</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_3335">
+        <text>35</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_3336">
+        <text>36</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_3337">
+        <text>37</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_3338">
+        <text>38</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_3339">
+        <text>39</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_34">
+        <text>4</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_3430">
+        <text>40</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_3431">
+        <text>41</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_3432">
+        <text>42</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_3433">
+        <text>43</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_3434">
+        <text>44</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_3435">
+        <text>45</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_3436">
+        <text>46</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_3437">
+        <text>47</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_3438">
+        <text>48</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_3439">
+        <text>49</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_35">
+        <text>5</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_3530">
+        <text>50</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_3531">
+        <text>51</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_3532">
+        <text>52</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_3533">
+        <text>53</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_3534">
+        <text>54</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_3535">
+        <text>55</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_3536">
+        <text>56</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_3537">
+        <text>57</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_3538">
+        <text>58</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_3539">
+        <text>59</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_36">
+        <text>6</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_3630">
+        <text>60</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_3631">
+        <text>61</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_3632">
+        <text>62</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_3633">
+        <text>63</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_3634">
+        <text>64</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_3635">
+        <text>65</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_3636">
+        <text>66</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_37">
+        <text>7</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_38">
+        <text>8</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_39">
+        <text>9</text>
+    </string>
+    <string id="gamma_ap_cause_value_artefact_types_one_31">
+        <text>1</text>
+    </string>
+    <string id="gamma_ap_cause_value_enter_4167726f70726f6d">
+        <text>Agroprom</text>
+    </string>
+    <string id="gamma_ap_cause_value_enter_4167726f70726f6d20466163746f7279">
+        <text>Agroprom Factory</text>
+    </string>
+    <string id="gamma_ap_cause_value_enter_4167726f70726f6d20526573656172636820496e73746974757465">
+        <text>Agroprom Research Institute</text>
+    </string>
+    <string id="gamma_ap_cause_value_enter_4167726f70726f6d20556e64657267726f756e64">
+        <text>Agroprom Underground</text>
+    </string>
+    <string id="gamma_ap_cause_value_enter_41726d792057617265686f75736573">
+        <text>Army Warehouses</text>
+    </string>
+    <string id="gamma_ap_cause_value_enter_42616e6469742042617365">
+        <text>Bandit Base</text>
+    </string>
+    <string id="gamma_ap_cause_value_enter_434e5050204e6f727468">
+        <text>CNPP North</text>
+    </string>
+    <string id="gamma_ap_cause_value_enter_434e505020536f757468">
+        <text>CNPP South</text>
+    </string>
+    <string id="gamma_ap_cause_value_enter_436c65617220536b792042617365">
+        <text>Clear Sky Base</text>
+    </string>
+    <string id="gamma_ap_cause_value_enter_436f72646f6e">
+        <text>Cordon</text>
+    </string>
+    <string id="gamma_ap_cause_value_enter_4461726b2056616c6c6579">
+        <text>Dark Valley</text>
+    </string>
+    <string id="gamma_ap_cause_value_enter_4461726b7363617065">
+        <text>Darkscape</text>
+    </string>
+    <string id="gamma_ap_cause_value_enter_446561642043697479">
+        <text>Dead City</text>
+    </string>
+    <string id="gamma_ap_cause_value_enter_46726565646f6d2042617365">
+        <text>Freedom Base</text>
+    </string>
+    <string id="gamma_ap_cause_value_enter_47617262616765">
+        <text>Garbage</text>
+    </string>
+    <string id="gamma_ap_cause_value_enter_47656e657261746f7273">
+        <text>Generators</text>
+    </string>
+    <string id="gamma_ap_cause_value_enter_4772656174205377616d7073">
+        <text>Great Swamps</text>
+    </string>
+    <string id="gamma_ap_cause_value_enter_4865726d616e6e2042756e6b6572">
+        <text>Hermann Bunker</text>
+    </string>
+    <string id="gamma_ap_cause_value_enter_486f73706974616c">
+        <text>Hospital</text>
+    </string>
+    <string id="gamma_ap_cause_value_enter_4a757069746572">
+        <text>Jupiter</text>
+    </string>
+    <string id="gamma_ap_cause_value_enter_4a75706974657220556e64657267726f756e64">
+        <text>Jupiter Underground</text>
+    </string>
+    <string id="gamma_ap_cause_value_enter_4c616220583136">
+        <text>Lab X16</text>
+    </string>
+    <string id="gamma_ap_cause_value_enter_4c616220583138">
+        <text>Lab X18</text>
+    </string>
+    <string id="gamma_ap_cause_value_enter_4c616220583139">
+        <text>Lab X19</text>
+    </string>
+    <string id="gamma_ap_cause_value_enter_4c6162205838">
+        <text>Lab X8</text>
+    </string>
+    <string id="gamma_ap_cause_value_enter_4c61756e64726f6d6174">
+        <text>Laundromat</text>
+    </string>
+    <string id="gamma_ap_cause_value_enter_4c696d616e736b">
+        <text>Limansk</text>
+    </string>
+    <string id="gamma_ap_cause_value_enter_4d6561646f77">
+        <text>Meadow</text>
+    </string>
+    <string id="gamma_ap_cause_value_enter_4d657263656e6172792042617365">
+        <text>Mercenary Base</text>
+    </string>
+    <string id="gamma_ap_cause_value_enter_4d6f6e6f6c69746820436f6e74726f6c2043656e746572">
+        <text>Monolith Control Center</text>
+    </string>
+    <string id="gamma_ap_cause_value_enter_4d6f6e6f6c6974682043756c747572616c2043656e746572">
+        <text>Monolith Cultural Center</text>
+    </string>
+    <string id="gamma_ap_cause_value_enter_4f6c64204661726d7374656164">
+        <text>Old Farmstead</text>
+    </string>
+    <string id="gamma_ap_cause_value_enter_4f7574736b69727473">
+        <text>Outskirts</text>
+    </string>
+    <string id="gamma_ap_cause_value_enter_50726970796174">
+        <text>Pripyat</text>
+    </string>
+    <string id="gamma_ap_cause_value_enter_5261646172">
+        <text>Radar</text>
+    </string>
+    <string id="gamma_ap_cause_value_enter_52656420466f72657374">
+        <text>Red Forest</text>
+    </string>
+    <string id="gamma_ap_cause_value_enter_526f6f6b69652056696c6c616765">
+        <text>Rookie Village</text>
+    </string>
+    <string id="gamma_ap_cause_value_enter_526f73746f6b">
+        <text>Rostok</text>
+    </string>
+    <string id="gamma_ap_cause_value_enter_53616b6861726f762042756e6b6572">
+        <text>Sakharov Bunker</text>
+    </string>
+    <string id="gamma_ap_cause_value_enter_536172636f706861677573">
+        <text>Sarcophagus</text>
+    </string>
+    <string id="gamma_ap_cause_value_enter_53696e204d696e65204261727261636b73">
+        <text>Sin Mine Barracks</text>
+    </string>
+    <string id="gamma_ap_cause_value_enter_536b61646f76736b">
+        <text>Skadovsk</text>
+    </string>
+    <string id="gamma_ap_cause_value_enter_536f75746865726e20436865636b706f696e74">
+        <text>Southern Checkpoint</text>
+    </string>
+    <string id="gamma_ap_cause_value_enter_547261696e204465706f74">
+        <text>Train Depot</text>
+    </string>
+    <string id="gamma_ap_cause_value_enter_547275636b2043656d6574657279">
+        <text>Truck Cemetery</text>
+    </string>
+    <string id="gamma_ap_cause_value_enter_576172204c6162">
+        <text>War Lab</text>
+    </string>
+    <string id="gamma_ap_cause_value_enter_57696c64205465727269746f7279">
+        <text>Wild Territory</text>
+    </string>
+    <string id="gamma_ap_cause_value_enter_59616e6f762053746174696f6e">
+        <text>Yanov Station</text>
+    </string>
+    <string id="gamma_ap_cause_value_enter_59616e746172">
+        <text>Yantar</text>
+    </string>
+    <string id="gamma_ap_cause_value_enter_5a61746f6e">
+        <text>Zaton</text>
+    </string>
+    <string id="gamma_ap_cause_value_faction_42616e64697473">
+        <text>Bandits</text>
+    </string>
+    <string id="gamma_ap_cause_value_faction_436c65617220536b79">
+        <text>Clear Sky</text>
+    </string>
+    <string id="gamma_ap_cause_value_faction_44757479">
+        <text>Duty</text>
+    </string>
+    <string id="gamma_ap_cause_value_faction_45636f6c6f6769737473">
+        <text>Ecologists</text>
+    </string>
+    <string id="gamma_ap_cause_value_faction_46726565646f6d">
+        <text>Freedom</text>
+    </string>
+    <string id="gamma_ap_cause_value_faction_4c6f6e657273">
+        <text>Loners</text>
+    </string>
+    <string id="gamma_ap_cause_value_faction_4d657263656e6172696573">
+        <text>Mercenaries</text>
+    </string>
+    <string id="gamma_ap_cause_value_faction_4d696c6974617279">
+        <text>Military</text>
+    </string>
+    <string id="gamma_ap_cause_value_faction_4d6f6e6f6c697468">
+        <text>Monolith</text>
+    </string>
+    <string id="gamma_ap_cause_value_faction_52656e656761646573">
+        <text>Renegades</text>
+    </string>
+    <string id="gamma_ap_cause_value_faction_53696e">
+        <text>Sin</text>
+    </string>
+    <string id="gamma_ap_cause_value_faction_554e495347">
+        <text>UNISG</text>
+    </string>
+    <string id="gamma_ap_cause_value_faction_5a6f6d626966696564">
+        <text>Zombified</text>
+    </string>
+    <string id="gamma_ap_cause_value_faction_types_3130">
+        <text>10</text>
+    </string>
+    <string id="gamma_ap_cause_value_faction_types_3131">
+        <text>11</text>
+    </string>
+    <string id="gamma_ap_cause_value_faction_types_3132">
+        <text>12</text>
+    </string>
+    <string id="gamma_ap_cause_value_faction_types_3133">
+        <text>13</text>
+    </string>
+    <string id="gamma_ap_cause_value_faction_types_32">
+        <text>2</text>
+    </string>
+    <string id="gamma_ap_cause_value_faction_types_33">
+        <text>3</text>
+    </string>
+    <string id="gamma_ap_cause_value_faction_types_34">
+        <text>4</text>
+    </string>
+    <string id="gamma_ap_cause_value_faction_types_35">
+        <text>5</text>
+    </string>
+    <string id="gamma_ap_cause_value_faction_types_36">
+        <text>6</text>
+    </string>
+    <string id="gamma_ap_cause_value_faction_types_37">
+        <text>7</text>
+    </string>
+    <string id="gamma_ap_cause_value_faction_types_38">
+        <text>8</text>
+    </string>
+    <string id="gamma_ap_cause_value_faction_types_39">
+        <text>9</text>
+    </string>
+    <string id="gamma_ap_cause_value_faction_types_one_31">
+        <text>1</text>
+    </string>
+    <string id="gamma_ap_cause_value_firearm_upgrades_33">
+        <text>3</text>
+    </string>
+    <string id="gamma_ap_cause_value_firearm_upgrades_35">
+        <text>5</text>
+    </string>
+    <string id="gamma_ap_cause_value_firearm_upgrades_one_31">
+        <text>1</text>
+    </string>
+    <string id="gamma_ap_cause_value_knife_32">
+        <text>2</text>
+    </string>
+    <string id="gamma_ap_cause_value_knife_33">
+        <text>3</text>
+    </string>
+    <string id="gamma_ap_cause_value_knife_34">
+        <text>4</text>
+    </string>
+    <string id="gamma_ap_cause_value_knife_35">
+        <text>5</text>
+    </string>
+    <string id="gamma_ap_cause_value_mutant_4269626c696f74656b6172">
+        <text>Bibliotekar</text>
+    </string>
+    <string id="gamma_ap_cause_value_mutant_426c696e6420446f67">
+        <text>Blind Dog</text>
+    </string>
+    <string id="gamma_ap_cause_value_mutant_426c6f6f647375636b6572">
+        <text>Bloodsucker</text>
+    </string>
+    <string id="gamma_ap_cause_value_mutant_426f6172">
+        <text>Boar</text>
+    </string>
+    <string id="gamma_ap_cause_value_mutant_426f727961">
+        <text>Borya</text>
+    </string>
+    <string id="gamma_ap_cause_value_mutant_4275726572">
+        <text>Burer</text>
+    </string>
+    <string id="gamma_ap_cause_value_mutant_436174">
+        <text>Cat</text>
+    </string>
+    <string id="gamma_ap_cause_value_mutant_4368696d657261">
+        <text>Chimera</text>
+    </string>
+    <string id="gamma_ap_cause_value_mutant_436f6e74726f6c6c6572">
+        <text>Controller</text>
+    </string>
+    <string id="gamma_ap_cause_value_mutant_466c657368">
+        <text>Flesh</text>
+    </string>
+    <string id="gamma_ap_cause_value_mutant_4672616374757265">
+        <text>Fracture</text>
+    </string>
+    <string id="gamma_ap_cause_value_mutant_4a756d70696e672050736575646f6769616e74">
+        <text>Jumping Pseudogiant</text>
+    </string>
+    <string id="gamma_ap_cause_value_mutant_4b61726c696b">
+        <text>Karlik</text>
+    </string>
+    <string id="gamma_ap_cause_value_mutant_4c75726b6572">
+        <text>Lurker</text>
+    </string>
+    <string id="gamma_ap_cause_value_mutant_506f6c7465726765697374">
+        <text>Poltergeist</text>
+    </string>
+    <string id="gamma_ap_cause_value_mutant_50736575646f646f67">
+        <text>Pseudodog</text>
+    </string>
+    <string id="gamma_ap_cause_value_mutant_50736575646f6765697374">
+        <text>Pseudogeist</text>
+    </string>
+    <string id="gamma_ap_cause_value_mutant_50736575646f6769616e74">
+        <text>Pseudogiant</text>
+    </string>
+    <string id="gamma_ap_cause_value_mutant_50737920446f67">
+        <text>Psy Dog</text>
+    </string>
+    <string id="gamma_ap_cause_value_mutant_5073797375636b6572">
+        <text>Psysucker</text>
+    </string>
+    <string id="gamma_ap_cause_value_mutant_5079726f6765697374">
+        <text>Pyrogeist</text>
+    </string>
+    <string id="gamma_ap_cause_value_mutant_526174">
+        <text>Rat</text>
+    </string>
+    <string id="gamma_ap_cause_value_mutant_536e6f726b">
+        <text>Snork</text>
+    </string>
+    <string id="gamma_ap_cause_value_mutant_547573686b616e6f">
+        <text>Tushkano</text>
+    </string>
+    <string id="gamma_ap_cause_value_mutant_5a6f6d626965">
+        <text>Zombie</text>
+    </string>
+    <string id="gamma_ap_cause_value_mutant_types_3130">
+        <text>10</text>
+    </string>
+    <string id="gamma_ap_cause_value_mutant_types_3131">
+        <text>11</text>
+    </string>
+    <string id="gamma_ap_cause_value_mutant_types_3132">
+        <text>12</text>
+    </string>
+    <string id="gamma_ap_cause_value_mutant_types_3133">
+        <text>13</text>
+    </string>
+    <string id="gamma_ap_cause_value_mutant_types_3134">
+        <text>14</text>
+    </string>
+    <string id="gamma_ap_cause_value_mutant_types_3135">
+        <text>15</text>
+    </string>
+    <string id="gamma_ap_cause_value_mutant_types_3136">
+        <text>16</text>
+    </string>
+    <string id="gamma_ap_cause_value_mutant_types_3137">
+        <text>17</text>
+    </string>
+    <string id="gamma_ap_cause_value_mutant_types_3138">
+        <text>18</text>
+    </string>
+    <string id="gamma_ap_cause_value_mutant_types_3139">
+        <text>19</text>
+    </string>
+    <string id="gamma_ap_cause_value_mutant_types_32">
+        <text>2</text>
+    </string>
+    <string id="gamma_ap_cause_value_mutant_types_3230">
+        <text>20</text>
+    </string>
+    <string id="gamma_ap_cause_value_mutant_types_3231">
+        <text>21</text>
+    </string>
+    <string id="gamma_ap_cause_value_mutant_types_3232">
+        <text>22</text>
+    </string>
+    <string id="gamma_ap_cause_value_mutant_types_3233">
+        <text>23</text>
+    </string>
+    <string id="gamma_ap_cause_value_mutant_types_3234">
+        <text>24</text>
+    </string>
+    <string id="gamma_ap_cause_value_mutant_types_3235">
+        <text>25</text>
+    </string>
+    <string id="gamma_ap_cause_value_mutant_types_33">
+        <text>3</text>
+    </string>
+    <string id="gamma_ap_cause_value_mutant_types_34">
+        <text>4</text>
+    </string>
+    <string id="gamma_ap_cause_value_mutant_types_35">
+        <text>5</text>
+    </string>
+    <string id="gamma_ap_cause_value_mutant_types_36">
+        <text>6</text>
+    </string>
+    <string id="gamma_ap_cause_value_mutant_types_37">
+        <text>7</text>
+    </string>
+    <string id="gamma_ap_cause_value_mutant_types_38">
+        <text>8</text>
+    </string>
+    <string id="gamma_ap_cause_value_mutant_types_39">
+        <text>9</text>
+    </string>
+    <string id="gamma_ap_cause_value_mutant_types_one_31">
+        <text>1</text>
+    </string>
+    <string id="gamma_ap_cause_value_quest_41737361756c74">
+        <text>Assault</text>
+    </string>
+    <string id="gamma_ap_cause_value_quest_426f756e7479">
+        <text>Bounty</text>
+    </string>
+    <string id="gamma_ap_cause_value_quest_446566656e6365">
+        <text>Defence</text>
+    </string>
+    <string id="gamma_ap_cause_value_quest_44656c6976657279">
+        <text>Delivery</text>
+    </string>
+    <string id="gamma_ap_cause_value_quest_446f6e6174696f6e">
+        <text>Donation</text>
+    </string>
+    <string id="gamma_ap_cause_value_quest_4665746368">
+        <text>Fetch</text>
+    </string>
+    <string id="gamma_ap_cause_value_quest_48756e74696e67">
+        <text>Hunting</text>
+    </string>
+    <string id="gamma_ap_cause_value_quest_496e7665737469676174696f6e">
+        <text>Investigation</text>
+    </string>
+    <string id="gamma_ap_cause_value_quest_5265636f76657279">
+        <text>Recovery</text>
+    </string>
+    <string id="gamma_ap_cause_value_quest_526573637565">
+        <text>Rescue</text>
+    </string>
+    <string id="gamma_ap_cause_value_quest_5265736561726368">
+        <text>Research</text>
+    </string>
+    <string id="gamma_ap_cause_value_quest_5465727269746f7279">
+        <text>Territory</text>
+    </string>
+    <string id="gamma_ap_cause_value_quest_56656869636c65">
+        <text>Vehicle</text>
+    </string>
+    <string id="gamma_ap_cause_value_rank_457870657269656e636564">
+        <text>Experienced</text>
+    </string>
+    <string id="gamma_ap_cause_value_rank_457870657274">
+        <text>Expert</text>
+    </string>
+    <string id="gamma_ap_cause_value_rank_4c6567656e64">
+        <text>Legend</text>
+    </string>
+    <string id="gamma_ap_cause_value_rank_4d6173746572">
+        <text>Master</text>
+    </string>
+    <string id="gamma_ap_cause_value_rank_4e6f76696365">
+        <text>Novice</text>
+    </string>
+    <string id="gamma_ap_cause_value_rank_50726f66657373696f6e616c">
+        <text>Professional</text>
+    </string>
+    <string id="gamma_ap_cause_value_rank_547261696e6565">
+        <text>Trainee</text>
+    </string>
+    <string id="gamma_ap_cause_value_rank_5665746572616e">
+        <text>Veteran</text>
+    </string>
+    <string id="gamma_ap_cause_value_shop_46697273742050757263686173652066726f6d204261726d616e">
+        <text>First Purchase from Barman</text>
+    </string>
+    <string id="gamma_ap_cause_value_shop_46697273742050757263686173652066726f6d2053616b6861726f76">
+        <text>First Purchase from Sakharov</text>
+    </string>
+    <string id="gamma_ap_cause_value_shop_46697273742050757263686173652066726f6d205369646f726f76696368">
+        <text>First Purchase from Sidorovich</text>
+    </string>
+    <string id="gamma_ap_cause_value_standing_31303030">
+        <text>1000</text>
+    </string>
+    <string id="gamma_ap_cause_value_standing_32303030">
+        <text>2000</text>
+    </string>
+    <string id="gamma_ap_cause_value_standing_33303030">
+        <text>3000</text>
+    </string>
+    <string id="gamma_ap_cause_value_standing_353030">
+        <text>500</text>
+    </string>
+    <string id="gamma_ap_cause_value_story_4c6976696e67204c6567656e64202f20416e7377657273">
+        <text>Living Legend / Answers</text>
+    </string>
+    <string id="gamma_ap_cause_value_story_4c6976696e67204c6567656e64202f2041747461636b204f6e20546974616e">
+        <text>Living Legend / Attack On Titan</text>
+    </string>
+    <string id="gamma_ap_cause_value_story_4c6976696e67204c6567656e64202f20427265616b7468726f756768">
+        <text>Living Legend / Breakthrough</text>
+    </string>
+    <string id="gamma_ap_cause_value_story_4c6976696e67204c6567656e64202f2043616c6c204e6f727468">
+        <text>Living Legend / Call North</text>
+    </string>
+    <string id="gamma_ap_cause_value_story_4c6976696e67204c6567656e64202f20436865726e6f62796c2052616964">
+        <text>Living Legend / Chernobyl Raid</text>
+    </string>
+    <string id="gamma_ap_cause_value_story_4c6976696e67204c6567656e64202f204372756369626c65">
+        <text>Living Legend / Crucible</text>
+    </string>
+    <string id="gamma_ap_cause_value_story_4c6976696e67204c6567656e64202f204569646f6c6f6e">
+        <text>Living Legend / Eidolon</text>
+    </string>
+    <string id="gamma_ap_cause_value_story_4c6976696e67204c6567656e64202f204569646f6c6f6e205374617274">
+        <text>Living Legend / Eidolon Start</text>
+    </string>
+    <string id="gamma_ap_cause_value_story_4c6976696e67204c6567656e64202f204665746368204761757373">
+        <text>Living Legend / Fetch Gauss</text>
+    </string>
+    <string id="gamma_ap_cause_value_story_4c6976696e67204c6567656e64202f2046696e6420446f63746f72">
+        <text>Living Legend / Find Doctor</text>
+    </string>
+    <string id="gamma_ap_cause_value_story_4c6976696e67204c6567656e64202f2046696e6420446f63756d656e7473">
+        <text>Living Legend / Find Documents</text>
+    </string>
+    <string id="gamma_ap_cause_value_story_4c6976696e67204c6567656e64202f2046696e697368">
+        <text>Living Legend / Finish</text>
+    </string>
+    <string id="gamma_ap_cause_value_story_4c6976696e67204c6567656e64202f204d65646963616c20537570706c696573">
+        <text>Living Legend / Medical Supplies</text>
+    </string>
+    <string id="gamma_ap_cause_value_story_4c6976696e67204c6567656e64202f204d65657420526f677565">
+        <text>Living Legend / Meet Rogue</text>
+    </string>
+    <string id="gamma_ap_cause_value_story_4c6976696e67204c6567656e64202f20506174682050726970796174">
+        <text>Living Legend / Path Pripyat</text>
+    </string>
+    <string id="gamma_ap_cause_value_story_4c6976696e67204c6567656e64202f20537472656c6f6b204f626a656374697665">
+        <text>Living Legend / Strelok Objective</text>
+    </string>
+    <string id="gamma_ap_cause_value_story_4c6976696e67204c6567656e64202f205475726e204f666620427261696e2053636f7263686572">
+        <text>Living Legend / Turn Off Brain Scorcher</text>
+    </string>
+    <string id="gamma_ap_cause_value_story_4c6976696e67204c6567656e64202f205669736974204167726f205567">
+        <text>Living Legend / Visit Agro Ug</text>
+    </string>
+    <string id="gamma_ap_cause_value_story_4c6976696e67204c6567656e64202f205669736974204261726b656570">
+        <text>Living Legend / Visit Barkeep</text>
+    </string>
+    <string id="gamma_ap_cause_value_story_4c6976696e67204c6567656e64202f205669736974204265617264">
+        <text>Living Legend / Visit Beard</text>
+    </string>
+    <string id="gamma_ap_cause_value_story_4c6976696e67204c6567656e64202f20566973697420426c61636b6a61636b">
+        <text>Living Legend / Visit Blackjack</text>
+    </string>
+    <string id="gamma_ap_cause_value_story_4d6f7274616c2053696e202f20416d62757368">
+        <text>Mortal Sin / Ambush</text>
+    </string>
+    <string id="gamma_ap_cause_value_story_4d6f7274616c2053696e202f2043686f696365">
+        <text>Mortal Sin / Choice</text>
+    </string>
+    <string id="gamma_ap_cause_value_story_4d6f7274616c2053696e202f20436f6e66726f6e746174696f6e">
+        <text>Mortal Sin / Confrontation</text>
+    </string>
+    <string id="gamma_ap_cause_value_story_4d6f7274616c2053696e202f20436f6e74616374204c6f7374">
+        <text>Mortal Sin / Contact Lost</text>
+    </string>
+    <string id="gamma_ap_cause_value_story_4d6f7274616c2053696e202f204461726b2043727573616465">
+        <text>Mortal Sin / Dark Crusade</text>
+    </string>
+    <string id="gamma_ap_cause_value_story_4d6f7274616c2053696e202f20446563697369766520426c6f77">
+        <text>Mortal Sin / Decisive Blow</text>
+    </string>
+    <string id="gamma_ap_cause_value_story_4d6f7274616c2053696e202f204465737472756374696f6e2053697465">
+        <text>Mortal Sin / Destruction Site</text>
+    </string>
+    <string id="gamma_ap_cause_value_story_4d6f7274616c2053696e202f20456e6467616d65">
+        <text>Mortal Sin / Endgame</text>
+    </string>
+    <string id="gamma_ap_cause_value_story_4d6f7274616c2053696e202f204865617274205a6f6e65">
+        <text>Mortal Sin / Heart Zone</text>
+    </string>
+    <string id="gamma_ap_cause_value_story_4d6f7274616c2053696e202f20486f73706974616c2041737361756c74">
+        <text>Mortal Sin / Hospital Assault</text>
+    </string>
+    <string id="gamma_ap_cause_value_story_4d6f7274616c2053696e202f204e6565646c6520486179737461636b">
+        <text>Mortal Sin / Needle Haystack</text>
+    </string>
+    <string id="gamma_ap_cause_value_story_4d6f7274616c2053696e202f2050726f7465637420427261696e2053636f7263686572">
+        <text>Mortal Sin / Protect Brain Scorcher</text>
+    </string>
+    <string id="gamma_ap_cause_value_story_4d6f7274616c2053696e202f2050726f74656374204d697261636c65204d616368696e65">
+        <text>Mortal Sin / Protect Miracle Machine</text>
+    </string>
+    <string id="gamma_ap_cause_value_story_4d6f7274616c2053696e202f2052656420466f726573742041747461636b657273">
+        <text>Mortal Sin / Red Forest Attackers</text>
+    </string>
+    <string id="gamma_ap_cause_value_story_4d6f7274616c2053696e202f2052656420466f726573746572">
+        <text>Mortal Sin / Red Forester</text>
+    </string>
+    <string id="gamma_ap_cause_value_story_4d6f7274616c2053696e202f205265706f7274">
+        <text>Mortal Sin / Report</text>
+    </string>
+    <string id="gamma_ap_cause_value_story_4d6f7274616c2053696e202f2052756e61776179">
+        <text>Mortal Sin / Runaway</text>
+    </string>
+    <string id="gamma_ap_cause_value_story_4d6f7274616c2053696e202f205374617274">
+        <text>Mortal Sin / Start</text>
+    </string>
+    <string id="gamma_ap_cause_value_story_4d6f7274616c2053696e202f20546f20576172">
+        <text>Mortal Sin / To War</text>
+    </string>
+    <string id="gamma_ap_cause_value_story_4d6f7274616c2053696e202f20557262616e2057617266617265">
+        <text>Mortal Sin / Urban Warfare</text>
+    </string>
+    <string id="gamma_ap_cause_value_story_4d6f7274616c2053696e202f2057617220507269736f6e6572">
+        <text>Mortal Sin / War Prisoner</text>
+    </string>
+    <string id="gamma_ap_cause_value_story_4d6f7274616c2053696e202f205a6f6e65204865726f">
+        <text>Mortal Sin / Zone Hero</text>
+    </string>
+    <string id="gamma_ap_cause_value_story_4f7065726174696f6e204166746572676c6f77202f20456e63727970746564205472616e736d697373696f6e">
+        <text>Operation Afterglow / Encrypted Transmission</text>
+    </string>
+    <string id="gamma_ap_cause_value_story_4f7065726174696f6e204166746572676c6f77202f204c6f6f736520456e6473">
+        <text>Operation Afterglow / Loose Ends</text>
+    </string>
+    <string id="gamma_ap_cause_value_story_4f7065726174696f6e204166746572676c6f77202f2052616c6c7920506f696e74">
+        <text>Operation Afterglow / Rally Point</text>
+    </string>
+    <string id="gamma_ap_cause_value_story_4f7065726174696f6e204166746572676c6f77202f205265706f7274">
+        <text>Operation Afterglow / Report</text>
+    </string>
+    <string id="gamma_ap_cause_value_story_4f7065726174696f6e204166746572676c6f77202f20526f677565">
+        <text>Operation Afterglow / Rogue</text>
+    </string>
+    <string id="gamma_ap_cause_value_story_4f7065726174696f6e204166746572676c6f77202f2053656172636820556e6974">
+        <text>Operation Afterglow / Search Unit</text>
+    </string>
+    <string id="gamma_ap_cause_value_story_4f7065726174696f6e204166746572676c6f77202f205370656369616c2044656c6976657279">
+        <text>Operation Afterglow / Special Delivery</text>
+    </string>
+    <string id="gamma_ap_cause_value_story_4f7065726174696f6e204166746572676c6f77202f20537469746368">
+        <text>Operation Afterglow / Stitch</text>
+    </string>
+    <string id="gamma_ap_cause_value_story_4f7065726174696f6e204166746572676c6f77202f20537472656c6f6b">
+        <text>Operation Afterglow / Strelok</text>
+    </string>
+    <string id="gamma_ap_cause_value_story_4f7065726174696f6e204166746572676c6f77202f20556e646572636f766572204167656e74">
+        <text>Operation Afterglow / Undercover Agent</text>
+    </string>
+    <string id="gamma_ap_cause_value_weapon_4d616368696e6567756e">
+        <text>Machinegun</text>
+    </string>
+    <string id="gamma_ap_cause_value_weapon_506973746f6c">
+        <text>Pistol</text>
+    </string>
+    <string id="gamma_ap_cause_value_weapon_5269666c65">
+        <text>Rifle</text>
+    </string>
+    <string id="gamma_ap_cause_value_weapon_53686f7467756e">
+        <text>Shotgun</text>
+    </string>
+    <string id="gamma_ap_cause_value_weapon_536d67">
+        <text>Smg</text>
+    </string>
+    <string id="gamma_ap_cause_value_weapon_536e69706572">
+        <text>Sniper</text>
+    </string>
+    <string id="gamma_ap_cause_weapon">
+        <text>by using a firearm of class "{value}"</text>
+    </string>
     <string id="gamma_ap_notice_joined">
         <text>{player} joined the Archipelago.</text>
     </string>
     <string id="gamma_ap_notice_received_item">
         <text>{player} gave you "{item}".</text>
     </string>
+    <string id="gamma_ap_notice_received_item_cause">
+        <text>{player} gave you "{item}" {cause}.</text>
+    </string>
     <string id="gamma_ap_notice_received_unlock">
         <text>{player} unlocked your "{item}".</text>
+    </string>
+    <string id="gamma_ap_notice_received_unlock_cause">
+        <text>{player} unlocked your "{item}" {cause}.</text>
     </string>
     <string id="gamma_ap_notice_sent_item">
         <text>You sent "{item}" to {player}.</text>
     </string>
+    <string id="gamma_ap_notice_sent_item_cause">
+        <text>You sent "{item}" to {player} {cause}.</text>
+    </string>
     <string id="gamma_ap_notice_sent_unlock">
         <text>You unlocked "{item}" for {player}.</text>
+    </string>
+    <string id="gamma_ap_notice_sent_unlock_cause">
+        <text>You unlocked "{item}" for {player} {cause}.</text>
     </string>
     <string id="gamma_ap_reward_28051001">
         <text>Basic Toolkit</text>

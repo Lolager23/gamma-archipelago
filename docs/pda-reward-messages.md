@@ -10,6 +10,33 @@ including when the starting PDA is omitted or AP-locked. English examples:
 - `You unlocked "Zone Access" for James.`
 - `GammaPilot joined the Archipelago.`
 
+## Why a reward was earned
+
+Transfer announcements finish with the source check, for example:
+
+- `You unlocked "Equipment Unlock: PDA" for Owen by entering Rookie Village.`
+- `Friend unlocked your "Zone Key: Garbage" by entering Rostok.`
+- `Friend gave you "Bandage" by killing 15 hostiles.`
+- `You sent "Basic Toolkit" to James for reaching Legend rank.`
+
+The companion resolves the source slot's game and `NetworkItem.location`, not the
+recipient's game or the item ID. GAMMA causes come from the authoritative check
+catalogue, including maps, settlements, first mutant/faction kills, distinct-type
+quotas, artefacts, task types, side-task/kill totals, gear tiers/upgrades, story,
+rank, purchases and goodwill. Hostile totals include stalkers; distinct mutant
+types are explicitly described as distinct types rather than repeated kills.
+
+Other games use their source slot's data-package check name: `by completing
+"Defeat the Dragon"`. Numeric ID collisions cannot turn a foreign check into a
+GAMMA action. Server/starting/cheat deliveries use their actual upstream source
+label (`from "Server"` or `from "Cheat Console"`) rather than inventing a check.
+Unknown source metadata delays only the notice until its data package arrives;
+item history/application continues normally.
+
+This presentation update does not change checks, rewards, IDs, settings digests
+or save schemas. Notice identities and acknowledgements remain unchanged, so
+already displayed announcements are not replayed merely to add their cause.
+
 Quoted item labels work with plurals, currency, acronyms and foreign-game names
 without guessing an English article. Outgoing messages avoid possessive-name
 rules. Only explicitly known GAMMA unlock and skill effects use unlock wording;
@@ -31,6 +58,16 @@ malformed or unsafe translations fall back to English. Missing reward translatio
 use the companion's canonical label. Foreign-game reward labels remain upstream
 data-package text, even if an ID matches a GAMMA item. Names are never translated.
 Substitution is a single pass: placeholders inside labels remain literal data.
+
+Causal transfer templates use the additional `{cause}` placeholder exactly once:
+`gamma_ap_notice_<kind>_cause`. Cause fragments use exactly one `{value}` in
+`gamma_ap_cause_<cause kind>`. Generated `gamma_ap_cause_value_<kind>_<UTF-8 hex>`
+entries translate catalogue-backed values such as map, rank and artefact labels.
+Dynamic milestone numbers retain their canonical decimal values when a value
+entry is absent. Foreign check/source names stay upstream data, even if a value
+matches an owned label. Each template layer substitutes once; braces inside
+names/labels are never interpreted as another placeholder. Invalid or missing
+translations fall back independently to the English sentence, cause or value.
 
 The join sentence uses exactly one `{player}` placeholder and no `{item}`. It
 names this game's authenticated AP slot/alias, not its generated STALKER character.
@@ -96,7 +133,7 @@ incoming notice. Notices never create inventory objects. No-PDA settings do not
 delay broadcasts or reward application. Successful display identities are
 saved separately; failed display cannot repeat item application.
 
-The optional `notices.txt` sidecar now supports semantic version 2:
+The optional `notices.txt` sidecar supports semantic version 2:
 
 ```text
 GAMMA_AP_NOTICES|2
@@ -113,6 +150,24 @@ retains version 1 for entirely legacy batches. Upgrade companion and add-on
 together: an old add-on cannot display new semantic sidecars. Receipt/check
 protocols, acknowledgement version 1, published IDs and save schemas are unchanged.
 Previously saved notice identities remain valid and prevent redisplay.
+
+Version 3 adds structured check causes:
+
+```text
+GAMMA_AP_NOTICES|3
+session|<session key>
+notice|<identity>|<minimum receipt>|<kind>|<player UTF-8 hex>|<item UTF-8 hex>|<owned item ID or 0>|<cause kind>|<cause value UTF-8 hex>
+end|1
+```
+
+Mixed version-3 batches represent semantic records without a cause with
+`|none|` (empty cause value). They also accept the version-2 legacy `text` form.
+The encoder retains version 1 for text-only batches and version 2 for semantic
+batches without causes. The add-on reads all three versions and rejects malformed
+or unknown causes. Upgrade companion/APWorld adapter and add-on together: old
+add-ons cannot display version 3. The AP server and existing seed can be retained;
+only the companion needs a restart after installing the matching bundle. Receipt,
+check, save and acknowledgement formats are unchanged.
 
 Each snapshot binds to the session key, contains at most 16 notices and displays
 at most one per normal poll. Malformed, oversized, wrong-session and unsafe text
@@ -136,6 +191,10 @@ sentences, self-awards, broadcasts without a PDA, reconnect and ordinary save/lo
 confirm readable history/icons/fonts. A translation pack additionally needs its
 own selected-language and missing-key fallback checks. Automated coverage and real
 AP traffic do not establish engine rendering.
+
+Cause acceptance additionally needs sent/received/self awards from different
+check categories, a foreign-game source, selected-language fallback, loading
+readiness and save/load without replay. These checks remain **not run**.
 
 Startup-message acceptance additionally needs a live connected game load,
 disconnect/reconnect, no-PDA broadcasts and a cached sidecar while the companion is

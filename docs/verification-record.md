@@ -1,5 +1,27 @@
 # Verification record
 
+## Source-check causes in PDA announcements: 19 November 2026
+
+Branch `codex/pda-check-announcements` adds the earning check to the end of sent
+and received notices. It uses the authenticated source slot's game/location,
+catalogue-backed action wording for GAMMA and data-package labels for other
+games. Starting/server items retain an honest source label. It distinguishes
+hostile totals, first kills and distinct-type quotas.
+
+Regressions exercise every published GAMMA check, all cause templates/directions,
+foreign ID collisions, metadata arriving after receipts, self-award deduplication,
+malformed sidecars, translation fallback/value labels, literal placeholders,
+version-1/2 compatibility and version-3 mixed batches. A save/load case preserves
+seen identities, waits for loading dismissal and applies only the new receipt.
+Complete verifier/current-head CI results and package hashes are recorded on the
+PR; focused subsets do not satisfy the complete coverage gate by themselves.
+
+Native verification is **not run**, reserved for Owen. This is presentation-only:
+no published ID, generation rule, seed/configuration identity or save/receipt
+schema changes. Matching companion and game files are required for version 3.
+Keep the current AP server/seed and saved progress when upgrading the companion;
+do not replay old notices to add their newly available cause.
+
 ## Tracker opening crash / native row lifetime: 19 November 2026
 
 Owen reported a native crash on opening the AP tab after the layout deployment.

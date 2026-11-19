@@ -4,6 +4,7 @@ import re
 from dataclasses import dataclass
 
 from .catalog import GAME, ITEM_EFFECTS, ITEM_IDS, MAX_ITEMS
+from .notice_causes import CheckCause
 from .notice_text import TransferMessage, clean_label, render_english
 from .protocol import ProtocolError, validate_session_key
 
@@ -62,6 +63,7 @@ def transfer_notice(
     item_id: int,
     game: str,
     outgoing: bool,
+    cause: CheckCause | None = None,
 ) -> Notice:
     kind = ("sent_" if outgoing else "received_") + (
         "unlock" if is_unlock(item_id, game) else "item"
@@ -71,6 +73,7 @@ def transfer_notice(
         clean_label(player),
         clean_label(item),
         item_id if game == GAME and item_id in ITEM_IDS else 0,
+        cause,
     )
     return Notice(identity, minimum_received, render_english(message), message)
 
@@ -106,7 +109,9 @@ def encode_notices(session_key: str, notices: tuple[Notice, ...]) -> str:
     ):
         raise ProtocolError("Notice batch is too large or repeats an identity")
     semantic = any(notice.transfer is not None for notice in notices)
-    lines = [f"GAMMA_AP_NOTICES|{2 if semantic else 1}", f"session|{session_key}"]
+    causal = any(notice.transfer and notice.transfer.cause is not None for notice in notices)
+    version = 3 if causal else 2 if semantic else 1
+    lines = [f"GAMMA_AP_NOTICES|{version}", f"session|{session_key}"]
     for notice in notices:
         validate_notice(notice)
         prefix = f"notice|{notice.identity}|{notice.minimum_received}|"
@@ -118,6 +123,11 @@ def encode_notices(session_key: str, notices: tuple[Notice, ...]) -> str:
                 prefix + f"{message.kind}|{message.player.encode('utf-8').hex()}|"
                 f"{message.item.encode('utf-8').hex()}|{message.local_item_id}"
             )
+            if causal:
+                cause = message.cause
+                lines[-1] += (
+                    f"|{cause.kind}|{cause.value.encode('utf-8').hex()}" if cause else "|none|"
+                )
     lines.append(f"end|{len(notices)}")
     return "\n".join(lines) + "\n"
 
