@@ -60,6 +60,8 @@ function actor_on_update()
     gamma_ap_state.check_level(state, level.name())
     local written, write_error = write_outgoing()
     if not written then report_error(write_error); return end
+    local notified, notice_error = gamma_ap_notifications.poll(state)
+    if not notified then report_error(notice_error); return end
     last_error = nil
 end
 

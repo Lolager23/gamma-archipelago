@@ -7,10 +7,11 @@ from contextlib import suppress
 from typing import Any
 
 from CommonClient import CommonContext, get_base_parser, server_loop
-from NetUtils import ClientStatus
+from NetUtils import ClientStatus, NetworkItem
 
 from gamma_archipelago.bridge import FileBridge
 from gamma_archipelago.catalog import GAME
+from gamma_archipelago.notifications import Notice, is_unlock, reward_message
 from gamma_archipelago.paths import DEFAULT_GAME_ROOT
 from gamma_archipelago.protocol import ProtocolError
 from gamma_archipelago.session import SessionCoordinator, make_session_key
@@ -53,11 +54,48 @@ class GammaContext(CommonContext):
         if command in ("Connected", "ReceivedItems") and self.session:
             if command == "ReceivedItems":
                 self.session.accept_history(tuple(item.item for item in self.items_received))
+                for index, item in enumerate(self.items_received):
+                    self.session.add_notice(
+                        Notice(
+                            f"r:{index}",
+                            index + 1,
+                            reward_message(
+                                self.player_names.get(item.player, f"Player {item.player}"),
+                                self.item_names.lookup_in_game(item.item),
+                                unlock=is_unlock(item.item, GAME),
+                                outgoing=False,
+                            ),
+                        )
+                    )
             self.bridge.write_history(self.session.session_key, self.session.item_ids)
+        if command == "PrintJSON" and self.session:
+            item = arguments.get("item")
+            recipient = arguments.get("receiving")
+            if (
+                arguments.get("type") == "ItemSend"
+                and isinstance(item, NetworkItem)
+                and item.player == self.slot
+                and type(recipient) is int
+                and recipient != self.slot
+                and recipient in self.slot_info
+            ):
+                self.session.add_notice(
+                    Notice(
+                        f"s:{item.location}:{recipient}:{item.item}",
+                        0,
+                        reward_message(
+                            self.player_names.get(recipient, f"Player {recipient}"),
+                            self.item_names.lookup_in_slot(item.item, recipient),
+                            unlock=is_unlock(item.item, self.slot_info[recipient].game),
+                            outgoing=True,
+                        ),
+                    )
+                )
 
     async def poll_game_once(self) -> None:
         if not self.session or not self.server or not self.slot:
             return
+        self.bridge.write_notices(self.session.session_key, tuple(self.session.notices.values()))
         snapshot = self.bridge.read_game(self.session.session_key)
         if snapshot is None:
             return

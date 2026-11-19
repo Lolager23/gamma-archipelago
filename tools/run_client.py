@@ -9,6 +9,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--ap-root", type=Path, default=Path("D:/GAMMAAPTools/ap-runtime"))
 arguments, client_arguments = parser.parse_known_args()
 os.environ["SKIP_REQUIREMENTS_UPDATE"] = "1"
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 sys.path.insert(0, str(arguments.ap_root.resolve()))
 import Utils  # noqa: E402
 

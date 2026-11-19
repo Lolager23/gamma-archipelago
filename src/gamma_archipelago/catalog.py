@@ -8,6 +8,7 @@ GAME: str = _data["game"]
 SCHEMA_VERSION: int = _data["schema_version"]
 ITEM_SECTIONS: dict[int, str] = {item["id"]: item["section"] for item in _data["items"]}
 ITEM_NAMES: dict[str, int] = {item["name"]: item["id"] for item in _data["items"]}
+ITEM_EFFECTS: dict[int, str] = {item["id"]: item.get("effect", "item") for item in _data["items"]}
 LOCATION_NAMES: dict[str, int] = {
     location["name"]: location["id"] for location in _data["locations"]
 }

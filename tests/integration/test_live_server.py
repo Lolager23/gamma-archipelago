@@ -36,7 +36,7 @@ def test_real_generation_server_item_delivery_and_reconnect(tmp_path, mixed_game
     (players / "gamma.yaml").write_bytes((ROOT / "examples/pilot.yaml").read_bytes())
     if mixed_game:
         (players / "quest.yaml").write_text(
-            "name: QuestPilot\ngame: Archipelago\nArchipelago: {}\n", encoding="utf-8"
+            "name: QuestPilot\ngame: APQuest\nAPQuest: {}\n", encoding="utf-8"
         )
     arguments = Generate.mystery_argparse(
         [
@@ -73,7 +73,7 @@ def test_real_generation_server_item_delivery_and_reconnect(tmp_path, mixed_game
                 await wait_until(lambda: client.session is not None)
                 if mixed_game:
                     quest = CommonContext()
-                    quest.game = "Archipelago"
+                    quest.game = "APQuest"
                     quest.auth = "QuestPilot"
                     quest.items_handling = 0b111
 
@@ -96,6 +96,13 @@ def test_real_generation_server_item_delivery_and_reconnect(tmp_path, mixed_game
                 await client.poll_game_once()
                 await wait_until(lambda: len(client.items_received) == 3)
                 assert {item.item for item in client.items_received} == set(ITEM_SECTIONS)
+                assert {f"r:{index}" for index in range(3)} <= client.session.notices.keys()
+                if mixed_game:
+                    await wait_until(
+                        lambda: any(
+                            identity.startswith("s:") for identity in client.session.notices
+                        )
+                    )
                 assert server.location_checks[(client.team, client.slot)] == set(LOCATION_IDS)
                 assert (
                     server.client_game_state[(client.team, client.slot)] == ClientStatus.CLIENT_GOAL
