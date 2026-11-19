@@ -133,9 +133,10 @@ class GammaWorld(World):
         stashes = [
             item["name"]
             for item in _catalog["items"]
-            if item.get("category") == "rewards_loot_stashes"
+            if item.get("category") in {"rewards_loot_stashes", "rewards_faction_reputation"}
+            and item.get("category") in self.configuration.rewards
         ]
-        enabled = "rewards_loot_stashes" in self.configuration.rewards
+        enabled = bool(stashes)
         count = len(self.multiworld.get_unfilled_locations(self.player))
         if len(required) > count:
             raise OptionError("The selected check pool cannot hold required progression rewards")

@@ -36,6 +36,14 @@ item_effects = {
     [28051126] = "loot_stash",
     [28051127] = "loot_stash",
     [28051201] = "progression_stash",
+    [28051301] = "reputation",
+    [28051302] = "reputation",
+    [28051303] = "reputation",
+    [28051304] = "reputation",
+    [28051305] = "reputation",
+    [28051306] = "reputation",
+    [28051307] = "reputation",
+    [28051308] = "reputation",
 }
 item_categories = {
     [28051001] = "",
@@ -69,6 +77,24 @@ item_categories = {
     [28051126] = "rewards_loot_stashes",
     [28051127] = "rewards_loot_stashes",
     [28051201] = "rewards_progression_stashes",
+    [28051301] = "rewards_faction_reputation",
+    [28051302] = "rewards_faction_reputation",
+    [28051303] = "rewards_faction_reputation",
+    [28051304] = "rewards_faction_reputation",
+    [28051305] = "rewards_faction_reputation",
+    [28051306] = "rewards_faction_reputation",
+    [28051307] = "rewards_faction_reputation",
+    [28051308] = "rewards_faction_reputation",
+}
+reputation_rewards = {
+    [28051301] = {faction="stalker", bonus=250, cap=3000},
+    [28051302] = {faction="csky", bonus=250, cap=3000},
+    [28051303] = {faction="dolg", bonus=250, cap=3000},
+    [28051304] = {faction="freedom", bonus=250, cap=3000},
+    [28051305] = {faction="ecolog", bonus=250, cap=3000},
+    [28051306] = {faction="killer", bonus=250, cap=3000},
+    [28051307] = {faction="army", bonus=250, cap=3000},
+    [28051308] = {faction="bandit", bonus=250, cap=3000},
 }
 stash_containers = {
     ["esc_treasure_1"] = "l01_escape",

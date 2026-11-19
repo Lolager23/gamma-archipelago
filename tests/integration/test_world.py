@@ -204,8 +204,14 @@ def test_loot_stash_pool_is_optional_seeded_and_fits_even_one_check():
         names = [location.item.name for location in multiworld.get_locations()]
         assert any("Loot Stash:" in name for name in names)
         assert "Basic Toolkit" in names
-        assert set(world.fill_slot_data()["item_ids"]) == ITEM_IDS - {28051201}
-        assert enabled_item_ids(world.configuration.rewards) == ITEM_IDS - {28051201}
+        assert set(world.fill_slot_data()["item_ids"]) == ITEM_IDS - {
+            28051201,
+            *range(28051301, 28051309),
+        }
+        assert enabled_item_ids(world.configuration.rewards) == ITEM_IDS - {
+            28051201,
+            *range(28051301, 28051309),
+        }
         assert multiworld.can_beat_game()
         placements.append(names)
     assert placements[0] == placements[1] and placements[0] != placements[2]

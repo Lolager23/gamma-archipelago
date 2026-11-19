@@ -73,7 +73,12 @@ local function read_configuration(incoming)
 end
 
 local function apply_reward(section)
-    if type(section) == "number" then return gamma_ap_stashes.receive(state, section) end
+    if type(section) == "number" then
+        if gamma_ap_catalog.item_effects[section] == "reputation" then
+            return gamma_ap_reputation.receive(state, section)
+        end
+        return gamma_ap_stashes.receive(state, section)
+    end
     state.applying_reward = true
     local ok, object = pcall(alife_create_item, section, db.actor)
     state.applying_reward = false
