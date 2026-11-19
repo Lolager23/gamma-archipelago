@@ -33,6 +33,38 @@ def generate_catalogues() -> None:
     lines.extend(["}", "location_ids = {"])
     lines.extend(f"    {loc['id']}," for loc in catalogue["locations"])
     lines.append("}")
+    for name in ("armour_kinds", "weapon_kinds", "knives"):
+        lines.append(name + " = {")
+        for key, value in catalogue["equipment"][name].items():
+            encoded = json.dumps(value)
+            lines.append(f'    ["{key}"] = {encoded},')
+        lines.append("}")
+    for name in ("powered_outfits", "machineguns"):
+        lines.append(name + " = {")
+        lines.extend(f'    ["{section}"] = true,' for section in catalogue["equipment"][name])
+        lines.append("}")
+    for category, name in (
+        ("checks_armour_tiers", "armour_locations"),
+        ("checks_weapon_tiers", "weapon_locations"),
+        ("checks_knife_tiers", "knife_locations"),
+    ):
+        lines.append(name + " = {")
+        lines.extend(
+            f'    ["{loc["key"]}"] = {loc["id"]},'
+            for loc in catalogue["locations"]
+            if loc["category"] == category
+        )
+        lines.append("}")
+    lines.append("upgrade_locations = {")
+    for group in ("firearm", "armour"):
+        lines.append(f'    ["{group}"] = {{')
+        lines.extend(
+            f"        [{loc['threshold']}] = {loc['id']},"
+            for loc in catalogue["locations"]
+            if loc["category"] == "checks_gear_upgrades" and loc["key"] == group
+        )
+        lines.append("    },")
+    lines.append("}")
     lines.append("task_functors = {")
     lines.extend(f'    ["{key}"] = "{value}",' for key, value in catalogue["task_functors"].items())
     lines.extend(["}", "quest_type_locations = {"])
