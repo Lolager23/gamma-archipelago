@@ -36,6 +36,12 @@ def generate_catalogues() -> None:
     lines.extend(
         f'    [{item["id"]}] = "{item.get("category", "")}",' for item in catalogue["items"]
     )
+    lines.extend(["}", "gear_rewards = {"])
+    lines.extend(
+        f'    [{item["id"]}] = {{group="{item["group"]}", section="{item["baseline"]}"}},'
+        for item in catalogue["items"]
+        if "baseline" in item
+    )
     lines.extend(["}", "permissions = {"])
     lines.extend(
         f'    [{item["id"]}] = "{item["permission"]}",'

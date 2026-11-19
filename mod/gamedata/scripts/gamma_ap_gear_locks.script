@@ -1,0 +1,84 @@
+-- AP mode 2 is a permission lock; mode 1 only omits the initial equipment.
+
+local pickup_flags = nil
+local pickup_wrapper = nil
+
+function install_pickup_guard(configuration)
+    if not configuration or not configuration.expanded
+        or configuration.options.rewards_starting_gear_unlocks ~= 1 then return true end
+    local binder = rawget(_G, "bind_stalker_ext")
+    if not binder or type(binder.actor_on_item_before_pickup) ~= "function" then
+        return false, "Equipment locks require the native pickup binder"
+    end
+    if binder.actor_on_item_before_pickup ~= pickup_wrapper then
+        local delegate = binder.actor_on_item_before_pickup
+        pickup_wrapper = function(...)
+            -- The pinned binder reuses its flags without resetting them. Clear
+            -- the previous dispatch before delegates run current mod callbacks.
+            if pickup_flags then pickup_flags.ret_value = true end
+            return delegate(...)
+        end
+        binder.actor_on_item_before_pickup = pickup_wrapper
+    end
+    return true
+end
+
+local function locked(state, item)
+    local configuration = state.configuration
+    if not configuration or not configuration.expanded or not item then return false end
+    local group = gamma_ap_equipment.group(item:section())
+    return group and configuration.options["starting_" .. group] == 2
+        and not state.unlocks["gear_" .. group]
+end
+
+function before(state, item, flags)
+    if locked(state, item) then flags.ret_value = false end
+end
+
+function before_pickup(state, item, flags)
+    pickup_flags = flags
+    before(state, item, flags)
+end
+
+function taken(state, item)
+    if not locked(state, item) then return true end
+    local ok = pcall(function() db.actor:drop_item(item) end)
+    if not ok then return false, "Cannot return AP-locked equipment to the ground" end
+    return false, "This equipment group requires its Archipelago unlock"
+end
+
+function poll(state)
+    if not state.configuration or not state.configuration.expanded then return true end
+    local blocked = {}
+    db.actor:iterate_inventory(function(_,item)
+        if #blocked < 32 and locked(state, item) then blocked[#blocked+1] = item end
+    end, db.actor)
+    if #blocked == 0 then return true end
+    for _,item in ipairs(blocked) do
+        local ok = pcall(function() db.actor:drop_item(item) end)
+        if not ok then return false, "Cannot return AP-locked equipment to the ground" end
+    end
+    return false, "Returned locked equipment; waiting for its AP permission"
+end
+
+function receive(state, item_id)
+    local reward = gamma_ap_catalog.gear_rewards[item_id]
+    if not reward or not state.allowed_items[item_id] or not state.configuration
+        or state.configuration.options["starting_" .. reward.group] ~= 2 then
+        return false, "This equipment permission is not enabled in the seed"
+    end
+    if not ini_sys:section_exist(reward.section) then return false, "The baseline unlock equipment is unavailable" end
+    state.unlocks["gear_" .. reward.group] = true
+    local receipt = state.received_count + 1
+    if state.gear_grants[receipt] == "uncertain" then
+        return false, "Equipment creation is uncertain; automatic retry is blocked"
+    end
+    local ok, object = pcall(alife_create_item, reward.section, db.actor)
+    if not ok then
+        state.gear_grants[receipt] = "uncertain"
+        return false, "Equipment creation is uncertain; automatic retry is blocked"
+    end
+    if not object then return false, "Baseline equipment creation failed; receipt remains pending" end
+    state.gear_grants[receipt] = "created"
+    return true
+end

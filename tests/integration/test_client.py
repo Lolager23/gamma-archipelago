@@ -138,6 +138,7 @@ async def test_configured_stash_item_manifests_and_history_are_validated():
                 *range(28051301, 28051309),
                 *range(28051401, 28051405),
                 *range(28051501, 28051504),
+                *range(28051601, 28051610),
             }
         ),
     }
@@ -151,6 +152,7 @@ async def test_configured_stash_item_manifests_and_history_are_validated():
                 *range(28051301, 28051309),
                 *range(28051401, 28051405),
                 *range(28051501, 28051504),
+                *range(28051601, 28051610),
             }
         )
     )

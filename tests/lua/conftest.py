@@ -30,6 +30,7 @@ def lua():
         "reputation",
         "skills",
         "quest_keys",
+        "gear_locks",
         "stashes",
         "state",
         "settlements",

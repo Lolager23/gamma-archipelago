@@ -74,6 +74,7 @@ end
 
 local function apply_reward(section)
     if type(section) == "number" then
+        if gamma_ap_catalog.gear_rewards[section] then return gamma_ap_gear_locks.receive(state, section) end
         if gamma_ap_catalog.item_effects[section] == "unlock" then
             state.unlocks[gamma_ap_catalog.permissions[section]] = true
             return true
@@ -103,6 +104,8 @@ function actor_on_update()
     if not incoming then report_error(reason); return end
     local configuration, configuration_error = read_configuration(incoming)
     if incoming.configuration_key and not configuration then report_error(configuration_error); return end
+    local pickup_ready, pickup_error = gamma_ap_gear_locks.install_pickup_guard(configuration)
+    if not pickup_ready then report_error(pickup_error); return end
     local quest_ready, quest_error = gamma_ap_quest_keys.install(function() return state end)
     if configuration and configuration.expanded and configuration.options.rewards_quest_keys == 1
         and not quest_ready then report_error(quest_error); return end
@@ -126,8 +129,11 @@ function actor_on_update()
     if not ranked then report_error(rank_error); return end
     gamma_ap_state.merge_confirmed(state, confirmed)
     gamma_ap_state.check_level(state, level.name())
-    local equipped, equipment_error = gamma_ap_equipment_checks.poll(state, configuration)
-    if not equipped then report_error(equipment_error); return end
+    local permitted, permission_error = gamma_ap_gear_locks.poll(state)
+    if permitted then
+        local equipped, equipment_error = gamma_ap_equipment_checks.poll(state, configuration)
+        if not equipped then report_error(equipment_error); return end
+    end
     local quests, quest_error = gamma_ap_quest_keys.poll(state)
     if not quests then report_error(quest_error); return end
     local stashed, stash_error = gamma_ap_stashes.poll(state)
@@ -137,6 +143,7 @@ function actor_on_update()
     local notified, notice_error = gamma_ap_notifications.poll(state)
     if not notified then report_error(notice_error); return end
     if not success then report_error(delivery_error)
+    elseif not permitted then report_error(permission_error)
     elseif not stashed then report_error(stash_error)
     else last_error = nil end
 end
@@ -163,6 +170,8 @@ function creature_spawned(victim)
 end
 
 function actor_on_item_take(item)
+    local permitted, reason = gamma_ap_gear_locks.taken(state, item)
+    if not permitted then report_error(reason); return end
     gamma_ap_collection.observe(state, item, "ownership")
     local ok, reason = gamma_ap_equipment_checks.acquired(state, item)
     if not ok then report_error(reason) end
@@ -170,10 +179,20 @@ function actor_on_item_take(item)
 end
 
 function actor_on_item_take_from_box(box, item)
+    local permitted, reason = gamma_ap_gear_locks.taken(state, item)
+    if not permitted then report_error(reason); return end
     gamma_ap_collection.observe(state, item, "container")
     local ok, reason = gamma_ap_equipment_checks.acquired(state, item)
     if not ok then report_error(reason) end
     gamma_ap_stashes.take(state, box, item)
+end
+
+function actor_on_item_before_pickup(item, flags)
+    gamma_ap_gear_locks.before_pickup(state, item, flags)
+end
+
+function actor_on_item_before_use(item, flags)
+    gamma_ap_gear_locks.before(state, item, flags)
 end
 
 function physic_object_on_use_callback(box, who)
@@ -213,6 +232,8 @@ function on_game_start()
         local configuration, reason = read_configuration(incoming)
         if configuration then
             state.configuration = gamma_ap_configuration.copy(configuration)
+            local pickup_ready, pickup_error = gamma_ap_gear_locks.install_pickup_guard(configuration)
+            if not pickup_ready then report_error(pickup_error) end
             gamma_ap_quest_keys.install(function() return state end)
             local prepared, error = gamma_ap_loadout.prepare(state, configuration)
             if not prepared then report_error(error) end
@@ -229,6 +250,8 @@ function on_game_start()
     RegisterScriptCallback("monster_on_net_spawn", creature_spawned)
     RegisterScriptCallback("actor_on_item_take", actor_on_item_take)
     RegisterScriptCallback("actor_on_item_take_from_box", actor_on_item_take_from_box)
+    RegisterScriptCallback("actor_on_item_before_pickup", actor_on_item_before_pickup)
+    RegisterScriptCallback("actor_on_item_before_use", actor_on_item_before_use)
     RegisterScriptCallback("physic_object_on_use_callback", physic_object_on_use_callback)
     register_task_hook()
     printf("[GAMMA AP] Pilot loaded; multiplayer roots are forbidden")

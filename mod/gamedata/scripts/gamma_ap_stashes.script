@@ -110,6 +110,7 @@ function receive(state, item_id)
 end
 
 function open(state, box, who)
+    if not gamma_ap_loadout.pda_available(state) then return end
     if not state.session_key or not state.expanded or #state.stashes.order == 0
         or not db.actor or not db.actor:alive() or not box or not who
         or who:id() ~= db.actor:id() then return end

@@ -584,6 +584,96 @@
       "effect": "unlock",
       "category": "rewards_quest_keys",
       "permission": "operation_afterglow"
+    },
+    {
+      "id": 28051601,
+      "name": "Equipment Unlock: Detector",
+      "classification": "progression",
+      "effect": "unlock",
+      "category": "rewards_starting_gear_unlocks",
+      "permission": "gear_detector",
+      "group": "detector",
+      "baseline": "detector_simple"
+    },
+    {
+      "id": 28051602,
+      "name": "Equipment Unlock: PDA",
+      "classification": "progression",
+      "effect": "unlock",
+      "category": "rewards_starting_gear_unlocks",
+      "permission": "gear_pda",
+      "group": "pda",
+      "baseline": "device_pda_1"
+    },
+    {
+      "id": 28051603,
+      "name": "Equipment Unlock: Firearms",
+      "classification": "progression",
+      "effect": "unlock",
+      "category": "rewards_starting_gear_unlocks",
+      "permission": "gear_firearms",
+      "group": "firearms",
+      "baseline": "wpn_pm"
+    },
+    {
+      "id": 28051604,
+      "name": "Equipment Unlock: Melee",
+      "classification": "progression",
+      "effect": "unlock",
+      "category": "rewards_starting_gear_unlocks",
+      "permission": "gear_melee",
+      "group": "melee",
+      "baseline": "wpn_knife"
+    },
+    {
+      "id": 28051605,
+      "name": "Equipment Unlock: Outfit",
+      "classification": "progression",
+      "effect": "unlock",
+      "category": "rewards_starting_gear_unlocks",
+      "permission": "gear_outfit",
+      "group": "outfit",
+      "baseline": "stalker_outfit"
+    },
+    {
+      "id": 28051606,
+      "name": "Equipment Unlock: Helmet",
+      "classification": "progression",
+      "effect": "unlock",
+      "category": "rewards_starting_gear_unlocks",
+      "permission": "gear_helmet",
+      "group": "helmet",
+      "baseline": "helm_respirator"
+    },
+    {
+      "id": 28051607,
+      "name": "Equipment Unlock: Backpack",
+      "classification": "progression",
+      "effect": "unlock",
+      "category": "rewards_starting_gear_unlocks",
+      "permission": "gear_backpack",
+      "group": "backpack",
+      "baseline": "equ_small_pack"
+    },
+    {
+      "id": 28051608,
+      "name": "Equipment Unlock: Tools",
+      "classification": "progression",
+      "effect": "unlock",
+      "category": "rewards_starting_gear_unlocks",
+      "permission": "gear_tools",
+      "group": "tools",
+      "baseline": "itm_basickit"
+    },
+    {
+      "id": 28051609,
+      "name": "Equipment Unlock: Utilities",
+      "classification": "progression",
+      "effect": "unlock",
+      "category": "rewards_starting_gear_unlocks",
+      "permission": "gear_utilities",
+      "group": "utilities",
+      "baseline": "device_flashlight"
     }
   ],
   "locations": [

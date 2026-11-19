@@ -74,6 +74,8 @@ def test_callbacks_polling_save_restore_and_initial_inventory(lua):
         "actor_on_item_take",
         "actor_on_item_take_from_box",
         "physic_object_on_use_callback",
+        "actor_on_item_before_pickup",
+        "actor_on_item_before_use",
     }
     set_incoming(engine)
     module.actor_on_update()
