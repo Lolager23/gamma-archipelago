@@ -194,7 +194,9 @@ class GammaWorld(World):
                 for location in self.multiworld.get_locations(self.player)
                 if location.address is not None
             ),
-            "item_ids": sorted(enabled_item_ids(self.configuration.rewards)),
+            "item_ids": sorted(
+                enabled_item_ids(self.configuration.rewards, self.configuration.gear)
+            ),
         }
 
     def get_filler_item_name(self) -> str:

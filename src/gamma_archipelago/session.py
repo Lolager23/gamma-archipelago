@@ -10,7 +10,14 @@ from .protocol import GameSnapshot, ProtocolError, validate_session_key
 
 
 def make_session_key(seed_name: str, team: int, slot: int) -> str:
-    if not seed_name or type(team) is not int or type(slot) is not int or team < 0 or slot < 1:
+    if (
+        type(seed_name) is not str
+        or not seed_name
+        or type(team) is not int
+        or type(slot) is not int
+        or team < 0
+        or slot < 1
+    ):
         raise ProtocolError("A nonempty seed, nonnegative team and positive slot are required")
     identity = json.dumps([seed_name, team, slot], separators=(",", ":"), ensure_ascii=True)
     return hashlib.sha256(identity.encode("ascii")).hexdigest()
@@ -32,14 +39,24 @@ class SessionCoordinator:
     items_bound: bool = False
 
     def bind_items(self, items: frozenset[int]) -> None:
-        if not items or len(items) > MAX_ITEMS or not items <= ITEM_IDS:
+        if (
+            not items
+            or len(items) > MAX_ITEMS
+            or any(type(identity) is not int for identity in items)
+            or not items <= ITEM_IDS
+        ):
             raise ProtocolError("Unsupported seed item manifest")
         if self.items_bound and items != self.allowed_items:
             raise ProtocolError("Seed item manifest changed within the same session")
         self.allowed_items, self.items_bound = items, True
 
     def bind_locations(self, locations: frozenset[int]) -> None:
-        if not locations or len(locations) > MAX_ITEMS or not locations <= ALL_LOCATION_IDS:
+        if (
+            not locations
+            or len(locations) > MAX_ITEMS
+            or any(type(identity) is not int for identity in locations)
+            or not locations <= ALL_LOCATION_IDS
+        ):
             raise ProtocolError("Unsupported seed check manifest")
         if self.locations_bound and locations != self.allowed_locations:
             raise ProtocolError("Seed check manifest changed within the same session")
@@ -59,13 +76,16 @@ class SessionCoordinator:
         self.notices[notice.identity] = notice
 
     def accept_confirmed(self, checked: frozenset[int]) -> None:
-        if not checked <= self.allowed_locations:
+        if (
+            any(type(identity) is not int for identity in checked)
+            or not checked <= self.allowed_locations
+        ):
             raise ProtocolError("Server confirmed an unsupported location")
         self.checked_locations.update(checked)
 
     def accept_history(self, item_ids: tuple[int, ...]) -> None:
         if len(item_ids) > MAX_ITEMS or any(
-            item_id not in self.allowed_items for item_id in item_ids
+            type(item_id) is not int or item_id not in self.allowed_items for item_id in item_ids
         ):
             raise ProtocolError("Server history contains an unsupported item or exceeds the limit")
         if item_ids[: len(self.item_ids)] != self.item_ids:
@@ -75,9 +95,16 @@ class SessionCoordinator:
     def observe_game(self, snapshot: GameSnapshot) -> tuple[int, ...]:
         if snapshot.session_key != self.session_key:
             raise ProtocolError("Refusing a game save from another session")
-        if snapshot.received_count > len(self.item_ids):
+        if type(snapshot.received_count) is not int or not 0 <= snapshot.received_count <= len(
+            self.item_ids
+        ):
             raise ProtocolError("Game has acknowledged items that the server has not supplied")
-        if not snapshot.checked_locations <= self.allowed_locations:
+        if type(snapshot.goal_complete) is not bool:
+            raise ProtocolError("Game goal state must be a boolean")
+        if (
+            any(type(identity) is not int for identity in snapshot.checked_locations)
+            or not snapshot.checked_locations <= self.allowed_locations
+        ):
             raise ProtocolError("Game reported a location disabled in this seed")
         self.checked_locations.update(snapshot.checked_locations)
         return tuple(sorted(self.checked_locations))

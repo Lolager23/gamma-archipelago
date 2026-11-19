@@ -1,7 +1,14 @@
 """Explicit access requirements shared by entrances and activity checks."""
 
+from typing import TYPE_CHECKING, Any
 
-def apply_access_rules(world, catalog):
+from BaseClasses import CollectionState
+
+if TYPE_CHECKING:
+    from . import GammaWorld
+
+
+def apply_access_rules(world: "GammaWorld", catalog: dict[str, Any]) -> None:
     player = world.player
     gear = dict(world.configuration.gear)
     zone_items = {
@@ -11,7 +18,7 @@ def apply_access_rules(world, catalog):
     }
     zoned = "rewards_zone_keys" in world.configuration.rewards
 
-    def enter(state, level):
+    def enter(state: CollectionState, level: str) -> bool:
         if zoned and level != "l01_escape" and not state.has(zone_items[level], player):
             return False
         if level in {"l10_radar", "l10u_bunker", "l08u_brainlab"}:

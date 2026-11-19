@@ -126,3 +126,11 @@ def test_online_changers_preserve_native_disabled_state_and_restore_only_ap_owne
     assert not state.zone_disabled[201] and not disabled.active
     engine.bad_changer = True
     assert lua.globals().gamma_ap_zone_keys.poll(state)[0] is False
+
+
+def test_missing_transition_inspection_helpers_are_reported_without_blocking_key_delivery(lua):
+    game, engine = zone_game(lua)
+    lua.globals().db.storage = lua.table()
+    poll(game, engine)
+    assert progress(lua, game).received_count == 1
+    assert "destination APIs" in list(engine.logs.values())[-1]

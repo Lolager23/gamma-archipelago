@@ -1,11 +1,21 @@
 """Local completion events are separate from network checks and reward slots."""
 
-from BaseClasses import ItemClassification
+from typing import TYPE_CHECKING, Any
+
+from BaseClasses import Item, ItemClassification, Location, Region
 
 from gamma_archipelago.catalog import LOCATION_IDS
 
+if TYPE_CHECKING:
+    from . import GammaWorld
 
-def add_goal_events(world, regions, location_type, item_type):
+
+def add_goal_events(
+    world: "GammaWorld",
+    regions: dict[str, Region],
+    location_type: type[Location],
+    item_type: type[Item],
+) -> None:
     if (
         world.configuration.goal != "pilot_tour"
         and "rewards_progression_stashes" not in world.configuration.rewards
@@ -70,7 +80,7 @@ def add_goal_events(world, regions, location_type, item_type):
         regions["l01_escape"].locations.append(finish)
 
 
-def set_goal_rule(world, catalog):
+def set_goal_rule(world: "GammaWorld", catalog: dict[str, Any]) -> None:
     if world.configuration.goal == "psi_protection":
         world.multiworld.completion_condition[world.player] = lambda state: state.has(
             "Calibrated Psi Protection", world.player

@@ -18,7 +18,12 @@ def test_packages_are_reproducible_and_load_from_apworld(tmp_path):
     subprocess.run([sys.executable, "tools/build.py"], cwd=ROOT, check=True)
     outputs = [
         ROOT / "dist" / name
-        for name in ("gamma.apworld", "gamma-archipelago-mo2.zip", "gamma-archipelago-probes.zip")
+        for name in (
+            "gamma.apworld",
+            "gamma-archipelago-mo2.zip",
+            "gamma-archipelago-probes.zip",
+            "gamma-archipelago-client.zip",
+        )
     ]
     first = [hashlib.sha256(path.read_bytes()).digest() for path in outputs]
     subprocess.run([sys.executable, "tools/build.py"], cwd=ROOT, check=True)
@@ -51,6 +56,7 @@ def test_packages_are_reproducible_and_load_from_apworld(tmp_path):
                 "zone_keys",
                 "travel",
                 "goals",
+                "save_validation",
                 "stashes",
             )
         } | {
@@ -64,8 +70,12 @@ def test_packages_are_reproducible_and_load_from_apworld(tmp_path):
     runtime = Path(os.environ.get("AP_RUNTIME_ROOT", "D:/GAMMAAPTools/ap-runtime"))
     isolated = tmp_path / "runtime"
     shutil.copytree(
-        runtime, isolated, ignore=shutil.ignore_patterns("gamma", "user", "cache", "__pycache__")
+        runtime,
+        isolated,
+        ignore=shutil.ignore_patterns("gamma", "gamma_archipelago", "user", "cache", "__pycache__"),
     )
+    with ZipFile(outputs[3]) as archive:
+        archive.extractall(isolated)
     shutil.copy2(outputs[0], isolated / "worlds/gamma.apworld")
     code = """
 import sys
@@ -83,6 +93,8 @@ container.read()
 assert container.world_version == Utils.Version(0, 1, 0)
 assert len(GammaWorld.location_name_to_id) == 20249
 import worlds.gamma.client
+import gamma_archipelago
+assert str(gamma_archipelago.__file__).startswith(sys.argv[1]), gamma_archipelago.__file__
 """
     subprocess.run(
         [sys.executable, "-c", code, str(isolated)],
@@ -90,7 +102,17 @@ import worlds.gamma.client
         env={
             **os.environ,
             "SKIP_REQUIREMENTS_UPDATE": "1",
-            "PYTHONPATH": str(ROOT / "src"),
+            "PYTHONPATH": "",
         },
         timeout=30,
     )
+    help_result = subprocess.run(
+        [sys.executable, str(isolated / "GammaArchipelagoClient.py"), "--help"],
+        cwd=isolated,
+        env={**os.environ, "PYTHONPATH": ""},
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    assert help_result.returncode == 0, help_result.stderr
+    assert "--name" in help_result.stdout

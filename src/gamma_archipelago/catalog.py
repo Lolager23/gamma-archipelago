@@ -14,6 +14,9 @@ ITEM_CATEGORIES: dict[int, str | None] = {
     item["id"]: item.get("category") for item in _data["items"]
 }
 ITEM_NAMES: dict[str, int] = {item["name"]: item["id"] for item in _data["items"]}
+ITEM_GEAR: dict[int, str] = {
+    item["id"]: item["group"] for item in _data["items"] if "group" in item
+}
 ITEM_EFFECTS: dict[int, str] = {item["id"]: item.get("effect", "item") for item in _data["items"]}
 LOCATION_NAMES: dict[str, int] = {
     location["name"]: location["id"] for location in _data["locations"]
@@ -52,11 +55,17 @@ MAX_ITEMS = 4000
 MAX_SNAPSHOT_BYTES = 131072
 
 
-def enabled_item_ids(rewards: frozenset[str]) -> frozenset[int]:
+def enabled_item_ids(
+    rewards: frozenset[str], gear: tuple[tuple[str, int], ...] | None = None
+) -> frozenset[int]:
+    modes = dict(gear or ())
     return frozenset(
         identity
         for identity, category in ITEM_CATEGORIES.items()
         if category is None or category in rewards
+        if gear is None
+        or identity not in ITEM_GEAR
+        or modes.get("starting_" + ITEM_GEAR[identity]) == 2
     )
 
 

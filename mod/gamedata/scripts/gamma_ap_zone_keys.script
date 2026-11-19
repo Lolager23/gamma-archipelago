@@ -29,6 +29,10 @@ end
 
 function poll(state)
     if not enabled(state) or not db.storage then return true end
+    if type(IsLevelChanger) ~= "function" or not utils_stpk
+        or type(utils_stpk.get_level_changer_data) ~= "function" then
+        return false, "Cannot inspect native transition destination APIs"
+    end
     if storage_cursor and not db.storage[storage_cursor] then storage_cursor = nil end
     for _=1,128 do
         local id,entry = next(db.storage, storage_cursor)

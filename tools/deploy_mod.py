@@ -2,11 +2,13 @@
 
 import argparse
 import shutil
+import sys
 from pathlib import Path
 
-from gamma_archipelago.paths import DEFAULT_MO2_ROOT, require_isolated_root, require_safe_child
-
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "src"))
+
+from gamma_archipelago.paths import DEFAULT_MO2_ROOT, require_isolated_root, require_safe_child  # noqa: E402
 
 
 def main() -> None:

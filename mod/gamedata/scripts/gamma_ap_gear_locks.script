@@ -47,6 +47,7 @@ function receive(state, item_id)
     if state.gear_grants[receipt] == "uncertain" then
         return false, "Equipment creation is uncertain; automatic retry is blocked"
     end
+    if state.gear_grants[receipt] == "created" then return true end
     local ok, object = pcall(alife_create_item, reward.section, db.actor)
     if not ok then
         state.gear_grants[receipt] = "uncertain"

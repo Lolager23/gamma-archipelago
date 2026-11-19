@@ -136,6 +136,7 @@ end
 
 local function spawn_action(action, box)
     if action.uncertain then return false, "AP stash creation has an uncertain result; automatic retry is blocked" end
+    if action.created_id and action.created_name then return true end
     local ok, created = pcall(alife_create_item, action.section, box)
     if not ok then
         action.uncertain = true

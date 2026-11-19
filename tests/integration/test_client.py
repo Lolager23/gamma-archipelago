@@ -411,3 +411,30 @@ async def test_selected_alternate_goal_configures_the_bridge_goal_protocol():
         }
     )
     assert context.bridge.pilot_goal is False
+
+
+@run_async
+async def test_legacy_equipment_manifest_keeps_only_selected_permissions_enabled():
+    from gamma_archipelago.catalog import MAP_LOCATION_IDS, enabled_item_ids
+    from gamma_archipelago.configuration import build_configuration, defaults
+
+    configuration = build_configuration(
+        {**defaults(), "starting_pda": 2, "rewards_starting_gear_unlocks": 1}
+    )
+    selected = enabled_item_ids(configuration.rewards, configuration.gear)
+    slot = {
+        "schema_version": 3,
+        "pilot": False,
+        "configuration": configuration.to_values(),
+        "configuration_key": configuration.digest,
+        "location_ids": sorted(MAP_LOCATION_IDS),
+    }
+    for manifest in (sorted(selected), sorted(enabled_item_ids(configuration.rewards))):
+        context = connected_context({**slot, "item_ids": manifest})
+        assert context.session.allowed_items == selected
+        with pytest.raises(ProtocolError, match="unsupported item"):
+            context.session.accept_history((28051601,))
+    with pytest.raises(ProtocolError, match="manifest"):
+        connected_context(
+            {**slot, "location_ids": [float(value) for value in sorted(MAP_LOCATION_IDS)]}
+        )

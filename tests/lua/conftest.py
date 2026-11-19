@@ -34,6 +34,7 @@ def lua():
         "zone_keys",
         "travel",
         "goals",
+        "save_validation",
         "stashes",
         "state",
         "settlements",

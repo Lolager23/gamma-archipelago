@@ -1,7 +1,7 @@
 -- The sole owner of this save's AP state. Files and engine calls are injected.
 
 function new_state()
-    return { session_key = nil, received_count = 0, checks = {}, applied_items = {}, notices_seen = {},
+    return { schema_version=1, refused_save=false, session_key = nil, received_count = 0, checks = {}, applied_items = {}, notices_seen = {},
         configuration_key=nil, loadout_prepared=false, loadout_initialized=false, starting_pda_mode=0,
         expanded=false, enabled_checks=enabled_locations(nil), visited_maps={},
         combat=gamma_ap_combat.copy(nil), tasks=gamma_ap_tasks.copy(nil),
@@ -16,7 +16,10 @@ function enabled_items(configuration)
     local result = {}
     for id, category in pairs(gamma_ap_catalog.item_categories) do
         if category == "" or (configuration and configuration.expanded
-            and configuration.options[category] == 1) then result[id] = true end
+            and configuration.options[category] == 1) then
+            local gear = gamma_ap_catalog.gear_rewards[id]
+            if not gear or (configuration and configuration.options["starting_" .. gear.group] == 2) then result[id] = true end
+        end
     end
     return result
 end
@@ -45,6 +48,7 @@ end
 
 function copy_state(state)
     local result = new_state()
+    result.refused_save = state.refused_save == true
     result.session_key = state.session_key
     result.received_count = state.received_count
     for key, value in pairs(state.checks) do result.checks[key] = value end

@@ -96,6 +96,7 @@ local function apply_reward(section)
 end
 
 function actor_on_update()
+    if state.refused_save then report_error("AP save is refused; restore a valid backup"); return end
     if not db.actor or not db.actor:alive() then return end
     local now = time_global()
     if now < next_poll then return end
@@ -216,9 +217,25 @@ function save_state(data)
 end
 
 function load_state(data)
+    if data.gamma_archipelago_v1 ~= nil then
+        local ran, valid, reason = pcall(gamma_ap_save_validation.validate, data.gamma_archipelago_v1)
+        if not ran or not valid then
+            state = gamma_ap_state.new_state()
+            state.refused_save = true
+            report_error(ran and reason or "AP save validation failed; restore a valid backup")
+            return
+        end
+    end
     local prepared, configuration_key = state.loadout_prepared, state.configuration_key
     local configuration, pending = state.configuration, state.quest_pending
-    state = gamma_ap_state.copy_state(data.gamma_archipelago_v1 or gamma_ap_state.new_state())
+    local copied, restored = pcall(gamma_ap_state.copy_state, data.gamma_archipelago_v1 or gamma_ap_state.new_state())
+    if not copied then
+        state = gamma_ap_state.new_state()
+        state.refused_save = true
+        report_error("AP save structure is incompatible; restore a valid backup")
+        return
+    end
+    state = restored
     if not data.gamma_archipelago_v1 and prepared then
         state.loadout_prepared, state.configuration_key = true, configuration_key
     end
