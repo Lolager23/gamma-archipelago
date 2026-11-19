@@ -7,19 +7,65 @@ function label(key, fallback)
     return text ~= "gamma_ap_pda_"..key and text or fallback
 end
 
+local function set_text(control, value)
+    -- X-Ray's complex text parser recognizes backslash+n, not an LF character.
+    control:SetTextComplexMode(true)
+    local text = value:gsub("\r\n","\n"):gsub("\r","\n"):gsub("\n","\\n")
+    control:SetText(text)
+    control:AdjustHeightToText()
+end
+
+local function resize(control, height)
+    control:SetWndSize(vector2():set(control:GetWidth(),height))
+end
+
+local function cache_key(values)
+    local parts = {}
+    for _,value in ipairs(values) do parts[#parts+1] = #value..":"..value end
+    return table.concat(parts)
+end
+
+local function field(xml, node, parent, value)
+    local control = xml:InitTextWnd(node,parent)
+    set_text(control,value)
+    return control
+end
+
+local function check_row(xml, values)
+    local row = CUIWindow()
+    xml:InitWindow("check_row",0,row)
+    local bottom = 0
+    for index,name in ipairs({"status","region","name"}) do
+        local control = field(xml,"check_row:"..name,row,values[index])
+        bottom = math.max(bottom,control:GetHeight()+8)
+    end
+    for index,name in ipairs({"reason","reward"}) do
+        local control = field(xml,"check_row:"..name,row,values[index+3])
+        control:SetWndPos(vector2():set(8,bottom+6))
+        bottom = bottom+6+control:GetHeight()
+    end
+    resize(row,bottom+10)
+    return row
+end
+
 class "ap_tracker_window" (CUIScriptWnd)
 function ap_tracker_window:__init() super()
     self.region_index, self.status_index, self.offset, self.progress_offset = 1, 1, 1, 1
     self.selected_index,self.selected_id,self.feedback = 1,nil,""
-    self:SetWndRect(Frect():set(0,0,1024,768))
-    local xml = CScriptXmlInit()
-    xml:ParseFile("gamma_ap_pda.xml")
-    self.summary = xml:InitTextWnd("summary",self)
-    self.details = xml:InitTextWnd("details",self)
-    self.progress = xml:InitTextWnd("progress",self)
+    self.xml,self.drawn = CScriptXmlInit(),{}
+    self.xml:ParseFile("gamma_ap_pda.xml")
+    -- Custom dialogs attach to the background, whose origin differs from its tabs.
+    self.xml:InitWindow("main",0,self)
+    for _,name in ipairs({"summary","details","progress"}) do
+        self[name] = self.xml:InitScrollView(name,self)
+    end
+    for _,name in ipairs({"head_status","head_region","head_check","head_progress"}) do
+        self.xml:InitTextWnd(name,self)
+    end
+    self.page = self.xml:InitTextWnd("page",self)
     self.buttons = {}
     for _,name in ipairs({"refresh","region","status","previous","next","progress_next","select","scout"}) do
-        local button = xml:Init3tButton(name,self)
+        local button = self.xml:Init3tButton(name,self)
         self.buttons[name] = button
         self:Register(button,name)
         local action = name
@@ -38,6 +84,9 @@ function ap_tracker_window:change(action)
         local _,reason = gamma_ap_game.request_scout(self.selected_id)
         self.feedback = reason
     end
+    if action == "region" or action == "status" or action == "next" or action == "previous" then
+        self.details:ScrollToBegin()
+    elseif action == "progress_next" then self.progress:ScrollToBegin() end
     self:refresh()
 end
 
@@ -50,12 +99,77 @@ function ap_tracker_window:Update()
     end
 end
 
+function ap_tracker_window:render_text(name, lines)
+    local key = cache_key(lines)
+    if self.drawn[name] == key then return end
+    local list = self[name]
+    local position = list:GetCurrentScrollPos()
+    list:Clear()
+    for _,value in ipairs(lines) do
+        local control = field(self.xml,name.."_row",nil,value)
+        resize(control,control:GetHeight()+6)
+        list:AddWindow(control,true)
+    end
+    list:SetScrollPos(position)
+    self.drawn[name] = key
+end
+
+function ap_tracker_window:render_checks(rows, view)
+    local values,keys = {},{}
+    for index,row in ipairs(rows) do
+        local reward = view.scouted and view.scouted[row.id]
+        local info = reward and (reward.item.." -> "..reward.player) or label("not_scouted","Reward not scouted")
+        values[index] = {(index==self.selected_index and "> " or "")..label(row.status,row.status),
+            row.region,row.name,row.reason,info}
+        keys[index] = cache_key(values[index])
+    end
+    local key = cache_key(keys)
+    if self.drawn.details == key then return end
+    local position = self.details:GetCurrentScrollPos()
+    self.details:Clear()
+    for _,value in ipairs(values) do self.details:AddWindow(check_row(self.xml,value),true) end
+    self.details:SetScrollPos(position)
+    self.drawn.details = key
+end
+
+function ap_tracker_window:refresh_summary(view)
+    local lines = {
+        string.format("%s: %d / %d | %s: %d | %s: %d",label("completed","Completed"),
+            view.completed,#view.rows,label("available","Available"),view.available,label("blocked","Blocked"),view.blocked),
+        string.format("%s: %d/%d (%d %s)",label("applied","Rewards applied"),view.applied,
+            view.total,view.pending,label("pending","pending")),
+        view.problem or view.connection_status or label("offline","Server connectivity not reported by this snapshot"),
+    }
+    if view.delivery or view.stash_delivery then lines[#lines+1] = view.delivery or view.stash_delivery end
+    if self.feedback ~= "" then lines[#lines+1] = self.feedback end
+    self:render_text("summary",lines)
+end
+
+function ap_tracker_window:refresh_progress(view)
+    local lines = {
+        string.format("%s: %s (%s)",label("goal","Goal"),label("goal_"..view.goal,tostring(view.goal)),
+            view.goal_complete and label("completed","Completed") or label("incomplete","Incomplete")),
+        string.format("Kills: %d | Side tasks: %d | Rank index: %d",view.kills,view.tasks,view.rank),
+    }
+    for _,preview in ipairs(view.previews or {}) do
+        local reward = view.scouted and view.scouted[preview.id]
+        lines[#lines+1] = preview.label..": "..(reward and reward.item.." -> "..reward.player
+            or label("waiting_scout","Waiting for scouting data"))
+    end
+    if self.progress_offset > #view.progression then self.progress_offset = 1 end
+    for index=self.progress_offset,math.min(self.progress_offset+9,#view.progression) do
+        lines[#lines+1] = view.progression[index]
+    end
+    self:render_text("progress",lines)
+end
+
 function ap_tracker_window:refresh()
     local view = gamma_ap_game.tracker_view()
     if not view.enabled or not view.bound then
-        self.summary:SetText(view.enabled and label("unbound","Start a matching AP session")
-            or label("disabled","Tracker disabled by this seed"))
-        self.details:SetText(""); self.progress:SetText("")
+        self:render_text("summary",{view.enabled and label("unbound","Start a matching AP session")
+            or label("disabled","Tracker disabled by this seed")})
+        self.details:Clear(); self.progress:Clear(); self.page:SetText("")
+        self.drawn.details,self.drawn.progress,self.selected_id = nil,nil,nil
         return
     end
     local regions = {label("all_regions","All regions")}
@@ -70,36 +184,13 @@ function ap_tracker_window:refresh()
     self.offset = offset
     self.buttons.region:TextControl():SetText(regions[self.region_index])
     self.buttons.status:TextControl():SetText(label(statuses[self.status_index],statuses[self.status_index]))
-    self.summary:SetText(string.format("%s: %d / %d | %s: %d | %s: %d\n%s: %d/%d (%d %s). %s",
-        label("completed","Completed"),view.completed,#view.rows,label("available","Available"),view.available,
-        label("blocked","Blocked"),view.blocked,label("applied","Rewards applied"),view.applied,view.total,
-        view.pending,label("pending","pending"),view.problem or view.connection_status
-            or label("offline","Server connectivity not reported by this snapshot")).."\n"..(view.delivery or view.stash_delivery or "").." "..self.feedback)
-    local lines = {}
     if self.selected_index > #rows then self.selected_index = 1 end
     self.selected_id = rows[self.selected_index] and rows[self.selected_index].id
-    for index,row in ipairs(rows) do
-        local reward = view.scouted and view.scouted[row.id]
-        local info = reward and (reward.item.." -> "..reward.player) or "Reward not scouted"
-        lines[#lines+1] = string.format("%s%s | %s | %s\n%s\n%s",index==self.selected_index and "> " or "",
-            label(row.status,row.status),row.region,row.name,row.reason,info)
-    end
-    lines[#lines+1] = string.format("%d-%d / %d",total==0 and 0 or offset,math.min(offset+gamma_ap_tracker.PAGE_SIZE-1,total),total)
-    self.details:SetText(table.concat(lines,"\n\n"))
-    local text = string.format("%s: %s (%s)\nKills: %d | Side tasks: %d | Rank index: %d\n",
-        label("goal","Goal"),label("goal_"..view.goal,tostring(view.goal)),
-        view.goal_complete and label("completed","Completed") or label("incomplete","Incomplete"),
-        view.kills,view.tasks,view.rank)
-    for _,preview in ipairs(view.previews or {}) do
-        local reward = view.scouted[preview.id]
-        text = text..preview.label..": "..(reward and reward.item.." -> "..reward.player or "Waiting for scouting data").."\n"
-    end
-    if self.progress_offset > #view.progression then self.progress_offset = 1 end
-    local progress = {}
-    for index=self.progress_offset,math.min(self.progress_offset+9,#view.progression) do
-        progress[#progress+1] = view.progression[index]
-    end
-    self.progress:SetText(text..table.concat(progress,"\n"))
+    self:refresh_summary(view)
+    self:render_checks(rows,view)
+    self.page:SetText(string.format("%d-%d / %d",total==0 and 0 or offset,
+        math.min(offset+gamma_ap_tracker.PAGE_SIZE-1,total),total))
+    self:refresh_progress(view)
 end
 
 function get_ui()

@@ -1,4 +1,7 @@
 from pathlib import Path
+from xml.etree import ElementTree
+
+import pytest
 
 from .test_tracker import state_for, view
 
@@ -6,22 +9,95 @@ ROOT = Path(__file__).resolve().parents[2]
 
 
 def load_ui(lua):
-    lua.execute("""
+    root = ElementTree.parse(ROOT / "mod/gamedata/configs/ui/gamma_ap_pda.xml").getroot()
+    nodes = {}
+
+    def record(element, prefix=""):
+        name = prefix + element.tag
+        nodes[name] = lua.table_from(element.attrib)
+        text = element.find("text")
+        nodes[name].initial_text = text.text if text is not None else None
+        for child in element:
+            if child.tag != "text":
+                record(child, name + ":")
+
+    for element in root:
+        record(element)
+    lua.globals().xml_nodes = lua.table_from(nodes)
+    lua.execute(r"""
         super=function() end
         clock=1000; time_global=function() return clock end
-        CUIScriptWnd={SetWndRect=function() end, Register=function() end, Update=function() end,
-            AddCallback=function(self,name,event,callback)
-                self.callbacks=self.callbacks or {}; self.callbacks[name]=callback end}
+        local methods={}
+        methods.SetWndSize=function(self,size) self.width,self.height=size.x,size.y end
+        methods.SetWndPos=function(self,pos) self.x,self.y=pos.x,pos.y end
+        methods.GetWidth=function(self) return self.width end
+        methods.GetHeight=function(self) return self.height end
+        methods.SetText=function(self,text,...)
+            assert(select('#',...)==0,'native SetText accepts exactly one string')
+            self.text=text
+        end
+        methods.SetTextComplexMode=function(self,value) self.complex=value end
+        methods.AdjustHeightToText=function(self)
+            assert(self.complex)
+            local count=0
+            local newline=string.char(92)..'n'
+            for line in (self.text..newline):gmatch('(.-)'..newline) do
+                count=count+math.max(1,math.ceil(#line/math.max(1,math.floor(self.width/8))))
+            end
+            self.height=16*count
+        end
+        methods.Register=function() end
+        methods.Update=function() end
+        methods.AddCallback=function(self,name,event,callback)
+            self.callbacks=self.callbacks or {}; self.callbacks[name]=callback
+        end
+        methods.Clear=function(self)
+            self.items={}; self.position=0; self.cleared=(self.cleared or 0)+1
+        end
+        methods.AddWindow=function(self,row,owned)
+            assert(owned and row.width<=self.width)
+            local previous=self.items[#self.items]
+            row.y=previous and previous.y+previous.height+self.interval or 0
+            self.items[#self.items+1]=row
+        end
+        methods.GetCurrentScrollPos=function(self) return self.position end
+        methods.SetScrollPos=function(self,value) self.position=value end
+        methods.ScrollToBegin=function(self) self.position=0 end
+        CUIWindow=function() return setmetatable({children={}}, {__index=methods}) end
+        CUIScriptWnd=methods
+        vector2=function() return {set=function(self,x,y) self.x,self.y=x,y; return self end} end
         class=function(name) return function(base)
             local env=getfenv(2); local cls={}; cls.__index=cls
             setmetatable(cls,{__index=base,__call=function()
-                local self=setmetatable({},cls); self:__init(); return self end}); env[name]=cls
+                local self=setmetatable({children={}},cls); self:__init(); return self
+            end}); env[name]=cls
         end end
-        Frect=function() return {set=function(self) return self end} end
+        text_controls={}
+        local function init(node,parent,target)
+            local attr=assert(xml_nodes[node],node)
+            local control=target or CUIWindow()
+            control.node=node
+            control.x,control.y=tonumber(attr.x) or 0,tonumber(attr.y) or 0
+            control.width,control.height=tonumber(attr.width),tonumber(attr.height)
+            if parent then parent.children[#parent.children+1]=control end
+            if attr.initial_text then control.text=game.translate_string(attr.initial_text) end
+            return control
+        end
         CScriptXmlInit=function() return {ParseFile=function() end,
-            InitTextWnd=function() return {SetText=function(self,text) self.text=text end} end,
-            Init3tButton=function() local text={SetText=function(self,value) self.text=value end}
-                return {TextControl=function() return text end} end} end
+            InitWindow=function(self,node,index,target) assert(index==0); init(node,nil,target) end,
+            InitScrollView=function(self,node,parent)
+                local control=init(node,parent); control.items={}; control.position=0
+                control.interval=tonumber(xml_nodes[node].vert_interval) or 0
+                return control
+            end,
+            InitTextWnd=function(self,node,parent)
+                local control=init(node,parent); text_controls[#text_controls+1]=control
+                return control
+            end,
+            Init3tButton=function(self,node,parent)
+                local button=init(node,parent); local text=CUIWindow()
+                button.TextControl=function() return text end; return button
+            end} end
         game={translate_string=function(key) return key end}
         ui_events={BUTTON_CLICKED=1}
         pda={set_active_subdialog=function(section) return 'original:'..section end}
@@ -32,6 +108,35 @@ def load_ui(lua):
     return module
 
 
+def panel_text(panel):
+    def texts(control):
+        return ([control.text] if control.text else []) + [
+            text for child in control.children.values() for text in texts(child)
+        ]
+
+    return "\n".join(text for item in panel["items"].values() for text in texts(item))
+
+
+def test_native_text_parser_does_not_receive_raw_newlines_that_merge_rows(lua):
+    module = load_ui(lua)
+    lua.globals().gamma_ap_game = lua.table(tracker_view=lambda: view(lua, state_for(lua)))
+    module.get_ui()
+    controls = list(lua.globals().text_controls.values())
+    assert controls
+    assert all("\n" not in (control.text or "") for control in controls)
+
+
+@pytest.mark.parametrize("aspect", [4 / 3, 16 / 9, 21 / 9])
+def test_page_content_starts_below_native_pda_tabs(aspect):
+    # The custom tab is attached to the PDA background at y=-34; tabs are y=23,h=27.
+    root = ElementTree.parse(ROOT / "mod/gamedata/configs/ui/gamma_ap_pda.xml").getroot()
+    main = root.find("main")
+    origin = float(main.get("y")) if main is not None else 0
+    summary = root.find("summary")
+    scale = (768 / aspect) / 1024
+    assert (origin + float(summary.get("y")) - 34) * scale >= (23 + 27 + 8) * scale
+
+
 def test_tab_preserves_delegates_refreshes_filters_and_bounds_all_pages(lua):
     module = load_ui(lua)
     lua.globals().gamma_ap_game = lua.table(tracker_view=lambda: view(lua, state_for(lua)))
@@ -39,7 +144,7 @@ def test_tab_preserves_delegates_refreshes_filters_and_bounds_all_pages(lua):
     assert module.install() is True
     assert lua.globals().pda.set_active_subdialog("eptTasks") == "original:eptTasks"
     window = lua.globals().pda.set_active_subdialog("eptArchipelago")
-    assert "Rewards applied" in window.summary.text
+    assert "Rewards applied" in panel_text(window.summary)
     window.Update(window)
     window.Update(window)
     lua.globals().clock = 2000
@@ -65,13 +170,14 @@ def test_disabled_and_unbound_views_do_not_retain_previous_seed_rows(lua):
         tracker_view=lambda: view(lua, state_for(lua, pda_tracker=0))
     )
     window = module.get_ui()
-    assert "disabled" in window.summary.text
-    assert window.details.text == "" and window.progress.text == ""
+    assert "disabled" in panel_text(window.summary)
+    assert not list(window.details["items"].values())
+    assert not list(window.progress["items"].values())
     state = state_for(lua)
     state.session_key = None
     lua.globals().gamma_ap_game.tracker_view = lambda: view(lua, state)
     window.refresh(window)
-    assert "matching AP" in window.summary.text
+    assert "matching AP" in panel_text(window.summary)
 
 
 def test_scout_selection_and_next_milestone_rewards_are_displayed_from_metadata(lua):
@@ -93,12 +199,12 @@ def test_scout_selection_and_next_milestone_rewards_are_displayed_from_metadata(
 
     lua.globals().gamma_ap_game = lua.table(tracker_view=lambda: current, request_scout=request)
     window = module.get_ui()
-    assert "Toolkit -> Friend" in window.details.text
-    assert "Waiting for scouting data" in window.progress.text
+    assert "Toolkit -> Friend" in panel_text(window.details)
+    assert "Waiting for scouting data" in panel_text(window.progress)
     window.callbacks["select"]()
     window.callbacks["scout"]()
     assert requested == [28052002]
-    assert "Requested" in window.summary.text
+    assert "Requested" in panel_text(window.summary)
 
 
 def test_dxml_adds_one_tab_without_replacing_existing_tabs_and_is_idempotent(lua):
