@@ -44,6 +44,7 @@ def test_metadata_assets_preview_and_exports(web):
     status, headers, body = request("GET", "/api/metadata")
     assert status == 200 and "presets" in json.loads(body)
     assert "frame-ancestors 'none'" in headers["Content-Security-Policy"]
+    assert "img-src 'self' data:" in headers["Content-Security-Policy"]
     for path in ("/", "/index.html", "/style.css", "/app.js", "/ui.js"):
         assert request("GET", path)[2] == b"asset"
     body = {"options": defaults(), "name": "Owen", "seed": "123"}

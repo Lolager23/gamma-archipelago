@@ -43,7 +43,8 @@ def make_handler(assets: Path, generator: SeedGenerator) -> type[BaseHTTPRequest
             self.send_header("Referrer-Policy", "no-referrer")
             self.send_header(
                 "Content-Security-Policy",
-                "default-src 'self'; object-src 'none'; frame-ancestors 'none'",
+                "default-src 'self'; img-src 'self' data:; "
+                "object-src 'none'; frame-ancestors 'none'",
             )
             if filename:
                 self.send_header("Content-Disposition", f'attachment; filename="{filename}"')
