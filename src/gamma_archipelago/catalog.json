@@ -970,6 +970,62 @@
       "classification": "progression",
       "effect": "progressive_tools",
       "copies": 3
+    },
+    {
+      "id": 28051811,
+      "name": "Workshop Access: Repair",
+      "permission": "workshop_repair",
+      "category": "rewards_workshop_access",
+      "classification": "progression",
+      "effect": "unlock"
+    },
+    {
+      "id": 28051812,
+      "name": "Workshop Access: Upgrades",
+      "permission": "workshop_upgrade",
+      "category": "rewards_workshop_access",
+      "classification": "progression",
+      "effect": "unlock"
+    },
+    {
+      "id": 28051813,
+      "name": "Workshop Access: Crafting",
+      "permission": "workshop_craft",
+      "category": "rewards_workshop_access",
+      "classification": "progression",
+      "effect": "unlock"
+    },
+    {
+      "id": 28051821,
+      "name": "Recipe Access: General",
+      "permission": "recipe_general",
+      "category": "rewards_recipe_access",
+      "classification": "progression",
+      "effect": "unlock"
+    },
+    {
+      "id": 28051822,
+      "name": "Recipe Access: Medical",
+      "permission": "recipe_medical",
+      "category": "rewards_recipe_access",
+      "classification": "progression",
+      "effect": "unlock"
+    },
+    {
+      "id": 28051823,
+      "name": "Recipe Access: Ammunition",
+      "permission": "recipe_ammo",
+      "category": "rewards_recipe_access",
+      "classification": "progression",
+      "effect": "unlock"
+    },
+    {
+      "id": 28051824,
+      "name": "Recipe Access: Artefacts",
+      "permission": "recipe_artefact",
+      "category": "rewards_recipe_access",
+      "classification": "progression",
+      "effect": "unlock"
     }
   ],
   "locations": [

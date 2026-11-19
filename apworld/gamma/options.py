@@ -97,6 +97,18 @@ class ChecksRankMilestones(Toggle):
     display_name = "Checks: Rank Milestones"
 
 
+class RewardsWorkshopAccess(Toggle):
+    """Separate AP permissions for repair, upgrades and crafting at supported native routes."""
+
+    display_name = "Rewards: Workshop access"
+
+
+class RewardsRecipeAccess(Toggle):
+    """AP permission for general, medical, ammunition and artefact recipe groups."""
+
+    display_name = "Rewards: Recipe access"
+
+
 class RewardsProgressiveTools(Toggle):
     """Three progressive basic/advanced/expert workshop permissions; physical tools still apply."""
 
@@ -288,6 +300,8 @@ class OptionalCheckPolicy(Choice):
 
 @dataclass
 class GammaOptions(PerGameCommonOptions):
+    rewards_workshop_access: RewardsWorkshopAccess
+    rewards_recipe_access: RewardsRecipeAccess
     rewards_progressive_tools: RewardsProgressiveTools
     mutant_discovery_mode: DiscoveryMode
     mutant_discovery_count: MutantDiscoveryCount

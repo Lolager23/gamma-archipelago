@@ -137,7 +137,7 @@ async def test_configured_stash_item_manifests_and_history_are_validated():
         "item_ids": sorted(
             ITEM_IDS
             - {
-                28051801,
+                *range(28051801, 28052000),
                 28051201,
                 *range(28051301, 28051309),
                 *range(28051401, 28051405),
@@ -153,7 +153,7 @@ async def test_configured_stash_item_manifests_and_history_are_validated():
             ITEM_IDS
             - set(ITEM_SECTIONS)
             - {
-                28051801,
+                *range(28051801, 28052000),
                 28051201,
                 *range(28051301, 28051309),
                 *range(28051401, 28051405),

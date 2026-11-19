@@ -10,9 +10,9 @@ TOOLS = 28051801
 INCOMING = "D:/AnomalyAP/appdata/archipelago\\incoming.txt"
 
 
-def tool_game(lua, items=()):
+def tool_game(lua, items=(), **options):
     game, engine, configuration = configured_game(
-        lua, rewards_progressive_tools=1, checks_gear_upgrades=1
+        lua, **{"rewards_progressive_tools": 1, "checks_gear_upgrades": 1, **options}
     )
     lua.execute("""
         engine.work_calls=0; engine.tips={}; engine.objects={}

@@ -21,6 +21,8 @@
     "checks_rank_milestones": 1,
     "checks_shops": 1,
     "checks_faction_standing": 1,
+    "rewards_workshop_access": 1,
+    "rewards_recipe_access": 1,
     "rewards_progressive_tools": 1,
     "rewards_loot_stashes": 1,
     "rewards_progression_stashes": 1,

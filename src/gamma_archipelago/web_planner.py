@@ -21,6 +21,8 @@ from .presets import presets
 from .web_estimates import ASSUMPTIONS, estimate_playtime
 
 LABELS = {
+    "rewards_workshop_access": "Workshop action permissions",
+    "rewards_recipe_access": "Recipe group permissions",
     "rewards_progressive_tools": "Progressive workshop tools",
     "checks_shops": "Named trader purchases",
     "checks_faction_standing": "Faction goodwill milestones",

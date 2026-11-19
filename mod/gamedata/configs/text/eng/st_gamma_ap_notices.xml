@@ -276,4 +276,25 @@
     <string id="gamma_ap_reward_28051801">
         <text>Progressive Tools</text>
     </string>
+    <string id="gamma_ap_reward_28051811">
+        <text>Workshop Access: Repair</text>
+    </string>
+    <string id="gamma_ap_reward_28051812">
+        <text>Workshop Access: Upgrades</text>
+    </string>
+    <string id="gamma_ap_reward_28051813">
+        <text>Workshop Access: Crafting</text>
+    </string>
+    <string id="gamma_ap_reward_28051821">
+        <text>Recipe Access: General</text>
+    </string>
+    <string id="gamma_ap_reward_28051822">
+        <text>Recipe Access: Medical</text>
+    </string>
+    <string id="gamma_ap_reward_28051823">
+        <text>Recipe Access: Ammunition</text>
+    </string>
+    <string id="gamma_ap_reward_28051824">
+        <text>Recipe Access: Artefacts</text>
+    </string>
 </string_table>

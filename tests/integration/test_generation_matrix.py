@@ -43,7 +43,11 @@ def test_each_category_and_every_pair_generate_without_implicit_dependency_chang
     names = CHECK_OPTIONS + REWARD_OPTIONS
     for seed, selected in enumerate([(name,) for name in names] + list(combinations(names, 2))):
         options = {name: 1 for name in selected}
-        if {"rewards_progressive_tools", "rewards_zone_keys"} <= set(selected):
+        if "rewards_zone_keys" in selected and {
+            "rewards_progressive_tools",
+            "rewards_workshop_access",
+            "rewards_recipe_access",
+        } & set(selected):
             with pytest.raises(OptionError, match="cannot hold"):
                 setup_multiworld(GammaWorld, seed=seed, options=options)
             continue

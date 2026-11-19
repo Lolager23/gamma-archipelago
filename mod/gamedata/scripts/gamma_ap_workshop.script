@@ -1,6 +1,20 @@
 -- Guards native mutation entry points; permissions derive from saved applied receipts.
 local hooks = {}
 
+local function active(configuration)
+    if not configuration or not configuration.expanded then return false end
+    local options = configuration.options
+    return options.rewards_progressive_tools == 1 or options.rewards_workshop_access == 1
+        or options.rewards_recipe_access == 1
+end
+
+local function recipe_tier(dialog)
+    local recipe = dialog.recipes and dialog.recipes[dialog.last_type]
+        and dialog.recipes[dialog.last_type][dialog.last_index]
+    local tier = recipe and recipe.tool
+    if type(tier) == "number" and tier == math.floor(tier) and tier >= 1 and tier <= 6 then return tier end
+end
+
 function tools_level(state)
     local count = 0
     for _,id in ipairs(state.applied_items) do
@@ -11,20 +25,24 @@ end
 
 function allowed(state, action, dialog)
     local configuration = state.configuration
-    if not configuration or not configuration.expanded or configuration.options.rewards_progressive_tools ~= 1 then return true end
+    if not active(configuration) then return true end
     if state.refused_save or not state.session_key then return false,"Restore a valid AP session before using the workshop" end
+    if action ~= "repair" and action ~= "upgrade" and action ~= "craft" then return false,"Unknown workshop action" end
+    if configuration.options.rewards_workshop_access == 1 and not state.unlocks["workshop_"..action] then
+        return false,"Archipelago workshop permission required: "..action
+    end
     local required = action == "upgrade" and 3 or 1
     if action == "craft" then
-        local recipe = dialog.recipes and dialog.recipes[dialog.last_type]
-            and dialog.recipes[dialog.last_type][dialog.last_index]
-        local tier = recipe and recipe.tool
-        if type(tier) ~= "number" or tier ~= math.floor(tier) or tier < 1 or tier > 6 then
-            return false,"Cannot identify this workshop recipe's tool requirement"
+        local tier = recipe_tier(dialog)
+        if not tier then return false,"Cannot identify this workshop recipe's tool requirement" end
+        local group = tier <= 3 and "general" or ({[4]="medical",[5]="ammo",[6]="artefact"})[tier]
+        if configuration.options.rewards_recipe_access == 1 and not state.unlocks["recipe_"..group] then
+            return false,"Archipelago recipe permission required: "..group
         end
         -- Drug/ammunition/artefact kits are independent of the three workshop tool tiers.
         required = tier <= 3 and tier or 0
     end
-    if tools_level(state) < required then
+    if configuration.options.rewards_progressive_tools == 1 and tools_level(state) < required then
         return false,"Archipelago tool permission required: "..({"Basic","Advanced","Expert"})[required]
     end
     return true
@@ -42,7 +60,7 @@ local function guarded(original, action, current_state)
 end
 
 function install(configuration, current_state)
-    if not configuration or not configuration.expanded or configuration.options.rewards_progressive_tools ~= 1 then return true end
+    if not active(configuration) then return true end
     local ok,targets = pcall(function() return {
         {ui_workshop.UIWorkshopRepair,"Repair","repair"},
         {ui_workshop.UIWorkshopUpgrade,"Upgrade","upgrade"},
@@ -51,10 +69,10 @@ function install(configuration, current_state)
         {ui_inventory.UIInventory,"RMode_RepairYes","repair"},
         {ui_inventory.UIInventory,"RMode_UpgradeYes","upgrade"},
     } end)
-    if not ok then return false,"Progressive tools require the supported workshop, repair and inventory APIs" end
+    if not ok then return false,"AP workshop permissions require supported workshop, repair and inventory APIs" end
     for _,target in ipairs(targets) do
         if not target[1] or type(target[1][target[2]]) ~= "function" then
-            return false,"Progressive tools cannot guard a missing native workshop action"
+            return false,"AP permissions cannot guard a missing native workshop action"
         end
     end
     for index,target in ipairs(targets) do

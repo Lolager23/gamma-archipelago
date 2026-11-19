@@ -95,7 +95,7 @@ def test_pickup_veto_does_not_latch_into_later_allowed_items_or_override_current
     locked = lua.globals().add_item(50, "pda", "D_PDA", "i_device", 0)
     allowed = lua.globals().add_item(51, "bandage", "S_FOOD", "i_medical", 0)
     pickup = lua.globals().bind_stalker_ext.actor_on_item_before_pickup
-    assert pickup(locked) is False
+    assert pickup(locked) is False, list(engine.logs.values())
     if other_veto:
         engine[other_veto] = True
         assert pickup(allowed) is False
@@ -144,3 +144,18 @@ def test_pickup_guard_preserves_another_mods_delegating_wrapper(lua):
     assert pickup(locked) is False
     assert pickup(allowed) is True
     assert engine.pickup_delegations == 2
+
+
+def test_repeated_fresh_sessions_rebind_pickup_guard_without_losing_permissions(lua):
+    for _ in range(32):
+        game, engine = gear_game(lua, items=())
+        poll(game, engine)
+        state = progress(lua, game)
+        assert state.session_key and state.configuration.options.starting_pda == 2, list(
+            engine.logs.values()
+        )
+        locked = lua.globals().add_item(50, "pda", "D_PDA", "i_device", 0)
+        allowed = lua.globals().add_item(51, "bandage", "S_FOOD", "i_medical", 0)
+        pickup = lua.globals().bind_stalker_ext.actor_on_item_before_pickup
+        assert pickup(locked) is False, list(engine.logs.values())
+        assert pickup(allowed) is True
