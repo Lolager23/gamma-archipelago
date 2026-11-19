@@ -187,6 +187,13 @@ def build_configuration(values: Mapping[str, object]) -> SeedConfiguration:
         raise ConfigurationError("Quest keys require checks outside their locked story chains")
     if "rewards_zone_keys" in rewards and "checks_maps" not in checks:
         raise ConfigurationError("Zone keys require map checks for a guaranteed exploration route")
+    if {
+        "rewards_zone_keys",
+        "rewards_progression_stashes",
+    } <= rewards and "checks_settlements" not in checks:
+        raise ConfigurationError(
+            "Exclusive psi stashes with zone keys require settlement checks for early rewards"
+        )
     travel = _integer(values, "zone_unlock_travel", 1)
     if travel and "rewards_zone_keys" not in rewards:
         raise ConfigurationError("Unlock travel requires zone keys")

@@ -3,6 +3,8 @@
 local function locked(state, item)
     local configuration = state.configuration
     if not configuration or not configuration.expanded or not item then return false end
+    if item:section() == "good_psy_helmet" and configuration.options.rewards_progression_stashes == 1
+        and not state.unlocks.calibrated_psi then return true end
     local group = gamma_ap_equipment.group(item:section())
     return group and configuration.options["starting_" .. group] == 2
         and not state.unlocks["gear_" .. group]

@@ -132,10 +132,10 @@ function actor_on_update()
     if not ranked then report_error(rank_error); return end
     gamma_ap_state.merge_confirmed(state, confirmed)
     gamma_ap_state.check_level(state, level.name())
-    local goal_ready, goal_reason = gamma_ap_goals.poll(state)
-    if not goal_ready then report_error(goal_reason); return end
     local permitted, permission_error = gamma_ap_gear_locks.poll(state)
     if permitted then
+        local goal_ready, goal_reason = gamma_ap_goals.poll(state)
+        if not goal_ready then report_error(goal_reason); return end
         local equipped, equipment_error = gamma_ap_equipment_checks.poll(state, configuration)
         if not equipped then report_error(equipment_error); return end
     end

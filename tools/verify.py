@@ -47,7 +47,7 @@ def main() -> None:
         "pytest",
         "-q",
         "-m",
-        "not server",
+        "not server and not generation",
         "--cov=gamma_archipelago",
         "--cov=worlds.gamma",
         "--cov-branch",
@@ -58,7 +58,9 @@ def main() -> None:
     # On this Python 3.12.3 installation, tracing upstream's C-backed YAML loader
     # yields invalid None tags. Exercise the real generator/server without tracing;
     # the same owned client/world code is covered by the preceding regression suite.
-    run("-m", "pytest", "-q", "-m", "server")
+    # Keep the complete large seed matrix, without tracing every repeated graph
+    # traversal. The covered regression pass exercises these same world branches.
+    run("-m", "pytest", "-q", "-m", "server or generation")
 
 
 if __name__ == "__main__":

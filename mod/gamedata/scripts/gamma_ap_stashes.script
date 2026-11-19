@@ -167,6 +167,7 @@ function poll(state)
             local box = level.object_by_id(record.cache_id)
             if box and box:name() == record.cache_name then
                 local protected = gamma_ap_catalog.progression_stashes[record.item_id] ~= nil
+                if protected then state.unlocks.calibrated_psi = true end
                 while record.next_action <= #record.actions and work < 8 do
                     local ok, problem = spawn_action(record.actions[record.next_action], protected and db.actor or box)
                     if not ok then return false, problem end

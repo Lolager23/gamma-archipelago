@@ -28,6 +28,7 @@ addopts = "-ra"
 markers = [
   "integration: uses the pinned upstream Archipelago checkout",
   "server: actual upstream generator and websocket server, verified without tracing",
+  "generation: large deterministic seed matrix, verified without tracing",
 ]
 
 [tool.coverage.run]

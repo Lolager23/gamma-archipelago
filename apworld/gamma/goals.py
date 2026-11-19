@@ -6,7 +6,10 @@ from gamma_archipelago.catalog import LOCATION_IDS
 
 
 def add_goal_events(world, regions, location_type, item_type):
-    if world.configuration.goal != "pilot_tour":
+    if (
+        world.configuration.goal != "pilot_tour"
+        and "rewards_progression_stashes" not in world.configuration.rewards
+    ):
         claim = location_type(
             world.player, "Obtain Calibrated Helmet from Sakharov", None, regions["l08_yantar"]
         )
