@@ -19,6 +19,12 @@ inherited those work overrides; that history is retained. Subsequent commits use
 the personal identity. The current single-owner policy rejects
 any other outgoing identity; revisit that policy explicitly before collaboration.
 
+The push guard checks commits not already reachable from fetched remote branches.
+GitHub-created merge commits already published on the remote may use GitHub's
+committer identity; importing that shared history is not new authored work.
+Unpublished commits and the current local author/committer still require the
+personal identity above. This rule is identical for new and existing branches.
+
 Keep `main` in a state that passes automated checks. Initialise it with the project
 charter and standards, then develop the Archipelago foundation on
 `codex/archipelago-integration`. Create the remote as private initially. Public
