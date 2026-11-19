@@ -1,0 +1,68 @@
+-- Guards native mutation entry points; permissions derive from saved applied receipts.
+local hooks = {}
+
+function tools_level(state)
+    local count = 0
+    for _,id in ipairs(state.applied_items) do
+        if gamma_ap_catalog.item_effects[id] == "progressive_tools" then count=count+1 end
+    end
+    return math.min(3,count)
+end
+
+function allowed(state, action, dialog)
+    local configuration = state.configuration
+    if not configuration or not configuration.expanded or configuration.options.rewards_progressive_tools ~= 1 then return true end
+    if state.refused_save or not state.session_key then return false,"Restore a valid AP session before using the workshop" end
+    local required = action == "upgrade" and 3 or 1
+    if action == "craft" then
+        local recipe = dialog.recipes and dialog.recipes[dialog.last_type]
+            and dialog.recipes[dialog.last_type][dialog.last_index]
+        local tier = recipe and recipe.tool
+        if type(tier) ~= "number" or tier ~= math.floor(tier) or tier < 1 or tier > 6 then
+            return false,"Cannot identify this workshop recipe's tool requirement"
+        end
+        -- Drug/ammunition/artefact kits are independent of the three workshop tool tiers.
+        required = tier <= 3 and tier or 0
+    end
+    if tools_level(state) < required then
+        return false,"Archipelago tool permission required: "..({"Basic","Advanced","Expert"})[required]
+    end
+    return true
+end
+
+local function guarded(original, action, current_state)
+    return function(dialog,...)
+        local ok,permit,reason = pcall(allowed,current_state(),action,dialog)
+        if not ok or not permit then
+            news_manager.send_tip(db.actor,ok and reason or "Unsupported workshop integration; action refused",nil,nil,5000)
+            return false
+        end
+        return original(dialog,...)
+    end
+end
+
+function install(configuration, current_state)
+    if not configuration or not configuration.expanded or configuration.options.rewards_progressive_tools ~= 1 then return true end
+    local ok,targets = pcall(function() return {
+        {ui_workshop.UIWorkshopRepair,"Repair","repair"},
+        {ui_workshop.UIWorkshopUpgrade,"Upgrade","upgrade"},
+        {ui_workshop.UIWorkshopCraft,"Craft","craft"},
+        {item_repair.UIRepair,"OnRepair","repair"},
+        {ui_inventory.UIInventory,"RMode_RepairYes","repair"},
+        {ui_inventory.UIInventory,"RMode_UpgradeYes","upgrade"},
+    } end)
+    if not ok then return false,"Progressive tools require the supported workshop, repair and inventory APIs" end
+    for _,target in ipairs(targets) do
+        if not target[1] or type(target[1][target[2]]) ~= "function" then
+            return false,"Progressive tools cannot guard a missing native workshop action"
+        end
+    end
+    for index,target in ipairs(targets) do
+        local current = target[1][target[2]]
+        if hooks[index] ~= current then
+            local wrapper = guarded(current,target[3],current_state)
+            target[1][target[2]],hooks[index] = wrapper,wrapper
+        end
+    end
+    return true
+end

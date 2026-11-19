@@ -92,6 +92,7 @@ item_effects = {
     [28051730] = "unlock",
     [28051731] = "unlock",
     [28051732] = "unlock",
+    [28051801] = "progressive_tools",
 }
 item_categories = {
     [28051001] = "",
@@ -181,6 +182,7 @@ item_categories = {
     [28051730] = "rewards_zone_keys",
     [28051731] = "rewards_zone_keys",
     [28051732] = "rewards_zone_keys",
+    [28051801] = "rewards_progressive_tools",
 }
 lab_levels = {
     ["l04u_labx18"] = true,
@@ -1831,6 +1833,7 @@ config_limits = {
     ["rewards_faction_reputation"] = 1,
     ["rewards_loot_stashes"] = 1,
     ["rewards_progression_stashes"] = 1,
+    ["rewards_progressive_tools"] = 1,
     ["rewards_quest_keys"] = 1,
     ["rewards_starting_gear_unlocks"] = 1,
     ["rewards_stat_levels"] = 1,
@@ -2431,6 +2434,7 @@ tracker_item_names = {
     [28051730]="Zone Key: Lab X8",
     [28051731]="Zone Key: Truck Cemetery",
     [28051732]="Zone Key: Meadow",
+    [28051801]="Progressive Tools",
 }
 tracker_milestones = {
     checks_kill_milestones="Defeat {count} Enemies",
@@ -2574,4 +2578,20 @@ missable_checks = {
     [28052912]=true,
     [28052913]=true,
     [28052914]=true,
+}
+config_defaults = {
+    ["artefact_discovery_count"]=0,
+    ["artefact_discovery_mode"]=0,
+    ["checks_faction_standing"]=0,
+    ["checks_shops"]=0,
+    ["faction_discovery_count"]=0,
+    ["faction_discovery_mode"]=0,
+    ["mutant_discovery_count"]=0,
+    ["mutant_discovery_mode"]=0,
+    ["optional_check_policy"]=0,
+    ["pda_tracker"]=1,
+    ["reward_previews"]=0,
+    ["rewards_progressive_tools"]=0,
+    ["scouting_mode"]=0,
+    ["zone_unlock_travel"]=0,
 }

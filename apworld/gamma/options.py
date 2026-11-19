@@ -97,6 +97,12 @@ class ChecksRankMilestones(Toggle):
     display_name = "Checks: Rank Milestones"
 
 
+class RewardsProgressiveTools(Toggle):
+    """Three progressive basic/advanced/expert workshop permissions; physical tools still apply."""
+
+    display_name = "Rewards: Progressive tools"
+
+
 class RewardsLootStashes(Toggle):
     """Enable loot stashes rewards."""
 
@@ -282,6 +288,7 @@ class OptionalCheckPolicy(Choice):
 
 @dataclass
 class GammaOptions(PerGameCommonOptions):
+    rewards_progressive_tools: RewardsProgressiveTools
     mutant_discovery_mode: DiscoveryMode
     mutant_discovery_count: MutantDiscoveryCount
     faction_discovery_mode: DiscoveryMode

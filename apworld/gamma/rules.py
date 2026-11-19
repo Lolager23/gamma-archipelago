@@ -60,6 +60,10 @@ def apply_access_rules(world: "GammaWorld", catalog: dict[str, Any]) -> None:
             for group in required
             if gear["starting_" + group] == 2
         ]
+        tools = (
+            "rewards_progressive_tools" in world.configuration.rewards
+            and category == "checks_gear_upgrades"
+        )
         previous = location.access_rule
         # Global activities deliberately wait for full zone access. This is a
         # conservative guarantee, not a claim that every species lives in Cordon.
@@ -71,10 +75,16 @@ def apply_access_rules(world: "GammaWorld", catalog: dict[str, Any]) -> None:
         }
 
         def activity(
-            state, prior=previous, items=names, global_check=global_activity, fight=combat
+            state,
+            prior=previous,
+            items=names,
+            global_check=global_activity,
+            fight=combat,
+            tools=tools,
         ):
             return (
                 prior(state)
+                and (not tools or state.has("Progressive Tools", player, 3))
                 and all(state.has(name, player) for name in items)
                 and (
                     not global_check

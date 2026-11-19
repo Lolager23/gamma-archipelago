@@ -55,12 +55,8 @@ function parse(content, key, digest)
             values[#values + 1] = value
         end
     end
-    if result.options.zone_unlock_travel == nil then result.options.zone_unlock_travel = 0 end
-    if result.options.pda_tracker == nil then result.options.pda_tracker = 1 end
-    for _,name in ipairs({"checks_shops","checks_faction_standing","scouting_mode","reward_previews",
-        "mutant_discovery_mode","mutant_discovery_count","faction_discovery_mode","faction_discovery_count",
-        "artefact_discovery_mode","artefact_discovery_count","optional_check_policy"}) do
-        if result.options[name] == nil then result.options[name] = 0 end
+    for name,value in pairs(gamma_ap_catalog.config_defaults) do
+        if result.options[name] == nil then result.options[name] = value end
     end
     for name in pairs(gamma_ap_catalog.config_limits) do
         if result.options[name] == nil then return nil, "Configuration option is missing" end

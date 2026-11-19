@@ -147,6 +147,7 @@ class GammaWorld(World):
         required = [
             item["name"]
             for item in _catalog["items"]
+            for _ in range(item.get("copies", 1))
             if item.get("classification") == "progression"
             and item.get("category") in self.configuration.rewards
             and (

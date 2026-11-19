@@ -41,6 +41,7 @@ def test_only_explicit_known_permissions_use_unlock_wording(monkeypatch):
     assert is_unlock(42, notifications.GAME)
     assert not is_unlock(42, "Foreign Game")
     assert not is_unlock(28051001, notifications.GAME)
+    assert is_unlock(28051801, notifications.GAME)
 
 
 def ack(*identities, key=KEY):
