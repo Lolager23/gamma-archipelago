@@ -1,5 +1,25 @@
 # Verification record
 
+## Tracker opening crash / native row lifetime: 19 November 2026
+
+Owen reported a native crash on opening the AP tab after the layout deployment.
+The private DEV log reaches the base native `Update` call in `gamma_ap_pda`.
+Source inspection found Lua-created checklist rows passed to a non-adopting
+scroll binding; native auto-deletion does not transfer their Lua ownership.
+Use the native XML static factory for row containers instead.
+
+Two new regressions **failed** before the correction, after actual Lua collection
+and modeled native child traversal. Both pass after it, along with the existing
+16 tracker UI/layout cases. The fixture models distinct Lua handles and native
+pointers rather than treating native parentage as a strong Lua reference.
+Complete verifier/current-head CI results and package checksums belong to the PR
+evidence; a focused subset alone does not satisfy the project coverage gate.
+
+Native re-verification is **not run**, reserved for Owen. The change is limited to
+UI row construction and leaves the current seed, checks, reward history, receipt
+order, saved fields and developer panel unchanged. Crash logs, save names and
+runtime inventories remain outside Git.
+
 ## PDA tracker formatting and tab clearance: 19 November 2026
 
 Branch `codex/pda-tracker-layout` fixes the reported concatenated checklist and

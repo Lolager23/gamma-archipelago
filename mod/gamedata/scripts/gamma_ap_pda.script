@@ -32,8 +32,8 @@ local function field(xml, node, parent, value)
 end
 
 local function check_row(xml, values)
-    local row = CUIWindow()
-    xml:InitWindow("check_row",0,row)
+    -- AddWindow does not adopt Lua-created userdata; use an engine-created row.
+    local row = xml:InitStatic("check_row",nil)
     local bottom = 0
     for index,name in ipairs({"status","region","name"}) do
         local control = field(xml,"check_row:"..name,row,values[index])
