@@ -1,0 +1,24 @@
+-- Presentation only: actor updates also run behind the loading/entry screen.
+local dismissed_frame = nil
+
+function reset()
+    dismissed_frame = nil
+end
+
+function dismissed()
+    local ok, frame = pcall(function() return device().frame end)
+    dismissed_frame = ok and type(frame) == "number" and frame or nil
+end
+
+function ready()
+    if dismissed_frame == nil then return false end
+    -- The callback can precede the renderer hiding its screen in that frame.
+    -- Wait for a later unpaused world frame; never replace this with a timer.
+    local ok, visible = pcall(function()
+        local current = device()
+        return level.present() and db.actor ~= nil and db.actor:alive()
+            and current.precache_frame == 0 and current.frame > dismissed_frame
+            and not current:is_paused()
+    end)
+    return ok and visible == true
+end

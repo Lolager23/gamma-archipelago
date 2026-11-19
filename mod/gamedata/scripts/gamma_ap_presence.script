@@ -50,6 +50,7 @@ local function observe(frame, now)
 end
 
 function poll(state, now)
+    if not gamma_ap_readiness.ready() then return true end
     if not state.session_key then return true end
     local root = gamma_ap_paths.appdata_root(getFS():update_path("$app_data_root$", ""))
     if not root then return false,"Presence requires isolated development appdata" end

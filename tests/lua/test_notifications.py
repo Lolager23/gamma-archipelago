@@ -3,7 +3,7 @@ import pytest
 from gamma_archipelago.notifications import Notice, decode_acknowledgements, encode_notices
 
 from .assertions import assert_lua_error
-from .test_game_adapter import load_game, saved_state, set_incoming
+from .test_game_adapter import enter_world, load_game, saved_state, set_incoming
 
 KEY = "a" * 64
 
@@ -59,6 +59,7 @@ def test_notification_waits_for_actual_delivery_and_does_not_repeat_after_reload
     acknowledged = engine.files["D:/AnomalyAP/appdata/archipelago\\notices_ack.txt"]
     assert decode_acknowledgements(acknowledged, KEY) == {"r:1", "s:3:2:4"}
     game.load_state(saved_state(lua, game))
+    enter_world(engine)
     engine.now += 500
     game.actor_on_update()
     assert len(engine.news) == 2 and len(engine.created) == 2
