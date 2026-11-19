@@ -54,4 +54,25 @@ def tracker_lines(catalogue: dict[str, Any]) -> list[str]:
     )
     lines.extend(["}", "faction_standing_factions = {"])
     lines.extend(f"    {quoted(name)}," for name in catalogue.get("faction_standing_factions", []))
+    lines.extend(["}", "discovery_sources = {"])
+    groups = {
+        "checks_mutant_first_kills": "mutant",
+        "checks_faction_first_kills": "faction",
+        "checks_artefacts": "artefact",
+    }
+    for row in catalogue["locations"]:
+        group = groups.get(row["category"])
+        if group and "quota_group" not in row:
+            token = quoted(group + ":" + row["key"])
+            lines.append(f"    [{row['id']}]={{group={quoted(group)},token={token}}},")
+    lines.extend(["}", "discovery_quotas = {"])
+    for group in groups.values():
+        values = ",".join(
+            str(row["id"]) for row in catalogue["locations"] if row.get("quota_group") == group
+        )
+        lines.append(f"    {group}={{{values}}},")
+    lines.extend(["}", "missable_checks = {"])
+    lines.extend(
+        f"    [{row['id']}]=true," for row in catalogue["locations"] if row.get("missable")
+    )
     return lines + ["}"]

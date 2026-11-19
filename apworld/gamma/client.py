@@ -16,7 +16,6 @@ from gamma_archipelago.catalog import (
     ITEM_SECTIONS,
     LOCATION_IDS,
     enabled_item_ids,
-    enabled_location_ids,
 )
 from gamma_archipelago.configuration import (
     ConfigurationError,
@@ -24,6 +23,7 @@ from gamma_archipelago.configuration import (
     build_configuration,
     defaults,
 )
+from gamma_archipelago.discovery import configured_location_ids
 from gamma_archipelago.notifications import transfer_notice
 from gamma_archipelago.paths import DEFAULT_GAME_ROOT
 from gamma_archipelago.protocol import ProtocolError, validate_id_manifest
@@ -104,15 +104,7 @@ class GammaContext(CommonContext):
                 ):
                     raise ProtocolError("Expanded checks and rewards require schema 3")
             self.expanded = version == 3
-            allowed = (
-                enabled_location_ids(
-                    self.configuration.checks,
-                    self.configuration.kill_milestones,
-                    self.configuration.side_task_milestones,
-                )
-                if self.expanded
-                else LOCATION_IDS
-            )
+            allowed = configured_location_ids(self.configuration) if self.expanded else LOCATION_IDS
             if self.expanded:
                 validate_id_manifest(slot_data.get("location_ids"), allowed, "check")
             item_ids = (

@@ -14,6 +14,7 @@ from gamma_archipelago.catalog import (
     enabled_item_ids,
 )
 from gamma_archipelago.configuration import OPTION_NAMES, SeedConfiguration, build_configuration
+from gamma_archipelago.discovery import configured_location_ids
 
 from .goals import add_goal_events, set_goal_rule
 from .options import GammaOptions
@@ -98,12 +99,13 @@ class GammaWorld(World):
         for source, destination in _catalog["connections"]:
             regions[source].connect(regions[destination])
             regions[destination].connect(regions[source])
+        allowed = configured_location_ids(self.configuration)
         for location in _catalog["locations"]:
-            if location["category"] not in self.configuration.checks:
+            if location["id"] not in allowed:
                 continue
             region = regions.get(location["level"], menu)
             check = GammaLocation(self.player, location["name"], location["id"], region)
-            if location.get("missable"):
+            if location.get("missable") and self.configuration.option("optional_check_policy") == 0:
                 check.progress_type = LocationProgressType.EXCLUDED
             if location.get("tasks") and "rewards_quest_keys" in self.configuration.rewards:
                 permission = _catalog["quest_gates"][location["tasks"][0]]

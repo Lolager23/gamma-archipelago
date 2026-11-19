@@ -75,7 +75,9 @@ def enabled_location_ids(
     side_task_milestones: tuple[int, ...] = (5, 10, 20, 40),
 ) -> frozenset[int]:
     locations = frozenset(
-        identity for identity, category in LOCATION_CATEGORIES.items() if category in checks
+        row["id"]
+        for row in _data["locations"]
+        if row["category"] in checks and "quota_group" not in row
     )
     if "checks_kill_milestones" in checks:
         locations |= frozenset(KILL_MILESTONE_BASE + count for count in kill_milestones)

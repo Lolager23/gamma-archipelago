@@ -2,7 +2,8 @@
 
 function copy(configuration)
     if not configuration then return nil end
-    local result = {digest=configuration.digest, expanded=configuration.expanded, options={}, thresholds={}}
+    local result = {digest=configuration.digest, expanded=configuration.expanded, options={}, thresholds={},exclusions={}}
+    for token,value in pairs(configuration.exclusions or {}) do result.exclusions[token] = value end
     for name,value in pairs(configuration.options) do result.options[name] = value end
     for name,values in pairs(configuration.thresholds) do
         result.thresholds[name] = {}
@@ -23,10 +24,10 @@ function parse(content, key, digest)
         return nil, "Configuration protocol, session or digest mismatch"
     end
     local count = gamma_ap_protocol.canonical_number(lines[#lines]:match("^end|(.*)$"))
-    if not count or count ~= #lines - 4 or count > 128 then
+    if not count or count ~= #lines - 4 or count > 256 then
         return nil, "Configuration record count mismatch"
     end
-    local result = {digest=digest, options={}, thresholds={kill_milestones={}, side_task_milestones={}}}
+    local result = {digest=digest, options={}, exclusions={}, thresholds={kill_milestones={}, side_task_milestones={}}}
     result.expanded = lines[1] == "GAMMA_AP_CONFIG|2"
     for index = 4, #lines - 1 do
         local name, number = lines[index]:match("^option|([a-z_]+)|(%d+)$")
@@ -37,6 +38,12 @@ function parse(content, key, digest)
                 return nil, "Unknown, duplicate or invalid configuration option"
             end
             result.options[name] = value
+        elseif lines[index]:sub(1,8) == "exclude|" then
+            local token = lines[index]:sub(9)
+            local known = false
+            for _,source in pairs(gamma_ap_catalog.discovery_sources) do if source.token == token then known = true end end
+            if not known or result.exclusions[token] then return nil,"Unknown or duplicate discovery exclusion" end
+            result.exclusions[token] = true
         else
             name, number = lines[index]:match("^threshold|([a-z_]+)|(%d+)$")
             local values = name and result.thresholds[name]
@@ -50,7 +57,9 @@ function parse(content, key, digest)
     end
     if result.options.zone_unlock_travel == nil then result.options.zone_unlock_travel = 0 end
     if result.options.pda_tracker == nil then result.options.pda_tracker = 1 end
-    for _,name in ipairs({"checks_shops","checks_faction_standing","scouting_mode","reward_previews"}) do
+    for _,name in ipairs({"checks_shops","checks_faction_standing","scouting_mode","reward_previews",
+        "mutant_discovery_mode","mutant_discovery_count","faction_discovery_mode","faction_discovery_count",
+        "artefact_discovery_mode","artefact_discovery_count","optional_check_policy"}) do
         if result.options[name] == nil then result.options[name] = 0 end
     end
     for name in pairs(gamma_ap_catalog.config_limits) do
@@ -59,5 +68,7 @@ function parse(content, key, digest)
     if #result.thresholds.kill_milestones == 0 or #result.thresholds.side_task_milestones == 0 then
         return nil, "Configuration milestone list is missing"
     end
+    local selected,reason = gamma_ap_discovery.select(result,{})
+    if not selected then return nil,reason end
     return result
 end

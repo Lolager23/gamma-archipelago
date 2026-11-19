@@ -5,7 +5,6 @@ function observe(state, item, source)
         or not db.actor or not db.actor:alive() or not item then return end
     if source ~= "ownership" and source ~= "container" then return end
     local id = gamma_ap_catalog.artefact_locations[item:section()]
-    if not id or not state.enabled_checks[id] or state.checks[id] then return end
-    state.checks[id] = true
-    state.artefact_sources[id] = source
+    if not id then return end
+    if gamma_ap_discovery.record(state,id) and not state.artefact_sources[id] then state.artefact_sources[id] = source end
 end

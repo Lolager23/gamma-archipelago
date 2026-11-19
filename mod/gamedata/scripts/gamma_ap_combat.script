@@ -54,7 +54,7 @@ function observe(state, category, victim, killer)
         elseif faction == "greh_npc" then faction = "greh" end
         location_id = gamma_ap_catalog.faction_locations[faction]
     end
-    if location_id and state.enabled_checks[location_id] then state.checks[location_id] = true end
+    if location_id then gamma_ap_discovery.record(state,location_id) end
     local progress = state.combat
     local limit = progress.thresholds[#progress.thresholds] or 0
     if progress.kills >= limit then return end

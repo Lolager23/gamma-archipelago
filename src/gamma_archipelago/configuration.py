@@ -5,6 +5,7 @@ import json
 from collections.abc import Mapping
 from dataclasses import dataclass
 
+from .discovery import configured_location_ids, normalize_exclusions
 from .expansion_settings import EXPANSION_DEFAULTS, EXPANSION_LIMITS, LEGACY_CHECK_DEFAULTS
 from .protocol import validate_session_key
 
@@ -70,6 +71,7 @@ OPTION_NAMES = (
         "side_task_milestones",
         "zone_unlock_travel",
         "pda_tracker",
+        "discovery_exclusions",
     )
     + tuple(EXPANSION_LIMITS)
 )
@@ -128,6 +130,7 @@ def defaults() -> dict[str, object]:
         pda_tracker=1,
         kill_milestones=[10, 25, 50, 100],
         side_task_milestones=[5, 10, 20, 40],
+        discovery_exclusions=[],
     )
     return values
 
@@ -163,6 +166,7 @@ class SeedConfiguration:
     zone_unlock_travel: int
     pda_tracker: int = 1
     expansion: tuple[tuple[str, int], ...] = ()
+    discovery_exclusions: tuple[str, ...] = ()
 
     def option(self, name: str) -> int:
         return dict(self.expansion).get(name, EXPANSION_DEFAULTS[name])
@@ -180,11 +184,14 @@ class SeedConfiguration:
             "side_task_milestones": list(self.side_task_milestones),
             "zone_unlock_travel": self.zone_unlock_travel,
             "pda_tracker": self.pda_tracker,
+            "discovery_exclusions": list(self.discovery_exclusions),
         }
 
     @property
     def digest(self) -> str:
         values = self.to_values()
+        if not self.discovery_exclusions:
+            values.pop("discovery_exclusions")
         for name, default in (EXPANSION_DEFAULTS | LEGACY_CHECK_DEFAULTS).items():
             if values[name] == default:
                 values.pop(name)
@@ -197,7 +204,7 @@ class SeedConfiguration:
 
 
 def build_configuration(values: Mapping[str, object]) -> SeedConfiguration:
-    values = {**EXPANSION_DEFAULTS, **LEGACY_CHECK_DEFAULTS, **values}
+    values = {"discovery_exclusions": [], **EXPANSION_DEFAULTS, **LEGACY_CHECK_DEFAULTS, **values}
     if "pda_tracker" not in values:
         values = {**values, "pda_tracker": 1}
     if "zone_unlock_travel" not in values:
@@ -235,7 +242,11 @@ def build_configuration(values: Mapping[str, object]) -> SeedConfiguration:
             "Starting gear rewards require at least one AP-locked starting group"
         )
     quantities = tuple((name, _integer(values, name, 100)) for name in QUANTITY_OPTIONS)
-    return SeedConfiguration(
+    try:
+        exclusions = normalize_exclusions(values["discovery_exclusions"])
+    except ValueError as error:
+        raise ConfigurationError(str(error)) from error
+    configuration = SeedConfiguration(
         checks,
         rewards,
         goal,
@@ -249,7 +260,13 @@ def build_configuration(values: Mapping[str, object]) -> SeedConfiguration:
         tuple(
             (name, _integer(values, name, maximum)) for name, maximum in EXPANSION_LIMITS.items()
         ),
+        exclusions,
     )
+    try:
+        configured_location_ids(configuration)
+    except ValueError as error:
+        raise ConfigurationError(str(error)) from error
+    return configuration
 
 
 def encode_configuration(
@@ -262,7 +279,9 @@ def encode_configuration(
         f"digest|{configuration.digest}",
     ]
     for name, value in sorted(configuration.to_values().items()):
-        if isinstance(value, list):
+        if name == "discovery_exclusions":
+            lines.extend(f"exclude|{token}" for token in configuration.discovery_exclusions)
+        elif isinstance(value, list):
             lines.extend(f"threshold|{name}|{number}" for number in value)
         else:
             lines.append(f"option|{name}|{value}")

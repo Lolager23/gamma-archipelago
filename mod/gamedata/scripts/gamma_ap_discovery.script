@@ -1,0 +1,78 @@
+-- Canonical source IDs persist distinct observations; quota IDs are fixed milestones.
+local categories = {mutant="checks_mutant_first_kills",faction="checks_faction_first_kills",artefact="checks_artefacts"}
+
+function copy(seen)
+    local result = {}
+    for id,value in pairs(seen or {}) do result[id] = value end
+    return result
+end
+
+function excluded(configuration, token)
+    return configuration.exclusions and configuration.exclusions[token] == true
+end
+
+function select(configuration, enabled)
+    for group,category in pairs(categories) do
+        local count,roster = 0,{}
+        for id,source in pairs(gamma_ap_catalog.discovery_sources) do
+            if source.group == group then
+                enabled[id] = nil
+                if not excluded(configuration,source.token) then count=count+1; roster[id]=true end
+            end
+        end
+        for _,id in ipairs(gamma_ap_catalog.discovery_quotas[group]) do enabled[id] = nil end
+        if configuration.options[category] == 1 then
+            if (configuration.options[group.."_discovery_mode"] or 0) == 1 then
+                local limit = configuration.options[group.."_discovery_count"] or 0
+                if limit == 0 then limit = count end
+                if limit < 1 or limit > count then return nil,"Discovery quota exceeds its qualifying roster" end
+                for index=1,limit do enabled[gamma_ap_catalog.discovery_quotas[group][index]] = true end
+            else
+                for id in pairs(roster) do enabled[id] = true end
+            end
+        end
+    end
+    if configuration.options.optional_check_policy == 1 then
+        for id in pairs(gamma_ap_catalog.missable_checks) do enabled[id] = nil end
+    end
+    return enabled
+end
+
+function record(state, id)
+    local source = gamma_ap_catalog.discovery_sources[id]
+    if not source then return false end
+    local configuration = state.configuration
+    if not configuration then
+        if state.enabled_checks[id] then state.checks[id] = true; return true end
+        return false
+    end
+    if configuration.options[categories[source.group]] ~= 1 or excluded(configuration,source.token)
+        or state.discoveries[id] then return false end
+    state.discoveries[id] = true
+    if (configuration.options[source.group.."_discovery_mode"] or 0) == 0 then
+        if state.enabled_checks[id] then state.checks[id] = true end
+    else
+        local count = 0
+        for seen in pairs(state.discoveries) do
+            if gamma_ap_catalog.discovery_sources[seen].group == source.group then count=count+1 end
+        end
+        for index,check in ipairs(gamma_ap_catalog.discovery_quotas[source.group]) do
+            if index <= count and state.enabled_checks[check] then state.checks[check] = true end
+        end
+    end
+    return true
+end
+
+function validate(seen, key, configuration)
+    if seen == nil then return true end
+    if type(seen) ~= "table" then return false end
+    for id,value in pairs(seen) do
+        local source = gamma_ap_catalog.discovery_sources[id]
+        if not source or value ~= true or not key then return false end
+        if type(configuration) ~= "table" or type(configuration.options) ~= "table"
+            or (configuration.exclusions ~= nil and type(configuration.exclusions) ~= "table") then return false end
+        if configuration.options[categories[source.group]] ~= 1
+            or excluded(configuration,source.token) then return false end
+    end
+    return true
+end

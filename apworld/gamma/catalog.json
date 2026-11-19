@@ -3332,6 +3332,838 @@
       "key": "3000",
       "minimum": 3000,
       "missable": true
+    },
+    {
+      "id": 28140001,
+      "name": "Discovery: 1 Distinct Mutant Types",
+      "category": "checks_mutant_first_kills",
+      "level": "Menu",
+      "quota_group": "mutant",
+      "minimum": 1
+    },
+    {
+      "id": 28140002,
+      "name": "Discovery: 2 Distinct Mutant Types",
+      "category": "checks_mutant_first_kills",
+      "level": "Menu",
+      "quota_group": "mutant",
+      "minimum": 2
+    },
+    {
+      "id": 28140003,
+      "name": "Discovery: 3 Distinct Mutant Types",
+      "category": "checks_mutant_first_kills",
+      "level": "Menu",
+      "quota_group": "mutant",
+      "minimum": 3
+    },
+    {
+      "id": 28140004,
+      "name": "Discovery: 4 Distinct Mutant Types",
+      "category": "checks_mutant_first_kills",
+      "level": "Menu",
+      "quota_group": "mutant",
+      "minimum": 4
+    },
+    {
+      "id": 28140005,
+      "name": "Discovery: 5 Distinct Mutant Types",
+      "category": "checks_mutant_first_kills",
+      "level": "Menu",
+      "quota_group": "mutant",
+      "minimum": 5
+    },
+    {
+      "id": 28140006,
+      "name": "Discovery: 6 Distinct Mutant Types",
+      "category": "checks_mutant_first_kills",
+      "level": "Menu",
+      "quota_group": "mutant",
+      "minimum": 6
+    },
+    {
+      "id": 28140007,
+      "name": "Discovery: 7 Distinct Mutant Types",
+      "category": "checks_mutant_first_kills",
+      "level": "Menu",
+      "quota_group": "mutant",
+      "minimum": 7
+    },
+    {
+      "id": 28140008,
+      "name": "Discovery: 8 Distinct Mutant Types",
+      "category": "checks_mutant_first_kills",
+      "level": "Menu",
+      "quota_group": "mutant",
+      "minimum": 8
+    },
+    {
+      "id": 28140009,
+      "name": "Discovery: 9 Distinct Mutant Types",
+      "category": "checks_mutant_first_kills",
+      "level": "Menu",
+      "quota_group": "mutant",
+      "minimum": 9
+    },
+    {
+      "id": 28140010,
+      "name": "Discovery: 10 Distinct Mutant Types",
+      "category": "checks_mutant_first_kills",
+      "level": "Menu",
+      "quota_group": "mutant",
+      "minimum": 10
+    },
+    {
+      "id": 28140011,
+      "name": "Discovery: 11 Distinct Mutant Types",
+      "category": "checks_mutant_first_kills",
+      "level": "Menu",
+      "quota_group": "mutant",
+      "minimum": 11
+    },
+    {
+      "id": 28140012,
+      "name": "Discovery: 12 Distinct Mutant Types",
+      "category": "checks_mutant_first_kills",
+      "level": "Menu",
+      "quota_group": "mutant",
+      "minimum": 12
+    },
+    {
+      "id": 28140013,
+      "name": "Discovery: 13 Distinct Mutant Types",
+      "category": "checks_mutant_first_kills",
+      "level": "Menu",
+      "quota_group": "mutant",
+      "minimum": 13
+    },
+    {
+      "id": 28140014,
+      "name": "Discovery: 14 Distinct Mutant Types",
+      "category": "checks_mutant_first_kills",
+      "level": "Menu",
+      "quota_group": "mutant",
+      "minimum": 14
+    },
+    {
+      "id": 28140015,
+      "name": "Discovery: 15 Distinct Mutant Types",
+      "category": "checks_mutant_first_kills",
+      "level": "Menu",
+      "quota_group": "mutant",
+      "minimum": 15
+    },
+    {
+      "id": 28140016,
+      "name": "Discovery: 16 Distinct Mutant Types",
+      "category": "checks_mutant_first_kills",
+      "level": "Menu",
+      "quota_group": "mutant",
+      "minimum": 16
+    },
+    {
+      "id": 28140017,
+      "name": "Discovery: 17 Distinct Mutant Types",
+      "category": "checks_mutant_first_kills",
+      "level": "Menu",
+      "quota_group": "mutant",
+      "minimum": 17
+    },
+    {
+      "id": 28140018,
+      "name": "Discovery: 18 Distinct Mutant Types",
+      "category": "checks_mutant_first_kills",
+      "level": "Menu",
+      "quota_group": "mutant",
+      "minimum": 18
+    },
+    {
+      "id": 28140019,
+      "name": "Discovery: 19 Distinct Mutant Types",
+      "category": "checks_mutant_first_kills",
+      "level": "Menu",
+      "quota_group": "mutant",
+      "minimum": 19
+    },
+    {
+      "id": 28140020,
+      "name": "Discovery: 20 Distinct Mutant Types",
+      "category": "checks_mutant_first_kills",
+      "level": "Menu",
+      "quota_group": "mutant",
+      "minimum": 20
+    },
+    {
+      "id": 28140021,
+      "name": "Discovery: 21 Distinct Mutant Types",
+      "category": "checks_mutant_first_kills",
+      "level": "Menu",
+      "quota_group": "mutant",
+      "minimum": 21
+    },
+    {
+      "id": 28140022,
+      "name": "Discovery: 22 Distinct Mutant Types",
+      "category": "checks_mutant_first_kills",
+      "level": "Menu",
+      "quota_group": "mutant",
+      "minimum": 22
+    },
+    {
+      "id": 28140023,
+      "name": "Discovery: 23 Distinct Mutant Types",
+      "category": "checks_mutant_first_kills",
+      "level": "Menu",
+      "quota_group": "mutant",
+      "minimum": 23
+    },
+    {
+      "id": 28140024,
+      "name": "Discovery: 24 Distinct Mutant Types",
+      "category": "checks_mutant_first_kills",
+      "level": "Menu",
+      "quota_group": "mutant",
+      "minimum": 24
+    },
+    {
+      "id": 28140025,
+      "name": "Discovery: 25 Distinct Mutant Types",
+      "category": "checks_mutant_first_kills",
+      "level": "Menu",
+      "quota_group": "mutant",
+      "minimum": 25
+    },
+    {
+      "id": 28140101,
+      "name": "Discovery: 1 Distinct Faction Types",
+      "category": "checks_faction_first_kills",
+      "level": "Menu",
+      "quota_group": "faction",
+      "minimum": 1
+    },
+    {
+      "id": 28140102,
+      "name": "Discovery: 2 Distinct Faction Types",
+      "category": "checks_faction_first_kills",
+      "level": "Menu",
+      "quota_group": "faction",
+      "minimum": 2
+    },
+    {
+      "id": 28140103,
+      "name": "Discovery: 3 Distinct Faction Types",
+      "category": "checks_faction_first_kills",
+      "level": "Menu",
+      "quota_group": "faction",
+      "minimum": 3
+    },
+    {
+      "id": 28140104,
+      "name": "Discovery: 4 Distinct Faction Types",
+      "category": "checks_faction_first_kills",
+      "level": "Menu",
+      "quota_group": "faction",
+      "minimum": 4
+    },
+    {
+      "id": 28140105,
+      "name": "Discovery: 5 Distinct Faction Types",
+      "category": "checks_faction_first_kills",
+      "level": "Menu",
+      "quota_group": "faction",
+      "minimum": 5
+    },
+    {
+      "id": 28140106,
+      "name": "Discovery: 6 Distinct Faction Types",
+      "category": "checks_faction_first_kills",
+      "level": "Menu",
+      "quota_group": "faction",
+      "minimum": 6
+    },
+    {
+      "id": 28140107,
+      "name": "Discovery: 7 Distinct Faction Types",
+      "category": "checks_faction_first_kills",
+      "level": "Menu",
+      "quota_group": "faction",
+      "minimum": 7
+    },
+    {
+      "id": 28140108,
+      "name": "Discovery: 8 Distinct Faction Types",
+      "category": "checks_faction_first_kills",
+      "level": "Menu",
+      "quota_group": "faction",
+      "minimum": 8
+    },
+    {
+      "id": 28140109,
+      "name": "Discovery: 9 Distinct Faction Types",
+      "category": "checks_faction_first_kills",
+      "level": "Menu",
+      "quota_group": "faction",
+      "minimum": 9
+    },
+    {
+      "id": 28140110,
+      "name": "Discovery: 10 Distinct Faction Types",
+      "category": "checks_faction_first_kills",
+      "level": "Menu",
+      "quota_group": "faction",
+      "minimum": 10
+    },
+    {
+      "id": 28140111,
+      "name": "Discovery: 11 Distinct Faction Types",
+      "category": "checks_faction_first_kills",
+      "level": "Menu",
+      "quota_group": "faction",
+      "minimum": 11
+    },
+    {
+      "id": 28140112,
+      "name": "Discovery: 12 Distinct Faction Types",
+      "category": "checks_faction_first_kills",
+      "level": "Menu",
+      "quota_group": "faction",
+      "minimum": 12
+    },
+    {
+      "id": 28140113,
+      "name": "Discovery: 13 Distinct Faction Types",
+      "category": "checks_faction_first_kills",
+      "level": "Menu",
+      "quota_group": "faction",
+      "minimum": 13
+    },
+    {
+      "id": 28140201,
+      "name": "Discovery: 1 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 1
+    },
+    {
+      "id": 28140202,
+      "name": "Discovery: 2 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 2
+    },
+    {
+      "id": 28140203,
+      "name": "Discovery: 3 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 3
+    },
+    {
+      "id": 28140204,
+      "name": "Discovery: 4 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 4
+    },
+    {
+      "id": 28140205,
+      "name": "Discovery: 5 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 5
+    },
+    {
+      "id": 28140206,
+      "name": "Discovery: 6 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 6
+    },
+    {
+      "id": 28140207,
+      "name": "Discovery: 7 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 7
+    },
+    {
+      "id": 28140208,
+      "name": "Discovery: 8 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 8
+    },
+    {
+      "id": 28140209,
+      "name": "Discovery: 9 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 9
+    },
+    {
+      "id": 28140210,
+      "name": "Discovery: 10 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 10
+    },
+    {
+      "id": 28140211,
+      "name": "Discovery: 11 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 11
+    },
+    {
+      "id": 28140212,
+      "name": "Discovery: 12 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 12
+    },
+    {
+      "id": 28140213,
+      "name": "Discovery: 13 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 13
+    },
+    {
+      "id": 28140214,
+      "name": "Discovery: 14 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 14
+    },
+    {
+      "id": 28140215,
+      "name": "Discovery: 15 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 15
+    },
+    {
+      "id": 28140216,
+      "name": "Discovery: 16 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 16
+    },
+    {
+      "id": 28140217,
+      "name": "Discovery: 17 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 17
+    },
+    {
+      "id": 28140218,
+      "name": "Discovery: 18 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 18
+    },
+    {
+      "id": 28140219,
+      "name": "Discovery: 19 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 19
+    },
+    {
+      "id": 28140220,
+      "name": "Discovery: 20 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 20
+    },
+    {
+      "id": 28140221,
+      "name": "Discovery: 21 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 21
+    },
+    {
+      "id": 28140222,
+      "name": "Discovery: 22 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 22
+    },
+    {
+      "id": 28140223,
+      "name": "Discovery: 23 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 23
+    },
+    {
+      "id": 28140224,
+      "name": "Discovery: 24 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 24
+    },
+    {
+      "id": 28140225,
+      "name": "Discovery: 25 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 25
+    },
+    {
+      "id": 28140226,
+      "name": "Discovery: 26 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 26
+    },
+    {
+      "id": 28140227,
+      "name": "Discovery: 27 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 27
+    },
+    {
+      "id": 28140228,
+      "name": "Discovery: 28 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 28
+    },
+    {
+      "id": 28140229,
+      "name": "Discovery: 29 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 29
+    },
+    {
+      "id": 28140230,
+      "name": "Discovery: 30 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 30
+    },
+    {
+      "id": 28140231,
+      "name": "Discovery: 31 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 31
+    },
+    {
+      "id": 28140232,
+      "name": "Discovery: 32 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 32
+    },
+    {
+      "id": 28140233,
+      "name": "Discovery: 33 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 33
+    },
+    {
+      "id": 28140234,
+      "name": "Discovery: 34 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 34
+    },
+    {
+      "id": 28140235,
+      "name": "Discovery: 35 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 35
+    },
+    {
+      "id": 28140236,
+      "name": "Discovery: 36 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 36
+    },
+    {
+      "id": 28140237,
+      "name": "Discovery: 37 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 37
+    },
+    {
+      "id": 28140238,
+      "name": "Discovery: 38 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 38
+    },
+    {
+      "id": 28140239,
+      "name": "Discovery: 39 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 39
+    },
+    {
+      "id": 28140240,
+      "name": "Discovery: 40 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 40
+    },
+    {
+      "id": 28140241,
+      "name": "Discovery: 41 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 41
+    },
+    {
+      "id": 28140242,
+      "name": "Discovery: 42 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 42
+    },
+    {
+      "id": 28140243,
+      "name": "Discovery: 43 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 43
+    },
+    {
+      "id": 28140244,
+      "name": "Discovery: 44 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 44
+    },
+    {
+      "id": 28140245,
+      "name": "Discovery: 45 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 45
+    },
+    {
+      "id": 28140246,
+      "name": "Discovery: 46 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 46
+    },
+    {
+      "id": 28140247,
+      "name": "Discovery: 47 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 47
+    },
+    {
+      "id": 28140248,
+      "name": "Discovery: 48 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 48
+    },
+    {
+      "id": 28140249,
+      "name": "Discovery: 49 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 49
+    },
+    {
+      "id": 28140250,
+      "name": "Discovery: 50 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 50
+    },
+    {
+      "id": 28140251,
+      "name": "Discovery: 51 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 51
+    },
+    {
+      "id": 28140252,
+      "name": "Discovery: 52 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 52
+    },
+    {
+      "id": 28140253,
+      "name": "Discovery: 53 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 53
+    },
+    {
+      "id": 28140254,
+      "name": "Discovery: 54 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 54
+    },
+    {
+      "id": 28140255,
+      "name": "Discovery: 55 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 55
+    },
+    {
+      "id": 28140256,
+      "name": "Discovery: 56 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 56
+    },
+    {
+      "id": 28140257,
+      "name": "Discovery: 57 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 57
+    },
+    {
+      "id": 28140258,
+      "name": "Discovery: 58 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 58
+    },
+    {
+      "id": 28140259,
+      "name": "Discovery: 59 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 59
+    },
+    {
+      "id": 28140260,
+      "name": "Discovery: 60 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 60
+    },
+    {
+      "id": 28140261,
+      "name": "Discovery: 61 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 61
+    },
+    {
+      "id": 28140262,
+      "name": "Discovery: 62 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 62
+    },
+    {
+      "id": 28140263,
+      "name": "Discovery: 63 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 63
+    },
+    {
+      "id": 28140264,
+      "name": "Discovery: 64 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 64
+    },
+    {
+      "id": 28140265,
+      "name": "Discovery: 65 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 65
+    },
+    {
+      "id": 28140266,
+      "name": "Discovery: 66 Distinct Artefact Types",
+      "category": "checks_artefacts",
+      "level": "Menu",
+      "quota_group": "artefact",
+      "minimum": 66
     }
   ],
   "content_inventory": {
