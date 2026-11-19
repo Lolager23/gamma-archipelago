@@ -28,6 +28,7 @@ def snapshot(engine):
         KEY,
         MAP_LOCATION_IDS,
         pilot_goal=False,
+        configuration_key=engine.configuration_key,
     )
 
 
