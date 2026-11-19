@@ -13,6 +13,14 @@ def configured_game(lua, **values):
     game, engine = load_game(lua)
     lua.execute("""
         engine.objects={}; engine.meta={}; engine.money=1000
+        -- The pinned native pickup binder reuses this table without resetting it.
+        local pickup_flags={ret_value=true}
+        bind_stalker_ext={actor_on_item_before_pickup=function(item)
+            if engine.veto_before then pickup_flags.ret_value=false end
+            engine.callbacks.actor_on_item_before_pickup(item,pickup_flags)
+            if engine.veto_after then pickup_flags.ret_value=false end
+            return pickup_flags.ret_value
+        end}
         engine.creation={new_game_faction='stalker',new_game_loadout='detector,pda,gun,knife,medkit'}
         axr_main={config={
             r_value=function(self,section,key) return engine.creation[key] end,

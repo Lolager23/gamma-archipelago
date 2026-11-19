@@ -96,7 +96,6 @@ SUPPORTED_REWARDS: frozenset[str] = frozenset(
     }
 )
 SUPPORTED_GOALS = frozenset({"pilot_tour"})
-SUPPORTED_START_MODES = frozenset({0, 1, 2})
 
 
 class ConfigurationError(ValueError):
@@ -186,8 +185,6 @@ def build_configuration(values: Mapping[str, object]) -> SeedConfiguration:
         raise ConfigurationError(
             f"Not implemented in this build: {sorted(unavailable)}; goal={goal}"
         )
-    if any(mode not in SUPPORTED_START_MODES for mode in gear.values()):
-        raise ConfigurationError("Restricted starting loadouts are not implemented in this build")
     return SeedConfiguration(
         checks,
         rewards,
