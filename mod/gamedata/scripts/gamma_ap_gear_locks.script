@@ -5,7 +5,8 @@ local pickup_wrapper = nil
 
 function install_pickup_guard(configuration)
     if not configuration or not configuration.expanded
-        or configuration.options.rewards_starting_gear_unlocks ~= 1 then return true end
+        or (configuration.options.rewards_starting_gear_unlocks ~= 1
+            and configuration.options.rewards_progression_stashes ~= 1) then return true end
     local binder = rawget(_G, "bind_stalker_ext")
     if not binder or type(binder.actor_on_item_before_pickup) ~= "function" then
         return false, "Equipment locks require the native pickup binder"
@@ -26,6 +27,8 @@ end
 local function locked(state, item)
     local configuration = state.configuration
     if not configuration or not configuration.expanded or not item then return false end
+    if item:section() == "good_psy_helmet" and configuration.options.rewards_progression_stashes == 1
+        and not state.unlocks.calibrated_psi then return true end
     local group = gamma_ap_equipment.group(item:section())
     return group and configuration.options["starting_" .. group] == 2
         and not state.unlocks["gear_" .. group]

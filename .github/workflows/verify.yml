@@ -1,4 +1,4 @@
-name: Verify foundation
+name: Verify GAMMA Archipelago
 on:
   push:
   pull_request:
@@ -31,4 +31,5 @@ jobs:
           path: |
             coverage.json
             artifacts/lua-coverage.json
+            artifacts/generation-matrix.json
             dist/

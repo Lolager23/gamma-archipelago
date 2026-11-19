@@ -1,5 +1,7 @@
 """Guarantee a local exploration chain without asking general fill to break cycles."""
 
+from Options import OptionError
+
 
 def place_zone_keys(world, catalog):
     if "rewards_zone_keys" not in world.configuration.rewards:
@@ -11,6 +13,8 @@ def place_zone_keys(world, catalog):
         for row in catalog["locations"]
         if row["category"] == "checks_maps"
     }
+    if set(checks.values()) & world.options.exclude_locations.value:
+        raise OptionError("Zone-key exploration checks cannot be excluded")
     levels = {
         row["name"]: row["level"]
         for row in catalog["items"]

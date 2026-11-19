@@ -144,3 +144,10 @@ def test_travel_configuration_preserves_old_default_digest_and_requires_zone_key
         build_configuration({**defaults(), "zone_unlock_travel": 1})
     enabled = build_configuration({**defaults(), "rewards_zone_keys": 1, "zone_unlock_travel": 1})
     assert enabled.zone_unlock_travel == 1 and enabled.digest != expected
+
+
+def test_exclusive_psi_stash_and_zone_chain_need_early_unreserved_check_slots():
+    with pytest.raises(ConfigurationError, match="require settlement checks"):
+        build_configuration(
+            {**defaults(), "rewards_zone_keys": 1, "rewards_progression_stashes": 1}
+        )

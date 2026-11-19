@@ -15,6 +15,8 @@ def apply_access_rules(world, catalog):
         if zoned and level != "l01_escape" and not state.has(zone_items[level], player):
             return False
         if level in {"l10_radar", "l10u_bunker", "l08u_brainlab"}:
+            if "rewards_progression_stashes" in world.configuration.rewards:
+                return state.has("Calibrated Psi Protection", player)
             return state.has("Calibrated Psi Protection", player) or state.can_reach_region(
                 "l08_yantar", player
             )
@@ -24,10 +26,9 @@ def apply_access_rules(world, catalog):
         for entrance in region.entrances:
             if region.name in zone_items:
                 entrance.access_rule = lambda state, level=region.name: enter(state, level)
+    definitions = {row["id"]: row for row in catalog["locations"]}
     for location in world.multiworld.get_locations(player):
-        definition = next(
-            (row for row in catalog["locations"] if row["id"] == location.address), None
-        )
+        definition = definitions.get(location.address)
         if definition is None:
             if location.address is None:
                 continue

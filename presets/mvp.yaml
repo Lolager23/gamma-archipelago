@@ -1,0 +1,58 @@
+{
+  "name": "GammaPlayer",
+  "game": "S.T.A.L.K.E.R. GAMMA",
+  "requires": {
+    "version": "0.6.8"
+  },
+  "S.T.A.L.K.E.R. GAMMA": {
+    "checks_maps": 1,
+    "checks_settlements": 0,
+    "checks_mutant_first_kills": 0,
+    "checks_faction_first_kills": 0,
+    "checks_artefacts": 0,
+    "checks_quest_types": 0,
+    "checks_gear_upgrades": 0,
+    "checks_armour_tiers": 0,
+    "checks_weapon_tiers": 0,
+    "checks_knife_tiers": 0,
+    "checks_kill_milestones": 0,
+    "checks_side_task_milestones": 0,
+    "checks_story_milestones": 0,
+    "checks_rank_milestones": 0,
+    "rewards_loot_stashes": 1,
+    "rewards_progression_stashes": 1,
+    "rewards_quest_keys": 0,
+    "rewards_faction_reputation": 0,
+    "rewards_stat_levels": 0,
+    "rewards_zone_keys": 0,
+    "rewards_starting_gear_unlocks": 1,
+    "starting_detector": 2,
+    "starting_pda": 2,
+    "starting_firearms": 0,
+    "starting_melee": 0,
+    "starting_outfit": 0,
+    "starting_helmet": 0,
+    "starting_backpack": 0,
+    "starting_tools": 0,
+    "starting_utilities": 0,
+    "starting_ammo": 100,
+    "starting_medicine": 100,
+    "starting_food": 100,
+    "starting_money": 100,
+    "goal": 2,
+    "no_starting_weapons": 0,
+    "kill_milestones": [
+      10,
+      25,
+      50,
+      100
+    ],
+    "side_task_milestones": [
+      5,
+      10,
+      20,
+      40
+    ],
+    "zone_unlock_travel": 0
+  }
+}
