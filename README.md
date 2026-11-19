@@ -21,6 +21,7 @@ is protected throughout development.
 - [Build and test guide](docs/development-guide.md): commands, pilot scope and game acceptance.
 - [Verification record](docs/verification-record.md): measured results and remaining checks.
 - [Mod Configuration Menu](docs/mod-configuration-menu.md): Archipelago page and toolkit test action.
+- [Callback probes](docs/callback-probes.md): diagnostic add-on, source findings and live test procedure.
 
 Game files, downloaded archives, credentials and personal saves are not distributed
 in this repository. Install Anomaly and GAMMA independently using their official

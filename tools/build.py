@@ -41,9 +41,13 @@ def main() -> None:
     generate_catalogues()
     destination = ROOT / "dist"
     destination.mkdir(exist_ok=True)
-    packages = [destination / "gamma.apworld", destination / "gamma-archipelago-mo2.zip"]
+    packages = [
+        destination / name
+        for name in ("gamma.apworld", "gamma-archipelago-mo2.zip", "gamma-archipelago-probes.zip")
+    ]
     package(ROOT / "apworld/gamma", packages[0], "gamma/")
     package(ROOT / "mod", packages[1])
+    package(ROOT / "probes", packages[2])
     hashes = [f"{hashlib.sha256(path.read_bytes()).hexdigest()}  {path.name}" for path in packages]
     (destination / "SHA256SUMS").write_text("\n".join(hashes) + "\n", encoding="ascii")
     print("Built deterministic AP world and MO2 add-on packages.")
