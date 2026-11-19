@@ -94,6 +94,7 @@ function validate(state)
         end
     end
     if not gamma_ap_discovery.validate(state.discoveries,key,state.configuration) then return false,"Invalid saved distinct discoveries" end
+    if not gamma_ap_deliveries.validate(state) then return false,"Invalid saved delivery plan" end
     local permissions = {calibrated_psi=true}
     for _,name in pairs(gamma_ap_catalog.permissions) do permissions[name] = true end
     if state.unlocks ~= nil then

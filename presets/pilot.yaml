@@ -44,6 +44,7 @@
     "starting_medicine": 100,
     "starting_food": 100,
     "starting_money": 100,
+    "permission_supplies": 0,
     "scouting_mode": 0,
     "reward_previews": 0,
     "mutant_discovery_mode": 0,

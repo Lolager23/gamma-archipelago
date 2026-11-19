@@ -53,6 +53,13 @@ with catalogue-backed permanent permissions. They use the existing saved unlock
 set. Recipe groups map to the supported native recipe toolkit indices; native
 knowledge and component checks remain the captured method's responsibility.
 
+[Permission supplies](permission-supplies.md) use bounded per-receipt action plans
+inside the same save state. Catalogue-defined contents and the ordered applied
+history determine each plan. The adapter owns spawning; the tracker reads copied
+status. Permanent permission acknowledgement waits for plan completion, and an
+uncertain spawn blocks automatic retry. This does not create an engine/save
+transaction or change the server's authority over item history.
+
 ## State and failure boundaries
 
 The AP server owns completed location checks and the ordered item history. The

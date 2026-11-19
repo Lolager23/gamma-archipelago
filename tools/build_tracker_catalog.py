@@ -75,4 +75,12 @@ def tracker_lines(catalogue: dict[str, Any]) -> list[str]:
     lines.extend(
         f"    [{row['id']}]=true," for row in catalogue["locations"] if row.get("missable")
     )
+    lines.extend(["}", "permission_supplies = {"])
+    for row in catalogue["items"]:
+        if "supplies" in row or "tier_supplies" in row:
+            tiers = row.get("tier_supplies", [row.get("supplies", [])])
+            values = ",".join(
+                "{" + ",".join(quoted(section) for section in tier) + "}" for tier in tiers
+            )
+            lines.append(f"    [{row['id']}]={{{values}}},")
     return lines + ["}"]

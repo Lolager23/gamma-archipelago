@@ -74,7 +74,7 @@ function ap_tracker_window:refresh()
         label("completed","Completed"),view.completed,#view.rows,label("available","Available"),view.available,
         label("blocked","Blocked"),view.blocked,label("applied","Rewards applied"),view.applied,view.total,
         view.pending,label("pending","pending"),view.problem or view.connection_status
-            or label("offline","Server connectivity not reported by this snapshot")).."\n"..self.feedback)
+            or label("offline","Server connectivity not reported by this snapshot")).."\n"..(view.delivery or view.stash_delivery or "").." "..self.feedback)
     local lines = {}
     if self.selected_index > #rows then self.selected_index = 1 end
     self.selected_id = rows[self.selected_index] and rows[self.selected_index].id

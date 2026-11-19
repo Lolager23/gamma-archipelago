@@ -1,0 +1,90 @@
+-- Central-save action plans. A successful spawn and a game save are not one transaction.
+local function sections_for(state, id, receipt)
+    local tiers = gamma_ap_catalog.permission_supplies[id]
+    if not tiers then return nil end
+    local previous = 0
+    for index=1,receipt-1 do if state.applied_items[index] == id then previous=previous+1 end end
+    if gamma_ap_catalog.item_effects[id] == "progressive_tools" then return tiers[previous+1] or {} end
+    return previous == 0 and tiers[1] or {}
+end
+
+function copy(plans)
+    local result = {}
+    for receipt,plan in pairs(plans or {}) do
+        result[receipt] = {item_id=plan.item_id,next_action=plan.next_action,uncertain=plan.uncertain,sections={}}
+        for _,section in ipairs(plan.sections) do table.insert(result[receipt].sections,section) end
+    end
+    return result
+end
+
+local function integer(value, low, high)
+    return type(value) == "number" and value == math.floor(value) and value >= low and value <= high
+end
+
+function validate(state)
+    if state.deliveries == nil then return true end
+    if type(state.deliveries) ~= "table" then return false end
+    for receipt,plan in pairs(state.deliveries) do
+        if not state.session_key or not state.configuration or state.configuration.options.permission_supplies ~= 1
+            or not integer(receipt,1,math.min(4000,state.received_count+1))
+            or type(plan) ~= "table" or type(plan.sections) ~= "table" or type(plan.uncertain) ~= "boolean" then return false end
+        local expected = sections_for(state,plan.item_id,receipt)
+        if not expected or not state.allowed_items or not state.allowed_items[plan.item_id]
+            or #expected ~= #plan.sections or #expected > 8
+            or not integer(plan.next_action,1,#expected+1)
+            or (plan.uncertain and plan.next_action > #expected)
+            or (receipt <= state.received_count and (state.applied_items[receipt] ~= plan.item_id
+                or plan.next_action ~= #expected+1 or plan.uncertain)) then return false end
+        for index,section in ipairs(expected) do if plan.sections[index] ~= section then return false end end
+        for index in pairs(plan.sections) do if not integer(index,1,#expected) then return false end end
+    end
+    return true
+end
+
+local function spawn(state, section)
+    state.applying_reward = true
+    local ok,object = pcall(alife_create_item,section,db.actor)
+    state.applying_reward = false
+    if not ok then return false,true end
+    if not object then return false,false end
+    local valid,id = pcall(function() return type(object.id) == "function" and object:id() or object.id end)
+    if not valid or not integer(id,1,65534) then return false,true end
+    return true,false
+end
+
+function receive(state, id, grant_permission)
+    if not state.session_key or not state.allowed_items[id] or not state.configuration
+        or state.configuration.options.permission_supplies ~= 1 then return false,"Supply delivery is not enabled for this receipt" end
+    local receipt = state.received_count+1
+    local sections = sections_for(state,id,receipt)
+    if not sections then return false,"No supported supplies for this permission" end
+    local plan = state.deliveries[receipt]
+    if plan and plan.item_id ~= id then return false,"Pending delivery conflicts with ordered item history" end
+    if not plan then
+        plan = {item_id=id,next_action=1,uncertain=false,sections={}}
+        for _,section in ipairs(sections) do table.insert(plan.sections,section) end
+        state.deliveries[receipt] = plan
+    end
+    if plan.uncertain then return false,"Supply creation is uncertain; automatic retry blocked. Restore a valid save" end
+    local ok,valid = pcall(function()
+        for _,section in ipairs(plan.sections) do if not ini_sys:section_exist(section) then return false end end
+        return true
+    end)
+    if not ok or not valid then return false,"Supply sections unavailable; permission receipt remains pending" end
+    if plan.next_action <= #plan.sections then
+        local created,uncertain = spawn(state,plan.sections[plan.next_action])
+        plan.uncertain = uncertain
+        if not created then return false,uncertain and "Supply creation uncertain; automatic retry blocked" or "Supply creation failed; retry pending" end
+        plan.next_action = plan.next_action+1
+        -- At most one supply object per poll; the permission/receipt waits for the full plan.
+        if plan.next_action <= #plan.sections then return false,"Supply delivery in progress; permission pending" end
+    end
+    return grant_permission(id)
+end
+
+function summary(state)
+    local plan = state.deliveries and state.deliveries[state.received_count+1]
+    if not plan then return nil end
+    return "Receipt "..(state.received_count+1)..": "..(plan.next_action-1).."/"..#plan.sections
+        .." supplies delivered; "..(plan.uncertain and "uncertain, retry blocked" or "permission pending")
+end

@@ -24,6 +24,7 @@ def tool_game(lua, items=(), **options):
         item_repair={UIRepair={OnRepair=original}}
         ui_inventory={UIInventory={RMode_RepairYes=original,RMode_UpgradeYes=original}}
         news_manager={send_tip=function(actor,text) engine.tips[#engine.tips+1]=text end}
+        ini_sys.section_exist=function(self,section) return section~=engine.missing_section end
     """)
     engine.files[CONFIG_PATH] = encode_configuration(KEY, configuration, expanded=True)
     engine.files[INCOMING] = encode_incoming(KEY, items, configuration.digest)

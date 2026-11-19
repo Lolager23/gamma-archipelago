@@ -80,6 +80,7 @@ function snapshot(state, total, problem, psi)
     result.pending = result.total-result.applied
     result.kills, result.tasks, result.rank = state.combat.kills, state.tasks.count, state.rank_highest
     result.problem = problem
+    result.delivery = gamma_ap_deliveries.summary(state)
     if not result.bound or not result.enabled then return result end
     local regions = reachable(state, psi)
     for id in pairs(state.enabled_checks) do
@@ -109,6 +110,16 @@ function snapshot(state, total, problem, psi)
     end
     if options(state).rewards_progressive_tools == 1 then
         result.progression[#result.progression+1] = "Progressive tools: "..gamma_ap_workshop.tools_level(state).."/3"
+    end
+    if result.delivery then result.progression[#result.progression+1] = result.delivery end
+    local coordinates,claimed = 0,0
+    for _,record in pairs(state.stashes.records) do
+        coordinates = coordinates+1
+        if record.opened then claimed=claimed+1 end
+    end
+    if coordinates > 0 then
+        result.stash_delivery = "Stash deliveries: "..coordinates.." coordinates received, "..claimed.." claimed"
+        result.progression[#result.progression+1] = result.stash_delivery
     end
     table.sort(result.progression)
     return result

@@ -1,6 +1,7 @@
 """Additional bounded settings; legacy values preserve pre-expansion seed identities."""
 
 EXPANSION_LIMITS = {
+    "permission_supplies": 1,
     "scouting_mode": 2,
     "reward_previews": 1,
     "mutant_discovery_mode": 1,
