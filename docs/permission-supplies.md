@@ -56,3 +56,9 @@ also checked before mutation. Native acceptance is **not run**, reserved for
 Owen: actual quantities, partial failure/retry, native acquisition callbacks,
 save/load, older-save rollback, and PDA layout/status. No launch, deployment,
 installed-game write or local developer-panel change is included.
+
+The final clean complete verifier passed: 926 covered tests, 37 untraced
+generator/server tests and five Node tests (968 total). Owned Python runtime
+modules reached 100% measured line/branch coverage; Lua reached 100% measured
+executable lines. Lua branch coverage is not measured. Earlier overlapping
+tooling runs were stopped; their partial reports are not acceptance evidence.
