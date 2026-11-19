@@ -100,6 +100,14 @@ def test_factions_are_separate_and_story_aliases_are_canonical(lua):
     )
 
 
+def test_story_identified_npc_cannot_supply_a_faction_check_or_kill_total(lua):
+    game, engine, _ = combat_game(lua, checks_faction_first_kills=1)
+    engine.story_ids[1] = "story_critical_npc"
+    game.npc_on_death_callback(victim(lua), lua.globals().db.actor)
+    state = state_of(lua, game)
+    assert state.combat.kills == 0 and not list(state.checks.keys())
+
+
 @pytest.mark.parametrize("class_", ["SM_DOG_F", "AI_PHANT", "AI_CROW"])
 def test_hallucinations_and_birds_do_not_count_as_mobs(lua, class_):
     game, engine, _ = combat_game(lua, checks_mutant_first_kills=1)

@@ -20,6 +20,8 @@ def load_game(lua):
         getFS = function() return {update_path=function() return engine.root end} end
         printf = function(format, value) engine.logs[#engine.logs+1]=string.format(format,value) end
         RegisterScriptCallback = function(name,callback) engine.callbacks[name]=callback end
+        engine.story_ids={}
+        get_object_story_id=function(id) return engine.story_ids[id] end
         alife_create_item = function(section,actor)
             if engine.fail_reward then return nil end
             engine.created[#engine.created+1]=section

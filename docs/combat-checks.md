@@ -14,6 +14,9 @@ and pseudogeist are distinct. Psy-dog phantoms, generic hallucinations and crows
 are excluded from both first kills and totals. Factions use actual character
 community, with military/Sin story-NPC aliases mapped to their parent factions.
 Disguise and player faction do not rewrite the victim's recorded community.
+All story-identified NPCs are conservatively excluded from faction checks and
+totals, using the installed story-object lookup. Killing a story-critical NPC
+cannot be required as the source of a check.
 
 Credit requires an actual dead victim and the player actor as killer. Companion,
 other NPC, environmental, missing-killer and self deaths are excluded. The base
@@ -38,7 +41,7 @@ Those assumptions must be tightened with the gate/progression branches. The
 current development goal remains the independent three-map tour. Pool sizing now
 also handles a one-check seed without overflowing it with three starter rewards.
 
-Verification passes 388 covered tests and two real AP server cases, with 100%
+Verification passes 389 covered tests and two real AP server cases, with 100%
 measured owned Python lines/branches and Lua executable lines. Tests cover every
 species mapping and faction, death/hit duplicates, actor attribution, phantom
 exclusion, copied saves, older-save rollback, recycled IDs, counter saturation,

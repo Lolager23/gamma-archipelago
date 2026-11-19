@@ -47,6 +47,8 @@ function observe(state, category, victim, killer)
         if excluded then return end
         location_id = gamma_ap_catalog.mutant_locations[name]
     else
+        -- Conservatively exclude every story-identified NPC, not just a fragile name list.
+        if get_object_story_id(victim:id()) then return end
         local faction = victim:character_community()
         if faction == "army_npc" then faction = "army"
         elseif faction == "greh_npc" then faction = "greh" end
