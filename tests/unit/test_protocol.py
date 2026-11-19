@@ -80,3 +80,18 @@ def test_received_count_is_a_canonical_integer(number):
 
 def test_crlf_snapshot_is_readable():
     assert decode_outgoing(outgoing().replace("\n", "\r\n"), KEY).received_count == 0
+
+
+def test_alternate_goal_wire_is_bound_to_its_selected_goal_instead_of_pilot_checks(tmp_path):
+    from gamma_archipelago.bridge import FileBridge
+
+    content = outgoing(checks=[LOCATION], goal=1).replace("GAMMA_AP_OUT|1", "GAMMA_AP_OUT|2")
+    assert decode_outgoing(content, KEY, pilot_goal=False).goal_complete
+    with pytest.raises(ProtocolError, match="Unsupported"):
+        decode_outgoing(content, KEY)
+    with pytest.raises(ProtocolError, match="Unsupported"):
+        decode_outgoing(outgoing(), KEY, pilot_goal=False)
+    bridge = FileBridge(tmp_path, allowed_root=tmp_path)
+    bridge.pilot_goal = False
+    (bridge.directory / "outgoing.txt").write_text(content)
+    assert bridge.read_game(KEY).goal_complete

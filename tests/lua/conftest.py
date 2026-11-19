@@ -33,6 +33,7 @@ def lua():
         "gear_locks",
         "zone_keys",
         "travel",
+        "goals",
         "stashes",
         "state",
         "settlements",

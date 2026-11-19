@@ -393,3 +393,21 @@ async def test_unconnected_item_packet_does_not_write_a_snapshot():
     context = connected_context()
     context.session = None
     context.on_package("ReceivedItems", {})
+
+
+@run_async
+async def test_selected_alternate_goal_configures_the_bridge_goal_protocol():
+    from gamma_archipelago.catalog import MAP_LOCATION_IDS
+    from gamma_archipelago.configuration import build_configuration, defaults
+
+    configuration = build_configuration({**defaults(), "goal": 1})
+    context = connected_context(
+        {
+            "schema_version": 3,
+            "pilot": False,
+            "configuration": configuration.to_values(),
+            "configuration_key": configuration.digest,
+            "location_ids": sorted(MAP_LOCATION_IDS),
+        }
+    )
+    assert context.bridge.pilot_goal is False

@@ -120,6 +120,9 @@ class GammaContext(CommonContext):
             self.session.bind_locations(allowed)
             self.session.bind_items(item_ids)
             self.bridge.allowed_locations = allowed
+            self.bridge.pilot_goal = (
+                self.configuration is None or self.configuration.goal == "pilot_tour"
+            )
             self.require_configuration = version in (2, 3)
             if self.require_configuration:
                 self.bridge.write_configuration(

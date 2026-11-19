@@ -55,13 +55,17 @@ def encode_confirmed(session_key: str, location_ids: frozenset[int]) -> str:
 
 
 def decode_outgoing(
-    content: str, session_key: str, allowed_locations: frozenset[int] = LOCATION_IDS
+    content: str,
+    session_key: str,
+    allowed_locations: frozenset[int] = LOCATION_IDS,
+    *,
+    pilot_goal: bool = True,
 ) -> GameSnapshot:
     validate_session_key(session_key)
     if len(content.encode("utf-8")) > MAX_SNAPSHOT_BYTES or not content.endswith("\n"):
         raise ProtocolError("Snapshot is oversized or missing its final newline")
     lines = content.splitlines()
-    if len(lines) < 5 or lines[0] != "GAMMA_AP_OUT|1":
+    if len(lines) < 5 or lines[0] != f"GAMMA_AP_OUT|{1 if pilot_goal else 2}":
         raise ProtocolError("Unsupported or incomplete game snapshot")
     if lines[1] != f"session|{session_key}":
         raise ProtocolError("Game snapshot belongs to another seed or slot")
@@ -81,6 +85,11 @@ def decode_outgoing(
     if lines[-1] != f"end|{len(checks)}":
         raise ProtocolError("Snapshot trailer does not match its check count")
     goal = lines[-2] == "goal|1"
-    if goal and allowed_locations >= LOCATION_IDS and not frozenset(checks) >= LOCATION_IDS:
+    if (
+        pilot_goal
+        and goal
+        and allowed_locations >= LOCATION_IDS
+        and not frozenset(checks) >= LOCATION_IDS
+    ):
         raise ProtocolError("Pilot completion requires every pilot location")
     return GameSnapshot(session_key, received_count, frozenset(checks), goal)
