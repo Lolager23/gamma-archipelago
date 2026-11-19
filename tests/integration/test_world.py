@@ -204,8 +204,8 @@ def test_loot_stash_pool_is_optional_seeded_and_fits_even_one_check():
         names = [location.item.name for location in multiworld.get_locations()]
         assert any("Loot Stash:" in name for name in names)
         assert "Basic Toolkit" in names
-        assert set(world.fill_slot_data()["item_ids"]) == ITEM_IDS
-        assert enabled_item_ids(world.configuration.rewards) == ITEM_IDS
+        assert set(world.fill_slot_data()["item_ids"]) == ITEM_IDS - {28051201}
+        assert enabled_item_ids(world.configuration.rewards) == ITEM_IDS - {28051201}
         assert multiworld.can_beat_game()
         placements.append(names)
     assert placements[0] == placements[1] and placements[0] != placements[2]
@@ -220,3 +220,38 @@ def test_loot_stash_pool_is_optional_seeded_and_fits_even_one_check():
     )
     distribute_items_restrictive(single)
     assert "Loot Stash:" in next(iter(single.get_locations())).item.name
+
+
+def test_orange_stash_is_required_and_its_local_claim_is_a_separate_event():
+    from BaseClasses import CollectionState
+
+    multiworld = setup_multiworld(GammaWorld, seed=15, options={"rewards_progression_stashes": 1})
+    world = multiworld.worlds[1]
+    claim = multiworld.get_location("Claim Cordon Psi Stash", 1)
+    state = CollectionState(multiworld)
+    assert not claim.can_reach(state)
+    state.collect(world.create_item("Progression Stash: Calibrated Psi Helmet"))
+    assert claim.can_reach(state)
+    assert claim.address is None and claim.item.code is None
+    assert claim.item.name == "Calibrated Psi Protection"
+    distribute_items_restrictive(multiworld)
+    assert len(world.fill_slot_data()["location_ids"]) == 33
+    assert 28051201 in world.fill_slot_data()["item_ids"]
+    assert (
+        len(
+            [
+                loc
+                for loc in multiworld.get_locations()
+                if loc.item.name == "Progression Stash: Calibrated Psi Helmet"
+            ]
+        )
+        == 1
+    )
+    assert multiworld.can_beat_game()
+    for location in list(multiworld.get_locations()):
+        if location.address is not None:
+            location.item = None
+            location.locked = False
+            location.parent_region.locations.remove(location)
+    with pytest.raises(OptionError, match="cannot hold"):
+        world.create_items()

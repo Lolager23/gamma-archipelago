@@ -38,7 +38,9 @@ local function choose_cache(state, item_id, receipt)
     for id in pairs(treasure_manager.caches) do
         local object = alife_object(id)
         local expected = object and gamma_ap_catalog.stash_containers[object:name()]
-        if expected and object.parent_id == 65535 and IsInvbox(nil, object:clsid())
+        local required = gamma_ap_catalog.progression_stashes[item_id]
+        if expected and (not required or object:name() == required)
+            and object.parent_id == 65535 and IsInvbox(nil, object:clsid())
             and cache_level(object) == expected then
             candidates[#candidates+1] = {id=id, name=object:name(), level=expected}
         end
@@ -52,19 +54,23 @@ local function choose_cache(state, item_id, receipt)
 end
 
 local function marker(state, record)
+    local kind = gamma_ap_catalog.progression_stashes[record.item_id] and "gamma_ap_progression" or "gamma_ap_loot"
     local count = 0
     for _,index in ipairs(state.stashes.order) do
         local other = state.stashes.records[index]
-        if other.cache_id == record.cache_id and not other.claimed then count = count + 1 end
+        if other.cache_id == record.cache_id and not other.claimed
+            and (gamma_ap_catalog.progression_stashes[other.item_id] ~= nil)
+                == (gamma_ap_catalog.progression_stashes[record.item_id] ~= nil) then count = count + 1 end
     end
     local ok = pcall(function()
         if count == 0 then
-            level.map_remove_object_spot(record.cache_id, "gamma_ap_loot")
+            level.map_remove_object_spot(record.cache_id, kind)
         else
-            local hint = "Archipelago loot stash: " .. tostring(count) .. " package(s)"
-            if level.map_has_object_spot(record.cache_id, "gamma_ap_loot") == 0 then
-                level.map_add_object_spot_ser(record.cache_id, "gamma_ap_loot", hint)
-            else level.map_change_spot_hint(record.cache_id, "gamma_ap_loot", hint) end
+            local hint = "Archipelago " .. (kind == "gamma_ap_progression" and "progression" or "loot")
+                .. " stash: " .. tostring(count) .. " package(s)"
+            if level.map_has_object_spot(record.cache_id, kind) == 0 then
+                level.map_add_object_spot_ser(record.cache_id, kind, hint)
+            else level.map_change_spot_hint(record.cache_id, kind, hint) end
         end
     end)
     if not ok then return false, "Cannot reveal AP stash coordinates through the PDA map API" end
@@ -159,12 +165,14 @@ function poll(state)
             if not valid then return false, reason end
             local box = level.object_by_id(record.cache_id)
             if box and box:name() == record.cache_name then
+                local protected = gamma_ap_catalog.progression_stashes[record.item_id] ~= nil
                 while record.next_action <= #record.actions and work < 8 do
-                    local ok, problem = spawn_action(record.actions[record.next_action], box)
+                    local ok, problem = spawn_action(record.actions[record.next_action], protected and db.actor or box)
                     if not ok then return false, problem end
                     record.next_action = record.next_action + 1
                     work = work + 1
                 end
+                if protected and record.next_action > #record.actions then record.claimed = true end
             end
         end
         if work >= 8 then break end

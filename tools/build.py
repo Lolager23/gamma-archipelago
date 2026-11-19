@@ -42,9 +42,13 @@ def generate_catalogues() -> None:
     )
     lines.extend(["}", "stash_contents = {"])
     for item in catalogue["items"]:
-        if item.get("effect") == "loot_stash":
+        if item.get("effect") in {"loot_stash", "progression_stash"}:
             values = ", ".join(json.dumps(section) for section in item["contents"])
             lines.append(f"    [{item['id']}] = {{{values}}},")
+    lines.extend(["}", "progression_stashes = {"])
+    for item in catalogue["items"]:
+        if item.get("effect") == "progression_stash":
+            lines.append(f'    [{item["id"]}] = "{item["cache"]}",')
     lines.extend(["}", "location_by_level = {"])
     lines.extend(
         f'    ["{loc["level"]}"] = {loc["id"]},'

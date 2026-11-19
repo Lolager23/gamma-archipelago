@@ -10,9 +10,9 @@ FIRST = 28051101
 ADVANCED = 28051127
 
 
-def stash_game(lua, *, items=(FIRST,)):
+def stash_game(lua, *, items=(FIRST,), **options):
     lua.globals().modxml_gamma_ap_stashes = lua.table(registered=True)
-    game, engine, configuration = configured_game(lua, rewards_loot_stashes=1)
+    game, engine, configuration = configured_game(lua, rewards_loot_stashes=1, **options)
     engine.files[CONFIG_PATH] = encode_configuration(KEY, configuration, expanded=True)
     engine.files["D:/AnomalyAP/appdata/archipelago\\incoming.txt"] = encode_incoming(
         KEY, items, configuration.digest
@@ -243,3 +243,32 @@ def test_disabled_unbound_and_bounded_receipts_are_refused(lua):
     state.received_count = 4000
     state.stashes.order = lua.table_from(range(1, 4001))
     assert "bound" in module.receive(state, FIRST)[1]
+
+
+def test_progression_coordinates_require_the_fixed_box_and_deliver_protected_helmet(lua):
+    game, engine = stash_game(lua, items=(28051201,), rewards_progression_stashes=1)
+    poll(game, engine)
+    assert progress(lua, game).received_count == 0
+    assert not list(engine.spawns.values())
+    lua.globals().make_cache(30, "esc_treasure_3", "l01_escape", 65535, "invbox")
+    poll(game, engine)
+    record = progress(lua, game).stashes.records[1]
+    assert record.cache_id == 30 and not record.claimed
+    assert engine.markers["30:gamma_ap_progression"]
+    game.physic_object_on_use_callback(engine.boxes[1], lua.globals().db.actor)
+    poll(game, engine)
+    assert not list(engine.spawns.values())
+    game.physic_object_on_use_callback(engine.boxes[30], lua.globals().db.actor)
+    engine.fail_spawn = True
+    poll(game, engine)
+    assert not progress(lua, game).stashes.records[1].claimed
+    engine.fail_spawn = False
+    poll(game, engine)
+    assert progress(lua, game).stashes.records[1].claimed
+    assert not engine.markers["30:gamma_ap_progression"]
+    item = next(iter(engine.spawns.values()))
+    assert item.section == "good_psy_helmet" and item.owner == 0
+    calls = engine.spawn_calls
+    game.load_state(saved_state(lua, game))
+    poll(game, engine)
+    assert engine.spawn_calls == calls

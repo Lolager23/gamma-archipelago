@@ -35,6 +35,7 @@ item_effects = {
     [28051125] = "loot_stash",
     [28051126] = "loot_stash",
     [28051127] = "loot_stash",
+    [28051201] = "progression_stash",
 }
 item_categories = {
     [28051001] = "",
@@ -67,6 +68,7 @@ item_categories = {
     [28051125] = "rewards_loot_stashes",
     [28051126] = "rewards_loot_stashes",
     [28051127] = "rewards_loot_stashes",
+    [28051201] = "rewards_progression_stashes",
 }
 stash_containers = {
     ["esc_treasure_1"] = "l01_escape",
@@ -115,6 +117,10 @@ stash_contents = {
     [28051125] = {"bandage", "bandage", "bandage", "medkit_scientic", "stimpack", "drug_psy_blockade", "ammo_7.62x51_fmj", "ammo_7.62x51_fmj", "ammo_7.62x51_fmj"},
     [28051126] = {"bandage", "bandage", "bandage", "medkit_scientic", "stimpack", "drug_psy_blockade", "ammo_7.62x54_7h1", "ammo_7.62x54_7h1", "ammo_7.62x54_7h1"},
     [28051127] = {"bandage", "bandage", "bandage", "medkit_scientic", "stimpack", "drug_psy_blockade", "ammo_12x70_buck", "ammo_12x70_buck", "ammo_12x70_buck"},
+    [28051201] = {"good_psy_helmet"},
+}
+progression_stashes = {
+    [28051201] = "esc_treasure_3",
 }
 location_by_level = {
     ["l01_escape"] = 28052001,
