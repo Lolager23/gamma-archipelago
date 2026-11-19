@@ -567,7 +567,10 @@
       "classification": "progression",
       "effect": "unlock",
       "category": "rewards_quest_keys",
-      "permission": "living_legend"
+      "permission": "living_legend",
+      "supplies": [
+        "bandage"
+      ]
     },
     {
       "id": 28051502,
@@ -575,7 +578,10 @@
       "classification": "progression",
       "effect": "unlock",
       "category": "rewards_quest_keys",
-      "permission": "mortal_sin"
+      "permission": "mortal_sin",
+      "supplies": [
+        "bandage"
+      ]
     },
     {
       "id": 28051503,
@@ -583,7 +589,10 @@
       "classification": "progression",
       "effect": "unlock",
       "category": "rewards_quest_keys",
-      "permission": "operation_afterglow"
+      "permission": "operation_afterglow",
+      "supplies": [
+        "bandage"
+      ]
     },
     {
       "id": 28051601,
@@ -682,7 +691,10 @@
       "effect": "unlock",
       "category": "rewards_zone_keys",
       "permission": "zone_k00_marsh",
-      "level": "k00_marsh"
+      "level": "k00_marsh",
+      "supplies": [
+        "bandage"
+      ]
     },
     {
       "id": 28051702,
@@ -691,7 +703,10 @@
       "effect": "unlock",
       "category": "rewards_zone_keys",
       "permission": "zone_l02_garbage",
-      "level": "l02_garbage"
+      "level": "l02_garbage",
+      "supplies": [
+        "bandage"
+      ]
     },
     {
       "id": 28051703,
@@ -700,7 +715,10 @@
       "effect": "unlock",
       "category": "rewards_zone_keys",
       "permission": "zone_l03_agroprom",
-      "level": "l03_agroprom"
+      "level": "l03_agroprom",
+      "supplies": [
+        "bandage"
+      ]
     },
     {
       "id": 28051704,
@@ -709,7 +727,10 @@
       "effect": "unlock",
       "category": "rewards_zone_keys",
       "permission": "zone_k01_darkscape",
-      "level": "k01_darkscape"
+      "level": "k01_darkscape",
+      "supplies": [
+        "bandage"
+      ]
     },
     {
       "id": 28051705,
@@ -718,7 +739,10 @@
       "effect": "unlock",
       "category": "rewards_zone_keys",
       "permission": "zone_l04_darkvalley",
-      "level": "l04_darkvalley"
+      "level": "l04_darkvalley",
+      "supplies": [
+        "bandage"
+      ]
     },
     {
       "id": 28051706,
@@ -727,7 +751,10 @@
       "effect": "unlock",
       "category": "rewards_zone_keys",
       "permission": "zone_l05_bar",
-      "level": "l05_bar"
+      "level": "l05_bar",
+      "supplies": [
+        "bandage"
+      ]
     },
     {
       "id": 28051707,
@@ -736,7 +763,10 @@
       "effect": "unlock",
       "category": "rewards_zone_keys",
       "permission": "zone_l06_rostok",
-      "level": "l06_rostok"
+      "level": "l06_rostok",
+      "supplies": [
+        "bandage"
+      ]
     },
     {
       "id": 28051708,
@@ -745,7 +775,10 @@
       "effect": "unlock",
       "category": "rewards_zone_keys",
       "permission": "zone_l07_military",
-      "level": "l07_military"
+      "level": "l07_military",
+      "supplies": [
+        "bandage"
+      ]
     },
     {
       "id": 28051709,
@@ -754,7 +787,10 @@
       "effect": "unlock",
       "category": "rewards_zone_keys",
       "permission": "zone_l08_yantar",
-      "level": "l08_yantar"
+      "level": "l08_yantar",
+      "supplies": [
+        "bandage"
+      ]
     },
     {
       "id": 28051710,
@@ -763,7 +799,10 @@
       "effect": "unlock",
       "category": "rewards_zone_keys",
       "permission": "zone_l09_deadcity",
-      "level": "l09_deadcity"
+      "level": "l09_deadcity",
+      "supplies": [
+        "bandage"
+      ]
     },
     {
       "id": 28051711,
@@ -772,7 +811,10 @@
       "effect": "unlock",
       "category": "rewards_zone_keys",
       "permission": "zone_l10_limansk",
-      "level": "l10_limansk"
+      "level": "l10_limansk",
+      "supplies": [
+        "bandage"
+      ]
     },
     {
       "id": 28051712,
@@ -781,7 +823,10 @@
       "effect": "unlock",
       "category": "rewards_zone_keys",
       "permission": "zone_l10_radar",
-      "level": "l10_radar"
+      "level": "l10_radar",
+      "supplies": [
+        "bandage"
+      ]
     },
     {
       "id": 28051713,
@@ -790,7 +835,10 @@
       "effect": "unlock",
       "category": "rewards_zone_keys",
       "permission": "zone_l10_red_forest",
-      "level": "l10_red_forest"
+      "level": "l10_red_forest",
+      "supplies": [
+        "bandage"
+      ]
     },
     {
       "id": 28051714,
@@ -799,7 +847,10 @@
       "effect": "unlock",
       "category": "rewards_zone_keys",
       "permission": "zone_l11_hospital",
-      "level": "l11_hospital"
+      "level": "l11_hospital",
+      "supplies": [
+        "bandage"
+      ]
     },
     {
       "id": 28051715,
@@ -808,7 +859,10 @@
       "effect": "unlock",
       "category": "rewards_zone_keys",
       "permission": "zone_l11_pripyat",
-      "level": "l11_pripyat"
+      "level": "l11_pripyat",
+      "supplies": [
+        "bandage"
+      ]
     },
     {
       "id": 28051716,
@@ -817,7 +871,10 @@
       "effect": "unlock",
       "category": "rewards_zone_keys",
       "permission": "zone_l12_stancia",
-      "level": "l12_stancia"
+      "level": "l12_stancia",
+      "supplies": [
+        "bandage"
+      ]
     },
     {
       "id": 28051717,
@@ -826,7 +883,10 @@
       "effect": "unlock",
       "category": "rewards_zone_keys",
       "permission": "zone_l12_stancia_2",
-      "level": "l12_stancia_2"
+      "level": "l12_stancia_2",
+      "supplies": [
+        "bandage"
+      ]
     },
     {
       "id": 28051718,
@@ -835,7 +895,10 @@
       "effect": "unlock",
       "category": "rewards_zone_keys",
       "permission": "zone_l13_generators",
-      "level": "l13_generators"
+      "level": "l13_generators",
+      "supplies": [
+        "bandage"
+      ]
     },
     {
       "id": 28051719,
@@ -844,7 +907,10 @@
       "effect": "unlock",
       "category": "rewards_zone_keys",
       "permission": "zone_l03u_agr_underground",
-      "level": "l03u_agr_underground"
+      "level": "l03u_agr_underground",
+      "supplies": [
+        "bandage"
+      ]
     },
     {
       "id": 28051720,
@@ -853,7 +919,10 @@
       "effect": "unlock",
       "category": "rewards_zone_keys",
       "permission": "zone_l04u_labx18",
-      "level": "l04u_labx18"
+      "level": "l04u_labx18",
+      "supplies": [
+        "bandage"
+      ]
     },
     {
       "id": 28051721,
@@ -862,7 +931,10 @@
       "effect": "unlock",
       "category": "rewards_zone_keys",
       "permission": "zone_l08u_brainlab",
-      "level": "l08u_brainlab"
+      "level": "l08u_brainlab",
+      "supplies": [
+        "bandage"
+      ]
     },
     {
       "id": 28051722,
@@ -871,7 +943,10 @@
       "effect": "unlock",
       "category": "rewards_zone_keys",
       "permission": "zone_l10u_bunker",
-      "level": "l10u_bunker"
+      "level": "l10u_bunker",
+      "supplies": [
+        "bandage"
+      ]
     },
     {
       "id": 28051723,
@@ -880,7 +955,10 @@
       "effect": "unlock",
       "category": "rewards_zone_keys",
       "permission": "zone_l12u_sarcofag",
-      "level": "l12u_sarcofag"
+      "level": "l12u_sarcofag",
+      "supplies": [
+        "bandage"
+      ]
     },
     {
       "id": 28051724,
@@ -889,7 +967,10 @@
       "effect": "unlock",
       "category": "rewards_zone_keys",
       "permission": "zone_l12u_control_monolith",
-      "level": "l12u_control_monolith"
+      "level": "l12u_control_monolith",
+      "supplies": [
+        "bandage"
+      ]
     },
     {
       "id": 28051725,
@@ -898,7 +979,10 @@
       "effect": "unlock",
       "category": "rewards_zone_keys",
       "permission": "zone_l13u_warlab",
-      "level": "l13u_warlab"
+      "level": "l13u_warlab",
+      "supplies": [
+        "bandage"
+      ]
     },
     {
       "id": 28051726,
@@ -907,7 +991,10 @@
       "effect": "unlock",
       "category": "rewards_zone_keys",
       "permission": "zone_zaton",
-      "level": "zaton"
+      "level": "zaton",
+      "supplies": [
+        "bandage"
+      ]
     },
     {
       "id": 28051727,
@@ -916,7 +1003,10 @@
       "effect": "unlock",
       "category": "rewards_zone_keys",
       "permission": "zone_jupiter",
-      "level": "jupiter"
+      "level": "jupiter",
+      "supplies": [
+        "bandage"
+      ]
     },
     {
       "id": 28051728,
@@ -925,7 +1015,10 @@
       "effect": "unlock",
       "category": "rewards_zone_keys",
       "permission": "zone_jupiter_underground",
-      "level": "jupiter_underground"
+      "level": "jupiter_underground",
+      "supplies": [
+        "bandage"
+      ]
     },
     {
       "id": 28051729,
@@ -934,7 +1027,10 @@
       "effect": "unlock",
       "category": "rewards_zone_keys",
       "permission": "zone_pripyat",
-      "level": "pripyat"
+      "level": "pripyat",
+      "supplies": [
+        "bandage"
+      ]
     },
     {
       "id": 28051730,
@@ -943,7 +1039,10 @@
       "effect": "unlock",
       "category": "rewards_zone_keys",
       "permission": "zone_labx8",
-      "level": "labx8"
+      "level": "labx8",
+      "supplies": [
+        "bandage"
+      ]
     },
     {
       "id": 28051731,
@@ -952,7 +1051,10 @@
       "effect": "unlock",
       "category": "rewards_zone_keys",
       "permission": "zone_k02_trucks_cemetery",
-      "level": "k02_trucks_cemetery"
+      "level": "k02_trucks_cemetery",
+      "supplies": [
+        "bandage"
+      ]
     },
     {
       "id": 28051732,
@@ -961,7 +1063,10 @@
       "effect": "unlock",
       "category": "rewards_zone_keys",
       "permission": "zone_y04_pole",
-      "level": "y04_pole"
+      "level": "y04_pole",
+      "supplies": [
+        "bandage"
+      ]
     },
     {
       "id": 28051801,
@@ -969,7 +1074,18 @@
       "category": "rewards_progressive_tools",
       "classification": "progression",
       "effect": "progressive_tools",
-      "copies": 3
+      "copies": 3,
+      "tier_supplies": [
+        [
+          "itm_basickit"
+        ],
+        [
+          "itm_advancedkit"
+        ],
+        [
+          "itm_expertkit"
+        ]
+      ]
     },
     {
       "id": 28051811,
@@ -977,7 +1093,11 @@
       "permission": "workshop_repair",
       "category": "rewards_workshop_access",
       "classification": "progression",
-      "effect": "unlock"
+      "effect": "unlock",
+      "supplies": [
+        "gun_oil",
+        "glue_a"
+      ]
     },
     {
       "id": 28051812,
@@ -985,7 +1105,11 @@
       "permission": "workshop_upgrade",
       "category": "rewards_workshop_access",
       "classification": "progression",
-      "effect": "unlock"
+      "effect": "unlock",
+      "supplies": [
+        "duct_tape",
+        "gun_oil"
+      ]
     },
     {
       "id": 28051813,
@@ -993,7 +1117,11 @@
       "permission": "workshop_craft",
       "category": "rewards_workshop_access",
       "classification": "progression",
-      "effect": "unlock"
+      "effect": "unlock",
+      "supplies": [
+        "duct_tape",
+        "glue_a"
+      ]
     },
     {
       "id": 28051821,
@@ -1001,7 +1129,11 @@
       "permission": "recipe_general",
       "category": "rewards_recipe_access",
       "classification": "progression",
-      "effect": "unlock"
+      "effect": "unlock",
+      "supplies": [
+        "duct_tape",
+        "glue_a"
+      ]
     },
     {
       "id": 28051822,
@@ -1009,7 +1141,11 @@
       "permission": "recipe_medical",
       "category": "rewards_recipe_access",
       "classification": "progression",
-      "effect": "unlock"
+      "effect": "unlock",
+      "supplies": [
+        "medkit",
+        "bandage"
+      ]
     },
     {
       "id": 28051823,
@@ -1017,7 +1153,11 @@
       "permission": "recipe_ammo",
       "category": "rewards_recipe_access",
       "classification": "progression",
-      "effect": "unlock"
+      "effect": "unlock",
+      "supplies": [
+        "ammo_9x18_fmj",
+        "ammo_9x18_fmj"
+      ]
     },
     {
       "id": 28051824,
@@ -1025,7 +1165,10 @@
       "permission": "recipe_artefact",
       "category": "rewards_recipe_access",
       "classification": "progression",
-      "effect": "unlock"
+      "effect": "unlock",
+      "supplies": [
+        "lead_box"
+      ]
     }
   ],
   "locations": [

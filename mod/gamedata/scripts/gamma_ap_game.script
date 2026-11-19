@@ -73,7 +73,7 @@ local function read_configuration(incoming)
     return gamma_ap_configuration.parse(content, incoming.session_key, incoming.configuration_key)
 end
 
-local function apply_reward(section)
+local function grant_reward(section)
     if type(section) == "number" then
         if gamma_ap_catalog.item_effects[section] == "progressive_tools" then return true end
         if gamma_ap_catalog.gear_rewards[section] then return gamma_ap_gear_locks.receive(state, section) end
@@ -95,6 +95,14 @@ local function apply_reward(section)
     if not ok or not object then return false end
     printf("[GAMMA AP] Received %s", section)
     return true
+end
+
+local function apply_reward(section)
+    if type(section) == "number" and state.configuration and state.configuration.options.permission_supplies == 1
+        and gamma_ap_catalog.permission_supplies[section] then
+        return gamma_ap_deliveries.receive(state,section,grant_reward)
+    end
+    return grant_reward(section)
 end
 
 function actor_on_update()

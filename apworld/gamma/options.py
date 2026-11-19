@@ -97,6 +97,12 @@ class ChecksRankMilestones(Toggle):
     display_name = "Checks: Rank Milestones"
 
 
+class PermissionSupplies(Toggle):
+    """Attach one-time bounded supplies to supported permission receipts; default off."""
+
+    display_name = "Permission plus supplies"
+
+
 class RewardsWorkshopAccess(Toggle):
     """Separate AP permissions for repair, upgrades and crafting at supported native routes."""
 
@@ -300,6 +306,7 @@ class OptionalCheckPolicy(Choice):
 
 @dataclass
 class GammaOptions(PerGameCommonOptions):
+    permission_supplies: PermissionSupplies
     rewards_workshop_access: RewardsWorkshopAccess
     rewards_recipe_access: RewardsRecipeAccess
     rewards_progressive_tools: RewardsProgressiveTools
