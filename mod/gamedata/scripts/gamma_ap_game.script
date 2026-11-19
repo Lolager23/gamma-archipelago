@@ -41,6 +41,17 @@ local function write_outgoing()
     return true
 end
 
+local function read_confirmed(key)
+    local path, reason = bridge_path("confirmed_checks.txt")
+    if not path then return nil, reason end
+    local file = io.open(path, "rb")
+    if not file then return {} end -- Compatible with older companions.
+    local content = file:read(131073)
+    local closed = file:close()
+    if not closed then return nil, "Confirmed-check read close failed" end
+    return gamma_ap_protocol.parse_confirmed(content, key)
+end
+
 local function give_item(section)
     local object = alife_create_item(section, db.actor)
     if not object then return false end
@@ -55,8 +66,11 @@ function actor_on_update()
     next_poll = now + 500
     local incoming, reason = read_incoming()
     if not incoming then report_error(reason); return end
+    local confirmed, confirmed_error = read_confirmed(incoming.session_key)
+    if not confirmed then report_error(confirmed_error); return end
     local success, delivery_error = gamma_ap_state.apply_pending(state, incoming, give_item)
     if not success then report_error(delivery_error); return end
+    gamma_ap_state.merge_confirmed(state, confirmed)
     gamma_ap_state.check_level(state, level.name())
     local written, write_error = write_outgoing()
     if not written then report_error(write_error); return end

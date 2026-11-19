@@ -39,6 +39,16 @@ def encode_incoming(session_key: str, item_ids: tuple[int, ...]) -> str:
     return "\n".join(lines) + "\n"
 
 
+def encode_confirmed(session_key: str, location_ids: frozenset[int]) -> str:
+    validate_session_key(session_key)
+    if not location_ids <= LOCATION_IDS:
+        raise ProtocolError("Confirmed checks contain an unsupported location")
+    lines = ["GAMMA_AP_CONFIRMED|1", f"session|{session_key}"]
+    lines.extend(f"check|{identity}" for identity in sorted(location_ids))
+    lines.append(f"end|{len(location_ids)}")
+    return "\n".join(lines) + "\n"
+
+
 def decode_outgoing(content: str, session_key: str) -> GameSnapshot:
     validate_session_key(session_key)
     if len(content.encode("utf-8")) > MAX_SNAPSHOT_BYTES or not content.endswith("\n"):

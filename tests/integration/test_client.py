@@ -25,7 +25,10 @@ def run_async(test):
 
 def connected_context():
     bridge = SimpleNamespace(
-        write_history=lambda *_: None, write_notices=lambda *_: None, read_game=lambda _: None
+        write_history=lambda *_: None,
+        write_notices=lambda *_: None,
+        write_confirmed=lambda *_: None,
+        read_game=lambda _: None,
     )
     context = adapter.GammaContext(bridge=bridge)
     context.server_seed_name = "pilot-seed"
@@ -56,6 +59,36 @@ async def test_named_incoming_and_foreign_outgoing_notices_deduplicate_self_tran
     context.on_package("PrintJSON", {**transfer, "receiving": "2"})
     context.on_package("PrintJSON", {**transfer, "receiving": 9})
     assert len(context.session.notices) == 2
+
+
+@run_async
+async def test_reconstructs_confirmed_outgoing_notices_after_a_new_client_connects():
+    context = connected_context()
+    context.send_msgs = AsyncMock()
+    context.checked_locations = {ITEMS[0] + 1000}
+    location = next(iter(context.checked_locations))
+    context.player_names[2] = "Friend"
+    context.slot_info[2] = NetworkSlot("Friend", "Foreign Game", 1)
+    context.on_package("RoomUpdate", {})
+    await context.poll_game_once()
+    assert context.send_msgs.call_args.args[0] == [
+        {"cmd": "LocationScouts", "locations": [location], "create_as_hint": 0}
+    ]
+    context.locations_info[location] = NetworkItem(42, location, 2)
+    context.on_package("LocationInfo", {})
+    assert not context.session.notices  # Data package is not ready yet.
+    context.item_names.update_game("Foreign Game", {"Moon Key": 42})
+    context.on_package("DataPackage", {})
+    assert context.session.notices[f"s:{location}:2:42"].text == "You gave Friend Moon Key"
+    context.locations_info[99] = NetworkItem(42, 99, 2)
+    context.on_package("LocationInfo", {})
+    assert len(context.session.notices) == 1  # Unchecked scouts never announce a transfer.
+    context.sent_notice(NetworkItem(42, location, 9), 9)
+    context.items_received = [NetworkItem(42, location, 2)]
+    context.received_notices()  # Unknown incoming name waits for its package too.
+    context.session = None
+    context.received_notices()
+    context.sent_notice(NetworkItem(42, location, 2), 2)
 
 
 @run_async

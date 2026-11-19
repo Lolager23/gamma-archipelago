@@ -34,6 +34,7 @@ class GammaContext(CommonContext):
         self.bridge = bridge or FileBridge(DEFAULT_GAME_ROOT, allowed_root=DEFAULT_GAME_ROOT)
         self.session: SessionCoordinator | None = None
         self.last_error: str | None = None
+        self.scout_requested: set[int] = set()
 
     async def server_auth(self, password_requested: bool = False) -> None:
         if password_requested and not self.password:
@@ -51,22 +52,14 @@ class GammaContext(CommonContext):
             if self.session and self.session.session_key != key:
                 raise ProtocolError("Restart the companion client before changing seed or slot")
             self.session = self.session or SessionCoordinator(key)
+            self.scout_requested.clear()
+        if command in ("Connected", "RoomUpdate") and self.session:
+            self.session.accept_confirmed(frozenset(self.checked_locations))
+            self.bridge.write_confirmed(self.session.session_key, frozenset(self.checked_locations))
         if command in ("Connected", "ReceivedItems") and self.session:
             if command == "ReceivedItems":
                 self.session.accept_history(tuple(item.item for item in self.items_received))
-                for index, item in enumerate(self.items_received):
-                    self.session.add_notice(
-                        Notice(
-                            f"r:{index}",
-                            index + 1,
-                            reward_message(
-                                self.player_names.get(item.player, f"Player {item.player}"),
-                                self.item_names.lookup_in_game(item.item),
-                                unlock=is_unlock(item.item, GAME),
-                                outgoing=False,
-                            ),
-                        )
-                    )
+                self.received_notices()
             self.bridge.write_history(self.session.session_key, self.session.item_ids)
         if command == "PrintJSON" and self.session:
             item = arguments.get("item")
@@ -79,22 +72,61 @@ class GammaContext(CommonContext):
                 and recipient != self.slot
                 and recipient in self.slot_info
             ):
-                self.session.add_notice(
-                    Notice(
-                        f"s:{item.location}:{recipient}:{item.item}",
-                        0,
-                        reward_message(
-                            self.player_names.get(recipient, f"Player {recipient}"),
-                            self.item_names.lookup_in_slot(item.item, recipient),
-                            unlock=is_unlock(item.item, self.slot_info[recipient].game),
-                            outgoing=True,
-                        ),
-                    )
+                self.sent_notice(item, recipient)
+        if command in ("LocationInfo", "DataPackage", "RoomUpdate") and self.session:
+            self.received_notices()
+            for location, item in self.locations_info.items():
+                if location in self.checked_locations and item.player != self.slot:
+                    self.sent_notice(item, item.player)
+
+    def received_notices(self) -> None:
+        if self.session is None:
+            return
+        for index, item in enumerate(self.items_received):
+            name = self.item_names.lookup_in_game(item.item)
+            if name.startswith("Unknown item"):
+                continue
+            self.session.add_notice(
+                Notice(
+                    f"r:{index}",
+                    index + 1,
+                    reward_message(
+                        self.player_names.get(item.player, f"Player {item.player}"),
+                        name,
+                        unlock=is_unlock(item.item, GAME),
+                        outgoing=False,
+                    ),
                 )
+            )
+
+    def sent_notice(self, item: NetworkItem, recipient: int) -> None:
+        if self.session is None or recipient not in self.slot_info:
+            return
+        name = self.item_names.lookup_in_slot(item.item, recipient)
+        if name.startswith("Unknown item"):
+            return
+        self.session.add_notice(
+            Notice(
+                f"s:{item.location}:{recipient}:{item.item}",
+                0,
+                reward_message(
+                    self.player_names.get(recipient, f"Player {recipient}"),
+                    name,
+                    unlock=is_unlock(item.item, self.slot_info[recipient].game),
+                    outgoing=True,
+                ),
+            )
+        )
 
     async def poll_game_once(self) -> None:
         if not self.session or not self.server or not self.slot:
             return
+        missing = sorted(self.checked_locations - self.scout_requested)[:64]
+        if missing:
+            await self.send_msgs(
+                [{"cmd": "LocationScouts", "locations": missing, "create_as_hint": 0}]
+            )
+            self.scout_requested.update(missing)
         self.bridge.write_notices(self.session.session_key, tuple(self.session.notices.values()))
         snapshot = self.bridge.read_game(self.session.session_key)
         if snapshot is None:
