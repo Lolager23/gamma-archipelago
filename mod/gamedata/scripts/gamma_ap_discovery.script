@@ -63,11 +63,16 @@ function record(state, id)
     return true
 end
 
-function validate(seen, key)
+function validate(seen, key, configuration)
     if seen == nil then return true end
     if type(seen) ~= "table" then return false end
     for id,value in pairs(seen) do
-        if not gamma_ap_catalog.discovery_sources[id] or value ~= true or not key then return false end
+        local source = gamma_ap_catalog.discovery_sources[id]
+        if not source or value ~= true or not key then return false end
+        if type(configuration) ~= "table" or type(configuration.options) ~= "table"
+            or (configuration.exclusions ~= nil and type(configuration.exclusions) ~= "table") then return false end
+        if configuration.options[categories[source.group]] ~= 1
+            or excluded(configuration,source.token) then return false end
     end
     return true
 end
