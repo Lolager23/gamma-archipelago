@@ -1,11 +1,21 @@
 -- Central-save action plans. A successful spawn and a game save are not one transaction.
 local function sections_for(state, id, receipt)
-    local tiers = gamma_ap_catalog.permission_supplies[id]
+    local tiers = gamma_ap_catalog.delivery_contents[id]
     if not tiers then return nil end
+    if gamma_ap_catalog.item_effects[id] == "supply_package" then
+        local index = gamma_ap_catalog.item_categories[id] == "rewards_supply_ammunition"
+            and (state.configuration.options.supply_ammo_calibre or 0)+1 or 1
+        return tiers[index]
+    end
     local previous = 0
     for index=1,receipt-1 do if state.applied_items[index] == id then previous=previous+1 end end
     if gamma_ap_catalog.item_effects[id] == "progressive_tools" then return tiers[previous+1] or {} end
     return previous == 0 and tiers[1] or {}
+end
+
+local function enabled(state, id)
+    return state.session_key and state.configuration and state.allowed_items and state.allowed_items[id]
+        and (gamma_ap_catalog.item_effects[id] == "supply_package" or state.configuration.options.permission_supplies == 1)
 end
 
 function copy(plans)
@@ -25,11 +35,11 @@ function validate(state)
     if state.deliveries == nil then return true end
     if type(state.deliveries) ~= "table" then return false end
     for receipt,plan in pairs(state.deliveries) do
-        if not state.session_key or not state.configuration or state.configuration.options.permission_supplies ~= 1
+        if not state.session_key or not state.configuration
             or not integer(receipt,1,math.min(4000,state.received_count+1))
             or type(plan) ~= "table" or type(plan.sections) ~= "table" or type(plan.uncertain) ~= "boolean" then return false end
         local expected = sections_for(state,plan.item_id,receipt)
-        if not expected or not state.allowed_items or not state.allowed_items[plan.item_id]
+        if not expected or not enabled(state,plan.item_id)
             or #expected ~= #plan.sections or #expected > 8
             or not integer(plan.next_action,1,#expected+1)
             or (plan.uncertain and plan.next_action > #expected)
@@ -53,11 +63,10 @@ local function spawn(state, section)
 end
 
 function receive(state, id, grant_permission)
-    if not state.session_key or not state.allowed_items[id] or not state.configuration
-        or state.configuration.options.permission_supplies ~= 1 then return false,"Supply delivery is not enabled for this receipt" end
+    if not enabled(state,id) then return false,"Supply delivery is not enabled for this receipt" end
     local receipt = state.received_count+1
     local sections = sections_for(state,id,receipt)
-    if not sections then return false,"No supported supplies for this permission" end
+    if not sections then return false,"No supported supplies for this reward" end
     local plan = state.deliveries[receipt]
     if plan and plan.item_id ~= id then return false,"Pending delivery conflicts with ordered item history" end
     if not plan then
@@ -70,21 +79,23 @@ function receive(state, id, grant_permission)
         for _,section in ipairs(plan.sections) do if not ini_sys:section_exist(section) then return false end end
         return true
     end)
-    if not ok or not valid then return false,"Supply sections unavailable; permission receipt remains pending" end
+    if not ok or not valid then return false,"Supply sections unavailable; receipt remains pending" end
     if plan.next_action <= #plan.sections then
         local created,uncertain = spawn(state,plan.sections[plan.next_action])
         plan.uncertain = uncertain
         if not created then return false,uncertain and "Supply creation uncertain; automatic retry blocked" or "Supply creation failed; retry pending" end
         plan.next_action = plan.next_action+1
         -- At most one supply object per poll; the permission/receipt waits for the full plan.
-        if plan.next_action <= #plan.sections then return false,"Supply delivery in progress; permission pending" end
+        if plan.next_action <= #plan.sections then return false,"Supply delivery in progress; receipt pending" end
     end
+    if gamma_ap_catalog.item_effects[id] == "supply_package" then return true end
     return grant_permission(id)
 end
 
 function summary(state)
     local plan = state.deliveries and state.deliveries[state.received_count+1]
     if not plan then return nil end
+    local pending = gamma_ap_catalog.item_effects[plan.item_id] == "supply_package" and "package pending" or "permission pending"
     return "Receipt "..(state.received_count+1)..": "..(plan.next_action-1).."/"..#plan.sections
-        .." supplies delivered; "..(plan.uncertain and "uncertain, retry blocked" or "permission pending")
+        .." supplies delivered; "..(plan.uncertain and "uncertain, retry blocked" or pending)
 end

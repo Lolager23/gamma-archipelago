@@ -97,6 +97,42 @@ class ChecksRankMilestones(Toggle):
     display_name = "Checks: Rank Milestones"
 
 
+class SupplyAmmoCalibre(Choice):
+    """Choose the calibre for ammunition packages; ordinary native box sizes apply."""
+
+    display_name = "Supply package ammunition calibre"
+    option_9x18 = 0
+    option_9x19 = 1
+    option_545 = 2
+    option_556 = 3
+    option_762 = 4
+    default = 0
+
+
+class RewardsSupplyMedical(Toggle):
+    """Enable bounded useful medical supply packages in the optional filler pool."""
+
+    display_name = "rewards supply medical"
+
+
+class RewardsSupplyMaintenance(Toggle):
+    """Enable bounded useful maintenance supply packages in the optional filler pool."""
+
+    display_name = "rewards supply maintenance"
+
+
+class RewardsSupplyAmmunition(Toggle):
+    """Enable bounded useful ammunition supply packages in the optional filler pool."""
+
+    display_name = "rewards supply ammunition"
+
+
+class RewardsSupplyExpedition(Toggle):
+    """Enable bounded useful expedition supply packages in the optional filler pool."""
+
+    display_name = "rewards supply expedition"
+
+
 class PermissionSupplies(Toggle):
     """Attach one-time bounded supplies to supported permission receipts; default off."""
 
@@ -306,6 +342,11 @@ class OptionalCheckPolicy(Choice):
 
 @dataclass
 class GammaOptions(PerGameCommonOptions):
+    supply_ammo_calibre: SupplyAmmoCalibre
+    rewards_supply_medical: RewardsSupplyMedical
+    rewards_supply_maintenance: RewardsSupplyMaintenance
+    rewards_supply_ammunition: RewardsSupplyAmmunition
+    rewards_supply_expedition: RewardsSupplyExpedition
     permission_supplies: PermissionSupplies
     rewards_workshop_access: RewardsWorkshopAccess
     rewards_recipe_access: RewardsRecipeAccess

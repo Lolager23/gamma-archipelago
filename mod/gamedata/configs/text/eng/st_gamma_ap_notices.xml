@@ -297,4 +297,16 @@
     <string id="gamma_ap_reward_28051824">
         <text>Recipe Access: Artefacts</text>
     </string>
+    <string id="gamma_ap_reward_28051901">
+        <text>Medical Supply Package</text>
+    </string>
+    <string id="gamma_ap_reward_28051902">
+        <text>Maintenance Supply Package</text>
+    </string>
+    <string id="gamma_ap_reward_28051903">
+        <text>Ammunition Supply Package</text>
+    </string>
+    <string id="gamma_ap_reward_28051904">
+        <text>Expedition Supply Package</text>
+    </string>
 </string_table>

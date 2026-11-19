@@ -1169,6 +1169,80 @@
       "supplies": [
         "lead_box"
       ]
+    },
+    {
+      "id": 28051901,
+      "name": "Medical Supply Package",
+      "category": "rewards_supply_medical",
+      "classification": "useful",
+      "effect": "supply_package",
+      "filler_weight": 3,
+      "supplies": [
+        "medkit",
+        "bandage",
+        "antirad"
+      ]
+    },
+    {
+      "id": 28051902,
+      "name": "Maintenance Supply Package",
+      "category": "rewards_supply_maintenance",
+      "classification": "useful",
+      "effect": "supply_package",
+      "filler_weight": 2,
+      "supplies": [
+        "gun_oil",
+        "glue_a",
+        "duct_tape"
+      ]
+    },
+    {
+      "id": 28051903,
+      "name": "Ammunition Supply Package",
+      "category": "rewards_supply_ammunition",
+      "classification": "useful",
+      "effect": "supply_package",
+      "filler_weight": 3,
+      "calibre_supplies": [
+        [
+          "ammo_9x18_fmj",
+          "ammo_9x18_fmj",
+          "ammo_9x18_fmj"
+        ],
+        [
+          "ammo_9x19_fmj",
+          "ammo_9x19_fmj",
+          "ammo_9x19_fmj"
+        ],
+        [
+          "ammo_5.45x39_fmj",
+          "ammo_5.45x39_fmj",
+          "ammo_5.45x39_fmj"
+        ],
+        [
+          "ammo_5.56x45_ss190",
+          "ammo_5.56x45_ss190",
+          "ammo_5.56x45_ss190"
+        ],
+        [
+          "ammo_7.62x39_fmj",
+          "ammo_7.62x39_fmj",
+          "ammo_7.62x39_fmj"
+        ]
+      ]
+    },
+    {
+      "id": 28051904,
+      "name": "Expedition Supply Package",
+      "category": "rewards_supply_expedition",
+      "classification": "useful",
+      "effect": "supply_package",
+      "filler_weight": 2,
+      "supplies": [
+        "bread",
+        "water_drink",
+        "bandage"
+      ]
     }
   ],
   "locations": [
