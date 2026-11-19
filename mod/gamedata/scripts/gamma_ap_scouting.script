@@ -1,0 +1,78 @@
+-- Presentation cache and game-owned requests. Receipt/check state is never inferred here.
+local epoch, sequence, changed_at, observed_change = nil,nil,nil,false
+
+local function enabled(state)
+    return state.session_key and state.configuration_key and state.configuration
+end
+
+local function path(name)
+    local root = gamma_ap_paths.appdata_root(getFS():update_path("$app_data_root$", ""))
+    return root and root.."archipelago\\"..name or nil
+end
+
+function request(state, id)
+    if not enabled(state) or (state.configuration.options.scouting_mode or 0) == 0 then return false,"Scouting is disabled in this seed" end
+    if not state.enabled_checks[id] then return false,"Select an enabled AP check" end
+    local count = 0
+    for _ in pairs(state.scout_requests) do count = count+1 end
+    if not state.scout_requests[id] and count >= 512 then return false,"Scouting request limit reached" end
+    state.scout_requests[id] = true
+    return true,"Scouting requested; waiting for the companion"
+end
+
+function previews(state)
+    if not enabled(state) or state.configuration.options.reward_previews ~= 1 then return {} end
+    local tasks,standing = {},{}
+    for id in pairs(state.enabled_checks) do
+        if not state.checks[id] then
+            if id > gamma_ap_catalog.side_task_milestone_base then tasks[#tasks+1] = id
+            elseif gamma_ap_catalog.location_categories[id] == "checks_faction_standing" then standing[#standing+1] = id end
+        end
+    end
+    table.sort(tasks); table.sort(standing)
+    local result = {}
+    if tasks[1] then result[#result+1] = {id=tasks[1],label="Next side-task reward"} end
+    if standing[1] then result[#result+1] = {id=standing[1],label="Next faction-standing reward"} end
+    return result
+end
+
+function write_requests(state)
+    if not enabled(state) or (state.configuration.options.scouting_mode or 0) == 0 then return true end
+    local target = path("scout_requests.txt")
+    if not target then return false,"Scouting requires the isolated development appdata" end
+    local content,reason = gamma_ap_scout_protocol.requests(state)
+    if not content then return false,reason end
+    local file = io.open(target,"wb")
+    if not file then return false,"Cannot write scouting requests" end
+    local written,closed = file:write(content),file:close()
+    if not written or not closed then return false,"Scouting request write failed" end
+    return true
+end
+
+function view(state, now)
+    local empty = {rewards={},status="Companion heartbeat unavailable"}
+    if not enabled(state) then return empty end
+    local target = path("scouted_items.txt")
+    if not target then empty.status="Scouting requires isolated appdata"; return empty end
+    local file = io.open(target,"rb")
+    if not file then return empty end
+    local content = file:read(gamma_ap_scout_protocol.MAX_BYTES+1)
+    local closed = file:close()
+    if not closed then empty.status="Scouting read close failed"; return empty end
+    local frame,reason = gamma_ap_scout_protocol.parse(content,state.session_key,state.configuration_key,state.enabled_checks)
+    if not frame then empty.status=reason; return empty end
+    if frame.epoch ~= epoch then
+        epoch,sequence,changed_at,observed_change = frame.epoch,frame.sequence,now,false
+    elseif frame.sequence > sequence then
+        sequence,changed_at,observed_change = frame.sequence,now,true
+    elseif frame.sequence < sequence then
+        empty.status="Outdated companion snapshot refused"; return empty
+    end
+    frame.status = observed_change and now-changed_at >= 0 and now-changed_at <= 5000
+        and "AP companion heartbeat active" or "Cached data; awaiting companion heartbeat"
+    return frame
+end
+
+function reset()
+    epoch,sequence,changed_at,observed_change = nil,nil,nil,false
+end

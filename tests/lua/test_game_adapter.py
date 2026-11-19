@@ -45,6 +45,7 @@ def load_game(lua):
     module = lua.globals().load_ap_module(str(ROOT / "mod/gamedata/scripts/gamma_ap_game.script"))
     module.io = lua.globals().mock_io
     lua.globals().gamma_ap_notifications.io = lua.globals().mock_io
+    lua.globals().gamma_ap_scouting.io = lua.globals().mock_io
     module.on_game_start()
     return module, lua.globals().engine
 
@@ -76,6 +77,7 @@ def test_callbacks_polling_save_restore_and_initial_inventory(lua):
         "physic_object_on_use_callback",
         "actor_on_item_before_pickup",
         "actor_on_item_before_use",
+        "actor_on_trade",
     }
     set_incoming(engine)
     module.actor_on_update()

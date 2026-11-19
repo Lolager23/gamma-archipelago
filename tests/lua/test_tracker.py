@@ -145,11 +145,11 @@ def test_milestone_names_and_bounded_filter_paging(lua):
     assert len(result.rows) == 41
     module = lua.globals().gamma_ap_tracker
     first, offset, total = module.page(result, None, None, 1)
-    assert len(first) == 6 and offset == 1 and total == 41
+    assert len(first) == 4 and offset == 1 and total == 41
     last, offset, total = module.page(result, None, None, 1000)
-    assert offset == 37 and len(last) == 5
+    assert offset == 41 and len(last) == 1
     assert module.page(result, "Missing region", None, -10)[2] == 0
-    assert len(module.page(result, "Global activities", "available", 1)[0]) == 6
+    assert len(module.page(result, "Global activities", "available", 1)[0]) == 4
     assert len(module.page(result, None, "completed", None)[0]) == 0
 
 

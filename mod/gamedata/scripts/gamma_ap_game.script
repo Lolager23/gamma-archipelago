@@ -137,6 +137,8 @@ function actor_on_update()
     if not ranked then report_error(rank_error); return end
     gamma_ap_state.merge_confirmed(state, confirmed)
     gamma_ap_state.check_level(state, level.name())
+    local services, service_error = gamma_ap_services.poll(state)
+    if not services then report_error(service_error); return end
     local permitted, permission_error = gamma_ap_gear_locks.poll(state)
     if permitted then
         local goal_ready, goal_reason = gamma_ap_goals.poll(state)
@@ -153,6 +155,8 @@ function actor_on_update()
     if not written then report_error(write_error); return end
     local notified, notice_error = gamma_ap_notifications.poll(state)
     if not notified then report_error(notice_error); return end
+    local scouted, scout_error = gamma_ap_scouting.write_requests(state)
+    if not scouted then report_error(scout_error); return end
     if not success then report_error(delivery_error)
     elseif not permitted then report_error(permission_error)
     elseif not zones then report_error(zone_problem)
@@ -253,6 +257,7 @@ end
 function on_game_start()
     state = gamma_ap_state.new_state()
     known_receipts = 0
+    gamma_ap_scouting.reset()
     next_poll = 0
     last_error = nil
     task_hook_registered = false
@@ -282,6 +287,7 @@ function on_game_start()
     RegisterScriptCallback("actor_on_item_take_from_box", actor_on_item_take_from_box)
     RegisterScriptCallback("actor_on_item_before_pickup", actor_on_item_before_pickup)
     RegisterScriptCallback("actor_on_item_before_use", actor_on_item_before_use)
+    RegisterScriptCallback("actor_on_trade", actor_on_trade)
     RegisterScriptCallback("physic_object_on_use_callback", physic_object_on_use_callback)
     register_task_hook()
     printf("[GAMMA AP] Pilot loaded; multiplayer roots are forbidden")
@@ -301,5 +307,22 @@ function tracker_view()
         local helmet = db.actor:object("good_psy_helmet")
         return helmet ~= nil and helmet:condition() > 0 and helmet:condition() <= 1
     end)
-    return gamma_ap_tracker.snapshot(state,known_receipts,last_error,ok and psi)
+    local view = gamma_ap_tracker.snapshot(state,known_receipts,last_error,ok and psi)
+    local scouting = gamma_ap_scouting.view(state,time_global())
+    view.scouted,view.connection_status = scouting.rewards,scouting.status
+    view.previews = gamma_ap_scouting.previews(state)
+    view.scouting_enabled = state.configuration and (state.configuration.options.scouting_mode or 0) > 0
+    return view
+end
+
+function request_scout(id)
+    local queued,reason = gamma_ap_scouting.request(state,id)
+    if not queued then return false,reason end
+    local written,error = gamma_ap_scouting.write_requests(state)
+    return written,written and reason or error
+end
+
+function actor_on_trade(item, sold, money)
+    local ok,reason = gamma_ap_services.traded(state,item,sold,money)
+    if not ok then report_error(reason) end
 end

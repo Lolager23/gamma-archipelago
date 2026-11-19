@@ -150,6 +150,8 @@ def test_travel_configuration_preserves_old_default_digest_and_requires_zone_key
     values = defaults()
     values.pop("zone_unlock_travel")
     values.pop("pda_tracker")
+    for name in ("checks_shops", "checks_faction_standing", "scouting_mode", "reward_previews"):
+        values.pop(name)
     expected = hashlib.sha256(
         json.dumps(values, sort_keys=True, separators=(",", ":")).encode()
     ).hexdigest()

@@ -9,7 +9,7 @@ function new_state()
         goal_complete=false, rank_highest=-1, unlocks={}, quest_pending={}, gear_grants={}, zone_disabled={}, travel_used={}, travel_selection=nil,
         reputation_targets={}, skill_plans=gamma_ap_skills.copy(nil),
         allowed_items=enabled_items(nil), configuration=nil, stashes=gamma_ap_stashes.copy(nil),
-        artefact_sources={}, applying_reward=false }
+        artefact_sources={}, applying_reward=false, scout_requests={} }
 end
 
 function enabled_items(configuration)
@@ -82,6 +82,7 @@ function copy_state(state)
         for id,value in pairs(state.allowed_items) do result.allowed_items[id] = value end
     end
     for id, source in pairs(state.artefact_sources or {}) do result.artefact_sources[id] = source end
+    for id, value in pairs(state.scout_requests or {}) do result.scout_requests[id] = value end
     for id, value in pairs(state.visited_maps or {}) do result.visited_maps[id] = value end
     if state.enabled_checks then
         result.enabled_checks = {}

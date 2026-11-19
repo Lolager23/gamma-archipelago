@@ -1,0 +1,76 @@
+# Step 32: scouting, hints and finite service checks
+
+Stack base: Step 31 / PDA tracker PR #40. New APWorld options:
+
+| Option | Default | Behavior |
+|---|---|---|
+| `scouting_mode` | `disabled` (0) | `local` (1) requests a selected check's real item/recipient. `shared_hints` (2) also creates a persistent AP location hint for an unchecked selected location. |
+| `reward_previews` | Off | Automatically scout the next incomplete side-task and faction-standing milestone; show the actual item and recipient in the PDA. |
+| `checks_shops` | Off | One paid purchase check at each of Sidorovich, Barman and Sakharov. Sales, free transfers, repeated purchases and other NPCs give no new checks. |
+| `checks_faction_standing` | Off | Four permanent checks when any supported non-hostile faction reaches 500/1,000/2,000/3,000 personal goodwill. These are goodwill milestones, not claims about a particular trader's stock tier. |
+
+The PDA uses four-row pages to leave room for reward details. Its Select/Scout
+controls act on the highlighted row. A revealed reward
+always names its recipient; it may belong to another game/player. Unknown data
+stays pending. Preview selection advances only when the previous check is complete.
+Manual scouting is independent of automatic milestone previews. Neither feature
+grants an item, acknowledges a receipt or completes a location.
+
+Shared location hints use upstream `LocationScouts(create_as_hint=2)`: new hints
+are broadcast and retained by AP without spending hint points. This is a location
+scouting option, not an implementation of paid `!hint <item>` searches. Completed
+locations use metadata-only scouts and do not create persistent hints. All modes
+are off by default so no unrequested future rewards are revealed.
+
+Shop and faction-standing checks are marked excluded from required progression
+by default because of NPC/ALife and allegiance constraints. The later rare/missable
+policy increment makes that treatment configurable. Their finite IDs are new;
+old IDs are unchanged. The friendly faction roster is explicit catalogue data.
+
+## Authority and transport
+
+The game owns saved request IDs and `scout_requests.txt`; the companion owns
+`scouted_items.txt`. Both snapshots bind session and configuration, use bounded
+data-only records and fixed development-appdata paths. Metadata labels are
+sanitized UTF-8 hex. At most 512 requested/scouted records are supported, with
+network queries batched to 64. Partial/unknown/wrong-session files are rejected.
+The companion replaces its metadata atomically and rescouts after reconnect.
+
+A changing epoch/sequence heartbeat distinguishes fresh companion polls from
+cached metadata. The UI requires an observed sequence advance before reporting
+an active heartbeat and expires it after five seconds; clock rollback cannot
+make stale data appear active. Metadata may remain useful while offline, but
+the UI labels it cached. A companion heartbeat is not an item acknowledgement.
+
+Ordinary checks/receipts are processed before optional scouting requests; a bad
+scouting request cannot stop that poll's normal checks. Native scouting-file
+write failure also cannot reverse an applied reward. The metadata cache is not
+saved as gameplay state. Saved request IDs are bounded/validated and copy safely;
+older saves without the field migrate to an empty request set.
+
+The new options have legacy defaults. Their zero values are omitted from the
+configuration digest; old configured seeds still bind to the same identity.
+Upgrade the world/client/add-on together for the added fields and sidecars. New
+non-default categories require a newly generated seed. No receipt format or
+published ID is changed; the catalogue adds seven finite location IDs.
+
+## Source probes and acceptance
+
+Pinned AP 0.6.8 documents `LocationScouts`/`LocationInfo`, recipient-slot semantics
+and persistent hint behavior. Installed/extracted Anomaly scripts expose
+`actor_on_trade(item,sell_bye,money)`, `mob_trade.GetTalkingNpc`, story IDs and
+personal-goodwill/hostility queries. Mocked tests exercise the adapter; they do
+not prove callback timing or purchase direction in the active engine.
+
+Native verification is **not run**, reserved for Owen: paid purchases versus sales
+at all three shops; friendliness and standing thresholds; preview advancement;
+local/shared hints and recipient labels; companion disconnect/restart; partial
+files; and save/load request recovery. No game launch, deployment, developer-panel
+change or installed-game write is part of this PR.
+
+The complete verifier passed: 858 covered tests, 32 untraced generator/server
+tests and five Node tests (895 total). Every owned Python runtime module reached
+100% measured line/branch coverage; Lua reached 100% measured executable lines,
+including class methods. Lua branch coverage is not measured. A real AP server
+test verifies scouting metadata and persistent hints without checks, receipts or
+reward notices being generated by scouting.

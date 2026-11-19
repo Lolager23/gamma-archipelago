@@ -54,6 +54,15 @@ def test_two_gamma_slots_and_foreign_game_transfer_restart_and_each_goal(
     players, output = tmp_path / "players", tmp_path / "output"
     players.mkdir()
     values = {**presets()[preset], "goal": goal}
+    scout_case = seed == 20261119
+    if scout_case:
+        values.update(
+            scouting_mode=2,
+            reward_previews=1,
+            checks_shops=1,
+            checks_faction_standing=1,
+            checks_side_task_milestones=1,
+        )
     for name in ("GammaAlpha", "GammaBeta"):
         (players / f"{name}.yaml").write_text(
             json.dumps(
@@ -104,6 +113,43 @@ def test_two_gamma_slots_and_foreign_game_transfer_restart_and_each_goal(
                     await until(lambda client=client: client.session is not None)
                 await quest.connect(address)
                 await until(lambda: quest.slot is not None)
+                if scout_case:
+                    first = clients[0]
+                    requests = first.bridge.directory / "scout_requests.txt"
+                    requests.write_text(
+                        "\n".join(
+                            [
+                                "GAMMA_AP_SCOUTS|1",
+                                f"session|{first.session.session_key}",
+                                f"configuration|{first.configuration.digest}",
+                                "request|28052901",
+                                "end|1",
+                                "",
+                            ]
+                        ),
+                        encoding="ascii",
+                    )
+                    await first.poll_game_once()
+                    await until(lambda: 28052901 in first.locations_info)
+                    await until(
+                        lambda: (
+                            not first.item_names.lookup_in_slot(
+                                first.locations_info[28052901].item,
+                                first.locations_info[28052901].player,
+                            ).startswith("Unknown item")
+                        )
+                    )
+                    await first.poll_game_once()
+                    assert (
+                        "item|28052901|"
+                        in (first.bridge.directory / "scouted_items.txt").read_text()
+                    )
+                    assert any(
+                        hint.location == 28052901 for hint in server.hints[(first.team, first.slot)]
+                    )
+                    assert not server.location_checks[(first.team, first.slot)]
+                    assert not first.session.item_ids
+                    assert not first.session.notices
                 await quest.send_msgs(
                     [{"cmd": "LocationChecks", "locations": list(server.locations[quest.slot])}]
                 )

@@ -19,6 +19,7 @@ from gamma_archipelago.configuration import (  # noqa: E402
     QUANTITY_OPTIONS,
     REWARD_OPTIONS,
 )
+from gamma_archipelago.expansion_settings import EXPANSION_LIMITS  # noqa: E402
 from gamma_archipelago.paths import require_safe_child  # noqa: E402
 
 
@@ -193,6 +194,7 @@ def generate_catalogues() -> None:
         "no_starting_weapons": 1,
         "zone_unlock_travel": 1,
         "pda_tracker": 1,
+        **EXPANSION_LIMITS,
     }
     lines.append("config_limits = {")
     lines.extend(f'    ["{name}"] = {limit},' for name, limit in sorted(limits.items()))

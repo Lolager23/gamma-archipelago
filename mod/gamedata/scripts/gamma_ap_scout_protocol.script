@@ -1,0 +1,47 @@
+-- Data-only scouting sidecars. No record can create an item or complete a check.
+MAX_BYTES = 1048576
+MAX_RECORDS = 512
+
+local function text(hex)
+    if #hex == 0 or #hex > 768 or #hex%2 ~= 0 then return nil end
+    return hex:gsub("%x%x",function(pair) return string.char(tonumber(pair,16)) end)
+end
+
+function requests(state)
+    local ids = {}
+    for id in pairs(state.scout_requests) do ids[#ids+1] = id end
+    if #ids > MAX_RECORDS then return nil,"Too many scouting requests" end
+    table.sort(ids)
+    local lines = {"GAMMA_AP_SCOUTS|1","session|"..state.session_key,
+        "configuration|"..state.configuration_key}
+    for _,id in ipairs(ids) do lines[#lines+1] = "request|"..id end
+    lines[#lines+1] = "end|"..#ids
+    return table.concat(lines,"\n").."\n"
+end
+
+function parse(content, key, configuration, allowed)
+    if type(content) ~= "string" or #content > MAX_BYTES or content:sub(-1) ~= "\n" then
+        return nil,"Scouting information is incomplete or oversized"
+    end
+    local lines = {}
+    for line in content:gmatch("([^\n]*)\n") do lines[#lines+1] = line end
+    if #lines < 5 or lines[1] ~= "GAMMA_AP_SCOUTED|1" or lines[2] ~= "session|"..key
+        or lines[3] ~= "configuration|"..configuration then return nil,"Scouting session/configuration mismatch" end
+    local epoch,sequence = lines[4]:match("^heartbeat|([0-9a-f]+)|(%d+)$")
+    sequence = gamma_ap_protocol.canonical_number(sequence)
+    if not epoch or #epoch ~= 16 or not sequence then return nil,"Invalid companion heartbeat" end
+    local count = gamma_ap_protocol.canonical_number(lines[#lines]:match("^end|(.*)$"))
+    if not count or count > MAX_RECORDS or count ~= #lines-5 then return nil,"Scouting record count mismatch" end
+    local rewards = {}
+    for index=5,#lines-1 do
+        local location,slot,flags,player,item = lines[index]:match("^item|(%d+)|(%d+)|(%d+)|([0-9a-f]+)|([0-9a-f]+)$")
+        location,slot,flags = gamma_ap_protocol.canonical_number(location),
+            gamma_ap_protocol.canonical_number(slot),gamma_ap_protocol.canonical_number(flags)
+        if not location or not allowed[location] or rewards[location] or not slot or slot < 1
+            or not flags or flags > 7 then return nil,"Unknown or duplicate scouted check/recipient" end
+        player,item = text(player),text(item)
+        if not gamma_ap_notice_text.valid("received_item",player,item,0) then return nil,"Unsafe scouted label" end
+        rewards[location] = {player=player,item=item,flags=flags,recipient=slot}
+    end
+    return {epoch=epoch,sequence=sequence,rewards=rewards}
+end

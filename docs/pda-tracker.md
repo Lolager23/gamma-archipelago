@@ -14,7 +14,7 @@ at most once per second while active and also has a manual refresh button.
 - Available: documented access/equipment/quest requirements are currently met.
 - Blocked: missing zone access, connected route, usable psi protection, equipment
   or quest permissions. Global activities retain conservative world restrictions.
-- Region/status filters and six-row pages keep long catalogues bounded. A separate
+- Region/status filters and bounded pages keep long catalogues readable. A separate
   paginated panel shows the selected goal, important permissions, lab visits,
   cumulative kills, side tasks and rank. Disabled check categories do not hide goal
   observation. Random NPC/encounter availability is never implied.

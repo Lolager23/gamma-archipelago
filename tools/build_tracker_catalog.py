@@ -40,4 +40,18 @@ def tracker_lines(catalogue: dict[str, Any]) -> list[str]:
     lines.extend(["}", "tracker_milestones = {"])
     for category, row in catalogue["milestones"].items():
         lines.append(f"    {category}={quoted(row['name'])},")
+    lines.extend(["}", "shop_locations = {"])
+    lines.extend(
+        f"    [{quoted(row['key'])}]={row['id']},"
+        for row in catalogue["locations"]
+        if row["category"] == "checks_shops"
+    )
+    lines.extend(["}", "faction_standing_locations = {"])
+    lines.extend(
+        f"    [{row['minimum']}]={row['id']},"
+        for row in catalogue["locations"]
+        if row["category"] == "checks_faction_standing"
+    )
+    lines.extend(["}", "faction_standing_factions = {"])
+    lines.extend(f"    {quoted(name)}," for name in catalogue.get("faction_standing_factions", []))
     return lines + ["}"]
