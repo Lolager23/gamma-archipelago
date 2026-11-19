@@ -135,6 +135,12 @@ to the local Python/C-backed YAML interaction described in the development guide
 
 ## Remaining acceptance
 
+The callback-probe increment has its own [source findings and evidence matrix](callback-probes.md).
+Its local verifier passes 140 covered tests plus two real-server tests, with 100%
+Python line/branch coverage and 100% executable-line coverage for the five owned
+Lua modules. This remains automated evidence; no callback-probe in-game acceptance
+has been marked passed.
+
 - The Windows/Linux workflow is active at `.github/workflows/verify.yml` after
   the user authorised the required GitHub `workflow` scope. Hosted run evidence
   is linked from [PR #1](https://github.com/Lolager23/gamma-archipelago/pull/1/checks);
