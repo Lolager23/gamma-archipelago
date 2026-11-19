@@ -68,8 +68,9 @@ not infer that a feature is already installed from its source implementation.
 No numbered core implementation branch remains unstarted or unmerged. Follow-up
 coding is driven by the open acceptance cases, with these limits explicit:
 
-- [ ] Complete the original PDA localization/article/plural polish. Current
-  transfer templates are English; full localized grammar is not implemented.
+- [x] Implement PDA grammar polish and translation-ready English resources.
+  Whole-sentence game-language templates use quoted labels and English fallback;
+  native rendering and any future language pack remain user acceptance.
 - [ ] Calibrate playtime and reward/progression balance using recorded runs;
   current estimates are adjustable, uncalibrated scenarios.
 - [ ] Resolve baseline third-party failures that affect a supported integration;
@@ -361,7 +362,8 @@ current inventory receipts prove crash-safe recovery.
   in GAMMA, including delayed display after restoring a PDA.
 - [ ] Verify game/client/server restart, offline checks, old-save rollback and
   failed reward/display handling in disposable development saves.
-- [ ] Finish localized templates/article/plural polish; current templates are English.
+- [x] Finish translation-ready templates and English article/plural/name polish.
+  See [PDA messages](pda-reward-messages.md); native visual acceptance is not run.
 
 Exit: a live two-player or mixed-game test proves both directions and names;
 reconnect/load do not spam or create rewards twice because a notice failed.

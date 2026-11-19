@@ -18,6 +18,12 @@ The game writes its own outgoing snapshot. Each file has one writer. A central
 coordinator handles validation and reconciliation; no event bus or distributed
 service layer is needed.
 
+Optional PDA notices carry semantic transfer fields; the game adapter renders
+whole-sentence string-table templates in the selected language with English
+fallback. This presentation channel owns no item-application state. Its version 2
+sidecar retains version 1 acknowledgement/save identities and accepts old text
+sidecars. See [PDA messages](pda-reward-messages.md) for coordinated bundle upgrades.
+
 ## State and failure boundaries
 
 The AP server owns completed location checks and the ordered item history. The
