@@ -13,7 +13,8 @@ If quest keys are enabled, Living Legend permission is required. The supported
 playtest starting character remains a fresh Loner in Cordon; zone keys also
 require that starting area. Native NPC/task availability is not fabricated.
 
-Full verifier: 511 covered tests plus two real-server cases, all coverage gates
+Full verifier: 510 covered tests plus two real-server cases, all coverage gates
 pass. Tests distinguish conversation from campaign completion, enforce character
 restrictions and fill keyed story seeds. Engine dialogue/goal acceptance is not
 run, reserved for Owen after merge. No launch or deployment occurred.
+

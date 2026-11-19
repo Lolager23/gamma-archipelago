@@ -118,3 +118,17 @@ def test_story_goal_refuses_unsupported_character_modes(lua, restriction):
     poll(game, engine)
     assert not progress(lua, game).goal_complete
     assert "story-enabled faction" in list(engine.logs.values())[-1]
+
+
+def test_living_legend_goal_requires_terminal_dialogue_flag_not_first_meeting(lua):
+    game, engine = story_game(lua, goal=4)
+    engine.info.living_legend_strelok_start = True
+    poll(game, engine)
+    assert not snapshot(engine).goal_complete
+    engine.info.living_legend_done = True
+    poll(game, engine)
+    assert snapshot(engine).goal_complete
+    game.load_state(saved_state(lua, game))
+    engine.info.living_legend_done = False
+    poll(game, engine)
+    assert snapshot(engine).goal_complete

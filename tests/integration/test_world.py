@@ -420,3 +420,21 @@ def test_meet_strelok_goal_respects_living_legend_permission_and_story_route():
     assert event.address is None and event.parent_region.name == "pripyat"
     assert multiworld.worlds[1].fill_slot_data()["goal"] == "meet_strelok"
     assert multiworld.can_beat_game()
+
+
+def test_living_legend_goal_has_a_distinct_terminal_event_after_the_full_route():
+    multiworld = setup_multiworld(
+        GammaWorld,
+        seed=25,
+        options={
+            "goal": 4,
+            "checks_story_milestones": 1,
+            "rewards_quest_keys": 1,
+            "rewards_zone_keys": 1,
+        },
+    )
+    distribute_items_restrictive(multiworld)
+    event = multiworld.get_location("Return After Living Legend", 1)
+    assert event.item.name == "Living Legend Complete"
+    assert multiworld.worlds[1].fill_slot_data()["goal"] == "living_legend"
+    assert multiworld.can_beat_game()

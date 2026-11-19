@@ -19,12 +19,13 @@ function poll(state)
         local ok, disabled = pcall(has_alife_info, "bar_deactivate_radar_done")
         if not ok then return false, "Cannot inspect the native Brain Scorcher shutdown state" end
         state.goal_complete = disabled == true
-    elseif configuration.options.goal == 3 then
+    elseif configuration.options.goal == 3 or configuration.options.goal == 4 then
         local ok, supported, met = pcall(function()
             local valid = not has_alife_info("story_mode_disabled")
                 and not has_alife_info("faction_limited_playthrough")
                 and story_factions[character_community(db.actor)] == true
-            return valid, has_alife_info("living_legend_strelok_start") == true
+            local flag = configuration.options.goal == 3 and "living_legend_strelok_start" or "living_legend_done"
+            return valid, has_alife_info(flag) == true
         end)
         if not ok or not supported then return false, "Strelok goals require a supported story-enabled faction" end
         state.goal_complete = met
