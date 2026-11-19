@@ -20,7 +20,8 @@ the development game through MO2 when Owen performs acceptance. The normal
 The APWorld and client bundle must be upgraded together. The client bundle carries
 the shared catalogue/protocol/session code, so the APWorld does not depend on this
 developer checkout or an editable pip installation. Do not overwrite an existing
-shared Archipelago installation. Developers can instead use the documented
+shared Archipelago installation or install both a loose and archived GAMMA world
+in one runtime. Developers can instead use the documented
 bootstrap/launch tools from a checkout; those prioritize that checkout's source.
 
 Keep original appdata/profile backups and the old seed/client/add-on versions

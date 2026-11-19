@@ -6,127 +6,127 @@ from Options import Choice, DefaultOnToggle, OptionList, PerGameCommonOptions, R
 
 
 class ChecksMaps(DefaultOnToggle):
-    """Enable maps checks; unsupported adapters reject generation."""
+    """Enable maps checks."""
 
     display_name = "Checks: Maps"
 
 
 class ChecksSettlements(Toggle):
-    """Enable settlements checks; unsupported adapters reject generation."""
+    """Enable settlements checks."""
 
     display_name = "Checks: Settlements"
 
 
 class ChecksMutantFirstKills(Toggle):
-    """Enable mutant first kills checks; unsupported adapters reject generation."""
+    """Enable mutant first kills checks."""
 
     display_name = "Checks: Mutant First Kills"
 
 
 class ChecksFactionFirstKills(Toggle):
-    """Enable faction first kills checks; unsupported adapters reject generation."""
+    """Enable faction first kills checks."""
 
     display_name = "Checks: Faction First Kills"
 
 
 class ChecksArtefacts(Toggle):
-    """Enable artefacts checks; unsupported adapters reject generation."""
+    """Enable artefacts checks."""
 
     display_name = "Checks: Artefacts"
 
 
 class ChecksQuestTypes(Toggle):
-    """Enable quest types checks; unsupported adapters reject generation."""
+    """Enable quest types checks."""
 
     display_name = "Checks: Quest Types"
 
 
 class ChecksGearUpgrades(Toggle):
-    """Enable gear upgrades checks; unsupported adapters reject generation."""
+    """Enable gear upgrades checks."""
 
     display_name = "Checks: Gear Upgrades"
 
 
 class ChecksArmourTiers(Toggle):
-    """Enable armour tiers checks; unsupported adapters reject generation."""
+    """Enable armour tiers checks."""
 
     display_name = "Checks: Armour Tiers"
 
 
 class ChecksWeaponTiers(Toggle):
-    """Enable weapon tiers checks; unsupported adapters reject generation."""
+    """Enable weapon tiers checks."""
 
     display_name = "Checks: Weapon Tiers"
 
 
 class ChecksKnifeTiers(Toggle):
-    """Enable knife tiers checks; unsupported adapters reject generation."""
+    """Enable knife tiers checks."""
 
     display_name = "Checks: Knife Tiers"
 
 
 class ChecksKillMilestones(Toggle):
-    """Enable kill milestones checks; unsupported adapters reject generation."""
+    """Enable kill milestones checks."""
 
     display_name = "Checks: Kill Milestones"
 
 
 class ChecksSideTaskMilestones(Toggle):
-    """Enable side task milestones checks; unsupported adapters reject generation."""
+    """Enable side task milestones checks."""
 
     display_name = "Checks: Side Task Milestones"
 
 
 class ChecksStoryMilestones(Toggle):
-    """Enable story milestones checks; unsupported adapters reject generation."""
+    """Enable story milestones checks."""
 
     display_name = "Checks: Story Milestones"
 
 
 class ChecksRankMilestones(Toggle):
-    """Enable rank milestones checks; unsupported adapters reject generation."""
+    """Enable rank milestones checks."""
 
     display_name = "Checks: Rank Milestones"
 
 
 class RewardsLootStashes(Toggle):
-    """Enable loot stashes rewards; unsupported adapters reject generation."""
+    """Enable loot stashes rewards."""
 
     display_name = "Rewards: Loot Stashes"
 
 
 class RewardsProgressionStashes(Toggle):
-    """Enable progression stashes rewards; unsupported adapters reject generation."""
+    """Enable progression stashes rewards."""
 
     display_name = "Rewards: Progression Stashes"
 
 
 class RewardsQuestKeys(Toggle):
-    """Enable quest keys rewards; unsupported adapters reject generation."""
+    """Enable quest keys rewards."""
 
     display_name = "Rewards: Quest Keys"
 
 
 class RewardsFactionReputation(Toggle):
-    """Enable faction reputation rewards; unsupported adapters reject generation."""
+    """Enable faction reputation rewards."""
 
     display_name = "Rewards: Faction Reputation"
 
 
 class RewardsStatLevels(Toggle):
-    """Enable stat levels rewards; unsupported adapters reject generation."""
+    """Enable stat levels rewards."""
 
     display_name = "Rewards: Stat Levels"
 
 
 class RewardsZoneKeys(Toggle):
-    """Enable zone keys rewards; unsupported adapters reject generation."""
+    """Enable zone keys rewards."""
 
     display_name = "Rewards: Zone Keys"
 
 
 class RewardsStartingGearUnlocks(Toggle):
-    """Enable starting gear unlocks rewards; unsupported adapters reject generation."""
+    """Enable starting gear unlocks rewards."""
 
     display_name = "Rewards: Starting Gear Unlocks"
 

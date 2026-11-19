@@ -1,6 +1,18 @@
-# Build and test the integration pilot
+# Build, test and deploy GAMMA Archipelago
 
-## Current scope
+## Current candidate
+
+The 30-step candidate now implements expanded checks/rewards, options, permissions
+and alternate goals. Start with the [implementation index](implementation-status.md)
+and [preset matrix](configuration-and-balance.md). Owen performs engine acceptance
+after each merge; do not launch/load the game automatically. Always use the
+isolated development MO2 launcher for actual playtests.
+
+The complete verifier includes a covered regression pass plus untraced runs for
+6,000 preset seeds and ten actual server cases. Game snapshots in server tests
+are synthetic. Local events do not consume network check slots.
+
+## Original pilot scope (historical)
 
 The pilot has three finite checks: first arrival in Cordon, Garbage and Rostok.
 Its shuffled pool contains a basic toolkit, medkit and bandage. Visiting all three

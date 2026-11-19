@@ -261,6 +261,6 @@ async def run(arguments: Namespace) -> None:
 
 def launch(*arguments: str) -> None:
     logging.basicConfig(level=logging.INFO)
-    parser = get_base_parser(description="GAMMA Archipelago integration pilot")
+    parser = get_base_parser(description="GAMMA Archipelago companion")
     parser.add_argument("--name", required=True, help="Archipelago slot name")
     asyncio.run(run(parser.parse_args(arguments)))

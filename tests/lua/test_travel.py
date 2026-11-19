@@ -37,7 +37,7 @@ def test_trip_requires_preview_then_consumes_once_and_survives_reload(lua):
     game, engine = travel_game(lua)
     assert game.take_unlock_travel() is False
     assert game.preview_unlock_travel() is True
-    assert "esc_smart_terrain_2_12" in list(engine.travel_news.values())[-1]
+    assert "Rookie Village" in list(engine.travel_news.values())[-1]
     assert engine.travels == 0
     assert game.take_unlock_travel() is True
     assert engine.travels == 1 and progress(lua, game).travel_used.l02_garbage
@@ -110,6 +110,18 @@ def test_travel_failure_consumption_distinguishes_refusal_from_uncertain_side_ef
     )
     assert game.take_unlock_travel() is False
     assert bool(progress(lua, game).travel_used.l02_garbage) == (result == "exception")
+
+
+def test_preview_uses_native_settlement_translation_with_a_readable_fallback(lua):
+    game, engine = travel_game(lua)
+    lua.globals().game = lua.table(
+        translate_string=lua.eval("function() return 'Localized village' end")
+    )
+    assert game.preview_unlock_travel() is True
+    assert "Localized village" in list(engine.travel_news.values())[-1]
+    lua.globals().game.translate_string = lua.eval("function(name) return name end")
+    assert game.preview_unlock_travel() is True
+    assert "Rookie Village" in list(engine.travel_news.values())[-1]
 
 
 @pytest.mark.parametrize("vertex", [1.5, float("nan"), "10"])

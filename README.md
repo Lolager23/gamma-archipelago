@@ -1,29 +1,74 @@
 # GAMMA Archipelago
 
-An experimental Archipelago integration for S.T.A.L.K.E.R. Anomaly with G.A.M.M.A.
+Private **1.0.0rc1 candidate** for S.T.A.L.K.E.R. Anomaly with G.A.M.M.A.
+The implementation covers thirty reviewable increments. Engine acceptance
+belongs to Owen after each merge; this is not an accepted or publicly released v1.
 
-The first delivery establishes an isolated development installation and proves
-location checks and item delivery. It is not the finished randomiser. Multiplayer
-compatibility is a separate research task; the existing multiplayer installation
-is protected throughout development.
+| Feature | Implemented scope |
+|---|---|
+| Checks | 14 categories: 33 maps, 18 settlements, mutants/factions, artefacts, quests, story, equipment, kill/task totals and rank |
+| Rewards | 7 categories: white/orange stashes, quest keys, goodwill, Haruka skills, zone keys and starting-equipment permissions |
+| Starts | Normal, absent or AP-locked gear; supply percentages and No Starting Weapons |
+| Goals | Calibrated psi protection, Brain Scorcher, Meet Strelok, Living Legend, all five labs, and the development three-region tour |
+| PDA/MCM | Named transfers, no-PDA queues, toolkit test and optional previewed unlock travel |
+| Recovery | Seed/slot binding, ordered receipts, durable checks, notice recovery and malformed-save refusal |
 
-## Project documents
+See the [implementation/PR index](docs/implementation-status.md),
+[presets](docs/configuration-and-balance.md), and
+[remaining engine acceptance](docs/multiworld-acceptance.md).
+The full preset has 257 network checks. Local progression events are separate.
 
-- [Agent instructions](AGENTS.md): repository working rules drawn from the documents below.
-- [Execution plan](docs/execution-plan.md): investigation through release.
-- [Expanded checklist](docs/expansion-plan.md): requested check/reward toggles, PDA messages and five alternate goals.
-- [Branch roadmap](docs/branch-roadmap.md): ordered, reviewable increments.
-- [Randomisation design](docs/randomisation-plan.md): candidates, MVP, exploration and completion.
-- [Coding standard](docs/coding-standard.md): clarity, ownership and test requirements.
-- [Git workflow](docs/git-workflow.md): identity, commits, branches and PRs.
-- [Architecture](docs/architecture.md): responsibilities and persistence boundaries.
-- [Development environment](docs/development-environment.md): installation and isolation.
-- [Resources](docs/resources.md): primary documentation and version policy.
-- [Build and test guide](docs/development-guide.md): commands, pilot scope and game acceptance.
-- [Verification record](docs/verification-record.md): measured results and remaining checks.
-- [Mod Configuration Menu](docs/mod-configuration-menu.md): Archipelago page and toolkit test action.
-- [Callback probes](docs/callback-probes.md): diagnostic add-on, source findings and live test procedure.
+## Development and acceptance
 
-Game files, downloaded archives, credentials and personal saves are not distributed
-in this repository. Install Anomaly and GAMMA independently using their official
-instructions. No affiliation with GSC Game World, GAMMA or Archipelago is implied.
+The normal multiplayer installations `D:/Anomaly` and `D:/GAMMA` are protected.
+The isolated pair is `D:/AnomalyAP` and `D:/GAMMAAP`; the desktop **GAMMA AP DEV**
+shortcut opens that folder. **Launch through its Mod Organizer**, so enabled mods
+load. Verification tools never launch the game.
+
+After merging a step, close the game, follow the full appdata/profile backup
+procedure, and deploy copies from that exact source revision:
+
+```text
+python tools/deploy_mod.py --component pilot
+```
+
+Follow the [development guide](docs/development-guide.md) and
+[environment/restore policy](docs/development-environment.md). Keep world, client
+and add-on revisions together. The [portable companion guide](docs/portable-client.md)
+covers packaged installation. Source bootstrap creates a loose development world;
+do not install a second archived copy into that same runtime.
+
+## Verification and candidate packaging
+
+Python 3.12 and Archipelago 0.6.8 are the tested tooling baseline:
+
+```text
+python tools/verify.py --ap-source <pinned-upstream-checkout> --ap-root <separate-runtime>
+```
+
+The verifier runs lint, formatting, typing, Python/Lua regressions, independent
+coverage gates, 6,000 preset seeds, category/goal combinations, reproducible
+packages, archive loading and ten real-server cases. Server game snapshots are
+synthetic; these tests do not replace a GAMMA playthrough.
+
+From a clean committed checkout:
+
+```text
+python tools/prepare_release.py
+```
+
+This creates a local candidate, source/file manifest and checksums. It never
+merges, tags or publishes. See [v1 preparation](docs/version-one-release.md) for
+remaining acceptance, review and owner licence decisions.
+
+## Documents
+
+- [Agent instructions](AGENTS.md), [coding standard](docs/coding-standard.md), [Git workflow](docs/git-workflow.md), [architecture](docs/architecture.md).
+- [Execution plan](docs/execution-plan.md), [expanded checklist](docs/expansion-plan.md), [branch roadmap](docs/branch-roadmap.md), [randomisation goals](docs/randomisation-plan.md).
+- [Primary resources](docs/resources.md), [verification record](docs/verification-record.md), [callback probes](docs/callback-probes.md), [hardening](docs/release-hardening.md).
+- [Change log](CHANGELOG.md), [licence review](docs/licence-review.md), [notice](NOTICE.md).
+
+Game files, assets, credentials and personal saves are not distributed. Install
+Anomaly/GAMMA through official instructions. No affiliation with their owners or
+Archipelago is implied. In-world multiplayer and exploratory stretch goals remain
+separate future work.
