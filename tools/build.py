@@ -36,6 +36,13 @@ def generate_catalogues() -> None:
     lines.extend(
         f'    [{item["id"]}] = "{item.get("category", "")}",' for item in catalogue["items"]
     )
+    lines.extend(["}", "reputation_rewards = {"])
+    for item in catalogue["items"]:
+        if item.get("effect") == "reputation":
+            lines.append(
+                f'    [{item["id"]}] = {{faction="{item["faction"]}", '
+                f"bonus={item['bonus']}, cap={item['cap']}}},"
+            )
     lines.extend(["}", "stash_containers = {"])
     lines.extend(
         f'    ["{name}"] = "{level}",' for name, level in catalogue["stash_containers"].items()

@@ -1,0 +1,29 @@
+-- Personal faction goodwill only; never change faction alliances or NPC flags.
+
+function receive(state, item_id)
+    local reward = gamma_ap_catalog.reputation_rewards[item_id]
+    if not state.session_key or not state.expanded or not state.allowed_items[item_id] or not reward then
+        return false, "Faction reward is disabled in this seed"
+    end
+    if not relation_registry or type(relation_registry.community_goodwill) ~= "function"
+        or type(relation_registry.set_community_goodwill) ~= "function" then
+        return false, "Faction rewards require the personal goodwill API"
+    end
+    local ok, current = pcall(relation_registry.community_goodwill, reward.faction, db.actor:id())
+    if not ok or type(current) ~= "number" or current ~= math.floor(current)
+        or current < -2147483648 or current > 2147483647 then
+        return false, "Faction goodwill query returned an invalid value"
+    end
+    local receipt = state.received_count + 1
+    local target = state.reputation_targets[receipt]
+    if not target then
+        target = math.max(current, math.min(reward.cap, current + reward.bonus))
+        state.reputation_targets[receipt] = target
+    end
+    if current >= target then return true end
+    local changed = pcall(relation_registry.set_community_goodwill, reward.faction, db.actor:id(), target)
+    if not changed then return false, "Faction goodwill update failed; the same target will retry" end
+    local queried, actual = pcall(relation_registry.community_goodwill, reward.faction, db.actor:id())
+    if not queried or actual ~= target then return false, "Faction goodwill update was not confirmed" end
+    return true
+end

@@ -448,6 +448,86 @@
       ],
       "cache": "esc_treasure_3",
       "level": "l01_escape"
+    },
+    {
+      "id": 28051301,
+      "name": "Faction Goodwill: stalker",
+      "classification": "useful",
+      "effect": "reputation",
+      "category": "rewards_faction_reputation",
+      "faction": "stalker",
+      "bonus": 250,
+      "cap": 3000
+    },
+    {
+      "id": 28051302,
+      "name": "Faction Goodwill: csky",
+      "classification": "useful",
+      "effect": "reputation",
+      "category": "rewards_faction_reputation",
+      "faction": "csky",
+      "bonus": 250,
+      "cap": 3000
+    },
+    {
+      "id": 28051303,
+      "name": "Faction Goodwill: dolg",
+      "classification": "useful",
+      "effect": "reputation",
+      "category": "rewards_faction_reputation",
+      "faction": "dolg",
+      "bonus": 250,
+      "cap": 3000
+    },
+    {
+      "id": 28051304,
+      "name": "Faction Goodwill: freedom",
+      "classification": "useful",
+      "effect": "reputation",
+      "category": "rewards_faction_reputation",
+      "faction": "freedom",
+      "bonus": 250,
+      "cap": 3000
+    },
+    {
+      "id": 28051305,
+      "name": "Faction Goodwill: ecolog",
+      "classification": "useful",
+      "effect": "reputation",
+      "category": "rewards_faction_reputation",
+      "faction": "ecolog",
+      "bonus": 250,
+      "cap": 3000
+    },
+    {
+      "id": 28051306,
+      "name": "Faction Goodwill: killer",
+      "classification": "useful",
+      "effect": "reputation",
+      "category": "rewards_faction_reputation",
+      "faction": "killer",
+      "bonus": 250,
+      "cap": 3000
+    },
+    {
+      "id": 28051307,
+      "name": "Faction Goodwill: army",
+      "classification": "useful",
+      "effect": "reputation",
+      "category": "rewards_faction_reputation",
+      "faction": "army",
+      "bonus": 250,
+      "cap": 3000
+    },
+    {
+      "id": 28051308,
+      "name": "Faction Goodwill: bandit",
+      "classification": "useful",
+      "effect": "reputation",
+      "category": "rewards_faction_reputation",
+      "faction": "bandit",
+      "bonus": 250,
+      "cap": 3000
     }
   ],
   "locations": [
