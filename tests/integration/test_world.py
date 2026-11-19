@@ -393,3 +393,12 @@ def test_zone_chain_fills_previous_failure_seeds_and_keeps_yantar_before_psi_rou
         assert len(locked) == 32 and all(loc.locked for loc in locked)
         distribute_items_restrictive(multiworld)
         assert multiworld.can_beat_game()
+
+
+def test_scorcher_goal_requires_reaching_x19_with_psi_protection():
+    multiworld = setup_multiworld(GammaWorld, seed=23, options={"goal": 2, "rewards_zone_keys": 1})
+    distribute_items_restrictive(multiworld)
+    event = multiworld.get_location("Shut Down Brain Scorcher", 1)
+    assert event.address is None and event.parent_region.name == "l10u_bunker"
+    assert multiworld.worlds[1].fill_slot_data()["goal"] == "brain_scorcher"
+    assert multiworld.can_beat_game()

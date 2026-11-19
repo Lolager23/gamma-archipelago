@@ -12,6 +12,10 @@ function poll(state)
         end)
         if not ok then return false, "Cannot inspect calibrated psi protection" end
         state.goal_complete = usable
+    elseif configuration.options.goal == 2 then
+        local ok, disabled = pcall(has_alife_info, "bar_deactivate_radar_done")
+        if not ok then return false, "Cannot inspect the native Brain Scorcher shutdown state" end
+        state.goal_complete = disabled == true
     end
     return true
 end

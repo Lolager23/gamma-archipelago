@@ -60,3 +60,28 @@ def test_goal_inventory_api_failure_is_visible_before_reporting_victory(lua):
     poll(game, engine)
     assert not progress(lua, game).goal_complete
     assert "Cannot inspect" in list(engine.logs.values())[-1]
+
+
+def test_brain_scorcher_goal_requires_native_shutdown_not_key_or_region_entry(lua):
+    game, engine = goal_game(lua, goal=2)
+    lua.execute("""has_alife_info=function(name) assert(name=='bar_deactivate_radar_done');
+        return engine.shutdown end""")
+    poll(game, engine)
+    assert not snapshot(engine).goal_complete
+    engine.shutdown = "true"
+    poll(game, engine)
+    assert not snapshot(engine).goal_complete
+    engine.shutdown = True
+    poll(game, engine)
+    assert snapshot(engine).goal_complete
+    game.load_state(saved_state(lua, game))
+    engine.shutdown = False
+    poll(game, engine)
+    assert snapshot(engine).goal_complete
+
+
+def test_unavailable_shutdown_api_does_not_report_victory(lua):
+    game, engine = goal_game(lua, goal=2)
+    poll(game, engine)
+    assert not progress(lua, game).goal_complete
+    assert "shutdown state" in list(engine.logs.values())[-1]
