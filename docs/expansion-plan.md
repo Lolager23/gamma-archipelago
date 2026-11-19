@@ -5,6 +5,9 @@ adds Steps 31–40 as stacked PRs starting with the PDA tracker. It includes rew
 options, scouting, regional/delivery displays, discovery quotas, opening protection
 and pool/pacing previews. This extends the historical status below; native
 verification remains Owen's, with no automatic deployment or game launch.
+See the [stacked delivery and remaining acceptance](expansion-two-acceptance.md)
+for the new scope; the dated counts and merge states below describe the earlier
+thirty-step implementation.
 
 Updated **19 November 2026**, after the individual reviews and merges of PRs
 #2–#35, through merged implementation `ddb9ee8`. All thirty core increments and

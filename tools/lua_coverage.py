@@ -8,7 +8,7 @@ EXPECTED: dict[str, set[int]] = {}
 EXECUTED: dict[str, set[int]] = {}
 
 TRACE_SETUP = r"""
-ap_coverage = {expected={}, executed={}, visited={}}
+ap_coverage = {expected={}, executed={}, visited={}, modules={}}
 function ap_collect_function(fn)
     if ap_coverage.visited[fn] then return end
     ap_coverage.visited[fn] = true
@@ -46,6 +46,7 @@ function load_ap_module(path)
     setfenv(chunk,env)
     ap_collect_function(chunk)
     chunk()
+    ap_coverage.modules[#ap_coverage.modules+1] = env
     ap_collect_value(env,0)
     return env
 end
@@ -53,7 +54,13 @@ end
 
 
 def collect(runtime):
-    runtime.execute("debug.sethook()")
+    # Factories install closures into private callback tables after module load.
+    # Revisit owned module roots so uncalled callback bodies count as missing too.
+    runtime.execute("""
+        debug.sethook()
+        ap_coverage.visited = {}
+        for _,module in ipairs(ap_coverage.modules) do ap_collect_value(module,0) end
+    """)
     for kind, destination in (("expected", EXPECTED), ("executed", EXECUTED)):
         for source, lines in runtime.globals().ap_coverage[kind].items():
             name = Path(source.removeprefix("@")).name

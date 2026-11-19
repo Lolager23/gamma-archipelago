@@ -1,5 +1,7 @@
+import pytest
 from lupa.luajit21 import LuaRuntime
 
+from tools import lua_coverage
 from tools.lua_coverage import TRACE_SETUP
 
 
@@ -21,3 +23,27 @@ def test_collector_counts_unexecuted_class_methods_and_handles_cycles(tmp_path):
     assert expected[4] is True and not executed[4]
     assert module.window.render(module.window) == "tracked"
     assert executed[4] is True
+
+
+@pytest.mark.parametrize("invoke", [False, True])
+def test_collector_counts_callbacks_created_after_module_load(tmp_path, monkeypatch, invoke):
+    source = tmp_path / "gamma_ap_factory_probe.script"
+    source.write_text(
+        "local callbacks={}\nfunction install()\n"
+        " callbacks.hidden=function()\n"
+        "  local message='deferred'\n  return message\n end\nend\n"
+        "function callback() return callbacks.hidden end\n",
+        encoding="utf-8",
+    )
+    runtime = LuaRuntime(unpack_returned_tuples=True)
+    runtime.execute("jit.off(); jit.flush()")
+    runtime.execute(TRACE_SETUP)
+    module = runtime.globals().load_ap_module(str(source))
+    module.install()
+    if invoke:
+        assert module.callback()() == "deferred"
+    monkeypatch.setattr(lua_coverage, "EXPECTED", {})
+    monkeypatch.setattr(lua_coverage, "EXECUTED", {})
+    lua_coverage.collect(runtime)
+    assert 4 in lua_coverage.EXPECTED[source.name]
+    assert (4 in lua_coverage.EXECUTED[source.name]) == invoke

@@ -1,5 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { advancedOptions, syncAdvanced } from "../../web/generator/ui.js";
 import {
   DraftConfiguration,
   playerNameError,
@@ -92,4 +93,53 @@ test("quota exclusions and custom thresholds remain draft choices when profiles 
   assert.deepEqual(preset.discovery_exclusions,["mutant:dog"]);
   form.edit("grind_profile",0);
   assert.deepEqual(form.options.kill_milestones,[10,25]);
+});
+
+test("advanced controls have labels, bounded values and preserve editable quota state", () => {
+  const oldDocument = globalThis.document;
+  const oldOption = globalThis.Option;
+  const nodes = new Map();
+  const makeNode = () => ({
+    dataset: {}, attributes: {}, listeners: {}, children: [],
+    append(...children) { this.children.push(...children); },
+    add(child) { this.children.push(child); },
+    replaceChildren(...children) { this.children = children; },
+    setAttribute(key, value) { this.attributes[key] = value; },
+    addEventListener(key, value) { this.listeners[key] = value; },
+  });
+  for (const id of ["advanced-options", "discovery-exclusions", "kill-milestones", "task-milestones"])
+    nodes.set(id, makeNode());
+  globalThis.document = {
+    createElement: makeNode,
+    getElementById: (id) => nodes.get(id),
+    querySelectorAll: () => nodes.get("advanced-options").children.map((row) => row.children[0]),
+  };
+  globalThis.Option = class { constructor(text, value) { this.text = text; this.value = value; } };
+  try {
+    const options = {mutant_discovery_mode: 0, mutant_discovery_count: 15,
+      grind_profile: 1, discovery_exclusions: ["mutant:dog"]};
+    const edits = [];
+    advancedOptions({advanced: [
+      {key: "mutant_discovery_mode", label: "Mutant discovery mode", choices: ["Per type", "First N"]},
+      {key: "mutant_discovery_count", label: "Mutant discovery count", maximum: 25},
+    ], discovery_types: [{token: "mutant:dog"}]}, options, (...edit) => edits.push(edit));
+    const [mode, count] = document.querySelectorAll("[data-advanced]");
+    assert.equal(mode.attributes["aria-label"], "Mutant discovery mode");
+    assert.equal(count.attributes["aria-label"], "Mutant discovery count");
+    assert.equal(count.max, 25);
+    syncAdvanced(options);
+    assert.equal(count.disabled, true);
+    assert.equal(nodes.get("task-milestones").disabled, true);
+    syncAdvanced({...options, mutant_discovery_mode: 1, grind_profile: 0});
+    assert.equal(count.disabled, false);
+    assert.equal(count.value, 15);
+    assert.equal(nodes.get("task-milestones").disabled, false);
+    count.value = "12"; count.listeners.change();
+    count.value = ""; count.listeners.change();
+    assert.deepEqual(edits, [["mutant_discovery_count", 12], ["mutant_discovery_count", null]]);
+    assert.equal(nodes.get("discovery-exclusions").children[0].selected, true);
+  } finally {
+    globalThis.document = oldDocument;
+    globalThis.Option = oldOption;
+  }
 });

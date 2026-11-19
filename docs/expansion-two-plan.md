@@ -3,8 +3,11 @@
 Requested 19 November 2026. This extends the original thirty-step plan. All rows
 are proposed until their source and automated evidence are recorded. Engine
 acceptance belongs to Owen; do not launch, load or deploy the game automatically.
-Use stacked draft PRs, beginning at PDA localization PR #38. The unrelated
-compatibility investigation PR #39 remains independent. Do not merge the stack.
+The implementation was delivered as stacked draft PRs beginning at PDA
+localization #38, with compatibility investigation #39 independent. Owen then
+authorized sequential source review, fixes and merges; see the
+[merge-validation record](expansion-two-merge-review.md). Native acceptance stays
+with Owen, and public release remains a separate decision.
 
 | Step | Branch | Contract | Native acceptance |
 |---|---|---|---|
@@ -23,6 +26,10 @@ Each PR builds on the previous branch. Add fixes without rewriting published
 history. Run the complete verifier and inspect Windows/Linux CI for every head.
 Use independent tooling runtimes; never change installed source, local developer
 panel, protected multiplayer trees or running AP sessions for these PRs.
+
+The [delivery index and native acceptance matrix](expansion-two-acceptance.md)
+link the stacked PRs and distinguish source automation from Owen's remaining
+game verification and balance calibration.
 
 ## Options and semantics
 
@@ -80,6 +87,10 @@ not measure walking, repair or random-spawn waiting.
 
 ## Acceptance
 
+Counts below record each original implementation increment. The subsequent
+[merge review](expansion-two-merge-review.md) adds compatibility integration and
+regressions; each linked PR records its reviewed head's updated verifier/CI results.
+
 | Step | Source and automation | Native |
 |---|---|---|
 | 31 | Implemented; full verifier passed (826 tests) | Not run |
@@ -91,7 +102,7 @@ not measure walking, repair or random-spawn waiting.
 | 37 | Implemented; full verifier passed (981 tests) | Not run |
 | 38 | Implemented; full verifier passed (988 tests) | Not run |
 | 39 | Implemented; full verifier passed (1,034 tests) | Not run; calibration pending |
-| 40 | Not implemented | Not run; release gates remain |
+| 40 | Implemented; full verifier passed (1,041 tests) | Not run; release gates remain |
 
 Research references inspected 19 November 2026, used as design ideas rather than
 Anomaly API evidence:

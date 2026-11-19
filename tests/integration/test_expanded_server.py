@@ -45,6 +45,7 @@ def write_snapshot(client, *, received=0):
     [
         ("mvp", 2, 20261119),
         ("mvp", 2, 20261120),
+        ("extended", 4, 20261121),
         *[("full_story", goal, 20261200 + goal) for goal in range(6)],
     ],
 )
@@ -55,6 +56,19 @@ def test_two_gamma_slots_and_foreign_game_transfer_restart_and_each_goal(
     players.mkdir()
     values = {**presets()[preset], "goal": goal}
     scout_case = seed == 20261119
+    expansion_case = seed == 20261121
+    if expansion_case:
+        values.update(
+            rewards_convenience=1,
+            rewards_supply_ammunition=1,
+            supply_ammo_calibre=4,
+            mutant_discovery_count=15,
+            artefact_discovery_count=20,
+            discovery_exclusions=["mutant:bibliotekar", "artefact:af_compass"],
+            start_inventory={"Equipment Unlock: PDA": 1, "Zone Key: Garbage": 1},
+            start_inventory_from_pool={"Progressive Tools": 2},
+            generation_preview=1,
+        )
     if scout_case:
         values.update(
             scouting_mode=2,
@@ -111,6 +125,10 @@ def test_two_gamma_slots_and_foreign_game_transfer_restart_and_each_goal(
                     clients.append(client)
                     await client.connect(address)
                     await until(lambda client=client: client.session is not None)
+                    if expansion_case:
+                        await until(lambda client=client: len(client.session.item_ids) >= 4)
+                        assert client.session.item_ids.count(28051801) == 2
+                        assert client.expanded and client.require_configuration
                 await quest.connect(address)
                 await until(lambda: quest.slot is not None)
                 if scout_case:
@@ -157,7 +175,7 @@ def test_two_gamma_slots_and_foreign_game_transfer_restart_and_each_goal(
                     write_snapshot(client)
                     await client.poll_game_once()
                 for client in clients:
-                    expected = len(client.session.allowed_locations)
+                    expected = len(client.session.allowed_locations) + (4 if expansion_case else 0)
                     await until(
                         lambda client=client, expected=expected: (
                             len(client.items_received) == expected
@@ -178,6 +196,9 @@ def test_two_gamma_slots_and_foreign_game_transfer_restart_and_each_goal(
                     write_snapshot(client, received=expected)
                     await client.poll_game_once()
                     assert len(client.session.notices) >= expected
+                    if expansion_case:
+                        assert client.session.item_ids.count(28051801) == 3
+                        assert client.session.item_ids.count(28051911) == 3
                 assert any(item.player != clients[0].slot for item in clients[0].items_received)
                 await until(lambda: any(key.startswith("s:") for key in clients[0].session.notices))
                 original = clients[0]

@@ -163,8 +163,12 @@ async function download(path) {
 }
 
 function bindControls() {
-  $("discovery-exclusions").addEventListener("change",() =>
-    changeOption("discovery_exclusions",Array.from($("discovery-exclusions").selectedOptions,node=>node.value)));
+  $("discovery-exclusions").addEventListener("change", () =>
+    changeOption(
+      "discovery_exclusions",
+      Array.from($("discovery-exclusions").selectedOptions, (node) => node.value),
+    ),
+  );
   $("preset").addEventListener("change", loadPreset);
   $("goal").addEventListener("change", () =>
     changeOption("goal", Number($("goal").value)),
