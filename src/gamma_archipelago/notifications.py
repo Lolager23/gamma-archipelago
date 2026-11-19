@@ -3,7 +3,8 @@
 import re
 from dataclasses import dataclass
 
-from .catalog import GAME, ITEM_EFFECTS, MAX_ITEMS
+from .catalog import GAME, ITEM_EFFECTS, ITEM_IDS, MAX_ITEMS
+from .notice_text import TransferMessage, clean_label, render_english
 from .protocol import ProtocolError, validate_session_key
 
 MAX_NOTICES = MAX_ITEMS * 2
@@ -28,15 +29,6 @@ def _valid_identity(value: str) -> bool:
     return item != "-0" and abs(int(item)) <= MAX_NETWORK_ID
 
 
-def clean_label(value: str) -> str:
-    """Keep Unicode names while removing PDA markup, delimiters and control text."""
-    cleaned = "".join(
-        character if character.isprintable() and character not in "%[]<>|" else " "
-        for character in value[:96]
-    )
-    return " ".join(cleaned.split()) or "Archipelago"
-
-
 def is_unlock(item_id: int, game: str) -> bool:
     """Foreign progression flags do not imply equipment/permission semantics."""
     return game == GAME and ITEM_EFFECTS.get(item_id) in {"unlock", "skill"}
@@ -44,9 +36,8 @@ def is_unlock(item_id: int, game: str) -> bool:
 
 def reward_message(player: str, item: str, *, unlock: bool, outgoing: bool) -> str:
     player, item = clean_label(player), clean_label(item)
-    if outgoing:
-        return f"You unlocked {player}'s {item}" if unlock else f"You gave {player} {item}"
-    return f"{player} unlocked your {item}" if unlock else f"{player} gave you a {item}"
+    kind = ("sent_" if outgoing else "received_") + ("unlock" if unlock else "item")
+    return render_english(TransferMessage(kind, player, item))
 
 
 @dataclass(frozen=True)
@@ -54,6 +45,29 @@ class Notice:
     identity: str
     minimum_received: int
     text: str
+    transfer: TransferMessage | None = None
+
+
+def transfer_notice(
+    identity: str,
+    minimum_received: int,
+    player: str,
+    item: str,
+    *,
+    item_id: int,
+    game: str,
+    outgoing: bool,
+) -> Notice:
+    kind = ("sent_" if outgoing else "received_") + (
+        "unlock" if is_unlock(item_id, game) else "item"
+    )
+    message = TransferMessage(
+        kind,
+        clean_label(player),
+        clean_label(item),
+        item_id if game == GAME and item_id in ITEM_IDS else 0,
+    )
+    return Notice(identity, minimum_received, render_english(message), message)
 
 
 def validate_notice(notice: Notice) -> None:
@@ -66,6 +80,12 @@ def validate_notice(notice: Notice) -> None:
             raise ProtocolError("Incoming notice does not match its receipt index")
     elif notice.minimum_received != 0:
         raise ProtocolError("Outgoing notice must not depend on a local reward")
+    if notice.transfer is not None:
+        if notice.text != render_english(notice.transfer):
+            raise ProtocolError("Transfer fallback does not match its semantic fields")
+        sent = notice.transfer.kind.startswith("sent_")
+        if sent != notice.identity.startswith("s:"):
+            raise ProtocolError("Transfer direction does not match its identity")
     if (
         not notice.text
         or len(notice.text.encode("utf-8")) > 2048
@@ -80,12 +100,19 @@ def encode_notices(session_key: str, notices: tuple[Notice, ...]) -> str:
         notices
     ):
         raise ProtocolError("Notice batch is too large or repeats an identity")
-    lines = ["GAMMA_AP_NOTICES|1", f"session|{session_key}"]
+    semantic = any(notice.transfer is not None for notice in notices)
+    lines = [f"GAMMA_AP_NOTICES|{2 if semantic else 1}", f"session|{session_key}"]
     for notice in notices:
         validate_notice(notice)
-        lines.append(
-            f"notice|{notice.identity}|{notice.minimum_received}|{notice.text.encode('utf-8').hex()}"
-        )
+        prefix = f"notice|{notice.identity}|{notice.minimum_received}|"
+        message = notice.transfer
+        if message is None:
+            lines.append(prefix + ("text|" if semantic else "") + notice.text.encode("utf-8").hex())
+        else:
+            lines.append(
+                prefix + f"{message.kind}|{message.player.encode('utf-8').hex()}|"
+                f"{message.item.encode('utf-8').hex()}|{message.local_item_id}"
+            )
     lines.append(f"end|{len(notices)}")
     return "\n".join(lines) + "\n"
 

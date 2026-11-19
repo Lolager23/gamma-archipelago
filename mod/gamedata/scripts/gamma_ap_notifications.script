@@ -24,13 +24,43 @@ local function valid_id(id)
         and valid_item_id(item)
 end
 
+local function hex_text(hex, maximum)
+    if not hex or #hex == 0 or #hex > maximum * 2 or #hex % 2 ~= 0 then return nil end
+    local text = hex:gsub("%x%x", function(pair) return string.char(tonumber(pair, 16)) end)
+    if text:find("[%z\1-\31\127%%<>|%[%]]") then return nil end
+    return text
+end
+
+local function record(line, semantic)
+    local id, receipt, hex
+    if semantic then
+        local kind, player, item, local_id
+        id, receipt, kind, player, item, local_id = line:match("^notice|([^|]+)|([^|]+)|([^|]+)|([0-9a-f]+)|([0-9a-f]+)|([^|]+)$")
+        if id then
+            player, item = hex_text(player,384), hex_text(item,384)
+            local_id = gamma_ap_protocol.canonical_number(local_id)
+            if not gamma_ap_notice_text.valid(kind,player,item,local_id)
+                or (kind:sub(1,5) == "sent_") ~= (id:sub(1,2) == "s:") then return nil end
+            return {id=id, receipt=gamma_ap_protocol.canonical_number(receipt), kind=kind,
+                player=player, item=item, local_item_id=local_id}
+        end
+        id, receipt, hex = line:match("^notice|([^|]+)|([^|]+)|text|([0-9a-f]+)$")
+    else
+        id, receipt, hex = line:match("^notice|([^|]+)|([^|]+)|([0-9a-f]+)$")
+    end
+    local text = hex_text(hex,2048)
+    if not text then return nil end
+    return {id=id, receipt=gamma_ap_protocol.canonical_number(receipt), text=text}
+end
+
 function parse(content, key)
     if type(content) ~= "string" or #content > 131072 or content:sub(-1) ~= "\n" then
         return nil, "Incomplete or oversized notice snapshot"
     end
     local lines = {}
     for line in content:gmatch("([^\n]*)\n") do lines[#lines + 1] = line end
-    if #lines < 3 or lines[1] ~= "GAMMA_AP_NOTICES|1" or lines[2] ~= "session|" .. key then
+    if #lines < 3 or (lines[1] ~= "GAMMA_AP_NOTICES|1" and lines[1] ~= "GAMMA_AP_NOTICES|2")
+        or lines[2] ~= "session|" .. key then
         return nil, "Notice protocol or session mismatch"
     end
     local count = gamma_ap_protocol.canonical_number(lines[#lines]:match("^end|(.*)$"))
@@ -39,20 +69,18 @@ function parse(content, key)
     end
     local result, ids = {}, {}
     for index = 3, #lines - 1 do
-        local id, receipt_text, hex = lines[index]:match("^notice|([^|]+)|([^|]+)|([0-9a-f]+)$")
-        local receipt = gamma_ap_protocol.canonical_number(receipt_text)
-        if not id or not valid_id(id) or ids[id] or not receipt or receipt > 4000
-            or #hex > 4096 or #hex % 2 ~= 0 then
+        local notice = record(lines[index], lines[1] == "GAMMA_AP_NOTICES|2")
+        if not notice then return nil, "Malformed notice record" end
+        local id, receipt = notice.id, notice.receipt
+        if not id or not valid_id(id) or ids[id] or not receipt or receipt > 4000 then
             return nil, "Malformed notice record"
         end
         if (id:sub(1, 2) == "r:" and receipt ~= tonumber(id:sub(3)) + 1)
             or (id:sub(1, 2) == "s:" and receipt ~= 0) then
             return nil, "Notice receipt boundary mismatch"
         end
-        local text = hex:gsub("%x%x", function(pair) return string.char(tonumber(pair, 16)) end)
-        if text:find("[%z\1-\31\127%%<>|%[%]]") then return nil, "Unsafe PDA notice text" end
         ids[id] = true
-        result[#result + 1] = {id=id, receipt=receipt, text=text}
+        result[#result + 1] = notice
     end
     return result
 end
@@ -89,7 +117,7 @@ function poll(state)
         if not delivered and not state.notices_seen[notice.id]
             and state.received_count >= notice.receipt then
             local ok = pcall(function()
-                db.actor:give_game_news("Archipelago", notice.text, "ui_inGame2_D_Svyazist", 0, 5000)
+                db.actor:give_game_news("Archipelago", gamma_ap_notice_text.render(notice), "ui_inGame2_D_Svyazist", 0, 5000)
             end)
             if not ok then return false, "PDA notice display failed; reward remains applied" end
             state.notices_seen[notice.id] = true
