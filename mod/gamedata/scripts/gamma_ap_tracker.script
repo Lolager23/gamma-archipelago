@@ -1,0 +1,122 @@
+-- Read-only presentation. Availability means AP requirements, not ALife spawn proof.
+local psi_regions = {l10_radar=true, l10u_bunker=true, l08u_brainlab=true}
+local equipment = {checks_artefacts="detector", checks_armour_tiers="outfit",
+    checks_weapon_tiers="firearms", checks_knife_tiers="melee"}
+local combat = {checks_mutant_first_kills=true, checks_faction_first_kills=true,
+    checks_kill_milestones=true}
+PAGE_SIZE = 6
+
+local function options(state)
+    return state.configuration and state.configuration.options or {}
+end
+
+local function definition(id)
+    if gamma_ap_catalog.tracker_checks[id] then return gamma_ap_catalog.tracker_checks[id] end
+    local task = id >= gamma_ap_catalog.side_task_milestone_base
+    local base = task and gamma_ap_catalog.side_task_milestone_base or gamma_ap_catalog.kill_milestone_base
+    local category = task and "checks_side_task_milestones" or "checks_kill_milestones"
+    return {name=gamma_ap_catalog.tracker_milestones[category]:gsub("{count}",tostring(id-base)),
+        region="Menu", category=category, quests={}}
+end
+
+local function level_allowed(state, where, psi)
+    return gamma_ap_zone_keys.allowed(state, where) and (not psi_regions[where] or psi == true)
+end
+
+local function reachable(state, psi)
+    local result, changed = {l01_escape=true}, true
+    while changed do
+        changed = false
+        for _, edge in ipairs(gamma_ap_catalog.tracker_connections) do
+            if result[edge[1]] and not result[edge[2]] and level_allowed(state, edge[2], psi) then
+                result[edge[2]], changed = true, true
+            end
+            if result[edge[2]] and not result[edge[1]] and level_allowed(state, edge[1], psi) then
+                result[edge[1]], changed = true, true
+            end
+        end
+    end
+    return result
+end
+
+local function blocked(state, row, regions, psi)
+    local config = options(state)
+    if row.region ~= "Menu" and not regions[row.region] then
+        if not gamma_ap_zone_keys.allowed(state, row.region) then return "Zone access key required" end
+        if psi_regions[row.region] and psi ~= true then return "Usable calibrated psi protection required" end
+        return "An accessible route through connected regions is required"
+    end
+    if row.region == "Menu" and config.rewards_zone_keys == 1 then
+        for where in pairs(gamma_ap_catalog.zone_keys) do
+            if not regions[where] then return "Global activity: unlock the remaining Zone routes" end
+        end
+    end
+    local group = equipment[row.category]
+    if group and config["starting_"..group] == 2 and not state.unlocks["gear_"..group] then
+        return "Equipment permission required: " .. group
+    end
+    if combat[row.category] and config.starting_firearms == 2 and config.starting_melee == 2
+        and not state.unlocks.gear_firearms and not state.unlocks.gear_melee then
+        return "A firearm or melee permission is required"
+    end
+    if config.rewards_quest_keys == 1 then
+        for _, key in ipairs(row.quests) do
+            if not state.unlocks[key] then return gamma_ap_catalog.tracker_permissions[key] .. " required" end
+        end
+    end
+end
+
+function snapshot(state, total, problem, psi)
+    local result = {rows={}, regions={}, completed=0, available=0, blocked=0, progression={}}
+    result.enabled = options(state).pda_tracker ~= 0
+    result.bound = state.session_key ~= nil and not state.refused_save
+    result.goal = state.configuration and state.configuration.options.goal or 0
+    result.goal_complete = state.goal_complete
+    result.applied, result.total = state.received_count, math.max(total or 0,state.received_count)
+    result.pending = result.total-result.applied
+    result.kills, result.tasks, result.rank = state.combat.kills, state.tasks.count, state.rank_highest
+    result.problem = problem
+    if not result.bound or not result.enabled then return result end
+    local regions = reachable(state, psi)
+    for id in pairs(state.enabled_checks) do
+        local row = definition(id)
+        local reason = not state.checks[id] and blocked(state,row,regions,psi) or nil
+        local status = state.checks[id] and "completed" or (reason and "blocked" or "available")
+        local region = gamma_ap_catalog.tracker_regions[row.region] or "Global activities"
+        result.rows[#result.rows+1] = {id=id, name=row.name, region=region, status=status,
+            category=row.category, reason=reason or "Requirements met; encounter/task availability is not guaranteed"}
+        result[status] = result[status]+1
+        result.regions[region] = true
+    end
+    table.sort(result.rows,function(a,b) return a.id < b.id end)
+    for key, name in pairs(gamma_ap_catalog.tracker_permissions) do
+        local prefix = state.unlocks[key] and "Unlocked: " or "Locked: "
+        local item_enabled = false
+        for id in pairs(state.allowed_items) do
+            if gamma_ap_catalog.permissions[id] == key then item_enabled = true end
+        end
+        if item_enabled then result.progression[#result.progression+1] = prefix .. name end
+    end
+    table.sort(result.progression)
+    result.progression[#result.progression+1] = psi and "Calibrated psi protection: usable" or "Calibrated psi protection: not confirmed"
+    for where in pairs(gamma_ap_catalog.lab_levels) do
+        local visited = state.visited_maps[gamma_ap_catalog.location_by_level[where]]
+        result.progression[#result.progression+1] = (visited and "Visited: " or "Unvisited: ") .. gamma_ap_catalog.tracker_regions[where]
+    end
+    table.sort(result.progression)
+    return result
+end
+
+function page(view, region, status, offset)
+    local rows = {}
+    for _,row in ipairs(view.rows) do
+        if (not region or row.region == region) and (not status or row.status == status) then
+            rows[#rows+1] = row
+        end
+    end
+    local last = math.floor(math.max(0,#rows-1)/PAGE_SIZE)*PAGE_SIZE+1
+    local start = math.max(1,math.min(offset or 1,last))
+    local result = {}
+    for index=start,math.min(start+PAGE_SIZE-1,#rows) do result[#result+1] = rows[index] end
+    return result,start,#rows
+end

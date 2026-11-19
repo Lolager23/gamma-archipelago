@@ -16,6 +16,19 @@ from gamma_archipelago.protocol import ProtocolError
 from gamma_archipelago.session import SessionCoordinator
 
 
+def test_tracker_defaults_preserve_legacy_digest_and_nondefault_choice_is_bound():
+    values = defaults()
+    legacy = {key: value for key, value in values.items() if key != "pda_tracker"}
+    assert build_configuration(legacy).digest == build_configuration(values).digest
+    assert (
+        build_configuration({**values, "pda_tracker": 0}).digest
+        != build_configuration(values).digest
+    )
+    for invalid in (True, -1, 2, "1"):
+        with pytest.raises(ConfigurationError, match="pda_tracker"):
+            build_configuration({**values, "pda_tracker": invalid})
+
+
 def test_default_configuration_is_immutable_and_deterministically_serialized():
     values = defaults()
     configuration = build_configuration(values)
@@ -136,6 +149,7 @@ def test_travel_configuration_preserves_old_default_digest_and_requires_zone_key
 
     values = defaults()
     values.pop("zone_unlock_travel")
+    values.pop("pda_tracker")
     expected = hashlib.sha256(
         json.dumps(values, sort_keys=True, separators=(",", ":")).encode()
     ).hexdigest()

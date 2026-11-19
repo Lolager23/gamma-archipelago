@@ -1,0 +1,110 @@
+-- Engine UI boundary. Other PDA tabs retain their delegates; AP reads copied views.
+local singleton, wrapper = nil, nil
+local statuses = {"all", "completed", "available", "blocked"}
+
+function label(key, fallback)
+    local text = game.translate_string("gamma_ap_pda_"..key)
+    return text ~= "gamma_ap_pda_"..key and text or fallback
+end
+
+class "ap_tracker_window" (CUIScriptWnd)
+function ap_tracker_window:__init() super()
+    self.region_index, self.status_index, self.offset, self.progress_offset = 1, 1, 1, 1
+    self:SetWndRect(Frect():set(0,0,1024,768))
+    local xml = CScriptXmlInit()
+    xml:ParseFile("gamma_ap_pda.xml")
+    self.summary = xml:InitTextWnd("summary",self)
+    self.details = xml:InitTextWnd("details",self)
+    self.progress = xml:InitTextWnd("progress",self)
+    self.buttons = {}
+    for _,name in ipairs({"refresh","region","status","previous","next","progress_next"}) do
+        local button = xml:Init3tButton(name,self)
+        self.buttons[name] = button
+        self:Register(button,name)
+        local action = name
+        self:AddCallback(name,ui_events.BUTTON_CLICKED,function() self:change(action) end,self)
+    end
+end
+
+function ap_tracker_window:change(action)
+    if action == "region" then self.region_index,self.offset = self.region_index+1,1
+    elseif action == "status" then self.status_index,self.offset = self.status_index%4+1,1
+    elseif action == "next" then self.offset = self.offset+gamma_ap_tracker.PAGE_SIZE
+    elseif action == "previous" then self.offset = math.max(1,self.offset-gamma_ap_tracker.PAGE_SIZE)
+    elseif action == "progress_next" then self.progress_offset = self.progress_offset+10 end
+    self:refresh()
+end
+
+function ap_tracker_window:Update()
+    CUIScriptWnd.Update(self)
+    local now = time_global()
+    if not self.next_refresh or now >= self.next_refresh then
+        self.next_refresh = now+1000
+        self:refresh()
+    end
+end
+
+function ap_tracker_window:refresh()
+    local view = gamma_ap_game.tracker_view()
+    if not view.enabled or not view.bound then
+        self.summary:SetText(view.enabled and label("unbound","Start a matching AP session")
+            or label("disabled","Tracker disabled by this seed"))
+        self.details:SetText(""); self.progress:SetText("")
+        return
+    end
+    local regions = {label("all_regions","All regions")}
+    local ordered = {}
+    for region in pairs(view.regions) do ordered[#ordered+1] = region end
+    table.sort(ordered)
+    for _,region in ipairs(ordered) do regions[#regions+1] = region end
+    if self.region_index > #regions then self.region_index = 1 end
+    local region = self.region_index > 1 and regions[self.region_index] or nil
+    local status = self.status_index > 1 and statuses[self.status_index] or nil
+    local rows,offset,total = gamma_ap_tracker.page(view,region,status,self.offset)
+    self.offset = offset
+    self.buttons.region:TextControl():SetText(regions[self.region_index])
+    self.buttons.status:TextControl():SetText(label(statuses[self.status_index],statuses[self.status_index]))
+    self.summary:SetText(string.format("%s: %d / %d | %s: %d | %s: %d\n%s: %d/%d (%d %s). %s",
+        label("completed","Completed"),view.completed,#view.rows,label("available","Available"),view.available,
+        label("blocked","Blocked"),view.blocked,label("applied","Rewards applied"),view.applied,view.total,
+        view.pending,label("pending","pending"),view.problem or label("offline","Server connectivity not reported by this snapshot")))
+    local lines = {}
+    for _,row in ipairs(rows) do
+        lines[#lines+1] = string.format("%s | %s | %s\n%s",label(row.status,row.status),row.region,row.name,row.reason)
+    end
+    lines[#lines+1] = string.format("%d-%d / %d",total==0 and 0 or offset,math.min(offset+gamma_ap_tracker.PAGE_SIZE-1,total),total)
+    self.details:SetText(table.concat(lines,"\n\n"))
+    local text = string.format("%s: %s (%s)\nKills: %d | Side tasks: %d | Rank index: %d\n",
+        label("goal","Goal"),label("goal_"..view.goal,tostring(view.goal)),
+        view.goal_complete and label("completed","Completed") or label("incomplete","Incomplete"),
+        view.kills,view.tasks,view.rank)
+    if self.progress_offset > #view.progression then self.progress_offset = 1 end
+    local progress = {}
+    for index=self.progress_offset,math.min(self.progress_offset+9,#view.progression) do
+        progress[#progress+1] = view.progression[index]
+    end
+    self.progress:SetText(text..table.concat(progress,"\n"))
+end
+
+function get_ui()
+    singleton = singleton or ap_tracker_window()
+    singleton:refresh()
+    return singleton
+end
+
+function install()
+    if not pda or type(pda.set_active_subdialog) ~= "function" then return false end
+    if pda.set_active_subdialog == wrapper then return true end
+    local delegate = pda.set_active_subdialog
+    wrapper = function(section)
+        if section == "eptArchipelago" then return get_ui() end
+        return delegate(section)
+    end
+    pda.set_active_subdialog = wrapper
+    return true
+end
+
+function on_game_start()
+    singleton = nil
+    RegisterScriptCallback("on_game_load",install)
+end

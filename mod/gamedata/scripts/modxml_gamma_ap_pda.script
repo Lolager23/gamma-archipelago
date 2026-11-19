@@ -1,0 +1,31 @@
+-- Add one tab and reserve its width within the saved profile's existing tab row.
+local button = [[<button x="%d" y="0" width="36" height="27" id="eptArchipelago" frame_mode="0">
+<text align="c" vert_align="c" font="letterica16">gamma_ap_pda_short</text>
+<texture>ui_inGame2_pda_button</texture></button>]]
+
+function patch(file, xml)
+    local name = file:gsub("/", "\\")
+    if not name:match("^ui\\pda_?%d*%.xml$") then return end
+    local root = xml:query("tab")[1]
+    if not root then return end
+    local buttons = xml:query("tab > button")
+    local extent = 0
+    for _, item in ipairs(buttons) do
+        local attr = xml:getElementAttr(item)
+        if attr.id == "eptArchipelago" then return end
+        extent = math.max(extent,(tonumber(attr.x) or 0)+(tonumber(attr.width) or 0))
+    end
+    local width = tonumber(xml:getElementAttr(root).width)
+    if not width or width < 280 or extent == 0 then return end
+    local room = width-36
+    for _,item in ipairs(buttons) do
+        local attr = xml:getElementAttr(item)
+        xml:setElementAttr(item,{x=(tonumber(attr.x) or 0)*room/extent,
+            width=(tonumber(attr.width) or 0)*room/extent})
+    end
+    xml:insertFromXMLString(string.format(button,room),root,#root.kids+1)
+end
+
+function on_xml_read()
+    RegisterScriptCallback("on_xml_read",patch)
+end

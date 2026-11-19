@@ -5,6 +5,7 @@ local state = gamma_ap_state.new_state()
 local next_poll = 0
 local last_error = nil
 local task_hook_registered = false
+local known_receipts = 0
 
 local function register_task_hook()
     if not task_hook_registered and gamma_ap_tasks.hook_available() then
@@ -121,6 +122,7 @@ function actor_on_update()
     if not confirmed then report_error(confirmed_error); return end
     local bound, bind_error = gamma_ap_state.bind_session(state, incoming)
     if not bound then report_error(bind_error); return end
+    known_receipts = #incoming.items
     local ready, loadout_error = gamma_ap_loadout.apply(state, configuration)
     if not ready then report_error(loadout_error); return end
     state.expanded = configuration and configuration.expanded or false
@@ -250,6 +252,7 @@ end
 
 function on_game_start()
     state = gamma_ap_state.new_state()
+    known_receipts = 0
     next_poll = 0
     last_error = nil
     task_hook_registered = false
@@ -291,4 +294,12 @@ end
 
 function take_unlock_travel()
     return gamma_ap_travel.take(state)
+end
+
+function tracker_view()
+    local ok, psi = pcall(function()
+        local helmet = db.actor:object("good_psy_helmet")
+        return helmet ~= nil and helmet:condition() > 0 and helmet:condition() <= 1
+    end)
+    return gamma_ap_tracker.snapshot(state,known_receipts,last_error,ok and psi)
 end

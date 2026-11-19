@@ -22,7 +22,15 @@ function ap_collect_function(fn)
     for index=1,100 do
         local name,value=debug.getupvalue(fn,index)
         if not name then break end
-        if type(value)=="function" then ap_collect_function(value) end
+        ap_collect_value(value,0)
+    end
+end
+function ap_collect_value(value,depth)
+    local kind=type(value)
+    if kind=="function" then ap_collect_function(value)
+    elseif kind=="table" and depth<8 and not ap_coverage.visited[value] then
+        ap_coverage.visited[value]=true
+        for _,child in pairs(value) do ap_collect_value(child,depth+1) end
     end
 end
 debug.sethook(function(_,line)
@@ -38,9 +46,7 @@ function load_ap_module(path)
     setfenv(chunk,env)
     ap_collect_function(chunk)
     chunk()
-    for _,value in pairs(env) do
-        if type(value)=="function" then ap_collect_function(value) end
-    end
+    ap_collect_value(env,0)
     return env
 end
 """

@@ -24,6 +24,13 @@ fallback. This presentation channel owns no item-application state. Its version 
 sidecar retains version 1 acknowledgement/save identities and accepts old text
 sidecars. See [PDA messages](pda-reward-messages.md) for coordinated bundle upgrades.
 
+The [PDA tracker](pda-tracker.md) reads a detached view from the game-state owner.
+Generated catalogue metadata and a stateless requirement projection supply its
+regional/status pages. The UI owns only filters and page offsets; it cannot mark
+checks or acknowledge rewards. Its native tab wrapper delegates all other sections
+and uses DXML to extend the existing profile layout. No network work runs in UI
+refresh or the game update loop.
+
 ## State and failure boundaries
 
 The AP server owns completed location checks and the ordered item history. The

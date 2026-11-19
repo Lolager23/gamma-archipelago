@@ -10,6 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 sys.path.insert(0, str(ROOT / "tools"))
 from build_notice_strings import generate_notice_strings  # noqa: E402
+from build_tracker_catalog import tracker_lines  # noqa: E402
 
 from gamma_archipelago.configuration import (  # noqa: E402
     CHECK_OPTIONS,
@@ -191,10 +192,12 @@ def generate_catalogues() -> None:
         "goal": len(GOALS) - 1,
         "no_starting_weapons": 1,
         "zone_unlock_travel": 1,
+        "pda_tracker": 1,
     }
     lines.append("config_limits = {")
     lines.extend(f'    ["{name}"] = {limit},' for name, limit in sorted(limits.items()))
     lines.append("}")
+    lines.extend(tracker_lines(catalogue))
     require_safe_child(ROOT, "mod/gamedata/scripts/gamma_ap_catalog.script").write_text(
         "\n".join(lines) + "\n", encoding="utf-8", newline="\n"
     )
