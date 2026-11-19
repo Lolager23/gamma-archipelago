@@ -20,6 +20,20 @@ from gamma_archipelago.session import SessionCoordinator
 KEY = "a" * 64
 
 
+@pytest.mark.parametrize("item", [0, 10**10, 2**53 - 1, -(2**53 - 1)])
+def test_foreign_item_ids_cover_the_documented_ap_protocol_range(item):
+    identity = f"s:28052001:2:{item}"
+    notice = Notice(identity, 0, "You gave Friend a reward")
+    assert identity in encode_notices(KEY, (notice,))
+    assert decode_acknowledgements(ack(identity), KEY) == {identity}
+
+
+@pytest.mark.parametrize("item", [str(2**53), str(-(2**53)), "-0", "-01", "9" * 17])
+def test_foreign_item_ids_outside_the_protocol_range_are_rejected(item):
+    with pytest.raises(ProtocolError, match="identity"):
+        validate_notice(Notice(f"s:28052001:2:{item}", 0, "Reward"))
+
+
 def test_only_explicit_known_permissions_use_unlock_wording(monkeypatch):
     from gamma_archipelago import notifications
 
