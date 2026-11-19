@@ -55,8 +55,12 @@ def place_opening(world: "GammaWorld", catalog: dict[str, Any]) -> None:
         item = next(
             (item for item in pool if item.player == world.player and item.name == name), None
         )
-        if candidates and item:
-            location = candidates[0]
+        if item is None or name in world.options.non_local_items.value:
+            continue
+        location = next(
+            (row for row in candidates if row.can_fill(world.multiworld.state, item, True)), None
+        )
+        if location is not None:
             location.place_locked_item(item)
             pool.remove(item)
             world.opening_placements.append({"location": location.name, "item": name})
