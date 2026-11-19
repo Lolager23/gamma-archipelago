@@ -2,7 +2,8 @@
 
 function new_state()
     return { session_key = nil, received_count = 0, checks = {}, applied_items = {}, notices_seen = {},
-        configuration_key=nil, loadout_prepared=false, loadout_initialized=false, starting_pda_mode=0 }
+        configuration_key=nil, loadout_prepared=false, loadout_initialized=false, starting_pda_mode=0,
+        expanded=false }
 end
 
 function copy_state(state)
@@ -17,6 +18,7 @@ function copy_state(state)
     result.loadout_initialized = state.loadout_initialized == true
     result.starting_pda_mode = state.starting_pda_mode or 0
     result.loadout_plan = gamma_ap_loadout.copy_plan(state.loadout_plan)
+    result.expanded = state.expanded == true
     return result
 end
 
@@ -52,7 +54,9 @@ end
 
 function check_level(state, level_name)
     local location_id = gamma_ap_catalog.location_by_level[level_name]
-    if location_id then state.checks[location_id] = true end
+    if location_id and (state.expanded or gamma_ap_catalog.pilot_ids[location_id]) then
+        state.checks[location_id] = true
+    end
 end
 
 function merge_confirmed(state, checked)

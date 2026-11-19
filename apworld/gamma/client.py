@@ -10,7 +10,7 @@ from CommonClient import CommonContext, get_base_parser, server_loop
 from NetUtils import ClientStatus, NetworkItem
 
 from gamma_archipelago.bridge import FileBridge
-from gamma_archipelago.catalog import GAME
+from gamma_archipelago.catalog import ALL_LOCATION_IDS, GAME, LOCATION_IDS
 from gamma_archipelago.configuration import (
     ConfigurationError,
     SeedConfiguration,
@@ -43,6 +43,7 @@ class GammaContext(CommonContext):
         self.scout_requested: set[int] = set()
         self.configuration: SeedConfiguration | None = None
         self.require_configuration = False
+        self.expanded = False
 
     async def server_auth(self, password_requested: bool = False) -> None:
         if password_requested and not self.password:
@@ -54,10 +55,10 @@ class GammaContext(CommonContext):
         if command == "Connected":
             slot_data = arguments.get("slot_data", {})
             version = slot_data.get("schema_version")
-            if not (
+            if type(version) is not int or not (
                 (version == 1 and slot_data.get("pilot") is True)
                 or (
-                    version == 2
+                    version in (2, 3)
                     and slot_data.get("pilot") is False
                     and "configuration" in slot_data
                 )
@@ -82,11 +83,19 @@ class GammaContext(CommonContext):
                     raise ProtocolError("Generation configuration digest does not match")
                 if version == 1 and self.configuration.to_values() != defaults():
                     raise ProtocolError("Expanded configuration requires schema 2")
+            self.expanded = version == 3
+            allowed = ALL_LOCATION_IDS if self.expanded else LOCATION_IDS
+            if self.expanded and slot_data.get("location_ids") != sorted(allowed):
+                raise ProtocolError("Seed check manifest does not match this client build")
             self.session = self.session or SessionCoordinator(key)
             self.session.bind_configuration(configuration_key)
-            self.require_configuration = version == 2
-            if version == 2:
-                self.bridge.write_configuration(self.session.session_key, self.configuration)
+            self.session.bind_locations(allowed)
+            self.bridge.allowed_locations = allowed
+            self.require_configuration = version in (2, 3)
+            if self.require_configuration:
+                self.bridge.write_configuration(
+                    self.session.session_key, self.configuration, self.expanded
+                )
             self.scout_requested.clear()
         if command in ("Connected", "RoomUpdate") and self.session:
             self.session.accept_confirmed(frozenset(self.checked_locations))

@@ -25,17 +25,200 @@
     {
       "id": 28052001,
       "name": "Cordon: First Arrival",
-      "level": "l01_escape"
+      "level": "l01_escape",
+      "category": "checks_maps"
     },
     {
       "id": 28052002,
       "name": "Garbage: First Arrival",
-      "level": "l02_garbage"
+      "level": "l02_garbage",
+      "category": "checks_maps"
     },
     {
       "id": 28052003,
       "name": "Rostok: First Arrival",
-      "level": "l05_bar"
+      "level": "l05_bar",
+      "category": "checks_maps"
+    },
+    {
+      "id": 28052004,
+      "name": "Great Swamps: First Arrival",
+      "level": "k00_marsh",
+      "category": "checks_maps"
+    },
+    {
+      "id": 28052005,
+      "name": "Agroprom: First Arrival",
+      "level": "l03_agroprom",
+      "category": "checks_maps"
+    },
+    {
+      "id": 28052006,
+      "name": "Darkscape: First Arrival",
+      "level": "k01_darkscape",
+      "category": "checks_maps"
+    },
+    {
+      "id": 28052007,
+      "name": "Dark Valley: First Arrival",
+      "level": "l04_darkvalley",
+      "category": "checks_maps"
+    },
+    {
+      "id": 28052008,
+      "name": "Wild Territory: First Arrival",
+      "level": "l06_rostok",
+      "category": "checks_maps"
+    },
+    {
+      "id": 28052009,
+      "name": "Army Warehouses: First Arrival",
+      "level": "l07_military",
+      "category": "checks_maps"
+    },
+    {
+      "id": 28052010,
+      "name": "Yantar: First Arrival",
+      "level": "l08_yantar",
+      "category": "checks_maps"
+    },
+    {
+      "id": 28052011,
+      "name": "Dead City: First Arrival",
+      "level": "l09_deadcity",
+      "category": "checks_maps"
+    },
+    {
+      "id": 28052012,
+      "name": "Limansk: First Arrival",
+      "level": "l10_limansk",
+      "category": "checks_maps"
+    },
+    {
+      "id": 28052013,
+      "name": "Radar: First Arrival",
+      "level": "l10_radar",
+      "category": "checks_maps"
+    },
+    {
+      "id": 28052014,
+      "name": "Red Forest: First Arrival",
+      "level": "l10_red_forest",
+      "category": "checks_maps"
+    },
+    {
+      "id": 28052015,
+      "name": "Hospital: First Arrival",
+      "level": "l11_hospital",
+      "category": "checks_maps"
+    },
+    {
+      "id": 28052016,
+      "name": "Pripyat: First Arrival",
+      "level": "l11_pripyat",
+      "category": "checks_maps"
+    },
+    {
+      "id": 28052017,
+      "name": "CNPP South: First Arrival",
+      "level": "l12_stancia",
+      "category": "checks_maps"
+    },
+    {
+      "id": 28052018,
+      "name": "CNPP North: First Arrival",
+      "level": "l12_stancia_2",
+      "category": "checks_maps"
+    },
+    {
+      "id": 28052019,
+      "name": "Generators: First Arrival",
+      "level": "l13_generators",
+      "category": "checks_maps"
+    },
+    {
+      "id": 28052020,
+      "name": "Agroprom Underground: First Arrival",
+      "level": "l03u_agr_underground",
+      "category": "checks_maps"
+    },
+    {
+      "id": 28052021,
+      "name": "Lab X18: First Arrival",
+      "level": "l04u_labx18",
+      "category": "checks_maps"
+    },
+    {
+      "id": 28052022,
+      "name": "Lab X16: First Arrival",
+      "level": "l08u_brainlab",
+      "category": "checks_maps"
+    },
+    {
+      "id": 28052023,
+      "name": "Lab X19: First Arrival",
+      "level": "l10u_bunker",
+      "category": "checks_maps"
+    },
+    {
+      "id": 28052024,
+      "name": "Sarcophagus: First Arrival",
+      "level": "l12u_sarcofag",
+      "category": "checks_maps"
+    },
+    {
+      "id": 28052025,
+      "name": "Monolith Control Center: First Arrival",
+      "level": "l12u_control_monolith",
+      "category": "checks_maps"
+    },
+    {
+      "id": 28052026,
+      "name": "War Lab: First Arrival",
+      "level": "l13u_warlab",
+      "category": "checks_maps"
+    },
+    {
+      "id": 28052027,
+      "name": "Zaton: First Arrival",
+      "level": "zaton",
+      "category": "checks_maps"
+    },
+    {
+      "id": 28052028,
+      "name": "Jupiter: First Arrival",
+      "level": "jupiter",
+      "category": "checks_maps"
+    },
+    {
+      "id": 28052029,
+      "name": "Jupiter Underground: First Arrival",
+      "level": "jupiter_underground",
+      "category": "checks_maps"
+    },
+    {
+      "id": 28052030,
+      "name": "Outskirts: First Arrival",
+      "level": "pripyat",
+      "category": "checks_maps"
+    },
+    {
+      "id": 28052031,
+      "name": "Lab X8: First Arrival",
+      "level": "labx8",
+      "category": "checks_maps"
+    },
+    {
+      "id": 28052032,
+      "name": "Truck Cemetery: First Arrival",
+      "level": "k02_trucks_cemetery",
+      "category": "checks_maps"
+    },
+    {
+      "id": 28052033,
+      "name": "Meadow: First Arrival",
+      "level": "y04_pole",
+      "category": "checks_maps"
     }
   ],
   "content_inventory": {
@@ -89,5 +272,329 @@
       "story_milestones",
       "x_labs"
     ]
-  }
+  },
+  "levels": [
+    {
+      "id": "k00_marsh",
+      "name": "Great Swamps"
+    },
+    {
+      "id": "l01_escape",
+      "name": "Cordon"
+    },
+    {
+      "id": "l02_garbage",
+      "name": "Garbage"
+    },
+    {
+      "id": "l03_agroprom",
+      "name": "Agroprom"
+    },
+    {
+      "id": "k01_darkscape",
+      "name": "Darkscape"
+    },
+    {
+      "id": "l04_darkvalley",
+      "name": "Dark Valley"
+    },
+    {
+      "id": "l05_bar",
+      "name": "Rostok"
+    },
+    {
+      "id": "l06_rostok",
+      "name": "Wild Territory"
+    },
+    {
+      "id": "l07_military",
+      "name": "Army Warehouses"
+    },
+    {
+      "id": "l08_yantar",
+      "name": "Yantar"
+    },
+    {
+      "id": "l09_deadcity",
+      "name": "Dead City"
+    },
+    {
+      "id": "l10_limansk",
+      "name": "Limansk"
+    },
+    {
+      "id": "l10_radar",
+      "name": "Radar"
+    },
+    {
+      "id": "l10_red_forest",
+      "name": "Red Forest"
+    },
+    {
+      "id": "l11_hospital",
+      "name": "Hospital"
+    },
+    {
+      "id": "l11_pripyat",
+      "name": "Pripyat"
+    },
+    {
+      "id": "l12_stancia",
+      "name": "CNPP South"
+    },
+    {
+      "id": "l12_stancia_2",
+      "name": "CNPP North"
+    },
+    {
+      "id": "l13_generators",
+      "name": "Generators"
+    },
+    {
+      "id": "l03u_agr_underground",
+      "name": "Agroprom Underground"
+    },
+    {
+      "id": "l04u_labx18",
+      "name": "Lab X18"
+    },
+    {
+      "id": "l08u_brainlab",
+      "name": "Lab X16"
+    },
+    {
+      "id": "l10u_bunker",
+      "name": "Lab X19"
+    },
+    {
+      "id": "l12u_sarcofag",
+      "name": "Sarcophagus"
+    },
+    {
+      "id": "l12u_control_monolith",
+      "name": "Monolith Control Center"
+    },
+    {
+      "id": "l13u_warlab",
+      "name": "War Lab"
+    },
+    {
+      "id": "zaton",
+      "name": "Zaton"
+    },
+    {
+      "id": "jupiter",
+      "name": "Jupiter"
+    },
+    {
+      "id": "jupiter_underground",
+      "name": "Jupiter Underground"
+    },
+    {
+      "id": "pripyat",
+      "name": "Outskirts"
+    },
+    {
+      "id": "labx8",
+      "name": "Lab X8"
+    },
+    {
+      "id": "k02_trucks_cemetery",
+      "name": "Truck Cemetery"
+    },
+    {
+      "id": "y04_pole",
+      "name": "Meadow"
+    }
+  ],
+  "connections": [
+    [
+      "l01_escape",
+      "k00_marsh"
+    ],
+    [
+      "l01_escape",
+      "k01_darkscape"
+    ],
+    [
+      "l01_escape",
+      "l02_garbage"
+    ],
+    [
+      "k00_marsh",
+      "l03_agroprom"
+    ],
+    [
+      "k01_darkscape",
+      "l04_darkvalley"
+    ],
+    [
+      "l02_garbage",
+      "l03_agroprom"
+    ],
+    [
+      "l02_garbage",
+      "l04_darkvalley"
+    ],
+    [
+      "l02_garbage",
+      "l05_bar"
+    ],
+    [
+      "l02_garbage",
+      "l06_rostok"
+    ],
+    [
+      "l03_agroprom",
+      "l08_yantar"
+    ],
+    [
+      "l04_darkvalley",
+      "k02_trucks_cemetery"
+    ],
+    [
+      "l05_bar",
+      "l06_rostok"
+    ],
+    [
+      "l05_bar",
+      "l07_military"
+    ],
+    [
+      "l05_bar",
+      "k02_trucks_cemetery"
+    ],
+    [
+      "l06_rostok",
+      "l08_yantar"
+    ],
+    [
+      "l08_yantar",
+      "l09_deadcity"
+    ],
+    [
+      "l09_deadcity",
+      "l07_military"
+    ],
+    [
+      "l09_deadcity",
+      "l10_limansk"
+    ],
+    [
+      "k02_trucks_cemetery",
+      "l07_military"
+    ],
+    [
+      "l07_military",
+      "l10_red_forest"
+    ],
+    [
+      "l07_military",
+      "l10_radar"
+    ],
+    [
+      "l10_radar",
+      "l10_red_forest"
+    ],
+    [
+      "l10_radar",
+      "l11_pripyat"
+    ],
+    [
+      "l10_red_forest",
+      "l10_limansk"
+    ],
+    [
+      "l10_red_forest",
+      "jupiter"
+    ],
+    [
+      "l10_limansk",
+      "l11_hospital"
+    ],
+    [
+      "l11_hospital",
+      "l12_stancia_2"
+    ],
+    [
+      "jupiter",
+      "zaton"
+    ],
+    [
+      "jupiter",
+      "l11_pripyat"
+    ],
+    [
+      "jupiter",
+      "jupiter_underground"
+    ],
+    [
+      "jupiter_underground",
+      "pripyat"
+    ],
+    [
+      "l11_pripyat",
+      "pripyat"
+    ],
+    [
+      "l11_pripyat",
+      "l12_stancia"
+    ],
+    [
+      "zaton",
+      "l12_stancia"
+    ],
+    [
+      "l12_stancia",
+      "l12_stancia_2"
+    ],
+    [
+      "l12_stancia",
+      "l12u_sarcofag"
+    ],
+    [
+      "l12_stancia_2",
+      "l12u_control_monolith"
+    ],
+    [
+      "l12_stancia_2",
+      "l13_generators"
+    ],
+    [
+      "l12u_sarcofag",
+      "l12u_control_monolith"
+    ],
+    [
+      "l13_generators",
+      "l13u_warlab"
+    ],
+    [
+      "l03_agroprom",
+      "l03u_agr_underground"
+    ],
+    [
+      "l04_darkvalley",
+      "l04u_labx18"
+    ],
+    [
+      "l08_yantar",
+      "l08u_brainlab"
+    ],
+    [
+      "l10_radar",
+      "l10u_bunker"
+    ],
+    [
+      "pripyat",
+      "labx8"
+    ],
+    [
+      "l01_escape",
+      "y04_pole"
+    ],
+    [
+      "l04_darkvalley",
+      "y04_pole"
+    ]
+  ]
 }

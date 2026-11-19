@@ -29,7 +29,7 @@ VALID = encode_configuration(KEY, CONFIG)
         VALID.replace("threshold|kill_milestones|25", "threshold|kill_milestones|10"),
         VALID.replace("threshold|kill_milestones|10", "broken"),
         VALID.replace("digest|", "wrong|"),
-        VALID.replace("GAMMA_AP_CONFIG|1", "GAMMA_AP_CONFIG|2"),
+        VALID.replace("GAMMA_AP_CONFIG|1", "GAMMA_AP_CONFIG|3"),
     ],
 )
 def test_configuration_rejects_partial_unknown_repeated_and_invalid_values(lua, content):

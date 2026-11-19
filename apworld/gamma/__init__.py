@@ -1,4 +1,4 @@
-"""Three-check integration pilot; progression expansion belongs to later branches."""
+"""Exploration checks on the supported Anomaly/GAMMA level graph."""
 
 import json
 from importlib.resources import files
@@ -7,6 +7,7 @@ from BaseClasses import Item, ItemClassification, Location, Region, Tutorial
 from Options import OptionError
 from worlds.AutoWorld import WebWorld, World
 
+from gamma_archipelago.catalog import LOCATION_IDS
 from gamma_archipelago.configuration import OPTION_NAMES, SeedConfiguration, build_configuration
 
 from .options import GammaOptions
@@ -36,7 +37,7 @@ class GammaLocation(Location):
 
 
 class GammaWorld(World):
-    """Explore Cordon, Garbage and Rostok to prove the GAMMA/AP integration."""
+    """Explore the Zone; independent check and reward categories expand the seed."""
 
     game = _catalog["game"]
     web = GammaWeb()
@@ -60,25 +61,44 @@ class GammaWorld(World):
 
     def create_regions(self) -> None:
         menu = Region("Menu", self.player, self.multiworld)
-        for name, location_id in self.location_name_to_id.items():
-            menu.locations.append(GammaLocation(self.player, name, location_id, menu))
         self.multiworld.regions.append(menu)
+        regions = {}
+        for level in _catalog["levels"]:
+            region = Region(level["id"], self.player, self.multiworld)
+            regions[level["id"]] = region
+            self.multiworld.regions.append(region)
+        menu.connect(regions["l01_escape"])
+        for source, destination in _catalog["connections"]:
+            regions[source].connect(regions[destination])
+            regions[destination].connect(regions[source])
+        for location in _catalog["locations"]:
+            region = regions[location["level"]]
+            region.locations.append(
+                GammaLocation(self.player, location["name"], location["id"], region)
+            )
 
     def create_items(self) -> None:
         self.multiworld.itempool.extend(self.create_item(name) for name in self.item_name_to_id)
+        extra = len(self.location_name_to_id) - len(self.item_name_to_id)
+        self.multiworld.itempool.extend(
+            self.create_item(self.get_filler_item_name()) for _ in range(extra)
+        )
 
     def set_rules(self) -> None:
         self.multiworld.completion_condition[self.player] = lambda state: all(
-            state.can_reach_location(name, self.player) for name in self.location_name_to_id
+            state.can_reach_location(name, self.player)
+            for name, identity in self.location_name_to_id.items()
+            if identity in LOCATION_IDS
         )
 
     def fill_slot_data(self) -> dict[str, object]:
         return {
-            "schema_version": 2,
+            "schema_version": 3,
             "pilot": False,
             "goal": "visit_all_pilot_regions",
             "configuration": self.configuration.to_values(),
             "configuration_key": self.configuration.digest,
+            "location_ids": sorted(self.location_name_to_id.values()),
         }
 
     def get_filler_item_name(self) -> str:

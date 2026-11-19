@@ -29,6 +29,7 @@ def generate_catalogues() -> None:
     lines.extend(["}", "location_ids = {"])
     lines.extend(f"    {loc['id']}," for loc in catalogue["locations"])
     lines.append("}")
+    lines.append("pilot_ids = {[28052001]=true, [28052002]=true, [28052003]=true}")
     limits = {
         **dict.fromkeys(CHECK_OPTIONS + REWARD_OPTIONS, 1),
         **dict.fromkeys(GEAR_OPTIONS, 2),

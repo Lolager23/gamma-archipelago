@@ -16,7 +16,8 @@ from Utils import restricted_loads
 from worlds.gamma.client import GammaContext
 
 from gamma_archipelago.bridge import FileBridge
-from gamma_archipelago.catalog import ITEM_SECTIONS, LOCATION_IDS
+from gamma_archipelago.catalog import ALL_LOCATION_IDS as LOCATION_IDS
+from gamma_archipelago.catalog import ITEM_SECTIONS
 
 ROOT = Path(__file__).resolve().parents[2]
 pytestmark = [pytest.mark.integration, pytest.mark.server]
@@ -89,12 +90,12 @@ def test_real_generation_server_item_delivery_and_reconnect(tmp_path, mixed_game
                 key = client.session.session_key
                 outgoing = ["GAMMA_AP_OUT|1", f"session|{key}", "received|0"]
                 outgoing.extend(f"check|{value}" for value in sorted(LOCATION_IDS))
-                outgoing.extend(["goal|1", "end|3", ""])
+                outgoing.extend(["goal|1", f"end|{len(LOCATION_IDS)}", ""])
                 (bridge.directory / "outgoing.txt").write_text(
                     "\n".join(outgoing), encoding="ascii"
                 )
                 await client.poll_game_once()
-                await wait_until(lambda: len(client.items_received) == 3)
+                await wait_until(lambda: len(client.items_received) == len(LOCATION_IDS))
                 assert {item.item for item in client.items_received} == set(ITEM_SECTIONS)
                 assert {f"r:{index}" for index in range(3)} <= client.session.notices.keys()
                 if mixed_game:
@@ -108,14 +109,17 @@ def test_real_generation_server_item_delivery_and_reconnect(tmp_path, mixed_game
                     server.client_game_state[(client.team, client.slot)] == ClientStatus.CLIENT_GOAL
                 )
                 incoming = (bridge.directory / "incoming.txt").read_text()
-                assert incoming.endswith("end|3\n")
+                assert incoming.endswith(f"end|{len(LOCATION_IDS)}\n")
                 await client.disconnect()
                 await client.connect(address)
                 await wait_until(
-                    lambda: client.server is not None and len(client.items_received) == 3
+                    lambda: (
+                        client.server is not None
+                        and len(client.items_received) == len(LOCATION_IDS)
+                    )
                 )
                 assert client.session.session_key == key
-                assert client.session.item_ids and len(client.session.item_ids) == 3
+                assert client.session.item_ids and len(client.session.item_ids) == len(LOCATION_IDS)
                 await client.poll_game_once()
                 assert server.location_checks[(client.team, client.slot)] == set(LOCATION_IDS)
                 # Persist the actual server state and reconnect to a new server
@@ -137,7 +141,10 @@ def test_real_generation_server_item_delivery_and_reconnect(tmp_path, mixed_game
                 ) as restarted:
                     await client.connect(f"127.0.0.1:{restarted.sockets[0].getsockname()[1]}")
                     await wait_until(
-                        lambda: client.server is not None and len(client.items_received) == 3
+                        lambda: (
+                            client.server is not None
+                            and len(client.items_received) == len(LOCATION_IDS)
+                        )
                     )
                     assert client.session.session_key == key
                     assert restored.location_checks[(client.team, client.slot)] == set(LOCATION_IDS)
@@ -145,11 +152,13 @@ def test_real_generation_server_item_delivery_and_reconnect(tmp_path, mixed_game
                         restored.client_game_state[(client.team, client.slot)]
                         == ClientStatus.CLIENT_GOAL
                     )
-                    assert len(client.session.item_ids) == 3
+                    assert len(client.session.item_ids) == len(LOCATION_IDS)
                     await client.poll_game_once()
                     await wait_until(lambda: expected_notice_ids <= client.session.notices.keys())
                     assert (
-                        (bridge.directory / "confirmed_checks.txt").read_text().endswith("end|3\n")
+                        (bridge.directory / "confirmed_checks.txt")
+                        .read_text()
+                        .endswith(f"end|{len(LOCATION_IDS)}\n")
                     )
                     await client.disconnect()
             finally:

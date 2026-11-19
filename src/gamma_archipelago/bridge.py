@@ -3,7 +3,7 @@
 import os
 from pathlib import Path
 
-from .catalog import MAX_SNAPSHOT_BYTES
+from .catalog import LOCATION_IDS, MAX_SNAPSHOT_BYTES
 from .configuration import SeedConfiguration, encode_configuration
 from .notifications import (
     MAX_ACK_BYTES,
@@ -28,6 +28,7 @@ class FileBridge:
         self.game_root = require_isolated_root(game_root, allowed_root)
         self.directory = require_safe_child(self.game_root, "appdata/archipelago")
         self.directory.mkdir(parents=True, exist_ok=True)
+        self.allowed_locations = LOCATION_IDS
 
     def write_history(
         self, session_key: str, item_ids: tuple[int, ...], configuration_key: str | None = None
@@ -58,8 +59,12 @@ class FileBridge:
     def write_confirmed(self, session_key: str, location_ids: frozenset[int]) -> None:
         self._write_atomic("confirmed_checks", encode_confirmed(session_key, location_ids))
 
-    def write_configuration(self, session_key: str, configuration: SeedConfiguration) -> None:
-        self._write_atomic("configuration", encode_configuration(session_key, configuration))
+    def write_configuration(
+        self, session_key: str, configuration: SeedConfiguration, expanded: bool = False
+    ) -> None:
+        self._write_atomic(
+            "configuration", encode_configuration(session_key, configuration, expanded)
+        )
 
     def read_game(self, session_key: str) -> GameSnapshot | None:
         source = require_safe_child(self.game_root, "appdata/archipelago/outgoing.txt")
@@ -70,4 +75,4 @@ class FileBridge:
             return None
         except UnicodeDecodeError as exc:
             raise ProtocolError("Game snapshot must be ASCII data") from exc
-        return decode_outgoing(content, session_key)
+        return decode_outgoing(content, session_key, self.allowed_locations)

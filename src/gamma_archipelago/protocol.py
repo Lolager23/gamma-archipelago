@@ -3,7 +3,7 @@
 import re
 from dataclasses import dataclass
 
-from .catalog import ITEM_SECTIONS, LOCATION_IDS, MAX_ITEMS, MAX_SNAPSHOT_BYTES
+from .catalog import ALL_LOCATION_IDS, ITEM_SECTIONS, LOCATION_IDS, MAX_ITEMS, MAX_SNAPSHOT_BYTES
 
 
 class ProtocolError(ValueError):
@@ -46,7 +46,7 @@ def encode_incoming(
 
 def encode_confirmed(session_key: str, location_ids: frozenset[int]) -> str:
     validate_session_key(session_key)
-    if not location_ids <= LOCATION_IDS:
+    if not location_ids <= ALL_LOCATION_IDS:
         raise ProtocolError("Confirmed checks contain an unsupported location")
     lines = ["GAMMA_AP_CONFIRMED|1", f"session|{session_key}"]
     lines.extend(f"check|{identity}" for identity in sorted(location_ids))
@@ -54,7 +54,9 @@ def encode_confirmed(session_key: str, location_ids: frozenset[int]) -> str:
     return "\n".join(lines) + "\n"
 
 
-def decode_outgoing(content: str, session_key: str) -> GameSnapshot:
+def decode_outgoing(
+    content: str, session_key: str, allowed_locations: frozenset[int] = LOCATION_IDS
+) -> GameSnapshot:
     validate_session_key(session_key)
     if len(content.encode("utf-8")) > MAX_SNAPSHOT_BYTES or not content.endswith("\n"):
         raise ProtocolError("Snapshot is oversized or missing its final newline")
@@ -73,12 +75,12 @@ def decode_outgoing(content: str, session_key: str) -> GameSnapshot:
         if not line.startswith("check|"):
             raise ProtocolError("Unexpected snapshot field")
         location_id = _number(line.removeprefix("check|"))
-        if location_id not in LOCATION_IDS or location_id in checks:
+        if location_id not in allowed_locations or location_id in checks:
             raise ProtocolError("Unknown or duplicate location")
         checks.append(location_id)
     if lines[-1] != f"end|{len(checks)}":
         raise ProtocolError("Snapshot trailer does not match its check count")
     goal = lines[-2] == "goal|1"
-    if goal and frozenset(checks) != LOCATION_IDS:
+    if goal and not frozenset(checks) >= LOCATION_IDS:
         raise ProtocolError("Pilot completion requires every pilot location")
     return GameSnapshot(session_key, received_count, frozenset(checks), goal)

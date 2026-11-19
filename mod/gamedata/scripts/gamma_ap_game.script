@@ -86,6 +86,7 @@ function actor_on_update()
     if not bound then report_error(bind_error); return end
     local ready, loadout_error = gamma_ap_loadout.apply(state, configuration)
     if not ready then report_error(loadout_error); return end
+    state.expanded = configuration and configuration.expanded or false
     local success, delivery_error = gamma_ap_state.apply_pending(state, incoming, give_item)
     if not success then report_error(delivery_error); return end
     gamma_ap_state.merge_confirmed(state, confirmed)

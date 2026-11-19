@@ -6,7 +6,8 @@ function parse(content, key, digest)
     end
     local lines = {}
     for line in content:gmatch("([^\n]*)\n") do lines[#lines + 1] = line end
-    if #lines < 4 or lines[1] ~= "GAMMA_AP_CONFIG|1" or lines[2] ~= "session|" .. key
+    if #lines < 4 or (lines[1] ~= "GAMMA_AP_CONFIG|1" and lines[1] ~= "GAMMA_AP_CONFIG|2")
+        or lines[2] ~= "session|" .. key
         or lines[3] ~= "digest|" .. digest then
         return nil, "Configuration protocol, session or digest mismatch"
     end
@@ -15,6 +16,7 @@ function parse(content, key, digest)
         return nil, "Configuration record count mismatch"
     end
     local result = {digest=digest, options={}, thresholds={kill_milestones={}, side_task_milestones={}}}
+    result.expanded = lines[1] == "GAMMA_AP_CONFIG|2"
     for index = 4, #lines - 1 do
         local name, number = lines[index]:match("^option|([a-z_]+)|(%d+)$")
         if name then
