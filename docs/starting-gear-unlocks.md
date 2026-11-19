@@ -13,6 +13,11 @@ callbacks to accept the baseline. Missing sections and nil creation remain
 pending; creation exceptions persist an uncertain outcome and block automatic
 retry. A lock enforcement failure does not prevent its key from being received.
 
+The pinned native pickup binder reuses its callback flags without resetting them.
+A delegating wrapper clears stale flags before each new dispatch, so one denied
+locked pickup cannot block later allowed items. Vetoes from other mods in the
+current dispatch remain intact. Locked seeds refuse an unavailable pickup hook.
+
 PDA notices remain queued without a device. Local stash opening also requires
 an available PDA, and the solver's protected cache claim requires the PDA unlock
 when AP-locked. A permission cannot be hidden behind that same local stash claim.

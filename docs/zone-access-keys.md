@@ -5,6 +5,12 @@ Stack base: #23. `rewards_zone_keys` adds one required permanent key for each of
 required for an initial reachable exploration route; undersized required pools
 are rejected. Keys cannot be placed behind their own destination entrance.
 
+The fill reserves a local exploration chain: each next key comes from a map
+already reached, and its destination is adjacent to the unlocked frontier.
+Yantar precedes psi-gated maps. Zone keys remain local to their GAMMA slot;
+other rewards use ordinary multiworld fill. This prevents circular placement
+in map-only seeds, including regression seeds 1, 4, 5 and 22.
+
 All entrances to a keyed region require its key, including alternate graph edges.
 Global activities conservatively require access to every zone instead of claiming
 all species, artefacts and story events occur in Cordon. Equipment-dependent

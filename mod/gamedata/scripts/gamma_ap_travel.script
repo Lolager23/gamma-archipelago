@@ -80,14 +80,15 @@ function take(state)
         return false
     end
     if not hazards_clear() then notify("Native fast-travel settings or current hazards prevent this trip"); return false end
-    if smart.m_level_vertex_id == nil or smart.m_level_vertex_id < 0
-        or smart.m_level_vertex_id >= 4294967295 or not smart.position then
+    local vertex = smart.m_level_vertex_id
+    if type(vertex) ~= "number" or vertex ~= math.floor(vertex) or vertex < 0
+        or vertex >= 4294967295 or not smart.position then
         notify("Settlement travel coordinates are unavailable"); return false
     end
     state.travel_used[where], state.travel_selection = true, nil
     -- Consume before native travel triggers its save. Exceptions remain consumed
     -- because the engine may already have accepted a travel side effect.
-    local ok, result = pcall(ChangeLevel, smart.position, smart.m_level_vertex_id,
+    local ok, result = pcall(ChangeLevel, smart.position, vertex,
         smart.m_game_vertex_id, vector():set(0,0,0), false)
     if ok and result == false then state.travel_used[where] = nil end
     if not ok or result == false then notify("Travel was not confirmed; inspect the current save before retrying"); return false end
