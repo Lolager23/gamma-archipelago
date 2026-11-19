@@ -56,7 +56,12 @@ def test_actor_kills_deduplicate_hit_death_callbacks_and_survive_reload(lua):
     game.actor_on_update()
     packet = engine.files["D:/AnomalyAP/appdata/archipelago\\outgoing.txt"]
     allowed = enabled_location_ids(configuration.checks, configuration.kill_milestones)
-    assert decode_outgoing(packet, KEY, allowed).checked_locations <= allowed
+    assert (
+        decode_outgoing(
+            packet, KEY, allowed, configuration_key=configuration.digest
+        ).checked_locations
+        <= allowed
+    )
     confirmations = encode_confirmed(KEY, frozenset({KILL_MILESTONE_BASE + 4}))
     parser = lua.globals().gamma_ap_protocol.parse_confirmed
     assert parser(confirmations, KEY)[KILL_MILESTONE_BASE + 4]

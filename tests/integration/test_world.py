@@ -359,3 +359,37 @@ def test_zone_keys_require_map_checks_for_initial_reachable_slots():
         setup_multiworld(
             GammaWorld, options={"checks_maps": 0, "checks_settlements": 1, "rewards_zone_keys": 1}
         )
+
+
+def test_psi_goal_models_sakharov_acquisition_as_a_local_event_without_network_slot():
+    multiworld = setup_multiworld(GammaWorld, seed=22, options={"goal": 1, "rewards_zone_keys": 1})
+    distribute_items_restrictive(multiworld)
+    world = multiworld.worlds[1]
+    event = multiworld.get_location("Obtain Calibrated Helmet from Sakharov", 1)
+    assert event.address is None and event.item.code is None
+    assert len(world.fill_slot_data()["location_ids"]) == 33
+    assert world.fill_slot_data()["goal"] == "psi_protection"
+    assert multiworld.can_beat_game()
+
+
+def test_zone_chain_fills_previous_failure_seeds_and_keeps_yantar_before_psi_routes():
+    from BaseClasses import CollectionState
+
+    for seed in (1, 4, 5, 22):
+        multiworld = setup_multiworld(
+            GammaWorld, seed=seed, options={"goal": 1, "rewards_zone_keys": 1}
+        )
+        state = CollectionState(multiworld)
+        state.sweep_for_advancements()
+        assert all(
+            state.can_reach_region(level, 1)
+            for level in ("l08_yantar", "l10_radar", "l08u_brainlab", "l10u_bunker")
+        )
+        locked = [
+            loc
+            for loc in multiworld.get_locations()
+            if loc.item and loc.item.name.startswith("Zone Key:")
+        ]
+        assert len(locked) == 32 and all(loc.locked for loc in locked)
+        distribute_items_restrictive(multiworld)
+        assert multiworld.can_beat_game()

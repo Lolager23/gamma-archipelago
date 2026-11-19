@@ -97,7 +97,7 @@ SUPPORTED_REWARDS: frozenset[str] = frozenset(
         "rewards_zone_keys",
     }
 )
-SUPPORTED_GOALS = frozenset({"pilot_tour"})
+SUPPORTED_GOALS = frozenset({"pilot_tour", "psi_protection"})
 
 
 class ConfigurationError(ValueError):

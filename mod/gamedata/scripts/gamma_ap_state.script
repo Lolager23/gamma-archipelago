@@ -6,7 +6,7 @@ function new_state()
         expanded=false, enabled_checks=enabled_locations(nil), visited_maps={},
         combat=gamma_ap_combat.copy(nil), tasks=gamma_ap_tasks.copy(nil),
         equipment=gamma_ap_equipment_checks.copy(nil),
-        rank_highest=-1, unlocks={}, quest_pending={}, gear_grants={}, zone_disabled={}, travel_used={}, travel_selection=nil,
+        goal_complete=false, rank_highest=-1, unlocks={}, quest_pending={}, gear_grants={}, zone_disabled={}, travel_used={}, travel_selection=nil,
         reputation_targets={}, skill_plans=gamma_ap_skills.copy(nil),
         allowed_items=enabled_items(nil), configuration=nil, stashes=gamma_ap_stashes.copy(nil),
         artefact_sources={}, applying_reward=false }
@@ -67,6 +67,7 @@ function copy_state(state)
     for key,value in pairs(state.zone_disabled or {}) do result.zone_disabled[key] = value end
     result.travel_selection = state.travel_selection
     for key,value in pairs(state.travel_used or {}) do result.travel_used[key] = value end
+    result.goal_complete = state.goal_complete == true
     result.rank_highest = state.rank_highest or -1
     result.skill_plans = gamma_ap_skills.copy(state.skill_plans)
     for key,value in pairs(state.reputation_targets or {}) do result.reputation_targets[key] = value end

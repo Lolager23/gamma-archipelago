@@ -393,3 +393,64 @@ async def test_unconnected_item_packet_does_not_write_a_snapshot():
     context = connected_context()
     context.session = None
     context.on_package("ReceivedItems", {})
+
+
+@run_async
+async def test_selected_alternate_goal_configures_the_bridge_goal_protocol():
+    from gamma_archipelago.catalog import MAP_LOCATION_IDS
+    from gamma_archipelago.configuration import build_configuration, defaults
+
+    configuration = build_configuration({**defaults(), "goal": 1})
+    context = connected_context(
+        {
+            "schema_version": 3,
+            "pilot": False,
+            "configuration": configuration.to_values(),
+            "configuration_key": configuration.digest,
+            "location_ids": sorted(MAP_LOCATION_IDS),
+        }
+    )
+    assert context.bridge.pilot_goal is False
+
+
+@run_async
+async def test_reused_seed_identity_rejects_old_configuration_game_snapshots(tmp_path):
+    from gamma_archipelago.bridge import FileBridge
+    from gamma_archipelago.catalog import MAP_LOCATION_IDS
+    from gamma_archipelago.configuration import build_configuration, defaults
+
+    old = build_configuration(defaults())
+    current = build_configuration({**defaults(), "starting_money": 50})
+    bridge = FileBridge(tmp_path, allowed_root=tmp_path)
+    context = adapter.GammaContext(bridge=bridge)
+    context.server_seed_name, context.team, context.slot = "reused-seed", 0, 1
+    context.server, context.send_msgs = object(), AsyncMock()
+    context.on_package(
+        "Connected",
+        {
+            "slot_data": {
+                "schema_version": 3,
+                "pilot": False,
+                "configuration": current.to_values(),
+                "configuration_key": current.digest,
+                "location_ids": sorted(MAP_LOCATION_IDS),
+            }
+        },
+    )
+    key = context.session.session_key
+    source = bridge.directory / "outgoing.txt"
+    body = "received|0\ncheck|28052001\ngoal|0\nend|1\n"
+    source.write_text(f"GAMMA_AP_OUT|1\nsession|{key}\n" + body)
+    with pytest.raises(ProtocolError):
+        await context.poll_game_once()
+    context.send_msgs.assert_not_called()
+    source.write_text(f"GAMMA_AP_OUT|3\nsession|{key}\nconfiguration|{old.digest}\n" + body)
+    with pytest.raises(ProtocolError):
+        await context.poll_game_once()
+    context.send_msgs.assert_not_called()
+    source.write_text(f"GAMMA_AP_OUT|3\nsession|{key}\nconfiguration|{current.digest}\n" + body)
+    await context.poll_game_once()
+    assert context.send_msgs.call_args.args[0][0] == {
+        "cmd": "LocationChecks",
+        "locations": [28052001],
+    }

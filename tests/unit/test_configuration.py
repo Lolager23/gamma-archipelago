@@ -75,7 +75,7 @@ def test_unimplemented_adapters_are_never_silently_enabled(name):
         build_configuration(values)
 
 
-@pytest.mark.parametrize("goal", range(1, len(GOALS)))
+@pytest.mark.parametrize("goal", range(2, len(GOALS)))
 def test_unimplemented_goals_do_not_fall_back_to_the_pilot(goal):
     with pytest.raises(ConfigurationError, match="Not implemented"):
         build_configuration({**defaults(), "goal": goal})

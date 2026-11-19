@@ -9,13 +9,13 @@ from worlds.AutoWorld import WebWorld, World
 
 from gamma_archipelago.catalog import (
     KILL_MILESTONE_BASE,
-    LOCATION_IDS,
     LOCATION_NAMES,
     SIDE_TASK_MILESTONE_BASE,
     enabled_item_ids,
 )
 from gamma_archipelago.configuration import OPTION_NAMES, SeedConfiguration, build_configuration
 
+from .goals import add_goal_events, set_goal_rule
 from .options import GammaOptions
 from .rules import apply_access_rules
 from .zone_fill import place_zone_keys
@@ -76,6 +76,7 @@ class GammaWorld(World):
             regions[level["id"]] = region
             self.multiworld.regions.append(region)
         menu.connect(regions["l01_escape"])
+        add_goal_events(self, regions, GammaLocation, GammaItem)
         if "rewards_progression_stashes" in self.configuration.rewards:
             claim = GammaLocation(
                 self.player, "Claim Cordon Psi Stash", None, regions["l01_escape"]
@@ -176,11 +177,7 @@ class GammaWorld(World):
 
     def set_rules(self) -> None:
         apply_access_rules(self, _catalog)
-        self.multiworld.completion_condition[self.player] = lambda state: all(
-            state.can_reach_region(location["level"], self.player)
-            for location in _catalog["locations"]
-            if location["id"] in LOCATION_IDS
-        )
+        set_goal_rule(self, _catalog)
 
     def pre_fill(self) -> None:
         place_zone_keys(self, _catalog)
@@ -189,7 +186,9 @@ class GammaWorld(World):
         return {
             "schema_version": 3,
             "pilot": False,
-            "goal": "visit_all_pilot_regions",
+            "goal": "visit_all_pilot_regions"
+            if self.configuration.goal == "pilot_tour"
+            else self.configuration.goal,
             "configuration": self.configuration.to_values(),
             "configuration_key": self.configuration.digest,
             "location_ids": sorted(

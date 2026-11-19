@@ -29,6 +29,8 @@ class FileBridge:
         self.directory = require_safe_child(self.game_root, "appdata/archipelago")
         self.directory.mkdir(parents=True, exist_ok=True)
         self.allowed_locations = LOCATION_IDS
+        self.pilot_goal = True
+        self.configuration_key: str | None = None
 
     def write_history(
         self, session_key: str, item_ids: tuple[int, ...], configuration_key: str | None = None
@@ -75,4 +77,10 @@ class FileBridge:
             return None
         except UnicodeDecodeError as exc:
             raise ProtocolError("Game snapshot must be ASCII data") from exc
-        return decode_outgoing(content, session_key, self.allowed_locations)
+        return decode_outgoing(
+            content,
+            session_key,
+            self.allowed_locations,
+            pilot_goal=self.pilot_goal,
+            configuration_key=self.configuration_key,
+        )

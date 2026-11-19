@@ -1,0 +1,17 @@
+-- Observe real game facts; receiving coordinates or a quest key is not victory.
+
+function poll(state)
+    local configuration = state.configuration
+    if not configuration or configuration.options.goal == 0 or state.goal_complete then return true end
+    if configuration.options.goal == 1 then
+        local ok, usable = pcall(function()
+            local helmet = db.actor:object("good_psy_helmet")
+            if not helmet then return false end
+            local condition = helmet:condition()
+            return type(condition) == "number" and condition > 0 and condition <= 1
+        end)
+        if not ok then return false, "Cannot inspect calibrated psi protection" end
+        state.goal_complete = usable
+    end
+    return true
+end
