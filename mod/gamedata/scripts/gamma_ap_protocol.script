@@ -45,8 +45,11 @@ end
 
 function encode_outgoing(state)
     local alternate = state.configuration and state.configuration.options.goal > 0
-    local lines = { "GAMMA_AP_OUT|" .. (alternate and "2" or "1"), "session|" .. state.session_key,
-        "received|" .. tostring(state.received_count) }
+    local configured = state.configuration and state.configuration_key
+    local version = configured and "3" or (alternate and "2" or "1")
+    local lines = { "GAMMA_AP_OUT|" .. version, "session|" .. state.session_key }
+    if configured then lines[#lines+1] = "configuration|" .. state.configuration_key end
+    lines[#lines+1] = "received|" .. tostring(state.received_count)
     local count = 0
     local ids = {}
     for id in pairs(state.enabled_checks) do ids[#ids+1] = id end

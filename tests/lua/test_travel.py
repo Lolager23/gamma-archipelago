@@ -110,3 +110,13 @@ def test_travel_failure_consumption_distinguishes_refusal_from_uncertain_side_ef
     )
     assert game.take_unlock_travel() is False
     assert bool(progress(lua, game).travel_used.l02_garbage) == (result == "exception")
+
+
+@pytest.mark.parametrize("vertex", [1.5, float("nan"), "10"])
+def test_invalid_settlement_vertex_refuses_travel_without_consuming_the_key_trip(lua, vertex):
+    game, engine = travel_game(lua)
+    engine.hub.m_level_vertex_id = vertex
+    assert game.preview_unlock_travel() is True
+    assert game.take_unlock_travel() is False
+    assert engine.travels == 0
+    assert not progress(lua, game).travel_used.l02_garbage

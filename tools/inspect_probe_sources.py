@@ -2,9 +2,18 @@
 
 import argparse
 import json
+import sys
+from pathlib import Path
 
-from gamma_archipelago.paths import DEFAULT_GAME_ROOT, DEFAULT_MO2_ROOT, require_isolated_root
-from gamma_archipelago.probe_sources import inspect_sources
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "src"))
+
+from gamma_archipelago.paths import (  # noqa: E402
+    DEFAULT_GAME_ROOT,
+    DEFAULT_MO2_ROOT,
+    require_isolated_root,
+)
+from gamma_archipelago.probe_sources import inspect_sources  # noqa: E402
 
 
 def main() -> None:
