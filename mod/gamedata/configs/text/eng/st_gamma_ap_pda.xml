@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <string_table>
+    <string id="gamma_ap_pda_status_header"><text>Status</text></string>
+    <string id="gamma_ap_pda_region_header"><text>Region</text></string>
+    <string id="gamma_ap_pda_check_header"><text>Check</text></string>
+    <string id="gamma_ap_pda_progress_header"><text>Goal and progression</text></string>
+    <string id="gamma_ap_pda_not_scouted"><text>Reward not scouted</text></string>
+    <string id="gamma_ap_pda_waiting_scout"><text>Waiting for scouting data</text></string>
     <string id="gamma_ap_pda_short"><text>AP</text></string>
     <string id="gamma_ap_pda_select"><text>Select next check</text></string>
     <string id="gamma_ap_pda_scout"><text>Scout selected check</text></string>

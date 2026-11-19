@@ -1,5 +1,34 @@
 # Verification record
 
+## PDA tracker formatting and tab clearance: 19 November 2026
+
+Branch `codex/pda-tracker-layout` fixes the reported concatenated checklist and
+progression entries and summary overlap with the native tabs. Four regressions
+reproduced ordinary LF characters reaching the native text parser and the
+summary intersecting the tab band at the modeled 4:3, 16:9 and 21:9 scales.
+
+The page now uses explicit Status/Region/Check cells, measured reason/reward
+lines, and independent scroll viewports for summary, checks and progression.
+It converts line breaks to the native marker and starts below the background-
+relative navigation band. Additional XML-driven boundary tests cover long labels,
+CR/LF conversion, increasing row heights, non-overlapping viewports/buttons,
+scroll retention, unchanged-refresh caching, multiline cache boundaries and
+clearing stale views. The model uses fixed glyph widths; it does not measure the
+native renderer, fonts or live aspect-ratio transformations.
+
+The complete local verifier **passed**: 1,048 covered Python/Lua tests, 57
+untraced generator/server tests and seven Node tests (**1,112 total**), including
+the 9,000-preset seed matrix and actual APWorld loading. Owned Python modules
+measured 100% lines/branches, and all measured Lua executable lines reached 100%.
+Lua branch coverage is not measured. Current-head Windows/Linux results and
+retained package hashes belong to this PR's evidence.
+
+Native layout/scroll/font acceptance is **not run**, reserved for Owen. No game
+was launched, installed files deployed, private developer panel changed or
+running AP session restarted. No gameplay rules, IDs or save/bridge schemas
+changed. This section records the isolated fix before integration with PRs #51
+and #52; combined-head evidence is recorded in the PR.
+
 ## Stash marker crash correction: 19 November 2026
 
 Branch `codex/fix-stash-marker-crash` isolates the reported `gamma_ap_loot`

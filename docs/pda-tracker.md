@@ -1,5 +1,45 @@
 # Step 31: PDA tracker and regional checklist
 
+## Layout correction: 19 November 2026
+
+The reported concatenated entries were text paragraphs, not a native table.
+Ordinary LF characters were passed to X-Ray's complex-text parser, which expects
+the two-character `\n` marker. The summary also began inside the native tab band:
+the custom tab attaches to the PDA background at y=-34, while the saved profile's
+tabs start at y=23 with height 27.
+
+The AP dialog now starts at background-relative y=100. Its summary, filter row,
+column headings, two content viewports, page count and bottom actions occupy
+separate non-overlapping rectangles. The checklist has independent Status,
+Region and Check cells, with reason and reward beneath each row. Native
+`AdjustHeightToText` measures every wrapped cell before the following fields
+and row are positioned. The summary and progression entries also use independent
+measured rows. Scroll-view clipping contains unusually long text instead of
+drawing over other controls.
+
+Display text explicitly enables complex mode and converts CR/LF line breaks to
+the native marker. Unchanged content does not recreate widgets; data refresh
+preserves scroll positions, while filter/page navigation returns its panel to
+the beginning. Disabled/unbound views clear old rows, page count and selection.
+No check, receipt, scouting or save ownership changes.
+
+Primary source basis: pinned Monolith
+[text parsing](https://github.com/themrdemonized/xray-monolith/blob/7289a03f19a3cc712d9fc4cf6122345984c8c094/src/xrGame/ui/UILines.cpp),
+[PDA dialog attachment](https://github.com/themrdemonized/xray-monolith/blob/7289a03f19a3cc712d9fc4cf6122345984c8c094/src/xrGame/ui/UIPdaWnd.cpp)
+and [scroll/text initialization](https://github.com/themrdemonized/xray-monolith/blob/7289a03f19a3cc712d9fc4cf6122345984c8c094/src/xrGame/ui/UIXmlInit.cpp),
+plus read-only inspection of the active DEV Taskboard XML and MCM/Taskboard
+`InitScrollView`, `AddWindow` and text-measurement usage. No base PDA XML is replaced.
+
+Four regressions reproduced the original native-newline mistake and tab
+intersection. Automated layout contracts model native XML coordinates and fixed
+glyph-width wrapping; they are **not native pixel/font rendering evidence**.
+Owen still needs to verify the page at the supported aspect ratios, scroll bars,
+long/localized names, other tabs and scouting controls. No game was launched or
+installed add-on changed by this source fix. The changes are independent of
+the loading-notice fix in PR #51 and do not require a new seed.
+
+## Original tracker implementation
+
 Stack base: PDA localization PR #38. `pda_tracker` is an APWorld toggle, enabled
 by default. The AP tab stays registered for UI compatibility; disabled seeds show
 a disabled page. The tab uses owned XML plus DXML injection, never a replacement
