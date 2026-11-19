@@ -50,6 +50,7 @@ def test_packages_are_reproducible_and_load_from_apworld(tmp_path):
                 "deliveries",
                 "convenience",
                 "notifications",
+                "presence",
                 "configuration",
                 "equipment",
                 "loadout",

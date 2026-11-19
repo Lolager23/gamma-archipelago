@@ -14,6 +14,7 @@ from .notifications import (
     pending_batch,
 )
 from .paths import require_isolated_root, require_safe_child
+from .presence import encode_presence
 from .protocol import (
     GameSnapshot,
     ProtocolError,
@@ -63,6 +64,11 @@ class FileBridge:
         self._write_atomic(
             "scouted_items", encode_scouted(key, configuration, epoch, sequence, rewards)
         )
+
+    def write_presence(
+        self, key: str, configuration: str | None, epoch: str, sequence: int, player: str
+    ) -> None:
+        self._write_atomic("presence", encode_presence(key, configuration, epoch, sequence, player))
 
     def _write_atomic(self, name: str, content: str) -> None:
         destination = require_safe_child(self.game_root, f"appdata/archipelago/{name}.txt")

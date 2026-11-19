@@ -1,5 +1,30 @@
 # Verification record
 
+## Startup join notices: 19 November 2026
+
+Branch `codex/startup-notifications` adds an optional authenticated-player
+startup/reconnect PDA message, based on reviewed main `2efe9ce`. The complete
+`tools/verify.py` run with a separate pinned AP 0.6.8 tooling runtime **passed**:
+1,036 covered Python/Lua tests, 57 untraced generation/server tests and seven
+Node tests. Python line/branch coverage is 100%; the new Lua presence module has
+100% executable-line coverage. Lua branch coverage is not measured.
+
+Actual solo and mixed-game AP connections publish the correct slot name and a
+new epoch on reconnect. Mocked-engine tests cover live-heartbeat requirements,
+stale/duplicate/outdated snapshots, wrong session/configuration, localization
+fallback, literal placeholders in names, save/load, clock rollback and failed
+display/file operations without blocking item/check handling. The follow-up
+removes PDA ownership gates from both join and transfer broadcasts; regression
+tests reproduce the original suppression with omitted and AP-locked PDAs, then
+check broadcast delivery, save/load deduplication and no replay on PDA acquisition.
+The optional sidecar adds no save-schema or item/check protocol changes.
+
+Native PDA startup/reconnect rendering is **not run**, and this branch is **not
+deployed**. Hosted checks must be evaluated for its current PR head separately.
+The source work uses an isolated worktree and verification runtime; it does not
+alter either game installation, the existing local developer panel or local
+third-party compatibility overrides.
+
 ## Second expansion source stack: 19 November 2026
 
 Steps 31–40 implement the requested tracker, regional/progression displays,

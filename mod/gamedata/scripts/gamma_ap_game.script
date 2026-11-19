@@ -172,9 +172,11 @@ function actor_on_update()
     if not written then report_error(write_error); return end
     local notified, notice_error = gamma_ap_notifications.poll(state)
     if not notified then report_error(notice_error); return end
+    local joined, join_error = gamma_ap_presence.poll(state,now)
     local scouted, scout_error = gamma_ap_scouting.write_requests(state)
     if not scouted then report_error(scout_error); return end
     if not success then report_error(delivery_error)
+    elseif not joined then report_error(join_error)
     elseif not permitted then report_error(permission_error)
     elseif not zones then report_error(zone_problem)
     elseif not stashed then report_error(stash_error)
@@ -261,6 +263,7 @@ function load_state(data)
         return
     end
     state = restored
+    gamma_ap_presence.reset()
     if not data.gamma_archipelago_v1 and prepared then
         state.loadout_prepared, state.configuration_key = true, configuration_key
     end
@@ -275,6 +278,7 @@ function on_game_start()
     state = gamma_ap_state.new_state()
     known_receipts = 0
     gamma_ap_scouting.reset()
+    gamma_ap_presence.reset()
     gamma_ap_convenience.reset()
     next_poll = 0
     last_error = nil

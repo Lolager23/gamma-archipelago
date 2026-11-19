@@ -69,7 +69,8 @@ Show known receipt total, applied count, pending reward and failure reason.
 Coordinates received, cache claimed and supplies created are different states.
 A write/scout never acknowledges an item. Permanent unlocks and consumable plans
 retain separate recovery semantics. Offline data cannot claim a live connection.
-No-PDA starts keep the bridge working and defer PDA presentation until restoration.
+No-PDA starts keep the bridge and Archipelago broadcasts working. PDA-only
+screens remain unavailable until restoration.
 
 ## Pool and pacing
 

@@ -195,9 +195,9 @@ tutorial grants and any refunds so none bypass or duplicate the restriction.
 
 No-PDA starts must not stop the AP bridge, lose pending messages or prevent the
 PDA unlock from being received. Keep connection/recovery status available in the
-companion and an appropriate menu. Queue PDA-only notifications/history while
-locked, then deliver them in bounded batches after restoration. Do not expose a
-restricted map or task screen accidentally through another UI or keybind.
+companion and an appropriate menu. Deliver Archipelago broadcasts without
+requiring a PDA, including join, received-reward and sent-reward notices. Do not
+expose a restricted map or task screen accidentally through another UI or keybind.
 
 The world must model the missing capabilities: no detector cannot imply early
 detector-dependent artefact access; no weapons cannot imply early combat checks;
@@ -362,7 +362,8 @@ current inventory receipts prove crash-safe recovery.
 
 - [x] Preserve sender, recipient, foreign item name and known unlock kind.
 - [x] Implement versioned metadata, English incoming/outgoing PDA notices,
-  self-reward deduplication and bounded no-PDA queues (Steps 03/04/19).
+  self-reward deduplication and bounded broadcast queues (Steps 03/04/19).
+  Broadcasts now work without a PDA, including omitted and AP-locked starts.
 - [x] Verify notice attribution/deduplication, confirmed transfers and durable
   server/client recovery in mocked game and real AP server tests.
 - [x] Document rollback/replay policy, separating permanent unlocks from
@@ -434,7 +435,8 @@ policy, and disabled categories impose no new locks or missing dependencies.
 ### Stage 5: quest and zone keys
 
 - [x] Implement three quest-chain keys and deferred native task-grant replay.
-- [x] Implement nine AP equipment permissions, baseline grants and no-PDA queues.
+- [x] Implement nine AP equipment permissions, baseline grants and deferred
+  PDA map markers.
 - [x] Implement 32 zone keys with native/scripted transition guards and a local
   randomized exploration chain; Cordon remains the free starting region.
 - [x] Implement preview/confirmation and saved one-trip consumption for nine

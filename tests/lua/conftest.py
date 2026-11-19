@@ -44,6 +44,7 @@ def lua():
         "settlements",
         "notice_text",
         "notifications",
+        "presence",
         "tracker",
         "scout_protocol",
         "scouting",

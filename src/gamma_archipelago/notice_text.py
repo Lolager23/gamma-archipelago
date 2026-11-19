@@ -5,6 +5,8 @@ from dataclasses import dataclass
 from .catalog import ITEM_IDS
 from .protocol import ProtocolError
 
+JOIN_TEMPLATE = "{player} joined the Archipelago."
+
 ENGLISH_TEMPLATES = {
     "received_item": '{player} gave you "{item}".',
     "received_unlock": '{player} unlocked your "{item}".',

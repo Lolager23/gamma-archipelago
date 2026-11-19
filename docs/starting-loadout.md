@@ -19,7 +19,8 @@ before character creation. Attaching such a seed to an existing character is
 refused. Unrestricted configured seeds can attach without an inventory sweep.
 Ordinary load/reload preserves earned equipment and the initialization marker.
 This is an initial omission, not a permanent ban on buying or finding equipment.
-When the initial PDA is absent, reward notices remain queued until a PDA exists.
+When the initial PDA is absent, Archipelago broadcasts still appear through the
+game's news API. PDA screens and PDA-dependent gameplay retain their restrictions.
 
 Newly generated seeds use slot schema 2 and incoming snapshot version 2. The
 snapshot names a configuration digest; a separately validated, bounded data-only

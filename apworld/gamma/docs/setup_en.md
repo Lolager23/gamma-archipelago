@@ -20,8 +20,9 @@ source and transport tests do not establish a completed GAMMA playthrough.
    `D:/AnomalyAP/appdata/archipelago`. Goal/category settings belong to the seed;
    changing them requires a matching new session, not editing a bound save.
 
-Named notices appear in the PDA after receipts apply. No-PDA starts retain queued
-messages. Optional travel requires separate MCM preview/confirmation. A received
+Named reward broadcasts appear after receipts apply, including without a PDA.
+Join broadcasts also work without a PDA. Optional travel requires separate MCM
+preview/confirmation. A received
 orange coordinate is not its local protected claim. Zone keys use a randomized
 local exploration chain; other rewards use normal multiworld placement.
 

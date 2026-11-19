@@ -24,6 +24,7 @@ from gamma_archipelago.configuration import (
     defaults,
 )
 from gamma_archipelago.discovery import configured_location_ids
+from gamma_archipelago.notice_text import clean_label
 from gamma_archipelago.notifications import transfer_notice
 from gamma_archipelago.paths import DEFAULT_GAME_ROOT
 from gamma_archipelago.protocol import ProtocolError, validate_id_manifest, validate_session_key
@@ -57,6 +58,8 @@ class GammaContext(CommonContext):
         self.scouting_hints: set[int] = set()
         self.scouting_epoch = secrets.token_hex(8)
         self.scouting_sequence = 0
+        self.presence_sequence = 0
+        self.last_presence_error: str | None = None
 
     async def server_auth(self, password_requested: bool = False) -> None:
         if password_requested and not self.password:
@@ -153,6 +156,7 @@ class GammaContext(CommonContext):
             self.scouting_hints.clear()
             self.scouting_epoch = secrets.token_hex(8)
             self.scouting_sequence = 0
+            self.presence_sequence = 0
         if command in ("Connected", "RoomUpdate") and self.session:
             self.session.accept_confirmed(frozenset(self.checked_locations))
             self.bridge.write_confirmed(self.session.session_key, frozenset(self.checked_locations))
@@ -219,9 +223,28 @@ class GammaContext(CommonContext):
             )
         )
 
+    def publish_presence(self) -> None:
+        self.presence_sequence += 1
+        try:
+            self.bridge.write_presence(
+                self.session.session_key,
+                self.bridge.configuration_key,
+                self.scouting_epoch,
+                self.presence_sequence,
+                clean_label(self.player_names.get(self.slot, self.auth or f"Player {self.slot}")),
+            )
+        except (OSError, ProtocolError) as error:
+            message = str(error)
+            if message != self.last_presence_error:
+                logger.warning("GAMMA PDA presence: %s", message)
+            self.last_presence_error = message
+        else:
+            self.last_presence_error = None
+
     async def poll_game_once(self) -> None:
         if not self.session or not self.server or not self.slot:
             return
+        self.publish_presence()
         missing = sorted(self.checked_locations - self.scout_requested)[:64]
         if missing:
             await self.send_msgs(
