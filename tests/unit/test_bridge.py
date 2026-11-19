@@ -5,10 +5,28 @@ import pytest
 
 from gamma_archipelago.bridge import FileBridge
 from gamma_archipelago.catalog import ITEM_SECTIONS
+from gamma_archipelago.notifications import Notice
 from gamma_archipelago.paths import require_isolated_root, require_safe_child
 from gamma_archipelago.protocol import ProtocolError
 
 from .test_protocol import KEY, outgoing
+
+
+def test_notices_wait_for_game_ack_and_ignore_acknowledgements_from_old_seeds(tmp_path):
+    bridge = FileBridge(tmp_path, allowed_root=tmp_path)
+    notice = Notice("r:0", 1, "Owen gave you a Toolkit")
+    bridge.write_notices(KEY, (notice,))
+    assert "notice|r:0|1|" in (bridge.directory / "notices.txt").read_text()
+    ack = bridge.directory / "notices_ack.txt"
+    ack.write_text(f"GAMMA_AP_NOTICES_ACK|1\nsession|{KEY}\nr:0\nend|1\n")
+    bridge.write_notices(KEY, (notice,))
+    assert (bridge.directory / "notices.txt").read_text().endswith("end|0\n")
+    ack.write_text(f"GAMMA_AP_NOTICES_ACK|1\nsession|{'b' * 64}\nr:0\nend|1\n")
+    bridge.write_notices(KEY, (notice,))
+    assert "notice|r:0|1|" in (bridge.directory / "notices.txt").read_text()
+    ack.write_bytes(b"\xff")
+    with pytest.raises(ProtocolError, match="ASCII"):
+        bridge.write_notices(KEY, (notice,))
 
 
 def test_bridge_writes_complete_snapshot_atomically_and_reads_game(tmp_path):

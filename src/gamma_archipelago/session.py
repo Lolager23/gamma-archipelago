@@ -5,6 +5,7 @@ import json
 from dataclasses import dataclass, field
 
 from .catalog import ITEM_SECTIONS, MAX_ITEMS
+from .notifications import MAX_NOTICES, Notice, validate_notice
 from .protocol import GameSnapshot, ProtocolError
 
 
@@ -22,6 +23,13 @@ class SessionCoordinator:
     session_key: str
     item_ids: tuple[int, ...] = ()
     checked_locations: set[int] = field(default_factory=set)
+    notices: dict[str, Notice] = field(default_factory=dict)
+
+    def add_notice(self, notice: Notice) -> None:
+        validate_notice(notice)
+        if notice.identity not in self.notices and len(self.notices) >= MAX_NOTICES:
+            raise ProtocolError("Notice history exceeds the supported bound")
+        self.notices[notice.identity] = notice
 
     def accept_history(self, item_ids: tuple[int, ...]) -> None:
         if len(item_ids) > MAX_ITEMS or any(item_id not in ITEM_SECTIONS for item_id in item_ids):

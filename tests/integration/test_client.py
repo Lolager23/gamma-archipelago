@@ -5,7 +5,7 @@ from unittest.mock import AsyncMock
 
 import pytest
 from CommonClient import CommonContext
-from NetUtils import ClientStatus, NetworkItem
+from NetUtils import ClientStatus, NetworkItem, NetworkSlot
 from worlds.gamma import client as adapter
 
 from gamma_archipelago.catalog import ITEM_SECTIONS, LOCATION_IDS
@@ -24,7 +24,9 @@ def run_async(test):
 
 
 def connected_context():
-    bridge = SimpleNamespace(write_history=lambda *_: None, read_game=lambda _: None)
+    bridge = SimpleNamespace(
+        write_history=lambda *_: None, write_notices=lambda *_: None, read_game=lambda _: None
+    )
     context = adapter.GammaContext(bridge=bridge)
     context.server_seed_name = "pilot-seed"
     context.team = 0
@@ -32,6 +34,28 @@ def connected_context():
     context.server = object()
     context.on_package("Connected", {"slot_data": {"schema_version": 1, "pilot": True}})
     return context
+
+
+@run_async
+async def test_named_incoming_and_foreign_outgoing_notices_deduplicate_self_transfers():
+    context = connected_context()
+    context.player_names.update({1: "Owen", 2: "Friend"})
+    context.slot_info[2] = NetworkSlot("Friend", "Foreign Game", 1)
+    context.item_names.update_game("Foreign Game", {"Moon Key": 42})
+    context.items_received = [NetworkItem(ITEMS[0], 3, 2)]
+    context.on_package("ReceivedItems", {})
+    assert context.session.notices["r:0"].text == "Friend gave you a Basic Toolkit"
+    transfer = {"type": "ItemSend", "receiving": 2, "item": NetworkItem(42, 99, 1)}
+    context.on_package("PrintJSON", transfer)
+    context.on_package("PrintJSON", transfer)
+    assert context.session.notices["s:99:2:42"].text == "You gave Friend Moon Key"
+    context.on_package("PrintJSON", {**transfer, "receiving": 1})
+    context.on_package("PrintJSON", {**transfer, "type": "Hint"})
+    context.on_package("PrintJSON", {**transfer, "item": None})
+    context.on_package("PrintJSON", {**transfer, "item": NetworkItem(42, 99, 2)})
+    context.on_package("PrintJSON", {**transfer, "receiving": "2"})
+    context.on_package("PrintJSON", {**transfer, "receiving": 9})
+    assert len(context.session.notices) == 2
 
 
 @run_async

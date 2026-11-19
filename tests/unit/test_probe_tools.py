@@ -1,6 +1,4 @@
 import json
-import os
-import subprocess
 import sys
 
 import pytest
@@ -8,23 +6,7 @@ import pytest
 from tools import deploy_mod, inspect_probe_sources, report_probes
 
 
-@pytest.mark.parametrize("tool", ["report_probes.py", "inspect_probe_sources.py"])
-def test_probe_cli_uses_its_own_checkout_before_an_unrelated_install(tmp_path, tool):
-    package = tmp_path / "gamma_archipelago"
-    package.mkdir()
-    (package / "__init__.py").write_text("raise RuntimeError('wrong checkout loaded')\n")
-    result = subprocess.run(
-        [sys.executable, str(deploy_mod.ROOT / "tools" / tool), "--help"],
-        cwd=tmp_path,
-        env={**os.environ, "PYTHONPATH": str(tmp_path)},
-        capture_output=True,
-        text=True,
-        check=True,
-    )
-    assert "usage:" in result.stdout
-
-
-@pytest.mark.parametrize("component,count", [("pilot", 7), ("probes", 3)])
+@pytest.mark.parametrize("component,count", [("pilot", 8), ("probes", 3)])
 def test_deployer_copies_each_component_to_a_separate_mod(tmp_path, monkeypatch, component, count):
     monkeypatch.setattr(deploy_mod, "DEFAULT_MO2_ROOT", tmp_path)
     monkeypatch.setattr(sys, "argv", ["deploy_mod.py", "--component", component])

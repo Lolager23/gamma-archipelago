@@ -4,6 +4,14 @@ import os
 from pathlib import Path
 
 from .catalog import MAX_SNAPSHOT_BYTES
+from .notifications import (
+    MAX_ACK_BYTES,
+    Notice,
+    NoticeSessionMismatch,
+    decode_acknowledgements,
+    encode_notices,
+    pending_batch,
+)
 from .paths import require_isolated_root, require_safe_child
 from .protocol import GameSnapshot, ProtocolError, decode_outgoing, encode_incoming
 
@@ -16,13 +24,27 @@ class FileBridge:
 
     def write_history(self, session_key: str, item_ids: tuple[int, ...]) -> None:
         content = encode_incoming(session_key, item_ids)
-        destination = require_safe_child(self.game_root, "appdata/archipelago/incoming.txt")
-        temporary = require_safe_child(self.game_root, "appdata/archipelago/incoming.tmp")
+        self._write_atomic("incoming", content)
+
+    def _write_atomic(self, name: str, content: str) -> None:
+        destination = require_safe_child(self.game_root, f"appdata/archipelago/{name}.txt")
+        temporary = require_safe_child(self.game_root, f"appdata/archipelago/{name}.tmp")
         with temporary.open("w", encoding="ascii", newline="\n") as stream:
             stream.write(content)
             stream.flush()
             os.fsync(stream.fileno())
         os.replace(temporary, destination)
+
+    def write_notices(self, session_key: str, notices: tuple[Notice, ...]) -> None:
+        source = require_safe_child(self.game_root, "appdata/archipelago/notices_ack.txt")
+        try:
+            with source.open("r", encoding="ascii") as stream:
+                seen = decode_acknowledgements(stream.read(MAX_ACK_BYTES + 1), session_key)
+        except (FileNotFoundError, NoticeSessionMismatch):
+            seen = frozenset()
+        except UnicodeDecodeError as exc:
+            raise ProtocolError("Notice acknowledgements must be ASCII data") from exc
+        self._write_atomic("notices", encode_notices(session_key, pending_batch(notices, seen)))
 
     def read_game(self, session_key: str) -> GameSnapshot | None:
         source = require_safe_child(self.game_root, "appdata/archipelago/outgoing.txt")

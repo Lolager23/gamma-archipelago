@@ -1,7 +1,7 @@
 -- The sole owner of this save's AP state. Files and engine calls are injected.
 
 function new_state()
-    return { session_key = nil, received_count = 0, checks = {}, applied_items = {} }
+    return { session_key = nil, received_count = 0, checks = {}, applied_items = {}, notices_seen = {} }
 end
 
 function copy_state(state)
@@ -10,6 +10,7 @@ function copy_state(state)
     result.received_count = state.received_count
     for key, value in pairs(state.checks) do result.checks[key] = value end
     for key, value in pairs(state.applied_items) do result.applied_items[key] = value end
+    for key, value in pairs(state.notices_seen or {}) do result.notices_seen[key] = value end
     return result
 end
 

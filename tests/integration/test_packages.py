@@ -26,7 +26,16 @@ def test_packages_are_reproducible_and_load_from_apworld(tmp_path):
     with ZipFile(outputs[1]) as archive:
         assert set(archive.namelist()) == {
             f"gamedata/scripts/gamma_ap_{name}.script"
-            for name in ("catalog", "paths", "protocol", "state", "game", "actions", "mcm")
+            for name in (
+                "catalog",
+                "paths",
+                "protocol",
+                "state",
+                "game",
+                "actions",
+                "mcm",
+                "notifications",
+            )
         } | {"gamedata/configs/text/eng/st_gamma_archipelago.xml"}
     with ZipFile(outputs[2]) as archive:
         assert set(archive.namelist()) == {
@@ -58,6 +67,10 @@ import worlds.gamma.client
     subprocess.run(
         [sys.executable, "-c", code, str(isolated)],
         check=True,
-        env={**os.environ, "SKIP_REQUIREMENTS_UPDATE": "1"},
+        env={
+            **os.environ,
+            "SKIP_REQUIREMENTS_UPDATE": "1",
+            "PYTHONPATH": str(ROOT / "src"),
+        },
         timeout=30,
     )
