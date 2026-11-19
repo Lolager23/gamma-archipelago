@@ -3490,6 +3490,11 @@
     "esc_treasure_8": "l01_escape",
     "esc_treasure_9": "l01_escape"
   },
+  "quest_key_requirements": {
+    "living_legend": ["living_legend"],
+    "mortal_sin": ["living_legend", "mortal_sin"],
+    "operation_afterglow": ["living_legend", "mortal_sin", "operation_afterglow"]
+  },
   "quest_gates": {
     "lttz_ll_find_doctor": "living_legend",
     "lttz_ll_visit_agro_ug": "living_legend",

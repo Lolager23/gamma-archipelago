@@ -289,3 +289,38 @@ def test_quest_permissions_are_required_items_and_gate_their_story_checks():
             "Quest Key: Operation Afterglow",
         )
     )
+
+
+@pytest.mark.parametrize(
+    "chain,missing",
+    [
+        ("living_legend", "Living Legend"),
+        ("mortal_sin", "Living Legend"),
+        ("mortal_sin", "Mortal Sin"),
+        ("operation_afterglow", "Living Legend"),
+        ("operation_afterglow", "Mortal Sin"),
+        ("operation_afterglow", "Operation Afterglow"),
+    ],
+)
+def test_quest_story_checks_require_permissions_for_all_prior_native_chains(chain, missing):
+    from BaseClasses import CollectionState
+
+    multiworld = setup_multiworld(
+        GammaWorld, options={"checks_story_milestones": 1, "rewards_quest_keys": 1}
+    )
+    world = multiworld.worlds[1]
+    catalogue = json.loads((ROOT / "src/gamma_archipelago/catalog.json").read_text())
+    identities = {
+        row["id"]
+        for row in catalogue["locations"]
+        if row.get("tasks") and catalogue["quest_gates"][row["tasks"][0]] == chain
+    }
+    locations = [loc for loc in multiworld.get_locations(1) if loc.address in identities]
+    assert locations
+    state = CollectionState(multiworld)
+    for key in ("Living Legend", "Mortal Sin", "Operation Afterglow"):
+        if key != missing:
+            state.collect(world.create_item("Quest Key: " + key))
+    assert all(not location.can_reach(state) for location in locations)
+    state.collect(world.create_item("Quest Key: " + missing))
+    assert all(location.can_reach(state) for location in locations)
