@@ -7,6 +7,25 @@ from .test_game_adapter import load_game, saved_state, set_incoming
 KEY = "a" * 64
 
 
+@pytest.mark.parametrize("item", [0, 10**10, 2**53 - 1, -(2**53 - 1)])
+def test_foreign_item_identity_roundtrips_without_numeric_rounding(lua, item):
+    module = lua.globals().gamma_ap_notifications
+    identity = f"s:28052001:2:{item}"
+    encoded = encode_notices(KEY, (Notice(identity, 0, "Foreign reward"),))
+    assert module.parse(encoded, KEY)[1].id == identity
+    acknowledged = module.encode_ack(KEY, lua.table_from({identity: True}))
+    assert decode_acknowledgements(acknowledged, KEY) == {identity}
+
+
+@pytest.mark.parametrize("item", [str(2**53), str(-(2**53)), "-0", "-01", "9" * 17])
+def test_lua_refuses_noncanonical_or_out_of_range_foreign_item_ids(lua, item):
+    identity = f"s:28052001:2:{item}"
+    assert (
+        lua.globals().gamma_ap_notifications.encode_ack(KEY, lua.table_from({identity: True}))[0]
+        is None
+    )
+
+
 def packet(*notices, key=KEY):
     return encode_notices(key, notices)
 
