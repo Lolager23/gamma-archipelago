@@ -2119,6 +2119,152 @@
       "tasks": [
         "lttz_oa_loose_ends"
       ]
+    },
+    {
+      "id": 28052701,
+      "name": "Reach Armour Tier: Light",
+      "level": "Menu",
+      "category": "checks_armour_tiers",
+      "key": "1"
+    },
+    {
+      "id": 28052702,
+      "name": "Reach Armour Tier: Medium / Scientific",
+      "level": "Menu",
+      "category": "checks_armour_tiers",
+      "key": "2"
+    },
+    {
+      "id": 28052703,
+      "name": "Reach Armour Tier: Heavy",
+      "level": "Menu",
+      "category": "checks_armour_tiers",
+      "key": "3"
+    },
+    {
+      "id": 28052704,
+      "name": "Reach Armour Tier: Exoskeleton / Nosorog",
+      "level": "Menu",
+      "category": "checks_armour_tiers",
+      "key": "4"
+    },
+    {
+      "id": 28052711,
+      "name": "Use Firearm Class: Pistol",
+      "level": "Menu",
+      "category": "checks_weapon_tiers",
+      "key": "pistol"
+    },
+    {
+      "id": 28052712,
+      "name": "Use Firearm Class: Shotgun",
+      "level": "Menu",
+      "category": "checks_weapon_tiers",
+      "key": "shotgun"
+    },
+    {
+      "id": 28052713,
+      "name": "Use Firearm Class: Smg",
+      "level": "Menu",
+      "category": "checks_weapon_tiers",
+      "key": "smg"
+    },
+    {
+      "id": 28052714,
+      "name": "Use Firearm Class: Rifle",
+      "level": "Menu",
+      "category": "checks_weapon_tiers",
+      "key": "rifle"
+    },
+    {
+      "id": 28052715,
+      "name": "Use Firearm Class: Sniper",
+      "level": "Menu",
+      "category": "checks_weapon_tiers",
+      "key": "sniper"
+    },
+    {
+      "id": 28052716,
+      "name": "Use Firearm Class: Machinegun",
+      "level": "Menu",
+      "category": "checks_weapon_tiers",
+      "key": "machinegun"
+    },
+    {
+      "id": 28052721,
+      "name": "Reach Knife Tier 2",
+      "level": "Menu",
+      "category": "checks_knife_tiers",
+      "key": "2"
+    },
+    {
+      "id": 28052722,
+      "name": "Reach Knife Tier 3",
+      "level": "Menu",
+      "category": "checks_knife_tiers",
+      "key": "3"
+    },
+    {
+      "id": 28052723,
+      "name": "Reach Knife Tier 4",
+      "level": "Menu",
+      "category": "checks_knife_tiers",
+      "key": "4"
+    },
+    {
+      "id": 28052724,
+      "name": "Reach Knife Tier 5",
+      "level": "Menu",
+      "category": "checks_knife_tiers",
+      "key": "5"
+    },
+    {
+      "id": 28052731,
+      "name": "Install 1 Firearm Upgrades",
+      "level": "Menu",
+      "category": "checks_gear_upgrades",
+      "key": "firearm",
+      "threshold": 1
+    },
+    {
+      "id": 28052732,
+      "name": "Install 3 Firearm Upgrades",
+      "level": "Menu",
+      "category": "checks_gear_upgrades",
+      "key": "firearm",
+      "threshold": 3
+    },
+    {
+      "id": 28052733,
+      "name": "Install 5 Firearm Upgrades",
+      "level": "Menu",
+      "category": "checks_gear_upgrades",
+      "key": "firearm",
+      "threshold": 5
+    },
+    {
+      "id": 28052734,
+      "name": "Install 1 Armour Upgrades",
+      "level": "Menu",
+      "category": "checks_gear_upgrades",
+      "key": "armour",
+      "threshold": 1
+    },
+    {
+      "id": 28052735,
+      "name": "Install 3 Armour Upgrades",
+      "level": "Menu",
+      "category": "checks_gear_upgrades",
+      "key": "armour",
+      "threshold": 3
+    },
+    {
+      "id": 28052736,
+      "name": "Install 5 Armour Upgrades",
+      "level": "Menu",
+      "category": "checks_gear_upgrades",
+      "key": "armour",
+      "threshold": 5
     }
   ],
   "content_inventory": {
@@ -2162,7 +2308,6 @@
       "fake_start"
     ],
     "remaining_rosters": [
-      "equipment_tiers",
       "ranks",
       "x_labs"
     ],
@@ -2573,5 +2718,129 @@
     "smart_control_task_status_functor": "territory",
     "veh_destroy_sf": "vehicle",
     "veh_destroy_tf": "vehicle"
+  },
+  "equipment": {
+    "armour_kinds": {
+      "o_light": 1,
+      "o_medium": 2,
+      "o_sci": 2,
+      "o_heavy": 3
+    },
+    "powered_outfits": [
+      "army_nosorog_outfit",
+      "bandit_exo_outfit",
+      "cs_exo_outfit",
+      "cs_stalker_proto_exo_outfit",
+      "dolg_exo_outfit",
+      "dolg_heavy_proto_exo_outfit",
+      "dolg_nosorog_outfit",
+      "dolg_proto_exo_outfit",
+      "ecolog_exo_outfit",
+      "ecolog_proto_exo_outfit",
+      "exo_outfit",
+      "freedom_nosorog_outfit",
+      "greh_exo_outfit",
+      "isg_exo_outfit",
+      "isg_nosorog_outfit",
+      "isg_proto_exo_outfit",
+      "merc_exo_outfit",
+      "merc_nosorog_outfit",
+      "military_exo_outfit",
+      "military_proto_exo_outfit",
+      "monolith_exo_outfit",
+      "monolith_nosorog_outfit",
+      "monolith_proto_exo_outfit",
+      "renegade_exo_outfit",
+      "stalker_proto_exo_outfit",
+      "svoboda_exo_outfit",
+      "svoboda_light_proto_exo_outfit"
+    ],
+    "weapon_kinds": {
+      "w_pistol": "pistol",
+      "w_shotgun": "shotgun",
+      "w_smg": "smg",
+      "w_rifle": "rifle",
+      "w_sniper": "sniper"
+    },
+    "machineguns": [
+      "wpn_m249",
+      "wpn_m249_ac10632",
+      "wpn_m249_bossxe",
+      "wpn_m249_c79",
+      "wpn_m249_e0t2",
+      "wpn_m249_e0t2_magd",
+      "wpn_m249_e0t2_magd_off",
+      "wpn_m249_echo1",
+      "wpn_m249_eot",
+      "wpn_m249_exps3",
+      "wpn_m249_hco",
+      "wpn_m249_he510",
+      "wpn_m249_lco1",
+      "wpn_m249_march_f_shorty",
+      "wpn_m249_march_f_shorty_alt",
+      "wpn_m249_mepro",
+      "wpn_m249_monstrum",
+      "wpn_m249_p1x42",
+      "wpn_m249_rmr",
+      "wpn_m249_romeo4",
+      "wpn_m249_specter",
+      "wpn_m249_t12",
+      "wpn_m249_trihawk",
+      "wpn_m249_triji",
+      "wpn_m249_uh1_magd",
+      "wpn_m249_uh1_magd_off",
+      "wpn_m249_uh2",
+      "wpn_pkm_siber",
+      "wpn_pkm_zenit_siber",
+      "wpn_pkm_zenit_siber_0kp2",
+      "wpn_pkm_zenit_siber_1p87",
+      "wpn_pkm_zenit_siber_ac10632",
+      "wpn_pkm_zenit_siber_aim_low",
+      "wpn_pkm_zenit_siber_aimpoint",
+      "wpn_pkm_zenit_siber_c-more",
+      "wpn_pkm_zenit_siber_compm4s",
+      "wpn_pkm_zenit_siber_cortex",
+      "wpn_pkm_zenit_siber_d0cter",
+      "wpn_pkm_zenit_siber_deltapoint",
+      "wpn_pkm_zenit_siber_e0t2",
+      "wpn_pkm_zenit_siber_e0t2_magd",
+      "wpn_pkm_zenit_siber_e0t2_magd_off",
+      "wpn_pkm_zenit_siber_ekp8_18",
+      "wpn_pkm_zenit_siber_eot",
+      "wpn_pkm_zenit_siber_kemper",
+      "wpn_pkm_zenit_siber_mark8_rmr",
+      "wpn_pkm_zenit_siber_mepro",
+      "wpn_pkm_zenit_siber_p1x42",
+      "wpn_pkm_zenit_siber_pk6",
+      "wpn_pkm_zenit_siber_point_aimpro",
+      "wpn_pkm_zenit_siber_ps320",
+      "wpn_pkm_zenit_siber_rakurs",
+      "wpn_pkm_zenit_siber_razorhd",
+      "wpn_pkm_zenit_siber_rmr",
+      "wpn_pkm_zenit_siber_romeo8",
+      "wpn_pkm_zenit_siber_spec_alt",
+      "wpn_pkm_zenit_siber_tac30",
+      "wpn_pkm_zenit_siber_triji",
+      "wpn_pkm_zenit_siber_uh1_magd",
+      "wpn_pkm_zenit_siber_uh1_magd_off",
+      "wpn_pkm_zenit_siber_uh2",
+      "wpn_pkp_siber",
+      "wpn_pkp_siber_1p63",
+      "wpn_pkp_siber_1p76",
+      "wpn_pkp_siber_ekp8_02",
+      "wpn_pkp_siber_kobra",
+      "wpn_pkp_siber_okp",
+      "wpn_pkp_siber_pka"
+    ],
+    "knives": {
+      "wpn_knife": 1,
+      "wpn_knife2": 2,
+      "wpn_knife3": 3,
+      "wpn_knife4": 4,
+      "wpn_knife5": 5,
+      "wpn_axe": 3,
+      "wpn_axe2": 4,
+      "wpn_axe3": 5
+    }
   }
 }

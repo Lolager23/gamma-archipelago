@@ -108,6 +108,8 @@ function actor_on_update()
     if not success then report_error(delivery_error); return end
     gamma_ap_state.merge_confirmed(state, confirmed)
     gamma_ap_state.check_level(state, level.name())
+    local equipped, equipment_error = gamma_ap_equipment_checks.poll(state, configuration)
+    if not equipped then report_error(equipment_error); return end
     local written, write_error = write_outgoing()
     if not written then report_error(write_error); return end
     local notified, notice_error = gamma_ap_notifications.poll(state)
@@ -138,10 +140,14 @@ end
 
 function actor_on_item_take(item)
     gamma_ap_collection.observe(state, item, "ownership")
+    local ok, reason = gamma_ap_equipment_checks.acquired(state, item)
+    if not ok then report_error(reason) end
 end
 
 function actor_on_item_take_from_box(box, item)
     gamma_ap_collection.observe(state, item, "container")
+    local ok, reason = gamma_ap_equipment_checks.acquired(state, item)
+    if not ok then report_error(reason) end
 end
 
 function actor_on_task_callback(object, status, manager, id)

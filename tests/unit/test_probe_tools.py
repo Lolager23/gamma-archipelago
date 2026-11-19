@@ -6,7 +6,7 @@ import pytest
 from tools import deploy_mod, inspect_probe_sources, report_probes
 
 
-@pytest.mark.parametrize("component,count", [("pilot", 15), ("probes", 3)])
+@pytest.mark.parametrize("component,count", [("pilot", 16), ("probes", 3)])
 def test_deployer_copies_each_component_to_a_separate_mod(tmp_path, monkeypatch, component, count):
     monkeypatch.setattr(deploy_mod, "DEFAULT_MO2_ROOT", tmp_path)
     monkeypatch.setattr(sys, "argv", ["deploy_mod.py", "--component", component])

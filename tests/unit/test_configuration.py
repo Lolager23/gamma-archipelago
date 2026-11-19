@@ -46,6 +46,10 @@ def test_default_configuration_is_immutable_and_deterministically_serialized():
             "checks_quest_types",
             "checks_story_milestones",
             "checks_side_task_milestones",
+            "checks_gear_upgrades",
+            "checks_armour_tiers",
+            "checks_weapon_tiers",
+            "checks_knife_tiers",
         }
     )
     + REWARD_OPTIONS,

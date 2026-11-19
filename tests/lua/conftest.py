@@ -25,6 +25,7 @@ def lua():
         "combat",
         "collection",
         "tasks",
+        "equipment_checks",
         "state",
         "settlements",
         "notifications",

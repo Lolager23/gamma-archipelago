@@ -78,6 +78,10 @@ SUPPORTED_CHECKS = frozenset(
         "checks_quest_types",
         "checks_story_milestones",
         "checks_side_task_milestones",
+        "checks_gear_upgrades",
+        "checks_armour_tiers",
+        "checks_weapon_tiers",
+        "checks_knife_tiers",
     }
 )
 SUPPORTED_REWARDS: frozenset[str] = frozenset()

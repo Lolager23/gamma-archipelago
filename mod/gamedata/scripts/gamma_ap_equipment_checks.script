@@ -1,0 +1,150 @@
+-- Equipment use and observed successful upgrade installations; no UI/payment inference.
+
+function copy(progress)
+    local result = {counts={firearm=0, armour=0}, observed={}, cursor=0}
+    if not progress then return result end
+    result.counts.firearm, result.counts.armour = progress.counts.firearm, progress.counts.armour
+    result.cursor = progress.cursor
+    for key, upgrades in pairs(progress.observed) do
+        result.observed[key] = {}
+        for id,value in pairs(upgrades) do result.observed[key][id] = value end
+    end
+    return result
+end
+
+local function kind(section)
+    return ini_sys:r_string_ex(section, "kind")
+end
+
+local function upgrade_group(section)
+    local value = kind(section)
+    if gamma_ap_catalog.armour_kinds[value] or value == "o_helmet" then return "armour" end
+    if gamma_ap_catalog.weapon_kinds[value] or gamma_ap_catalog.machineguns[section] then
+        return "firearm"
+    end
+end
+
+local function identity(object)
+    return tostring(object:id()) .. ":" .. object:name()
+end
+
+local function installed(object)
+    local upgrades, count = {}, 0
+    local ok = pcall(function()
+        object:iterate_installed_upgrades(function(id)
+            count = count + 1
+            if type(id) ~= "string" or #id < 1 or #id > 128 or count > 128 then
+                error("Invalid installed upgrade data")
+            end
+            upgrades[id] = true
+        end)
+    end)
+    if not ok then return nil, "Cannot inspect this item's installed upgrades" end
+    return upgrades
+end
+
+local function upgrades_enabled(state)
+    return state.enabled_checks[gamma_ap_catalog.upgrade_locations.firearm[1]]
+        or state.enabled_checks[gamma_ap_catalog.upgrade_locations.armour[1]]
+end
+
+function acquired(state, object)
+    if not state.session_key or not state.expanded or not object or not upgrades_enabled(state) then return true end
+    local group = upgrade_group(object:section())
+    if not group or state.equipment.counts[group] >= 5 then return true end
+    local key = identity(object)
+    if not state.equipment.observed[key] then
+        local values, reason = installed(object)
+        if not values then return false, reason end
+        state.equipment.observed[key] = values
+    end
+    return true
+end
+
+local function award_tiers(state, locations, tier)
+    if not tier then return end
+    for text, id in pairs(locations) do
+        if tonumber(text) <= tier and state.enabled_checks[id] then state.checks[id] = true end
+    end
+end
+
+local function check_equipped(state, options)
+    if options.checks_armour_tiers == 1 then
+        local outfit = db.actor:item_in_slot(7)
+        if outfit and outfit:condition() > 0 then
+            local section = outfit:section()
+            local tier = gamma_ap_catalog.powered_outfits[section] and 4
+                or gamma_ap_catalog.armour_kinds[kind(section)]
+            award_tiers(state, gamma_ap_catalog.armour_locations, tier)
+        end
+    end
+    if options.checks_weapon_tiers == 1 or options.checks_knife_tiers == 1 then
+        local active = db.actor:active_item()
+        if active and active:condition() > 0 then
+            local section = active:section()
+            local class = gamma_ap_catalog.machineguns[section] and "machinegun"
+                or gamma_ap_catalog.weapon_kinds[kind(section)]
+            local id = gamma_ap_catalog.weapon_locations[class]
+            if id and state.enabled_checks[id] then state.checks[id] = true end
+            award_tiers(state, gamma_ap_catalog.knife_locations, gamma_ap_catalog.knives[section])
+        end
+    end
+end
+
+local function observe_installations(state, object, group)
+    local values, reason = installed(object)
+    if not values then return false, reason end
+    local progress = state.equipment
+    local key = identity(object)
+    local previous = progress.observed[key]
+    if previous then
+        for id in pairs(values) do
+            if not previous[id] then
+                progress.counts[group] = math.min(5, progress.counts[group] + 1)
+                previous[id] = true
+            end
+        end
+    else progress.observed[key] = values end
+    for threshold, id in pairs(gamma_ap_catalog.upgrade_locations[group]) do
+        if progress.counts[group] >= threshold and state.enabled_checks[id] then state.checks[id] = true end
+    end
+    return true
+end
+
+local function check_upgrades(state)
+    local progress = state.equipment
+    if progress.counts.firearm >= 5 and progress.counts.armour >= 5 then
+        progress.observed = {}; return true
+    end
+    local objects, owned = {}, {}
+    db.actor:iterate_inventory(function(_, object)
+        local group = upgrade_group(object:section())
+        if group and progress.counts[group] < 5 then
+            objects[#objects+1] = {object=object, group=group}
+            owned[identity(object)] = true
+        end
+    end, db.actor)
+    for key in pairs(progress.observed) do
+        if not owned[key] then progress.observed[key] = nil end
+    end
+    table.sort(objects, function(a,b) return a.object:id() < b.object:id() end)
+    local processed, more = 0, false
+    for _, entry in ipairs(objects) do
+        if entry.object:id() > progress.cursor then
+            if processed >= 8 then more = true; break end
+            local ok, reason = observe_installations(state, entry.object, entry.group)
+            if not ok then return false, reason end
+            progress.cursor = entry.object:id()
+            processed = processed + 1
+        end
+    end
+    if not more then progress.cursor = 0 end
+    return true
+end
+
+function poll(state, configuration)
+    if not state.session_key or not state.expanded or not configuration or not configuration.expanded then return true end
+    check_equipped(state, configuration.options)
+    if configuration.options.checks_gear_upgrades == 1 then return check_upgrades(state) end
+    return true
+end
