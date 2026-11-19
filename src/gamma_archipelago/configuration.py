@@ -66,6 +66,7 @@ OPTION_NAMES = (
         "kill_milestones",
         "side_task_milestones",
         "zone_unlock_travel",
+        "pda_tracker",
     )
 )
 SUPPORTED_CHECKS = frozenset(
@@ -117,7 +118,10 @@ def defaults() -> dict[str, object]:
     values: dict[str, object] = dict.fromkeys(OPTION_NAMES, 0)
     values.update(dict.fromkeys(QUANTITY_OPTIONS, 100))
     values.update(
-        checks_maps=1, kill_milestones=[10, 25, 50, 100], side_task_milestones=[5, 10, 20, 40]
+        checks_maps=1,
+        pda_tracker=1,
+        kill_milestones=[10, 25, 50, 100],
+        side_task_milestones=[5, 10, 20, 40],
     )
     return values
 
@@ -151,6 +155,7 @@ class SeedConfiguration:
     kill_milestones: tuple[int, ...]
     side_task_milestones: tuple[int, ...]
     zone_unlock_travel: int
+    pda_tracker: int = 1
 
     def to_values(self) -> dict[str, object]:
         return {
@@ -163,11 +168,14 @@ class SeedConfiguration:
             "kill_milestones": list(self.kill_milestones),
             "side_task_milestones": list(self.side_task_milestones),
             "zone_unlock_travel": self.zone_unlock_travel,
+            "pda_tracker": self.pda_tracker,
         }
 
     @property
     def digest(self) -> str:
         values = self.to_values()
+        if self.pda_tracker == 1:
+            values.pop("pda_tracker")  # Presentation default preserves existing seed identities.
         if not self.zone_unlock_travel:
             values.pop("zone_unlock_travel")  # Preserve pre-travel configuration identities.
         encoded = json.dumps(values, sort_keys=True, separators=(",", ":"))
@@ -175,6 +183,8 @@ class SeedConfiguration:
 
 
 def build_configuration(values: Mapping[str, object]) -> SeedConfiguration:
+    if "pda_tracker" not in values:
+        values = {**values, "pda_tracker": 1}
     if "zone_unlock_travel" not in values:
         values = {**values, "zone_unlock_travel": 0}
     if set(values) != set(OPTION_NAMES):
@@ -220,6 +230,7 @@ def build_configuration(values: Mapping[str, object]) -> SeedConfiguration:
         _thresholds(values["kill_milestones"]),
         _thresholds(values["side_task_milestones"]),
         travel,
+        _integer(values, "pda_tracker", 1),
     )
 
 

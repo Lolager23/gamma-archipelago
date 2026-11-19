@@ -40,6 +40,8 @@ def test_packages_are_reproducible_and_load_from_apworld(tmp_path):
                 "actions",
                 "mcm",
                 "notice_text",
+                "tracker",
+                "pda",
                 "notifications",
                 "configuration",
                 "equipment",
@@ -63,6 +65,9 @@ def test_packages_are_reproducible_and_load_from_apworld(tmp_path):
         } | {
             "gamedata/configs/text/eng/st_gamma_archipelago.xml",
             "gamedata/configs/text/eng/st_gamma_ap_notices.xml",
+            "gamedata/configs/text/eng/st_gamma_ap_pda.xml",
+            "gamedata/configs/ui/gamma_ap_pda.xml",
+            "gamedata/scripts/modxml_gamma_ap_pda.script",
             "gamedata/scripts/modxml_gamma_ap_stashes.script",
         }
     with ZipFile(outputs[2]) as archive:

@@ -189,6 +189,12 @@ class ZoneUnlockTravel(Toggle):
     display_name = "One-time travel after zone unlock"
 
 
+class PdaTracker(DefaultOnToggle):
+    """Enable tracker content in the AP PDA tab; disabled seeds show a disabled page."""
+
+    display_name = "Archipelago PDA tracker"
+
+
 @dataclass
 class GammaOptions(PerGameCommonOptions):
     checks_maps: ChecksMaps
@@ -213,6 +219,7 @@ class GammaOptions(PerGameCommonOptions):
     rewards_zone_keys: RewardsZoneKeys
     rewards_starting_gear_unlocks: RewardsStartingGearUnlocks
     zone_unlock_travel: ZoneUnlockTravel
+    pda_tracker: PdaTracker
     goal: Goal
     no_starting_weapons: NoStartingWeapons
     starting_detector: StartingGear

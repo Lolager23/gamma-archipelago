@@ -1,5 +1,11 @@
 # Expanded randomiser: staged checklist
 
+**New scope, 19 November 2026:** the [second expansion plan](expansion-two-plan.md)
+adds Steps 31–40 as stacked PRs starting with the PDA tracker. It includes reward
+options, scouting, regional/delivery displays, discovery quotas, opening protection
+and pool/pacing previews. This extends the historical status below; native
+verification remains Owen's, with no automatic deployment or game launch.
+
 Updated **19 November 2026**, after the individual reviews and merges of PRs
 #2–#35, through merged implementation `ddb9ee8`. All thirty core increments and
 the local generator are merged in source. This checklist/audit reconciliation is

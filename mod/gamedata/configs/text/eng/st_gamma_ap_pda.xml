@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<string_table>
+    <string id="gamma_ap_pda_short"><text>AP</text></string>
+    <string id="gamma_ap_pda_progress_next"><text>Next progression page</text></string>
+    <string id="gamma_ap_pda_refresh"><text>Refresh</text></string>
+    <string id="gamma_ap_pda_all_regions"><text>All regions</text></string>
+    <string id="gamma_ap_pda_all"><text>All checks</text></string>
+    <string id="gamma_ap_pda_completed"><text>Completed</text></string>
+    <string id="gamma_ap_pda_available"><text>Available</text></string>
+    <string id="gamma_ap_pda_blocked"><text>Blocked</text></string>
+    <string id="gamma_ap_pda_previous"><text>Previous</text></string>
+    <string id="gamma_ap_pda_next"><text>Next</text></string>
+    <string id="gamma_ap_pda_applied"><text>Rewards applied</text></string>
+    <string id="gamma_ap_pda_pending"><text>pending</text></string>
+    <string id="gamma_ap_pda_goal"><text>Goal</text></string>
+    <string id="gamma_ap_pda_incomplete"><text>Incomplete</text></string>
+    <string id="gamma_ap_pda_goal_0"><text>Three-region tour</text></string>
+    <string id="gamma_ap_pda_goal_1"><text>Obtain calibrated psi protection</text></string>
+    <string id="gamma_ap_pda_goal_2"><text>Disable Brain Scorcher</text></string>
+    <string id="gamma_ap_pda_goal_3"><text>Meet Strelok</text></string>
+    <string id="gamma_ap_pda_goal_4"><text>Living Legend</text></string>
+    <string id="gamma_ap_pda_goal_5"><text>Visit all X-Labs</text></string>
+    <string id="gamma_ap_pda_unbound"><text>Start a matching AP session</text></string>
+    <string id="gamma_ap_pda_disabled"><text>Tracker disabled by this seed</text></string>
+    <string id="gamma_ap_pda_offline"><text>Server connectivity not reported by this snapshot</text></string>
+</string_table>

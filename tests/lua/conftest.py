@@ -40,6 +40,7 @@ def lua():
         "settlements",
         "notice_text",
         "notifications",
+        "tracker",
     ):
         path = ROOT / "mod/gamedata/scripts" / f"gamma_ap_{name}.script"
         runtime.globals()[f"gamma_ap_{name}"] = loader(str(path))

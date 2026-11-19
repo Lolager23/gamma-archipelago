@@ -53,6 +53,7 @@
       20,
       40
     ],
-    "zone_unlock_travel": 1
+    "zone_unlock_travel": 1,
+    "pda_tracker": 1
   }
 }
