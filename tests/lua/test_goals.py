@@ -84,3 +84,37 @@ def test_unavailable_shutdown_api_does_not_report_victory(lua):
     poll(game, engine)
     assert not progress(lua, game).goal_complete
     assert "shutdown state" in list(engine.logs.values())[-1]
+
+
+def story_game(lua, goal=3):
+    game, engine = goal_game(lua, goal=goal)
+    lua.execute("""
+        engine.info={};engine.faction='actor_stalker'
+        has_alife_info=function(name) return engine.info[name] == true end
+        character_community=function() return engine.faction end
+    """)
+    return game, engine
+
+
+def test_meet_strelok_is_the_actual_first_conversation_not_living_legend_completion(lua):
+    game, engine = story_game(lua)
+    engine.info.living_legend_done = True
+    poll(game, engine)
+    assert not snapshot(engine).goal_complete
+    engine.info.living_legend_strelok_start = True
+    poll(game, engine)
+    assert snapshot(engine).goal_complete
+
+
+@pytest.mark.parametrize(
+    "restriction", ["story_mode_disabled", "faction_limited_playthrough", "faction"]
+)
+def test_story_goal_refuses_unsupported_character_modes(lua, restriction):
+    game, engine = story_game(lua)
+    if restriction == "faction":
+        engine.faction = "actor_bandit"
+    else:
+        engine.info[restriction] = True
+    poll(game, engine)
+    assert not progress(lua, game).goal_complete
+    assert "story-enabled faction" in list(engine.logs.values())[-1]
