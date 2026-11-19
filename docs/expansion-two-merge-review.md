@@ -25,7 +25,7 @@ commits; the final hardening PR contains this review record itself.
 | [#46](https://github.com/Lolager23/gamma-archipelago/pull/46) | Supply packages | Contents/calibres, useful weights, repeatable receipts and partial-plan recovery reviewed |
 | [#47](https://github.com/Lolager23/gamma-archipelago/pull/47) | Carry rewards | Active keyed API, additive cap, idempotent retries, rollback and preservation of other modifiers reviewed |
 | [#48](https://github.com/Lolager23/gamma-archipelago/pull/48) | Generation/pacing | Fixed opening/route placement constraints; budgets, starting inventory, identity and spoiler reports reviewed |
-| [#49](https://github.com/Lolager23/gamma-archipelago/pull/49) | Combined hardening | Combined real generation/server tests, mocked recovery and this documentation reconciliation |
+| [#49](https://github.com/Lolager23/gamma-archipelago/pull/49) | Combined hardening | Combined generation/server/recovery tests, late-callback coverage census and documentation reconciliation |
 
 ## Corrections and compatibility
 
@@ -48,7 +48,13 @@ forced local placements. A regression reproduced the conflict. Generation now
 refuses that configuration before placing route keys; a companion positive case
 confirms already-precollected keys need no placement and remain supported.
 
-Both corrections preserve published IDs, receipt order and save schemas. The
+The Lua coverage collector also missed private callbacks created after module
+loading. Two regressions reproduced missing bodies whether invoked or uncalled.
+The collector now revisits owned module roots after each test with a fresh cycle
+guard; uncalled late callback bodies count as missing. This strengthens the line
+measurement without executing callbacks or claiming Lua branch coverage.
+
+These corrections preserve published IDs, receipt order and save schemas. The
 delivery prerequisite conflict was resolved by retaining both roster-aware
 discovery validation and delivery-plan validation. No coverage gates, exclusions
 or checks were disabled. Source review here is not independent human release
