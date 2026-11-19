@@ -11,12 +11,15 @@ The solver models ordinary calibrated acquisition as a local Yantar/Sakharov
 event, or the protected orange cache's separate local claim. Local events have
 no network IDs and consume no item slots. Ordinary acquisition assumes normal
 earnable money and completing calibration; the add-on does not bypass that task.
-Alternate goals use outgoing protocol 2, selected by the validated configuration.
-Pilot protocol 1 retains its three-map validation. An alternate victory can be
-reported without pilot checks; mismatched protocol/goal selection is rejected.
+Configured seeds use outgoing protocol 3, bound to the validated configuration
+digest before checks or victory are accepted. Legacy pilot protocol 1 retains
+its three-map validation. An alternate victory can be reported without pilot
+checks; stale or mismatched configurations are rejected. Upgrade companion and
+add-on together; existing saved receipts are unchanged. See the
+[bridge protocol](bridge-protocol.md) for compatibility and snapshot ordering.
 
-Regression generation exposed circular key placement in maps-only zone-key seeds.
-Zone keys now use a guaranteed local exploration chain: shuffle the reachable
+Zone keys retain the guaranteed local exploration chain from step 20, which
+corrected circular placement in map-only seeds: shuffle the reachable
 frontier and place its key in the previous visited map's first-arrival check.
 Return paths allow backtracking to any already-open frontier. Yantar precedes
 psi-gated maps. Every key remains an AP receipt/check, but zone keys are local to

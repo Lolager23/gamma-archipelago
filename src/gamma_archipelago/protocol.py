@@ -60,22 +60,29 @@ def decode_outgoing(
     allowed_locations: frozenset[int] = LOCATION_IDS,
     *,
     pilot_goal: bool = True,
+    configuration_key: str | None = None,
 ) -> GameSnapshot:
     validate_session_key(session_key)
+    if configuration_key is not None:
+        validate_session_key(configuration_key)
     if len(content.encode("utf-8")) > MAX_SNAPSHOT_BYTES or not content.endswith("\n"):
         raise ProtocolError("Snapshot is oversized or missing its final newline")
     lines = content.splitlines()
-    if len(lines) < 5 or lines[0] != f"GAMMA_AP_OUT|{1 if pilot_goal else 2}":
+    version = 3 if configuration_key is not None else (1 if pilot_goal else 2)
+    received_index = 3 if configuration_key is not None else 2
+    if len(lines) < received_index + 3 or lines[0] != f"GAMMA_AP_OUT|{version}":
         raise ProtocolError("Unsupported or incomplete game snapshot")
     if lines[1] != f"session|{session_key}":
         raise ProtocolError("Game snapshot belongs to another seed or slot")
-    if not lines[2].startswith("received|") or lines[-2] not in ("goal|0", "goal|1"):
+    if configuration_key is not None and lines[2] != f"configuration|{configuration_key}":
+        raise ProtocolError("Game snapshot belongs to another configuration")
+    if not lines[received_index].startswith("received|") or lines[-2] not in ("goal|0", "goal|1"):
         raise ProtocolError("Snapshot fields are missing or out of order")
-    received_count = _number(lines[2].removeprefix("received|"))
+    received_count = _number(lines[received_index].removeprefix("received|"))
     if received_count > MAX_ITEMS:
         raise ProtocolError("Received count exceeds the supported history size")
     checks = []
-    for line in lines[3:-2]:
+    for line in lines[received_index + 1 : -2]:
         if not line.startswith("check|"):
             raise ProtocolError("Unexpected snapshot field")
         location_id = _number(line.removeprefix("check|"))

@@ -87,12 +87,17 @@ def test_goal_observation_is_independent_of_map_checks_and_disabled_confirmation
         game.actor_on_update()
     allowed = enabled_location_ids(configuration.checks)
     outgoing = engine.files["D:/AnomalyAP/appdata/archipelago\\outgoing.txt"]
-    snapshot = decode_outgoing(outgoing, KEY, allowed)
+    snapshot = decode_outgoing(outgoing, KEY, allowed, configuration_key=configuration.digest)
     assert snapshot.goal_complete and not snapshot.checked_locations
     state = saved_state(lua, game).gamma_archipelago_v1
     assert set(state.visited_maps.keys()) >= {28052001, 28052002, 28052003}
     with pytest.raises(ProtocolError):
-        decode_outgoing(outgoing.replace("goal|1", "check|28052001\ngoal|1"), KEY, allowed)
+        decode_outgoing(
+            outgoing.replace("goal|1", "check|28052001\ngoal|1"),
+            KEY,
+            allowed,
+            configuration_key=configuration.digest,
+        )
     assert_lua_error(
         lua.globals().gamma_ap_protocol.parse_confirmed(
             encode_confirmed(KEY, MAP_LOCATION_IDS), KEY, state.enabled_checks

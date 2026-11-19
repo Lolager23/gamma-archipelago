@@ -84,3 +84,63 @@ def test_unknown_or_unselected_equipment_permissions_refuse_delivery(lua):
     state = progress(lua, game)
     assert lua.globals().gamma_ap_gear_locks.receive(state, 28051601)[0] is False
     assert lua.globals().gamma_ap_gear_locks.receive(state, 1)[0] is False
+
+
+@pytest.mark.parametrize("other_veto", [None, "veto_before", "veto_after"])
+def test_pickup_veto_does_not_latch_into_later_allowed_items_or_override_current_mod_veto(
+    lua, other_veto
+):
+    game, engine = gear_game(lua, items=())
+    poll(game, engine)
+    locked = lua.globals().add_item(50, "pda", "D_PDA", "i_device", 0)
+    allowed = lua.globals().add_item(51, "bandage", "S_FOOD", "i_medical", 0)
+    pickup = lua.globals().bind_stalker_ext.actor_on_item_before_pickup
+    assert pickup(locked) is False
+    if other_veto:
+        engine[other_veto] = True
+        assert pickup(allowed) is False
+        engine[other_veto] = False
+    assert pickup(allowed) is True
+    assert pickup(locked) is False
+    assert pickup(allowed) is True
+
+
+def test_missing_native_pickup_guard_refuses_locked_seed_before_receipt(lua):
+    game, engine = gear_game(lua)
+    lua.globals().bind_stalker_ext = None
+    poll(game, engine)
+    assert progress(lua, game).received_count == 0
+    assert "pickup binder" in list(engine.logs.values())[-1]
+
+
+def test_missing_pickup_guard_at_start_can_register_when_the_native_binder_loads(lua):
+    game, engine = gear_game(lua)
+    binder = lua.globals().bind_stalker_ext
+    lua.globals().bind_stalker_ext = None
+    engine.creation.new_game_faction = "stalker"
+    game.on_game_start()
+    assert any("pickup binder" in message for message in engine.logs.values())
+    lua.globals().bind_stalker_ext = binder
+    engine.creation.new_game_faction = None
+    poll(game, engine)
+    assert progress(lua, game).received_count == 1
+
+
+def test_pickup_guard_preserves_another_mods_delegating_wrapper(lua):
+    game, engine = gear_game(lua, items=())
+    poll(game, engine)
+    lua.execute("""
+        local delegate=bind_stalker_ext.actor_on_item_before_pickup
+        engine.pickup_delegations=0
+        bind_stalker_ext.actor_on_item_before_pickup=function(...)
+            engine.pickup_delegations=engine.pickup_delegations+1
+            return delegate(...)
+        end
+    """)
+    poll(game, engine)
+    locked = lua.globals().add_item(50, "pda", "D_PDA", "i_device", 0)
+    allowed = lua.globals().add_item(51, "bandage", "S_FOOD", "i_medical", 0)
+    pickup = lua.globals().bind_stalker_ext.actor_on_item_before_pickup
+    assert pickup(locked) is False
+    assert pickup(allowed) is True
+    assert engine.pickup_delegations == 2
