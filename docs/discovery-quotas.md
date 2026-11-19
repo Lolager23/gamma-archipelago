@@ -1,5 +1,11 @@
 # Step 33: configurable distinct discoveries
 
+Merge-review correction: saved distinct observations must belong to an enabled,
+non-excluded type under the saved configuration. A regression reproduced accepted
+excluded/disabled observations that could inflate quota counts; those saves are
+now refused before observations are copied or new checks advance. Empty older
+discovery state still migrates normally. No published ID or save schema changed.
+
 Stacks on scouting PR #41. Each existing discovery category remains independently
 toggleable. Its mode is `per_type` (default, existing checks) or `first_n_distinct`.
 `mutant_discovery_count`, `faction_discovery_count` and `artefact_discovery_count`
