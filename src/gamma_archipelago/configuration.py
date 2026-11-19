@@ -75,6 +75,9 @@ SUPPORTED_CHECKS = frozenset(
         "checks_faction_first_kills",
         "checks_kill_milestones",
         "checks_artefacts",
+        "checks_quest_types",
+        "checks_story_milestones",
+        "checks_side_task_milestones",
     }
 )
 SUPPORTED_REWARDS: frozenset[str] = frozenset()

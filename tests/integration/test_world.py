@@ -43,7 +43,7 @@ def test_world_uses_real_upstream_types_and_catalogue():
 
 def test_world_generation_rejects_unsupported_options_instead_of_ignoring_them():
     world = generate(123).worlds[1]
-    world.options.checks_quest_types.value = 1
+    world.options.checks_gear_upgrades.value = 1
     with pytest.raises(OptionError, match="Not implemented"):
         world.generate_early()
 
@@ -130,3 +130,35 @@ def test_single_threshold_seed_has_one_reward_without_pool_overflow():
     distribute_items_restrictive(multiworld)
     assert len(multiworld.get_locations()) == 1
     assert next(iter(multiworld.get_locations())).item is not None
+
+
+@pytest.mark.parametrize(
+    "category,count",
+    [
+        ("checks_quest_types", 13),
+        ("checks_story_milestones", 53),
+        ("checks_side_task_milestones", 3),
+    ],
+)
+def test_task_categories_generate_independently_with_stable_custom_thresholds(category, count):
+    from gamma_archipelago.catalog import enabled_location_ids
+
+    multiworld = setup_multiworld(
+        GammaWorld,
+        seed=91,
+        options={
+            "checks_maps": 0,
+            category: 1,
+            "side_task_milestones": [1, 3, 10000],
+        },
+    )
+    distribute_items_restrictive(multiworld)
+    world = multiworld.worlds[1]
+    assert len(multiworld.get_locations(1)) == count
+    assert set(world.fill_slot_data()["location_ids"]) == enabled_location_ids(
+        world.configuration.checks,
+        world.configuration.kill_milestones,
+        world.configuration.side_task_milestones,
+    )
+    assert all(location.item for location in multiworld.get_locations())
+    assert multiworld.can_beat_game()

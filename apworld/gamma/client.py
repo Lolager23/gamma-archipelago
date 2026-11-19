@@ -85,7 +85,11 @@ class GammaContext(CommonContext):
                     raise ProtocolError("Expanded configuration requires schema 2")
             self.expanded = version == 3
             allowed = (
-                enabled_location_ids(self.configuration.checks, self.configuration.kill_milestones)
+                enabled_location_ids(
+                    self.configuration.checks,
+                    self.configuration.kill_milestones,
+                    self.configuration.side_task_milestones,
+                )
                 if self.expanded
                 else LOCATION_IDS
             )

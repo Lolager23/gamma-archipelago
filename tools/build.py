@@ -33,6 +33,22 @@ def generate_catalogues() -> None:
     lines.extend(["}", "location_ids = {"])
     lines.extend(f"    {loc['id']}," for loc in catalogue["locations"])
     lines.append("}")
+    lines.append("task_functors = {")
+    lines.extend(f'    ["{key}"] = "{value}",' for key, value in catalogue["task_functors"].items())
+    lines.extend(["}", "quest_type_locations = {"])
+    lines.extend(
+        f'    ["{loc["key"]}"] = {loc["id"]},'
+        for loc in catalogue["locations"]
+        if loc["category"] == "checks_quest_types"
+    )
+    lines.extend(["}", "story_task_locations = {"])
+    for loc in catalogue["locations"]:
+        for task_id in loc.get("tasks", []):
+            lines.append(f'    ["{task_id}"] = {loc["id"]},')
+    lines.append("}")
+    milestone = catalogue["milestones"]["checks_side_task_milestones"]
+    lines.append(f"side_task_milestone_base = {milestone['base_id']}")
+    lines.append(f"side_task_milestone_maximum = {milestone['maximum']}")
     lines.append("artefact_locations = {")
     for loc in catalogue["locations"]:
         if loc["category"] == "checks_artefacts":

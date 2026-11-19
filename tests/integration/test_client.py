@@ -92,6 +92,34 @@ async def test_settlement_only_client_rejects_map_checks_without_losing_goal_obs
 
 
 @run_async
+async def test_custom_side_task_manifest_is_used_by_the_client():
+    from gamma_archipelago.catalog import enabled_location_ids
+    from gamma_archipelago.configuration import build_configuration, defaults
+
+    configuration = build_configuration(
+        {
+            **defaults(),
+            "checks_maps": 0,
+            "checks_side_task_milestones": 1,
+            "side_task_milestones": [1, 7, 10000],
+        }
+    )
+    allowed = enabled_location_ids(
+        configuration.checks, configuration.kill_milestones, configuration.side_task_milestones
+    )
+    context = connected_context(
+        {
+            "schema_version": 3,
+            "pilot": False,
+            "configuration": configuration.to_values(),
+            "configuration_key": configuration.digest,
+            "location_ids": sorted(allowed),
+        }
+    )
+    assert context.session.allowed_locations == allowed
+
+
+@run_async
 async def test_seed_configuration_is_validated_and_bound_before_bridge_publication():
     from gamma_archipelago.configuration import build_configuration, defaults
 

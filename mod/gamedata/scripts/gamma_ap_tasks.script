@@ -1,0 +1,95 @@
+-- Monolith supplies the engine completion event before the task manager clears it.
+
+function hook_available()
+    local callbacks = rawget(_G, "callbacks_gameobject")
+    return callbacks and type(callbacks.task_callback) == "function" or false
+end
+
+function supported(configuration)
+    if not configuration or not configuration.expanded then return true end
+    local options = configuration.options
+    if options.checks_quest_types == 1 or options.checks_side_task_milestones == 1
+        or options.checks_story_milestones == 1 then
+        if not hook_available() then return false, "Task checks require the installed Monolith task hook" end
+    end
+    if options.checks_story_milestones == 1 and db.actor:has_info("story_mode_disabled") then
+        return false, "Story checks require a character with story mode enabled"
+    end
+    return true
+end
+
+function copy(progress)
+    local result = {count=0, seen={}, thresholds={}, stories={}}
+    if not progress then return result end
+    result.count = progress.count
+    for key,value in pairs(progress.seen) do result.seen[key] = value end
+    for id,value in pairs(progress.stories) do result.stories[id] = value end
+    for _,value in ipairs(progress.thresholds) do result.thresholds[#result.thresholds+1] = value end
+    return result
+end
+
+function configure(progress, configuration)
+    progress.thresholds = {}
+    if configuration and configuration.expanded
+        and configuration.options.checks_side_task_milestones == 1 then
+        for _,value in ipairs(configuration.thresholds.side_task_milestones) do
+            progress.thresholds[#progress.thresholds+1] = value
+        end
+    end
+end
+
+local function instance_key(id, entry)
+    local ok, year, month, day, hour, minute, second, millisecond = pcall(function()
+        return entry.inited_time:get()
+    end)
+    local values = {year, month, day, hour, minute, second, millisecond}
+    if not ok then return nil end
+    for index=1,7 do
+        local value = values[index]
+        if type(value) ~= "number" or value < 0 or value > 999999999
+            or value ~= math.floor(value) then return nil end
+    end
+    return id .. ":" .. table.concat(values, ":")
+end
+
+local function quest_type(id, entry)
+    if entry.status_functor == "assault_task_status_functor" then
+        local parameters = task_manager.task_ini:r_string_ex(id, "status_functor_params") or ""
+        if parameters:find("monster", 1, true) then return "hunting" end
+    end
+    return gamma_ap_catalog.task_functors[entry.status_functor]
+        or gamma_ap_catalog.task_functors[entry.target_functor]
+        or gamma_ap_catalog.task_functors[entry.title_functor]
+end
+
+function observe(state, object, status, manager, id)
+    if not state.session_key or not state.expanded or not db.actor or not db.actor:alive()
+        or status ~= task.completed then return true end
+    if not object or type(id) ~= "string" or #id > 128 or object:get_id() ~= id then
+        return false, "Task completion identity is invalid"
+    end
+    local entry = manager and manager.task_info and manager.task_info[id]
+    if not entry or entry.cancelled_by_actor or entry.forced_status == "fail" then return true end
+    local story_id = gamma_ap_catalog.story_task_locations[id]
+    if story_id then
+        state.tasks.stories[story_id] = true
+        if state.enabled_checks[story_id] then state.checks[story_id] = true end
+    end
+    if entry.storyline ~= false or story_id then return true end
+    local type_id = gamma_ap_catalog.quest_type_locations[quest_type(id, entry)]
+    if type_id and state.enabled_checks[type_id] then state.checks[type_id] = true end
+    local progress = state.tasks
+    local limit = progress.thresholds[#progress.thresholds] or 0
+    if progress.count >= limit then return true end
+    local key = instance_key(id, entry)
+    if not key then return false, "Side-task callback lacks a valid saved instance time" end
+    if progress.seen[key] then return true end
+    progress.seen[key] = true
+    progress.count = progress.count + 1
+    for _,threshold in ipairs(progress.thresholds) do
+        if progress.count >= threshold then
+            state.checks[gamma_ap_catalog.side_task_milestone_base + threshold] = true
+        end
+    end
+    return true
+end

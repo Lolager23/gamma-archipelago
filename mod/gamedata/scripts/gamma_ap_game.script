@@ -4,6 +4,14 @@
 local state = gamma_ap_state.new_state()
 local next_poll = 0
 local last_error = nil
+local task_hook_registered = false
+
+local function register_task_hook()
+    if not task_hook_registered and gamma_ap_tasks.hook_available() then
+        RegisterScriptCallback("actor_on_task_callback", actor_on_task_callback)
+        task_hook_registered = true
+    end
+end
 
 local function report_error(message)
     if message ~= last_error then
@@ -82,6 +90,9 @@ function actor_on_update()
     if not incoming then report_error(reason); return end
     local configuration, configuration_error = read_configuration(incoming)
     if incoming.configuration_key and not configuration then report_error(configuration_error); return end
+    register_task_hook()
+    local supported, support_error = gamma_ap_tasks.supported(configuration)
+    if not supported then report_error(support_error); return end
     local enabled = gamma_ap_state.enabled_locations(configuration)
     local confirmed, confirmed_error = read_confirmed(incoming.session_key, enabled)
     if not confirmed then report_error(confirmed_error); return end
@@ -92,6 +103,7 @@ function actor_on_update()
     state.expanded = configuration and configuration.expanded or false
     state.enabled_checks = enabled
     gamma_ap_combat.configure(state.combat, configuration)
+    gamma_ap_tasks.configure(state.tasks, configuration)
     local success, delivery_error = gamma_ap_state.apply_pending(state, incoming, give_item)
     if not success then report_error(delivery_error); return end
     gamma_ap_state.merge_confirmed(state, confirmed)
@@ -132,6 +144,11 @@ function actor_on_item_take_from_box(box, item)
     gamma_ap_collection.observe(state, item, "container")
 end
 
+function actor_on_task_callback(object, status, manager, id)
+    local ok, reason = gamma_ap_tasks.observe(state, object, status, manager, id)
+    if not ok then report_error(reason) end
+end
+
 function save_state(data)
     data.gamma_archipelago_v1 = gamma_ap_state.copy_state(state)
 end
@@ -150,6 +167,7 @@ function on_game_start()
     state = gamma_ap_state.new_state()
     next_poll = 0
     last_error = nil
+    task_hook_registered = false
     local incoming = read_incoming()
     if incoming and incoming.configuration_key then
         local configuration, reason = read_configuration(incoming)
@@ -169,5 +187,6 @@ function on_game_start()
     RegisterScriptCallback("monster_on_net_spawn", creature_spawned)
     RegisterScriptCallback("actor_on_item_take", actor_on_item_take)
     RegisterScriptCallback("actor_on_item_take_from_box", actor_on_item_take_from_box)
+    register_task_hook()
     printf("[GAMMA AP] Pilot loaded; multiplayer roots are forbidden")
 end

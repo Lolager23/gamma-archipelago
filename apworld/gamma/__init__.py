@@ -7,7 +7,12 @@ from BaseClasses import Item, ItemClassification, Location, Region, Tutorial
 from Options import OptionError
 from worlds.AutoWorld import WebWorld, World
 
-from gamma_archipelago.catalog import KILL_MILESTONE_BASE, LOCATION_IDS, LOCATION_NAMES
+from gamma_archipelago.catalog import (
+    KILL_MILESTONE_BASE,
+    LOCATION_IDS,
+    LOCATION_NAMES,
+    SIDE_TASK_MILESTONE_BASE,
+)
 from gamma_archipelago.configuration import OPTION_NAMES, SeedConfiguration, build_configuration
 
 from .options import GammaOptions
@@ -82,7 +87,24 @@ class GammaWorld(World):
             for count in self.configuration.kill_milestones:
                 menu.locations.append(
                     GammaLocation(
-                        self.player, f"Defeat {count} Enemies", KILL_MILESTONE_BASE + count, menu
+                        self.player,
+                        _catalog["milestones"]["checks_kill_milestones"]["name"].format(
+                            count=count
+                        ),
+                        KILL_MILESTONE_BASE + count,
+                        menu,
+                    )
+                )
+        if "checks_side_task_milestones" in self.configuration.checks:
+            for count in self.configuration.side_task_milestones:
+                menu.locations.append(
+                    GammaLocation(
+                        self.player,
+                        _catalog["milestones"]["checks_side_task_milestones"]["name"].format(
+                            count=count
+                        ),
+                        SIDE_TASK_MILESTONE_BASE + count,
+                        menu,
                     )
                 )
 
