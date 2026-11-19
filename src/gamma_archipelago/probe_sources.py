@@ -20,6 +20,14 @@ WATCHED_SCRIPTS = (
     "actor_effects.script",
     "ui_pda.script",
     "character_creation.script",
+    "a_faction_prices.script",
+    "faction_stocks.script",
+    "mags_patches.script",
+    "magazine_binder.script",
+    "zz_ui_inventory_better_stats_bars.script",
+    "better_stats_bars_mcm.script",
+    "zzz_mspizza_godis_zoomcalc.script",
+    "lc_extra_transitions_mcm.script",
 )
 
 

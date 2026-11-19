@@ -218,6 +218,14 @@ independent of AP receipt state and is not counted as a received AP reward.
 
 ## Current environment and compatibility
 
+**19 November source follow-up:** see the
+[compatibility investigation](gamma-compatibility-investigation.md). The newer
+00:35 UTC log contains none of the four historical signatures. Read-only source
+inspection still finds three enabled consumers without enabled loose providers,
+two providers installed in disabled optional mods, and a reproducible LuaJIT syntax
+failure in the zoom script. No third-party repair or new native verification was
+performed. The differing PDA bindings remain configuration dependent.
+
 The official GAMMA installation completed successfully, as confirmed by the user.
 The isolated GAMMA 0.9.5 menu was observed. The engine identifies as Modded Exes
 MT-TEST2026.05.15, core 9959; Anomaly baseline is 1.5.3. Launch through
@@ -230,7 +238,8 @@ unsupported; do not rely on that checkbox for isolation. The custom DX11 dev
 entry uses `user_ap_dev.ltx`; ordinary dev entries use `user.ltx`. Their PDA key
 bindings currently differ. No settings or saves are shared with the original.
 
-The latest inspected game log contains four distinct third-party script failures:
+An earlier inspected game log contained four distinct third-party script failures
+(the 19 November follow-up above supersedes its claim to be the latest log):
 
 | Script | Observed reason | Owning active component |
 |---|---|---|
