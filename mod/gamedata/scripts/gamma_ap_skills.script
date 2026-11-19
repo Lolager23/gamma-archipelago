@@ -1,0 +1,73 @@
+-- Explicit adapter for the four Haruka skills and GAMMA's active stat formula.
+
+function copy(plans)
+    local result = {}
+    for receipt,plan in pairs(plans or {}) do
+        local cloned = {skill=plan.skill, levels={}, stats={}}
+        for key,value in pairs(plan.levels) do cloned.levels[key] = value end
+        for key,value in pairs(plan.stats) do cloned.stats[key] = value end
+        result[receipt] = cloned
+    end
+    return result
+end
+
+local function finite(value)
+    return type(value) == "number" and value == value and math.abs(value) < 1e12
+end
+
+local function build_plan(skill, levels, stats, increments)
+    for _,key in ipairs({"current_level", "max_level", "base_requirement", "requirement", "experience"}) do
+        if not finite(levels[key]) or levels[key] < 0 then return nil end
+    end
+    if levels.current_level ~= math.floor(levels.current_level) or levels.max_level ~= 15
+        or levels.current_level > levels.max_level or levels.base_requirement <= 0 then return nil end
+    local target = math.min(levels.max_level, levels.current_level + 1)
+    local plan = {skill=skill, levels={}, stats={}}
+    if target == levels.current_level then return plan end
+    plan.levels.current_level = target
+    plan.levels.prev_requirement = levels.requirement
+    plan.levels.requirement = levels.requirement + levels.base_requirement * (1 + target * 0.25)
+    plan.levels.experience = math.max(levels.experience, levels.requirement)
+    for key,value in pairs(stats) do
+        if key ~= "functor" then
+            if not finite(value) or not finite(increments[key]) then return nil end
+            plan.stats[key] = value + increments[key]
+        end
+    end
+    return plan
+end
+
+function receive(state, item_id)
+    local skill = gamma_ap_catalog.skill_rewards[item_id]
+    if not state.session_key or not state.expanded or not state.allowed_items[item_id] or not skill then
+        return false, "Skill reward is disabled in this seed"
+    end
+    local api = rawget(_G, "haru_skills")
+    if not api or type(api.skills_levels) ~= "table" or type(api.skills_stats) ~= "table"
+        or type(api.skills_increments) ~= "table" then
+        return false, "Skill rewards require the supported Haruka/GAMMA skill system"
+    end
+    local levels, stats, increments = api.skills_levels[skill], api.skills_stats[skill], api.skills_increments[skill]
+    local recalculate = skill ~= "scavenging" and api["update_" .. skill] or nil
+    if type(levels) ~= "table" or type(stats) ~= "table" or type(increments) ~= "table"
+        or (skill ~= "scavenging" and type(recalculate) ~= "function") then
+        return false, "The selected Haruka skill has not initialized"
+    end
+    local receipt = state.received_count + 1
+    local candidate = build_plan(skill, levels, stats, increments)
+    local plan = state.skill_plans[receipt] or candidate
+    if not candidate or plan.skill ~= skill then return false, "The installed skill schema is incompatible" end
+    state.skill_plans[receipt] = plan
+    -- Once the target level exists, retry only its effects. Native XP and later
+    -- levels may advance while recalculation is pending and must never roll back.
+    if plan.levels.current_level and levels.current_level < plan.levels.current_level then
+        local experience = math.max(levels.experience, plan.levels.experience)
+        for key,value in pairs(plan.levels) do levels[key] = value end
+        levels.experience = experience
+        for key,value in pairs(plan.stats) do stats[key] = value end
+    end
+    if recalculate and not pcall(recalculate) then
+        return false, "Skill effects failed to recalculate; the saved target will retry"
+    end
+    return true
+end

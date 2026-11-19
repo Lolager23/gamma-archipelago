@@ -133,7 +133,8 @@ class GammaWorld(World):
         stashes = [
             item["name"]
             for item in _catalog["items"]
-            if item.get("category") in {"rewards_loot_stashes", "rewards_faction_reputation"}
+            if item.get("category")
+            in {"rewards_loot_stashes", "rewards_faction_reputation", "rewards_stat_levels"}
             and item.get("category") in self.configuration.rewards
         ]
         enabled = bool(stashes)

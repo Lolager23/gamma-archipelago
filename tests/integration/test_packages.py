@@ -45,6 +45,7 @@ def test_packages_are_reproducible_and_load_from_apworld(tmp_path):
                 "equipment_checks",
                 "rank",
                 "reputation",
+                "skills",
                 "stashes",
             )
         } | {
