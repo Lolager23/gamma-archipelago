@@ -14,7 +14,12 @@ assignments are not duplicated. Initial requests survive the fresh-character
 load callback. Keys never fabricate objectives, story info portions or completion.
 The native story still owns NPCs, prerequisite flags and quest completion.
 
-Solver story checks require the matching key. Every enabled key is placed exactly
+Solver story checks require the matching key and permissions for every earlier
+native chain: Mortal Sin needs Living Legend, and Operation Afterglow needs both.
+The native dialogue conditions require the earlier chain's completion flags;
+including these key dependencies prevents placing an earlier key behind a later
+story check. Native story completion itself remains the game's responsibility.
+Every enabled key is placed exactly
 once. Story-only checks with quest keys are rejected because all would sit behind
 their own permissions. A pool smaller than its required items is also rejected.
 Quest keys must be selected for a fresh story-enabled character; importing an

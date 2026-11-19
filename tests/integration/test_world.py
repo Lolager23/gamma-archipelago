@@ -347,6 +347,7 @@ def test_zone_keys_gate_all_entrances_and_conservative_global_activities():
     assert not artefact.can_reach(state)
     for item in list(multiworld.itempool):
         state.collect(item, prevent_sweep=True)
+    state.sweep_for_advancements()
     assert artefact.can_reach(state)
     distribute_items_restrictive(multiworld)
     assert multiworld.can_beat_game()

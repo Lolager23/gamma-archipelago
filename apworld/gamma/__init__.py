@@ -18,6 +18,7 @@ from gamma_archipelago.configuration import OPTION_NAMES, SeedConfiguration, bui
 
 from .options import GammaOptions
 from .rules import apply_access_rules
+from .zone_fill import place_zone_keys
 
 _catalog = json.loads(files(__package__).joinpath("catalog.json").read_text(encoding="utf-8"))
 
@@ -103,12 +104,14 @@ class GammaWorld(World):
             check = GammaLocation(self.player, location["name"], location["id"], region)
             if location.get("tasks") and "rewards_quest_keys" in self.configuration.rewards:
                 permission = _catalog["quest_gates"][location["tasks"][0]]
-                key_name = next(
+                key_names = tuple(
                     item["name"]
                     for item in _catalog["items"]
-                    if item.get("permission") == permission
+                    if item.get("permission") in _catalog["quest_key_requirements"][permission]
                 )
-                check.access_rule = lambda state, name=key_name: state.has(name, self.player)
+                check.access_rule = lambda state, names=key_names: all(
+                    state.has(name, self.player) for name in names
+                )
             region.locations.append(check)
         if "checks_kill_milestones" in self.configuration.checks:
             for count in self.configuration.kill_milestones:
@@ -178,6 +181,9 @@ class GammaWorld(World):
             for location in _catalog["locations"]
             if location["id"] in LOCATION_IDS
         )
+
+    def pre_fill(self) -> None:
+        place_zone_keys(self, _catalog)
 
     def fill_slot_data(self) -> dict[str, object]:
         return {
