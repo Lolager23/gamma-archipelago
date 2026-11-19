@@ -4,6 +4,7 @@ from pathlib import Path
 import pytest
 from BaseClasses import ItemClassification
 from Fill import distribute_items_restrictive
+from Options import OptionError
 from test.general import setup_multiworld
 from worlds.apquest.world import APQuestWorld
 from worlds.gamma import GammaWorld
@@ -29,15 +30,22 @@ def test_world_uses_real_upstream_types_and_catalogue():
     assert world.create_item("Basic Toolkit").classification == ItemClassification.useful
     assert world.create_item("Medkit").classification == ItemClassification.filler
     assert world.get_filler_item_name() == "Bandage"
-    assert world.fill_slot_data() == {
-        "schema_version": 1,
-        "pilot": True,
-        "goal": "visit_all_pilot_regions",
-    }
+    slot_data = world.fill_slot_data()
+    assert slot_data["schema_version"] == 1 and slot_data["pilot"] is True
+    assert slot_data["goal"] == "visit_all_pilot_regions"
+    assert slot_data["configuration"] == world.configuration.to_values()
+    assert slot_data["configuration_key"] == world.configuration.digest
     source = ROOT / "src/gamma_archipelago/catalog.json"
     assert json.loads(source.read_text()) == json.loads(
         (ROOT / "apworld/gamma/catalog.json").read_text()
     )
+
+
+def test_world_generation_rejects_unsupported_options_instead_of_ignoring_them():
+    world = generate(123).worlds[1]
+    world.options.checks_settlements.value = 1
+    with pytest.raises(OptionError, match="Not implemented"):
+        world.generate_early()
 
 
 def test_one_thousand_pilot_seeds_are_fully_filled_and_beatable():

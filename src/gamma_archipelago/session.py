@@ -6,7 +6,7 @@ from dataclasses import dataclass, field
 
 from .catalog import ITEM_SECTIONS, LOCATION_IDS, MAX_ITEMS
 from .notifications import MAX_NOTICES, Notice, validate_notice
-from .protocol import GameSnapshot, ProtocolError
+from .protocol import GameSnapshot, ProtocolError, validate_session_key
 
 
 def make_session_key(seed_name: str, team: int, slot: int) -> str:
@@ -24,6 +24,15 @@ class SessionCoordinator:
     item_ids: tuple[int, ...] = ()
     checked_locations: set[int] = field(default_factory=set)
     notices: dict[str, Notice] = field(default_factory=dict)
+    configuration_key: str | None = None
+    configuration_bound: bool = False
+
+    def bind_configuration(self, key: str | None) -> None:
+        if key is not None:
+            validate_session_key(key)
+        if self.configuration_bound and self.configuration_key != key:
+            raise ProtocolError("Generation options changed within the same session")
+        self.configuration_key, self.configuration_bound = key, True
 
     def add_notice(self, notice: Notice) -> None:
         validate_notice(notice)

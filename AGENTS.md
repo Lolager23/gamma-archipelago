@@ -31,6 +31,13 @@ user changes its scope. Do not delegate to other agents unless explicitly asked.
 
 ## Protect the normal game
 
+On 19 November 2026 the user explicitly requested the full implementation as
+stacked PRs and reserved live game verification for themselves after each merge.
+Do not launch or load GAMMA for automated testing. Continue source inspection,
+unit/regression/coverage, real AP server tests and Windows/Linux CI; label engine
+acceptance as not run until the user reports it. This supersedes any instruction
+below to perform a live game run before progressing to the next implementation PR.
+
 - `D:/Anomaly` and `D:/GAMMA` are protected multiplayer installations. Never write
   there, run their installers, alter their profiles or load their saves for tests.
 - Game deployment, launch and installer targets are restricted to `D:/AnomalyAP`

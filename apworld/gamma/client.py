@@ -11,6 +11,7 @@ from NetUtils import ClientStatus, NetworkItem
 
 from gamma_archipelago.bridge import FileBridge
 from gamma_archipelago.catalog import GAME
+from gamma_archipelago.configuration import ConfigurationError, build_configuration
 from gamma_archipelago.notifications import Notice, is_unlock, reward_message
 from gamma_archipelago.paths import DEFAULT_GAME_ROOT
 from gamma_archipelago.protocol import ProtocolError
@@ -51,7 +52,19 @@ class GammaContext(CommonContext):
             key = make_session_key(self.server_seed_name, self.team, self.slot)
             if self.session and self.session.session_key != key:
                 raise ProtocolError("Restart the companion client before changing seed or slot")
+            configuration_key = None
+            if "configuration" in slot_data:
+                values = slot_data["configuration"]
+                if not isinstance(values, dict):
+                    raise ProtocolError("Generation configuration must be an object")
+                try:
+                    configuration_key = build_configuration(values).digest
+                except ConfigurationError as error:
+                    raise ProtocolError(f"Invalid generation configuration: {error}") from error
+                if slot_data.get("configuration_key") != configuration_key:
+                    raise ProtocolError("Generation configuration digest does not match")
             self.session = self.session or SessionCoordinator(key)
+            self.session.bind_configuration(configuration_key)
             self.scout_requested.clear()
         if command in ("Connected", "RoomUpdate") and self.session:
             self.session.accept_confirmed(frozenset(self.checked_locations))
