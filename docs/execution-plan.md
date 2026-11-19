@@ -1,5 +1,9 @@
 # Execution plan
 
+Implementation update: the [PR/status index](implementation-status.md) records the
+30-step candidate and remaining engine acceptance. The planning text below is
+retained as the original specification and milestone history.
+
 ## Outcome
 
 Deliver a playable, documented GAMMA Archipelago randomiser with deterministic

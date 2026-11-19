@@ -5,6 +5,19 @@ local hubs = {
     l08_yantar="yan_smart_terrain_6_4", l09_deadcity="cit_killers",
     zaton="zat_stalker_base_smart", jupiter="jup_a6", pripyat="pri_a16",
 }
+local hub_names = {
+    esc_smart_terrain_2_12="Rookie Village", mar_smart_terrain_base="Clear Sky Base",
+    bar_visitors="Rostok", mil_smart_terrain_7_7="Freedom Base",
+    yan_smart_terrain_6_4="Sakharov Bunker", cit_killers="Mercenary Base",
+    zat_stalker_base_smart="Skadovsk", jup_a6="Yanov Station", pri_a16="Laundromat",
+}
+
+local function settlement_name(smart)
+    local name = smart:name()
+    local translated = game and game.translate_string and game.translate_string(name)
+    if type(translated) == "string" and translated ~= name then return translated end
+    return hub_names[name]
+end
 
 local function notify(text)
     printf("[GAMMA AP] %s", text)
@@ -55,7 +68,7 @@ function preview(state)
     local where,smart = offer(state)
     if not smart then notify("No unused key has an available non-hostile settlement"); return false end
     state.travel_selection = where .. "|" .. smart:name()
-    notify("Optional one-time trip: " .. smart:name() .. ". Use Travel to the shown settlement to confirm.")
+    notify("Optional one-time trip: " .. settlement_name(smart) .. ". Use Travel to the shown settlement to confirm.")
     return true
 end
 

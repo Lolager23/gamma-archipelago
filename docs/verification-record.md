@@ -1,5 +1,30 @@
 # Verification record
 
+## Expanded candidate automation: 19 November 2026
+
+Step 30's complete local verifier passed on Windows with Python 3.12.3 and the
+pinned Archipelago 0.6.8 runtime. It ran 592 covered tests and 16 untraced
+generation/server tests: 608 passed. Every owned Python runtime module reached
+100% line and branch coverage; every measured non-generated Lua module reached
+100% executable-line coverage. Lua branch coverage is not measured.
+
+The generation matrix ran 1,000 seeds for each of six presets, alongside category
+and goal combinations. Ten actual loopback-server cases exercised the companion
+and expanded mixed-game/recovery paths with synthetic game snapshots. Lint,
+formatting, typing, catalogue parity, reproducible packages, portable companion
+loading and upstream APWorld archive loading also passed.
+
+The verifier used `D:/GAMMAAPTools/stack-verification-runtime`; the private local
+log is `D:/GAMMAAPTools/release-step-verification.log`. Current-head Windows/Linux
+CI is linked from [PR #34](https://github.com/Lolager23/gamma-archipelago/pull/34/checks).
+Check that head's results separately from this local evidence.
+
+All thirty increments now have implementation PRs in the
+[index](implementation-status.md). No expanded engine acceptance was run: Owen
+explicitly reserved that work for after each merge and requested no further
+automated game launches. Older observations below remain dated pilot evidence.
+The [v1 checklist](version-one-release.md) records the remaining acceptance gates.
+
 ## Acceptance update: 19 November 2026
 
 The user confirmed game reloading and third-map validation. On follow-up, the

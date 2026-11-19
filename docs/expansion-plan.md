@@ -1,5 +1,9 @@
 # Expanded randomiser: staged checklist
 
+Implementation update: the [PR/status index](implementation-status.md) records the
+30-step candidate and remaining engine acceptance. The planning text below is
+retained as the original specification and milestone history.
+
 Requested 18 November 2026. This is the implementation plan, not a list of
 features already available. This increment changes documentation only. The user
 explicitly selected verification and planning rather than implementing PDA

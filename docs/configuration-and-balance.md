@@ -1,6 +1,6 @@
 # Step 27: presets and generation matrix
 
-Stack base: #30. Six editable YAML presets cover the original pilot, exploration,
+Stack base: #30. Six editable YAML presets cover the development tour, exploration,
 a 33-map MVP with the Scorcher goal and PDA/detector locks, full story, full labs,
 and an intentionally restricted start. `src/gamma_archipelago/presets.py` is their
 validated definition. Defaults keep ordinary food/medicine/ammunition available;
