@@ -24,6 +24,10 @@ fallback. This presentation channel owns no item-application state. Its version 
 sidecar retains version 1 acknowledgement/save identities and accepts old text
 sidecars. See [PDA messages](pda-reward-messages.md) for coordinated bundle upgrades.
 
+An optional live-presence sidecar supplies the authenticated slot name and an
+advancing connection heartbeat for startup/reconnect PDA notices. Its transient
+game cache owns only presentation; it never enters save, item or check state.
+
 The [PDA tracker](pda-tracker.md) reads a detached view from the game-state owner.
 Generated catalogue metadata and a stateless requirement projection supply its
 regional/status pages. The UI owns only filters and page offsets; it cannot mark

@@ -101,6 +101,10 @@ def test_real_generation_server_item_delivery_and_reconnect(tmp_path, mixed_game
                 )
                 await client.poll_game_once()
                 await wait_until(lambda: len(client.items_received) == len(LOCATION_IDS))
+                presence = (bridge.directory / "presence.txt").read_text()
+                assert f"session|{key}\n" in presence
+                assert "player|" + b"GammaPilot".hex() in presence
+                initial_epoch = client.scouting_epoch
                 assert {item.item for item in client.items_received} == set(ITEM_SECTIONS)
                 assert {f"r:{index}" for index in range(3)} <= client.session.notices.keys()
                 if mixed_game:
@@ -126,6 +130,8 @@ def test_real_generation_server_item_delivery_and_reconnect(tmp_path, mixed_game
                 assert client.session.session_key == key
                 assert client.session.item_ids and len(client.session.item_ids) == len(LOCATION_IDS)
                 await client.poll_game_once()
+                assert client.scouting_epoch != initial_epoch
+                assert client.scouting_epoch in (bridge.directory / "presence.txt").read_text()
                 assert server.location_checks[(client.team, client.slot)] == set(LOCATION_IDS)
                 # Persist the actual server state and reconnect to a new server
                 # context, rather than treating socket reconnect as restart proof.

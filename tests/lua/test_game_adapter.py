@@ -45,6 +45,7 @@ def load_game(lua):
     module = lua.globals().load_ap_module(str(ROOT / "mod/gamedata/scripts/gamma_ap_game.script"))
     module.io = lua.globals().mock_io
     lua.globals().gamma_ap_notifications.io = lua.globals().mock_io
+    lua.globals().gamma_ap_presence.io = lua.globals().mock_io
     lua.globals().gamma_ap_scouting.io = lua.globals().mock_io
     module.on_game_start()
     return module, lua.globals().engine

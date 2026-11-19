@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <string_table>
+    <string id="gamma_ap_notice_joined">
+        <text>{player} joined the Archipelago.</text>
+    </string>
     <string id="gamma_ap_notice_received_item">
         <text>{player} gave you "{item}".</text>
     </string>

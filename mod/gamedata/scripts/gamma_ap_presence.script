@@ -1,0 +1,70 @@
+-- Transient presentation cache. Never persist it in receipt/check save state.
+local epoch, sequence, changed_at, announced, player = nil,nil,nil,false,nil
+
+function reset()
+    epoch,sequence,changed_at,announced,player = nil,nil,nil,false,nil
+end
+
+function parse(content, key, configuration)
+    if type(content) ~= "string" or #content > 2048 or content:sub(-1) ~= "\n" then
+        return nil,"Incomplete or oversized presence snapshot"
+    end
+    local lines = {}
+    for line in content:gmatch("([^\n]*)\n") do lines[#lines+1] = line end
+    if #lines ~= 6 or lines[1] ~= "GAMMA_AP_PRESENCE|1" or lines[2] ~= "session|"..key
+        or lines[3] ~= "configuration|"..(configuration or "-") or lines[6] ~= "end|1" then
+        return nil,"Presence protocol/session/configuration mismatch"
+    end
+    local token, count = lines[4]:match("^heartbeat|([0-9a-f]+)|(%d+)$")
+    count = gamma_ap_protocol.canonical_number(count)
+    local hex = lines[5]:match("^player|([0-9a-f]+)$")
+    if not token or #token ~= 16 or not count or not hex or #hex > 768 or #hex % 2 ~= 0 then
+        return nil,"Malformed presence heartbeat or player"
+    end
+    local label = hex:gsub("%x%x", function(pair) return string.char(tonumber(pair,16)) end)
+    if label:find("[%z\1-\31\127%%<>|%[%]]") then return nil,"Unsafe presence player" end
+    return {epoch=token,sequence=count,player=label}
+end
+
+local function join_text(label)
+    local fallback = "{player} joined the Archipelago."
+    local ok, template = pcall(function() return game.translate_string("gamma_ap_notice_joined") end)
+    local substitutions = 0
+    if ok and type(template) == "string" and #template <= 512
+        and not template:find("[%z\1-\31\127%%<>|%[%]]") then
+        local remainder = template:gsub("{player}",function() substitutions=substitutions+1; return "" end)
+        if substitutions ~= 1 or remainder:find("[{}]") then template=fallback end
+    else template=fallback end
+    return (template:gsub("{player}",function() return label end))
+end
+
+local function observe(frame, now)
+    if epoch ~= frame.epoch or player ~= frame.player then
+        epoch,sequence,changed_at,announced,player = frame.epoch,frame.sequence,now,false,frame.player
+        return false
+    end
+    if now < changed_at or now-changed_at > 5000 then announced=false end
+    if frame.sequence <= sequence then return false end
+    sequence,changed_at = frame.sequence,now
+    return not announced
+end
+
+function poll(state, now)
+    if not state.session_key then return true end
+    local root = gamma_ap_paths.appdata_root(getFS():update_path("$app_data_root$", ""))
+    if not root then return false,"Presence requires isolated development appdata" end
+    local file = io.open(root.."archipelago\\presence.txt","rb")
+    if not file then return true end -- Older companions have no presence sidecar.
+    local content = file:read(2049)
+    local closed = file:close()
+    if not closed then return false,"Presence read close failed" end
+    local frame,reason = parse(content,state.session_key,state.configuration_key)
+    if not frame then return false,reason end
+    if not observe(frame,now) or not gamma_ap_loadout.pda_available(state) then return true end
+    local shown = pcall(function()
+        db.actor:give_game_news("Archipelago",join_text(frame.player),"ui_inGame2_D_Svyazist",0,5000)
+    end)
+    if not shown then return false,"PDA join notice display failed" end
+    announced = true
+    return true
+end

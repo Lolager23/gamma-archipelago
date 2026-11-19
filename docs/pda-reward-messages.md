@@ -7,6 +7,7 @@ the game's PDA news API. English examples:
 - `Friend unlocked your "Zone Access".`
 - `You sent "100 Rupees" to James.`
 - `You unlocked "Zone Access" for James.`
+- `GammaPilot joined the Archipelago.`
 
 Quoted item labels work with plurals, currency, acronyms and foreign-game names
 without guessing an English article. Outgoing messages avoid possessive-name
@@ -18,17 +19,43 @@ foreign progression flags do not imply equipment permission.
 English ships now. The game selects its language through `game.translate_string`.
 The generated reference is
 `mod/gamedata/configs/text/eng/st_gamma_ap_notices.xml`; `tools/build.py` generates
-four whole-sentence templates from `notice_text.py` and every owned reward label
+the transfer and join templates from `notice_text.py` and every owned reward label
 from the authoritative catalogue. Do not hand-edit the generated English file.
 
 To add a translation, copy the string table into the game's appropriate language
 directory, retaining stable string IDs. Translate complete sentences and reward
-labels. Each sentence must contain exactly one `{player}` and one `{item}`; their
+labels. Each transfer sentence must contain exactly one `{player}` and one `{item}`; their
 order can change. Do not add PDA markup, controls or other placeholders. Missing,
 malformed or unsafe translations fall back to English. Missing reward translations
 use the companion's canonical label. Foreign-game reward labels remain upstream
 data-package text, even if an ID matches a GAMMA item. Names are never translated.
 Substitution is a single pass: placeholders inside labels remain literal data.
+
+The join sentence uses exactly one `{player}` placeholder and no `{item}`. It
+names this game's authenticated AP slot/alias, not its generated STALKER character.
+It does not broadcast other players' joins into this game's PDA.
+
+## Startup and reconnect notices
+
+The connected companion atomically publishes optional `presence.txt` version 1:
+header `GAMMA_AP_PRESENCE|1`, session key, configuration digest (or `-` for an
+unconfigured legacy pilot), a 16-hex connection epoch and monotonic sequence,
+UTF-8-hex player label, then `end|1`. The entire snapshot is at most 2,048 bytes.
+This presentation-only channel has no item/check acknowledgement fields.
+
+The game waits to observe an advancing heartbeat before showing the join message.
+A static file left by a stopped companion cannot announce a new connection.
+The notice appears once per game load and per observed reconnect, including a
+new companion epoch or a heartbeat resuming after more than five seconds. Clock
+rollback resets this transient presentation cache. No-PDA seeds defer the message
+until the PDA becomes available and the heartbeat advances again. Failed display
+retries on a later heartbeat. Wrong-session/configuration, partial, malformed and
+unsafe snapshots are refused. Old companions simply show no join message.
+
+No save schema, published IDs, receipt handling or generation logic changes.
+Translation fallback is English. The normal installation and private developer
+panel are outside this source change. Deploy the companion and game module
+together; an APWorld-only settings regeneration is not required for this feature.
 
 No translated language pack is claimed. Font coverage, language selection and
 native PDA rendering remain in-game acceptance for the user.
@@ -82,3 +109,9 @@ sentences, self-awards, absent PDA/deferred news, reconnect and ordinary save/lo
 confirm readable history/icons/fonts. A translation pack additionally needs its
 own selected-language and missing-key fallback checks. Automated coverage and real
 AP traffic do not establish engine rendering.
+
+Startup-message acceptance additionally needs a live connected game load,
+disconnect/reconnect, no-PDA deferral and a cached sidecar while the companion is
+stopped. These native checks are **not run**. Automated tests exercise their
+equivalent decisions with a mocked engine and actual AP connection/reconnection
+traffic separately.
