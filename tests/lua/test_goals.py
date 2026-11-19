@@ -8,8 +8,8 @@ from .test_loadout import KEY
 from .test_stashes import poll, progress, stash_game
 
 
-def goal_game(lua, goal=1):
-    game, engine = stash_game(lua, items=(), goal=goal)
+def goal_game(lua, goal=1, **options):
+    game, engine = stash_game(lua, items=(), goal=goal, **options)
     lua.execute("""
         db.actor.object=function(self,section)
             if engine.fail_protection then error('inventory failed') end
@@ -133,3 +133,21 @@ def test_living_legend_goal_requires_terminal_dialogue_flag_not_first_meeting(lu
     engine.info.living_legend_done = False
     poll(game, engine)
     assert snapshot(engine).goal_complete
+
+
+def test_all_labs_counts_actual_entries_with_map_checks_off_and_survives_reload(lua):
+    game, engine = goal_game(lua, goal=5, checks_maps=0, checks_settlements=1)
+    for where in ("l03u_agr_underground", "jupiter_underground", "l12u_sarcofag"):
+        engine.level = where
+        poll(game, engine)
+    assert not snapshot(engine).goal_complete
+    labs = list(lua.globals().gamma_ap_catalog.lab_levels.keys())
+    assert len(labs) == 5
+    for where in labs[:-1]:
+        engine.level = where
+        poll(game, engine)
+        assert not snapshot(engine).goal_complete
+        game.load_state(saved_state(lua, game))
+    engine.level = labs[-1]
+    poll(game, engine)
+    assert snapshot(engine).goal_complete and not snapshot(engine).checked_locations

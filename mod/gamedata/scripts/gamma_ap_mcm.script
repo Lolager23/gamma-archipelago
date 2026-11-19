@@ -14,6 +14,7 @@ function on_mcm_load()
             },
             {id="preview_unlock_travel", type="button", functor={preview_travel}},
             {id="take_unlock_travel", type="button", functor={take_travel}},
+            {id="lab_roster", type="desc", text="ui_mcm_gamma_archipelago_lab_roster"},
         },
     }
 end

@@ -98,7 +98,14 @@ SUPPORTED_REWARDS: frozenset[str] = frozenset(
     }
 )
 SUPPORTED_GOALS = frozenset(
-    {"pilot_tour", "psi_protection", "brain_scorcher", "meet_strelok", "living_legend"}
+    {
+        "pilot_tour",
+        "psi_protection",
+        "brain_scorcher",
+        "meet_strelok",
+        "living_legend",
+        "all_x_labs",
+    }
 )
 
 
@@ -196,11 +203,6 @@ def build_configuration(values: Mapping[str, object]) -> SeedConfiguration:
             "Starting gear rewards require at least one AP-locked starting group"
         )
     quantities = tuple((name, _integer(values, name, 100)) for name in QUANTITY_OPTIONS)
-    unavailable = (checks - SUPPORTED_CHECKS) | (rewards - SUPPORTED_REWARDS)
-    if unavailable or goal not in SUPPORTED_GOALS:
-        raise ConfigurationError(
-            f"Not implemented in this build: {sorted(unavailable)}; goal={goal}"
-        )
     return SeedConfiguration(
         checks,
         rewards,

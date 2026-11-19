@@ -17,4 +17,3 @@ Full verifier: 510 covered tests plus two real-server cases, all coverage gates
 pass. Tests distinguish conversation from campaign completion, enforce character
 restrictions and fill keyed story seeds. Engine dialogue/goal acceptance is not
 run, reserved for Owen after merge. No launch or deployment occurred.
-
