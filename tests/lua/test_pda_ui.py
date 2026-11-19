@@ -47,7 +47,12 @@ def load_ui(lua):
             self.height=16*count
         end
         methods.Register=function() end
-        methods.Update=function() end
+        methods.Update=function(self)
+            assert(not self.lua_owner or self.lua_owner[1],
+                'native Update reached a Lua-collected window')
+            for _,child in ipairs(self.children or {}) do methods.Update(child) end
+            for _,child in ipairs(self.items or {}) do methods.Update(child) end
+        end
         methods.AddCallback=function(self,name,event,callback)
             self.callbacks=self.callbacks or {}; self.callbacks[name]=callback
         end
@@ -56,6 +61,8 @@ def load_ui(lua):
         end
         methods.AddWindow=function(self,row,owned)
             assert(owned and row.width<=self.width)
+            -- The native binding stores a pointer but has no luabind adopt policy.
+            row=row.native_pointer or row
             local previous=self.items[#self.items]
             row.y=previous and previous.y+previous.height+self.interval or 0
             self.items[#self.items+1]=row
@@ -63,7 +70,16 @@ def load_ui(lua):
         methods.GetCurrentScrollPos=function(self) return self.position end
         methods.SetScrollPos=function(self,value) self.position=value end
         methods.ScrollToBegin=function(self) self.position=0 end
-        CUIWindow=function() return setmetatable({children={}}, {__index=methods}) end
+        local function native_window()
+            return setmetatable({children={}}, {__index=methods})
+        end
+        CUIWindow=function()
+            local native=native_window()
+            local handle=setmetatable({native_pointer=native}, {
+                __index=native,__newindex=function(_,key,value) native[key]=value end})
+            native.lua_owner=setmetatable({handle}, {__mode='v'})
+            return handle
+        end
         CUIScriptWnd=methods
         vector2=function() return {set=function(self,x,y) self.x,self.y=x,y; return self end} end
         class=function(name) return function(base)
@@ -75,7 +91,7 @@ def load_ui(lua):
         text_controls={}
         local function init(node,parent,target)
             local attr=assert(xml_nodes[node],node)
-            local control=target or CUIWindow()
+            local control=target or native_window()
             control.node=node
             control.x,control.y=tonumber(attr.x) or 0,tonumber(attr.y) or 0
             control.width,control.height=tonumber(attr.width),tonumber(attr.height)
@@ -94,8 +110,9 @@ def load_ui(lua):
                 local control=init(node,parent); text_controls[#text_controls+1]=control
                 return control
             end,
+            InitStatic=function(self,node,parent) return init(node,parent) end,
             Init3tButton=function(self,node,parent)
-                local button=init(node,parent); local text=CUIWindow()
+                local button=init(node,parent); local text=native_window()
                 button.TextControl=function() return text end; return button
             end} end
         game={translate_string=function(key) return key end}

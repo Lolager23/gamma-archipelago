@@ -1,5 +1,33 @@
 # Step 31: PDA tracker and regional checklist
 
+## Scroll-row lifetime correction: 19 November 2026
+
+Owen's opening-tracker crash reaches the native child update through
+`gamma_ap_pda.Update`. The checklist rows were Lua-constructed `CUIWindow`
+objects, while the scroll view's `AddWindow` binding has no luabind ownership
+adoption policy. Its `true` argument enables native auto-deletion on removal;
+it does not stop Lua from collecting a constructed object while its pointer
+remains in the native tree. The old table-only UI mock retained the object
+strongly and did not exercise this boundary.
+
+Create row containers through `CScriptXmlInit.InitStatic`, as the installed MCM
+does, then let the scroll view own their native lifetime. This keeps the existing
+column coordinates, measured heights, native update delegation and refresh cache.
+There are no session, save, protocol, ID or generation changes.
+
+The regression model separates Lua-owned handles from native child pointers and
+forces actual Lua garbage collection before native-tree traversal. Opening and
+repeated refresh/reopen cases both fail before the correction and pass with it;
+the tests do not execute native C++ or establish an in-game result. Complete
+verifier and current-head Windows/Linux evidence are recorded with the PR.
+Native confirmation remains **not run**, reserved for Owen.
+
+Ownership references at pinned Monolith commit
+`7289a03f19a3cc712d9fc4cf6122345984c8c094`:
+[constructor, adopting AttachChild and non-adopting AddWindow bindings](https://github.com/themrdemonized/xray-monolith/blob/7289a03f19a3cc712d9fc4cf6122345984c8c094/src/xrGame/ui/UIWindow_script.cpp),
+[XML factories](https://github.com/themrdemonized/xray-monolith/blob/7289a03f19a3cc712d9fc4cf6122345984c8c094/src/xrGame/ScriptXMLInit.cpp)
+and [scroll ownership/update](https://github.com/themrdemonized/xray-monolith/blob/7289a03f19a3cc712d9fc4cf6122345984c8c094/src/xrGame/ui/UIScrollView.cpp).
+
 ## Layout correction: 19 November 2026
 
 The reported concatenated entries were text paragraphs, not a native table.
