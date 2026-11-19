@@ -1,5 +1,28 @@
 # Verification record
 
+## PDA grammar and translation resources: 19 November 2026
+
+Implemented English grammar and translation-ready whole-sentence game resources;
+see [PDA notices](pda-reward-messages.md). A baseline reproducer confirmed the old
+`a 100 Rupees` and forced player-possessive templates. Regressions now cover plural,
+currency, acronym and arbitrary-name labels, game-selected translations, fallback,
+resource parity, opaque placeholders, foreign item-ID collisions and legacy/v2
+sidecars. Saved notice identities, receipt/check IDs and save schemas are unchanged.
+Upgrade companion and add-on together for version 2 semantic presentation.
+
+Full local verification **passed** using a separate tooling runtime: 772 covered
+Python/Lua tests, 32 untraced generator/server tests and five Node tests, **809
+total**, including the 6,000-preset seed matrix and actual AP server sessions.
+Every owned Python runtime module measured 100% line and branch coverage; Lua
+executable-line gates passed. Lua branch coverage is not measured. Reports and
+package checksums remain outside source control and in CI artifacts.
+
+The source branch builds on a separate test-fixture correction for Windows early
+HTTP rejection races. Current-head Windows/Linux CI is a separate delivery gate.
+Native PDA rendering, selected-language/font behavior and the in-game acceptance
+list are **not run**, reserved for Owen. No game launch, deployment, installed
+panel change or protected multiplayer write occurred.
+
 ## Sequential merge review: 19 November 2026
 
 At Owen's explicit instruction, PRs #2–#35 were reviewed, fixed where required,

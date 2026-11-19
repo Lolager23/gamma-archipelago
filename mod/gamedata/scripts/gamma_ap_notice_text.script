@@ -1,0 +1,50 @@
+-- Render structured notices in the game's language, without parsing English prose.
+local templates = {
+    received_item='{player} gave you "{item}".',
+    received_unlock='{player} unlocked your "{item}".',
+    sent_item='You sent "{item}" to {player}.',
+    sent_unlock='You unlocked "{item}" for {player}.',
+}
+
+local function plain(text, maximum)
+    return type(text) == "string" and #text > 0 and #text <= maximum
+        and not text:find("[%z\1-\31\127%%<>|%[%]]")
+end
+
+local function translated(key)
+    local ok, text = pcall(function() return game.translate_string(key) end)
+    if ok and text ~= key then return text end
+end
+
+function valid(kind, player, item, local_id)
+    return templates[kind] ~= nil and plain(player, 384) and plain(item, 384)
+        and (local_id == 0 or gamma_ap_catalog.item_effects[local_id] ~= nil)
+end
+
+local function valid_template(text)
+    if not plain(text, 512) then return false end
+    local player, item, unknown = 0, 0, false
+    local remaining = text:gsub("{([^{}]*)}", function(key)
+        if key == "player" then player = player + 1
+        elseif key == "item" then item = item + 1
+        else unknown = true end
+        return ""
+    end)
+    return player == 1 and item == 1 and not unknown and not remaining:find("[{}]")
+end
+
+function render(notice)
+    if not notice.kind then return notice.text end -- Older client sidecar.
+    local fallback = templates[notice.kind]
+    local template = translated("gamma_ap_notice_" .. notice.kind)
+    if not valid_template(template) then template = fallback end
+    local item = notice.item
+    if notice.local_item_id ~= 0 then
+        local label = translated("gamma_ap_reward_" .. notice.local_item_id)
+        if plain(label, 384) then item = label end
+    end
+    local fields = {player=notice.player, item=item}
+    -- One pass; a label containing {item} or a pattern character stays literal.
+    local text = template:gsub("{([a-z_]+)}", function(key) return fields[key] end)
+    return text
+end

@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<string_table>
+    <string id="gamma_ap_notice_received_item">
+        <text>{player} gave you "{item}".</text>
+    </string>
+    <string id="gamma_ap_notice_received_unlock">
+        <text>{player} unlocked your "{item}".</text>
+    </string>
+    <string id="gamma_ap_notice_sent_item">
+        <text>You sent "{item}" to {player}.</text>
+    </string>
+    <string id="gamma_ap_notice_sent_unlock">
+        <text>You unlocked "{item}" for {player}.</text>
+    </string>
+    <string id="gamma_ap_reward_28051001">
+        <text>Basic Toolkit</text>
+    </string>
+    <string id="gamma_ap_reward_28051002">
+        <text>Medkit</text>
+    </string>
+    <string id="gamma_ap_reward_28051003">
+        <text>Bandage</text>
+    </string>
+    <string id="gamma_ap_reward_28051101">
+        <text>Basic Loot Stash: Supplies</text>
+    </string>
+    <string id="gamma_ap_reward_28051102">
+        <text>Basic Loot Stash: 9x18</text>
+    </string>
+    <string id="gamma_ap_reward_28051103">
+        <text>Basic Loot Stash: 9x19</text>
+    </string>
+    <string id="gamma_ap_reward_28051104">
+        <text>Basic Loot Stash: 5.45x39</text>
+    </string>
+    <string id="gamma_ap_reward_28051105">
+        <text>Basic Loot Stash: 5.56x45</text>
+    </string>
+    <string id="gamma_ap_reward_28051106">
+        <text>Basic Loot Stash: 7.62x39</text>
+    </string>
+    <string id="gamma_ap_reward_28051107">
+        <text>Basic Loot Stash: 7.62x51</text>
+    </string>
+    <string id="gamma_ap_reward_28051108">
+        <text>Basic Loot Stash: 7.62x54R</text>
+    </string>
+    <string id="gamma_ap_reward_28051109">
+        <text>Basic Loot Stash: 12 Gauge</text>
+    </string>
+    <string id="gamma_ap_reward_28051110">
+        <text>Field Loot Stash: Supplies</text>
+    </string>
+    <string id="gamma_ap_reward_28051111">
+        <text>Field Loot Stash: 9x18</text>
+    </string>
+    <string id="gamma_ap_reward_28051112">
+        <text>Field Loot Stash: 9x19</text>
+    </string>
+    <string id="gamma_ap_reward_28051113">
+        <text>Field Loot Stash: 5.45x39</text>
+    </string>
+    <string id="gamma_ap_reward_28051114">
+        <text>Field Loot Stash: 5.56x45</text>
+    </string>
+    <string id="gamma_ap_reward_28051115">
+        <text>Field Loot Stash: 7.62x39</text>
+    </string>
+    <string id="gamma_ap_reward_28051116">
+        <text>Field Loot Stash: 7.62x51</text>
+    </string>
+    <string id="gamma_ap_reward_28051117">
+        <text>Field Loot Stash: 7.62x54R</text>
+    </string>
+    <string id="gamma_ap_reward_28051118">
+        <text>Field Loot Stash: 12 Gauge</text>
+    </string>
+    <string id="gamma_ap_reward_28051119">
+        <text>Advanced Loot Stash: Supplies</text>
+    </string>
+    <string id="gamma_ap_reward_28051120">
+        <text>Advanced Loot Stash: 9x18</text>
+    </string>
+    <string id="gamma_ap_reward_28051121">
+        <text>Advanced Loot Stash: 9x19</text>
+    </string>
+    <string id="gamma_ap_reward_28051122">
+        <text>Advanced Loot Stash: 5.45x39</text>
+    </string>
+    <string id="gamma_ap_reward_28051123">
+        <text>Advanced Loot Stash: 5.56x45</text>
+    </string>
+    <string id="gamma_ap_reward_28051124">
+        <text>Advanced Loot Stash: 7.62x39</text>
+    </string>
+    <string id="gamma_ap_reward_28051125">
+        <text>Advanced Loot Stash: 7.62x51</text>
+    </string>
+    <string id="gamma_ap_reward_28051126">
+        <text>Advanced Loot Stash: 7.62x54R</text>
+    </string>
+    <string id="gamma_ap_reward_28051127">
+        <text>Advanced Loot Stash: 12 Gauge</text>
+    </string>
+    <string id="gamma_ap_reward_28051201">
+        <text>Progression Stash: Calibrated Psi Helmet</text>
+    </string>
+    <string id="gamma_ap_reward_28051301">
+        <text>Faction Goodwill: stalker</text>
+    </string>
+    <string id="gamma_ap_reward_28051302">
+        <text>Faction Goodwill: csky</text>
+    </string>
+    <string id="gamma_ap_reward_28051303">
+        <text>Faction Goodwill: dolg</text>
+    </string>
+    <string id="gamma_ap_reward_28051304">
+        <text>Faction Goodwill: freedom</text>
+    </string>
+    <string id="gamma_ap_reward_28051305">
+        <text>Faction Goodwill: ecolog</text>
+    </string>
+    <string id="gamma_ap_reward_28051306">
+        <text>Faction Goodwill: killer</text>
+    </string>
+    <string id="gamma_ap_reward_28051307">
+        <text>Faction Goodwill: army</text>
+    </string>
+    <string id="gamma_ap_reward_28051308">
+        <text>Faction Goodwill: bandit</text>
+    </string>
+    <string id="gamma_ap_reward_28051401">
+        <text>Skill Level: Strength</text>
+    </string>
+    <string id="gamma_ap_reward_28051402">
+        <text>Skill Level: Endurance</text>
+    </string>
+    <string id="gamma_ap_reward_28051403">
+        <text>Skill Level: Survival</text>
+    </string>
+    <string id="gamma_ap_reward_28051404">
+        <text>Skill Level: Scavenging</text>
+    </string>
+    <string id="gamma_ap_reward_28051501">
+        <text>Quest Key: Living Legend</text>
+    </string>
+    <string id="gamma_ap_reward_28051502">
+        <text>Quest Key: Mortal Sin</text>
+    </string>
+    <string id="gamma_ap_reward_28051503">
+        <text>Quest Key: Operation Afterglow</text>
+    </string>
+    <string id="gamma_ap_reward_28051601">
+        <text>Equipment Unlock: Detector</text>
+    </string>
+    <string id="gamma_ap_reward_28051602">
+        <text>Equipment Unlock: PDA</text>
+    </string>
+    <string id="gamma_ap_reward_28051603">
+        <text>Equipment Unlock: Firearms</text>
+    </string>
+    <string id="gamma_ap_reward_28051604">
+        <text>Equipment Unlock: Melee</text>
+    </string>
+    <string id="gamma_ap_reward_28051605">
+        <text>Equipment Unlock: Outfit</text>
+    </string>
+    <string id="gamma_ap_reward_28051606">
+        <text>Equipment Unlock: Helmet</text>
+    </string>
+    <string id="gamma_ap_reward_28051607">
+        <text>Equipment Unlock: Backpack</text>
+    </string>
+    <string id="gamma_ap_reward_28051608">
+        <text>Equipment Unlock: Tools</text>
+    </string>
+    <string id="gamma_ap_reward_28051609">
+        <text>Equipment Unlock: Utilities</text>
+    </string>
+    <string id="gamma_ap_reward_28051701">
+        <text>Zone Key: Great Swamps</text>
+    </string>
+    <string id="gamma_ap_reward_28051702">
+        <text>Zone Key: Garbage</text>
+    </string>
+    <string id="gamma_ap_reward_28051703">
+        <text>Zone Key: Agroprom</text>
+    </string>
+    <string id="gamma_ap_reward_28051704">
+        <text>Zone Key: Darkscape</text>
+    </string>
+    <string id="gamma_ap_reward_28051705">
+        <text>Zone Key: Dark Valley</text>
+    </string>
+    <string id="gamma_ap_reward_28051706">
+        <text>Zone Key: Rostok</text>
+    </string>
+    <string id="gamma_ap_reward_28051707">
+        <text>Zone Key: Wild Territory</text>
+    </string>
+    <string id="gamma_ap_reward_28051708">
+        <text>Zone Key: Army Warehouses</text>
+    </string>
+    <string id="gamma_ap_reward_28051709">
+        <text>Zone Key: Yantar</text>
+    </string>
+    <string id="gamma_ap_reward_28051710">
+        <text>Zone Key: Dead City</text>
+    </string>
+    <string id="gamma_ap_reward_28051711">
+        <text>Zone Key: Limansk</text>
+    </string>
+    <string id="gamma_ap_reward_28051712">
+        <text>Zone Key: Radar</text>
+    </string>
+    <string id="gamma_ap_reward_28051713">
+        <text>Zone Key: Red Forest</text>
+    </string>
+    <string id="gamma_ap_reward_28051714">
+        <text>Zone Key: Hospital</text>
+    </string>
+    <string id="gamma_ap_reward_28051715">
+        <text>Zone Key: Pripyat</text>
+    </string>
+    <string id="gamma_ap_reward_28051716">
+        <text>Zone Key: CNPP South</text>
+    </string>
+    <string id="gamma_ap_reward_28051717">
+        <text>Zone Key: CNPP North</text>
+    </string>
+    <string id="gamma_ap_reward_28051718">
+        <text>Zone Key: Generators</text>
+    </string>
+    <string id="gamma_ap_reward_28051719">
+        <text>Zone Key: Agroprom Underground</text>
+    </string>
+    <string id="gamma_ap_reward_28051720">
+        <text>Zone Key: Lab X18</text>
+    </string>
+    <string id="gamma_ap_reward_28051721">
+        <text>Zone Key: Lab X16</text>
+    </string>
+    <string id="gamma_ap_reward_28051722">
+        <text>Zone Key: Lab X19</text>
+    </string>
+    <string id="gamma_ap_reward_28051723">
+        <text>Zone Key: Sarcophagus</text>
+    </string>
+    <string id="gamma_ap_reward_28051724">
+        <text>Zone Key: Monolith Control Center</text>
+    </string>
+    <string id="gamma_ap_reward_28051725">
+        <text>Zone Key: War Lab</text>
+    </string>
+    <string id="gamma_ap_reward_28051726">
+        <text>Zone Key: Zaton</text>
+    </string>
+    <string id="gamma_ap_reward_28051727">
+        <text>Zone Key: Jupiter</text>
+    </string>
+    <string id="gamma_ap_reward_28051728">
+        <text>Zone Key: Jupiter Underground</text>
+    </string>
+    <string id="gamma_ap_reward_28051729">
+        <text>Zone Key: Outskirts</text>
+    </string>
+    <string id="gamma_ap_reward_28051730">
+        <text>Zone Key: Lab X8</text>
+    </string>
+    <string id="gamma_ap_reward_28051731">
+        <text>Zone Key: Truck Cemetery</text>
+    </string>
+    <string id="gamma_ap_reward_28051732">
+        <text>Zone Key: Meadow</text>
+    </string>
+</string_table>

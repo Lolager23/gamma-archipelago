@@ -54,11 +54,20 @@ def test_unicode_labels_keep_names_but_cannot_inject_lines_or_pda_markup():
     assert clean_label("\n%[]<>") == "Archipelago"
     assert len(clean_label("A" * 200)) == 96
     assert (
-        reward_message("Owen", "Toolkit", unlock=False, outgoing=False) == "Owen gave you a Toolkit"
+        reward_message("Owen", "Toolkit", unlock=False, outgoing=False)
+        == 'Owen gave you "Toolkit".'
     )
-    assert reward_message("Owen", "Zone", unlock=True, outgoing=False) == "Owen unlocked your Zone"
-    assert reward_message("Owen", "Zone", unlock=True, outgoing=True) == "You unlocked Owen's Zone"
-    assert reward_message("Owen", "Rupees", unlock=False, outgoing=True) == "You gave Owen Rupees"
+    assert (
+        reward_message("Owen", "Zone", unlock=True, outgoing=False) == 'Owen unlocked your "Zone".'
+    )
+    assert (
+        reward_message("Owen", "Zone", unlock=True, outgoing=True)
+        == 'You unlocked "Zone" for Owen.'
+    )
+    assert (
+        reward_message("Owen", "Rupees", unlock=False, outgoing=True)
+        == 'You sent "Rupees" to Owen.'
+    )
 
 
 @pytest.mark.parametrize(

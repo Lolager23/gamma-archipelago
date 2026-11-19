@@ -23,7 +23,7 @@ from gamma_archipelago.configuration import (
     build_configuration,
     defaults,
 )
-from gamma_archipelago.notifications import Notice, is_unlock, reward_message
+from gamma_archipelago.notifications import transfer_notice
 from gamma_archipelago.paths import DEFAULT_GAME_ROOT
 from gamma_archipelago.protocol import ProtocolError, validate_id_manifest
 from gamma_archipelago.session import SessionCoordinator, make_session_key
@@ -180,15 +180,14 @@ class GammaContext(CommonContext):
             if name.startswith("Unknown item"):
                 continue
             self.session.add_notice(
-                Notice(
+                transfer_notice(
                     f"r:{index}",
                     index + 1,
-                    reward_message(
-                        self.player_names.get(item.player, f"Player {item.player}"),
-                        name,
-                        unlock=is_unlock(item.item, GAME),
-                        outgoing=False,
-                    ),
+                    self.player_names.get(item.player, f"Player {item.player}"),
+                    name,
+                    item_id=item.item,
+                    game=GAME,
+                    outgoing=False,
                 )
             )
 
@@ -199,15 +198,14 @@ class GammaContext(CommonContext):
         if name.startswith("Unknown item"):
             return
         self.session.add_notice(
-            Notice(
+            transfer_notice(
                 f"s:{item.location}:{recipient}:{item.item}",
                 0,
-                reward_message(
-                    self.player_names.get(recipient, f"Player {recipient}"),
-                    name,
-                    unlock=is_unlock(item.item, self.slot_info[recipient].game),
-                    outgoing=True,
-                ),
+                self.player_names.get(recipient, f"Player {recipient}"),
+                name,
+                item_id=item.item,
+                game=self.slot_info[recipient].game,
+                outgoing=True,
             )
         )
 

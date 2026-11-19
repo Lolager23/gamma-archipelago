@@ -1,59 +1,84 @@
-# Step 03: PDA reward messages
+# PDA reward messages
 
-Stack base: Step 02 / PR #6. The companion now preserves player and item names
-and sends optional notice snapshots to the game's PDA news API. Examples:
+The companion preserves player and item labels and publishes optional notices to
+the game's PDA news API. English examples:
 
-- `Friend gave you a Basic Toolkit`
-- `Friend unlocked your Zone Access` for an explicitly known unlock effect
-- `You gave Friend Moon Key` for a confirmed outgoing transfer
-- `You unlocked Friend's Zone Access` for a known outgoing GAMMA unlock
+- `Friend gave you "Basic Toolkit".`
+- `Friend unlocked your "Zone Access".`
+- `You sent "100 Rupees" to James.`
+- `You unlocked "Zone Access" for James.`
 
-Physical and unknown foreign-game items use "gave". Foreign progression flags
-do not imply an equipment permission. Known GAMMA unlock effects are explicit
-catalogue metadata; the three current pilot rewards are physical items.
+Quoted item labels work with plurals, currency, acronyms and foreign-game names
+without guessing an English article. Outgoing messages avoid possessive-name
+rules. Only explicitly known GAMMA unlock and skill effects use unlock wording;
+foreign progression flags do not imply equipment permission.
 
-Incoming notices are keyed by receipt index and wait for the save's applied-item
-count. Outgoing notices are keyed by source location, recipient and item, and
-come from a real server ItemSend confirmation. Self-awards only show the incoming
-notice. Notices never create inventory objects. A PDA display failure cannot
-repeat item application; successful display identities are saved separately.
+## English and translator resources
 
-The v1 item bridge remains compatible. Optional sidecars use their own version:
-`notices.txt` is atomically published by the companion and `notices_ack.txt` is
-written by the game. Every snapshot binds to the same session key. Each batch
-contains at most 16 notices; the game displays at most one each normal poll.
-Malformed, oversized, wrong-session and unsafe-text messages are refused.
-Acknowledgements from an older seed cannot suppress this seed's messages.
+English ships now. The game selects its language through `game.translate_string`.
+The generated reference is
+`mod/gamedata/configs/text/eng/st_gamma_ap_notices.xml`; `tools/build.py` generates
+four whole-sentence templates from `notice_text.py` and every owned reward label
+from the authoritative catalogue. Do not hand-edit the generated English file.
 
-Player/item labels retain printable Unicode and remove control/formatting text;
-names are bounded. UTF-8 text is hex encoded across the ASCII sidecar. The game
-uses `give_game_news` with the Archipelago header. Actual fonts, history visibility
-and sound remain live acceptance, separate from mocked news-API tests.
+To add a translation, copy the string table into the game's appropriate language
+directory, retaining stable string IDs. Translate complete sentences and reward
+labels. Each sentence must contain exactly one `{player}` and one `{item}`; their
+order can change. Do not add PDA markup, controls or other placeholders. Missing,
+malformed or unsafe translations fall back to English. Missing reward translations
+use the companion's canonical label. Foreign-game reward labels remain upstream
+data-package text, even if an ID matches a GAMMA item. Names are never translated.
+Substitution is a single pass: placeholders inside labels remain literal data.
 
-Ordinary save/reload retains displayed IDs, including migration from existing v1
-saves without the new field. Incoming metadata is reconstructed from item history
-after reconnect. Reconstructing outgoing notices after client-process restart or
-offline play is the next recovery increment; transient ItemSend packets alone
-are not a durable journal. Future no-PDA permission gates must defer display
-without preventing bridge progress.
+No translated language pack is claimed. Font coverage, language selection and
+native PDA rendering remain in-game acceptance for the user.
 
-Full verification passes 227 covered tests and two real-server cases. Owned
-Python line/branch coverage and all owned non-generated Lua executable-line
-coverage are 100%; Lua branch coverage is not measured. Tests include failure,
-malformed data, safe names, wrong seed, batching, receipt boundaries, duplicate
-self/transfers and saved notice replay. The server fixture now actually uses
-APQuest: an earlier fixture used the empty Archipelago meta-world. The current
-test proves real cross-game transfers and outgoing notices, as well as persisted
-server restart. The separate generation test already used APQuest correctly.
+## Transport and save compatibility
 
-No new map/reward category or goal is enabled by this PR. Deployment and actual
-PDA visual acceptance must be recorded separately; do not infer them from tests.
+Incoming notices use receipt identities and wait for the save's applied-item
+count. Outgoing notices use source location, recipient and item, from real server
+ItemSend confirmation and the durable recovery journal. Self-awards show only the
+incoming notice. Notices never create inventory objects. No-PDA settings defer
+display without blocking reward application. Successful display identities are
+saved separately; failed display cannot repeat item application.
 
-## Protocol ID compatibility
+The optional `notices.txt` sidecar now supports semantic version 2:
 
-Foreign item IDs use Archipelago 0.6.8's signed 53-bit range
-(`-9007199254740991` through `9007199254740991`). Notice identities and
-acknowledgements preserve their canonical decimal strings in Lua, so large IDs
-cannot be rounded into another transfer. Negative zero, leading zeros and values
-outside that range are rejected. This fixes the earlier ten-digit restriction;
-local GAMMA location IDs and receipt bounds remain unchanged.
+```text
+GAMMA_AP_NOTICES|2
+session|<session key>
+notice|<identity>|<minimum receipt>|<kind>|<player UTF-8 hex>|<item UTF-8 hex>|<owned item ID or 0>
+end|1
+```
+
+Kinds are `received_item`, `received_unlock`, `sent_item` and `sent_unlock`.
+Version 2 can also carry legacy text records:
+`notice|<identity>|<minimum receipt>|text|<UTF-8 hex>`.
+The new add-on accepts original version 1 text snapshots unchanged. The encoder
+retains version 1 for entirely legacy batches. Upgrade companion and add-on
+together: an old add-on cannot display new semantic sidecars. Receipt/check
+protocols, acknowledgement version 1, published IDs and save schemas are unchanged.
+Previously saved notice identities remain valid and prevent redisplay.
+
+Each snapshot binds to the session key, contains at most 16 notices and displays
+at most one per normal poll. Malformed, oversized, wrong-session and unsafe text
+is rejected. Labels are bounded and sanitized, then UTF-8 hex encoded across the
+ASCII sidecar. The native API is `give_game_news` with the Archipelago header.
+
+Foreign IDs retain Archipelago 0.6.8's signed 53-bit range exactly as decimal
+identity strings, including in Lua acknowledgements. Negative zero, leading
+zeros and out-of-range values are rejected. The server remains authoritative for
+checks and item history; a notice acknowledgement is never an item receipt.
+
+## Acceptance
+
+Automated tests cover grammar, translation selection/fallback, resource parity,
+opaque labels, foreign ID collisions, both sidecar versions, mixed batches,
+malformed semantic records, saved identity replay and real server transfers.
+Lua executable-line coverage is measured; Lua branch coverage is not measured.
+
+Native acceptance is **not run** and reserved for the user: check all four English
+sentences, self-awards, absent PDA/deferred news, reconnect and ordinary save/load;
+confirm readable history/icons/fonts. A translation pack additionally needs its
+own selected-language and missing-key fallback checks. Automated coverage and real
+AP traffic do not establish engine rendering.
