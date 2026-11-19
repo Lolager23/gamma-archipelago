@@ -209,12 +209,14 @@ def test_loot_stash_pool_is_optional_seeded_and_fits_even_one_check():
             *range(28051301, 28051309),
             *range(28051401, 28051405),
             *range(28051501, 28051504),
+            *range(28051601, 28051610),
         }
         assert enabled_item_ids(world.configuration.rewards) == ITEM_IDS - {
             28051201,
             *range(28051301, 28051309),
             *range(28051401, 28051405),
             *range(28051501, 28051504),
+            *range(28051601, 28051610),
         }
         assert multiworld.can_beat_game()
         placements.append(names)
@@ -289,3 +291,29 @@ def test_quest_permissions_are_required_items_and_gate_their_story_checks():
             "Quest Key: Operation Afterglow",
         )
     )
+
+
+def test_restricted_start_places_only_selected_permissions_and_keeps_pda_outside_its_stash():
+    multiworld = setup_multiworld(
+        GammaWorld,
+        options={
+            "starting_pda": 2,
+            "starting_detector": 2,
+            "rewards_starting_gear_unlocks": 1,
+            "rewards_progression_stashes": 1,
+        },
+    )
+    distribute_items_restrictive(multiworld)
+    names = [loc.item.name for loc in multiworld.get_locations()]
+    assert names.count("Equipment Unlock: PDA") == names.count("Equipment Unlock: Detector") == 1
+    assert "Equipment Unlock: Firearms" not in names
+    assert multiworld.can_beat_game()
+    claim = multiworld.get_location("Claim Cordon Psi Stash", 1)
+    from BaseClasses import CollectionState
+
+    state = CollectionState(multiworld)
+    world = multiworld.worlds[1]
+    state.collect(world.create_item("Progression Stash: Calibrated Psi Helmet"), prevent_sweep=True)
+    assert not claim.can_reach(state)
+    state.collect(world.create_item("Equipment Unlock: PDA"), prevent_sweep=True)
+    assert claim.can_reach(state)

@@ -92,10 +92,11 @@ SUPPORTED_REWARDS: frozenset[str] = frozenset(
         "rewards_faction_reputation",
         "rewards_stat_levels",
         "rewards_quest_keys",
+        "rewards_starting_gear_unlocks",
     }
 )
 SUPPORTED_GOALS = frozenset({"pilot_tour"})
-SUPPORTED_START_MODES = frozenset({0, 1})
+SUPPORTED_START_MODES = frozenset({0, 1, 2})
 
 
 class ConfigurationError(ValueError):
@@ -175,6 +176,10 @@ def build_configuration(values: Mapping[str, object]) -> SeedConfiguration:
             gear[name] = max(1, gear[name])
     if 2 in gear.values() and "rewards_starting_gear_unlocks" not in rewards:
         raise ConfigurationError("AP-locked starts require rewards_starting_gear_unlocks")
+    if "rewards_starting_gear_unlocks" in rewards and 2 not in gear.values():
+        raise ConfigurationError(
+            "Starting gear rewards require at least one AP-locked starting group"
+        )
     quantities = tuple((name, _integer(values, name, 100)) for name in QUANTITY_OPTIONS)
     unavailable = (checks - SUPPORTED_CHECKS) | (rewards - SUPPORTED_REWARDS)
     if unavailable or goal not in SUPPORTED_GOALS:

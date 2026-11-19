@@ -86,6 +86,11 @@ class GammaWorld(World):
                     "Calibrated Psi Protection", ItemClassification.progression, None, self.player
                 )
             )
+            if dict(self.configuration.gear)["starting_pda"] == 2:
+                previous = claim.access_rule
+                claim.access_rule = lambda state: (
+                    previous(state) and state.has("Equipment Unlock: PDA", self.player)
+                )
             regions["l01_escape"].locations.append(claim)
         for source, destination in _catalog["connections"]:
             regions[source].connect(regions[destination])
@@ -135,6 +140,10 @@ class GammaWorld(World):
             for item in _catalog["items"]
             if item.get("classification") == "progression"
             and item.get("category") in self.configuration.rewards
+            and (
+                "group" not in item
+                or dict(self.configuration.gear)["starting_" + item["group"]] == 2
+            )
         ]
         names = [item["name"] for item in _catalog["items"] if "category" not in item]
         stashes = [

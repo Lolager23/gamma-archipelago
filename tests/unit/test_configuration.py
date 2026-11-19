@@ -63,6 +63,7 @@ def test_default_configuration_is_immutable_and_deterministically_serialized():
             "rewards_faction_reputation",
             "rewards_stat_levels",
             "rewards_quest_keys",
+            "rewards_starting_gear_unlocks",
         }
     ),
 )
@@ -111,18 +112,19 @@ def test_initial_omission_and_quantity_options_are_supported(name):
 def test_ap_locked_equipment_requires_its_unlock_reward_pool():
     with pytest.raises(ConfigurationError, match="require rewards_starting_gear_unlocks"):
         build_configuration({**defaults(), "starting_pda": 2, "no_starting_weapons": 1})
-    with pytest.raises(ConfigurationError, match="Not implemented"):
-        build_configuration({**defaults(), "starting_pda": 2, "rewards_starting_gear_unlocks": 1})
-
-
-def test_permission_locks_wait_for_the_permission_adapter_even_with_a_reward_pool(monkeypatch):
-    from gamma_archipelago import configuration
-
-    monkeypatch.setattr(
-        configuration, "SUPPORTED_REWARDS", frozenset({"rewards_starting_gear_unlocks"})
+    assert (
+        dict(
+            build_configuration(
+                {**defaults(), "starting_pda": 2, "rewards_starting_gear_unlocks": 1}
+            ).gear
+        )["starting_pda"]
+        == 2
     )
-    with pytest.raises(ConfigurationError, match="Restricted"):
-        build_configuration({**defaults(), "starting_pda": 2, "rewards_starting_gear_unlocks": 1})
+
+
+def test_unlock_rewards_require_a_selected_locked_start():
+    with pytest.raises(ConfigurationError, match="at least one AP-locked"):
+        build_configuration({**defaults(), "rewards_starting_gear_unlocks": 1})
 
 
 @pytest.mark.parametrize("thresholds", [None, [], [1] * 21, [True], [0], [10001], [2, 1], [1, 1]])
