@@ -26,8 +26,8 @@ def test_packages_are_reproducible_and_load_from_apworld(tmp_path):
     with ZipFile(outputs[1]) as archive:
         assert set(archive.namelist()) == {
             f"gamedata/scripts/gamma_ap_{name}.script"
-            for name in ("catalog", "protocol", "state", "game")
-        }
+            for name in ("catalog", "paths", "protocol", "state", "game", "actions", "mcm")
+        } | {"gamedata/configs/text/eng/st_gamma_archipelago.xml"}
     with ZipFile(outputs[2]) as archive:
         assert set(archive.namelist()) == {
             f"gamedata/scripts/gamma_ap_probe_{name}.script" for name in ("capture", "game")

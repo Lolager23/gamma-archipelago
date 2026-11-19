@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<string_table>
+    <string id="ui_mcm_menu_gamma_archipelago">
+        <text>Archipelago</text>
+    </string>
+    <string id="ui_mcm_gamma_archipelago_description">
+        <text>Development tools for Archipelago. Load a save with a living character before spawning tools.</text>
+    </string>
+    <string id="ui_mcm_gamma_archipelago_spawn_basic_tools">
+        <text>Spawn basic tools at my feet</text>
+    </string>
+    <string id="ui_mcm_gamma_archipelago_spawn_basic_tools_desc">
+        <text>Spawns one basic toolkit on the ground. This test action does not advance Archipelago progress.</text>
+    </string>
+    <string id="gamma_ap_tools_spawned">
+        <text>Archipelago: Basic tools spawned at your feet.</text>
+    </string>
+    <string id="gamma_ap_tools_spawn_failed">
+        <text>Archipelago: Could not spawn basic tools.</text>
+    </string>
+</string_table>

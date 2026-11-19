@@ -24,7 +24,7 @@ def test_probe_cli_uses_its_own_checkout_before_an_unrelated_install(tmp_path, t
     assert "usage:" in result.stdout
 
 
-@pytest.mark.parametrize("component,count", [("pilot", 4), ("probes", 2)])
+@pytest.mark.parametrize("component,count", [("pilot", 7), ("probes", 2)])
 def test_deployer_copies_each_component_to_a_separate_mod(tmp_path, monkeypatch, component, count):
     monkeypatch.setattr(deploy_mod, "DEFAULT_MO2_ROOT", tmp_path)
     monkeypatch.setattr(sys, "argv", ["deploy_mod.py", "--component", component])
