@@ -1468,6 +1468,657 @@
       "aliases": [
         "af_zhelch"
       ]
+    },
+    {
+      "id": 28052501,
+      "name": "Complete Quest Type: Fetch",
+      "level": "Menu",
+      "category": "checks_quest_types",
+      "key": "fetch"
+    },
+    {
+      "id": 28052502,
+      "name": "Complete Quest Type: Delivery",
+      "level": "Menu",
+      "category": "checks_quest_types",
+      "key": "delivery"
+    },
+    {
+      "id": 28052503,
+      "name": "Complete Quest Type: Recovery",
+      "level": "Menu",
+      "category": "checks_quest_types",
+      "key": "recovery"
+    },
+    {
+      "id": 28052504,
+      "name": "Complete Quest Type: Hunting",
+      "level": "Menu",
+      "category": "checks_quest_types",
+      "key": "hunting"
+    },
+    {
+      "id": 28052505,
+      "name": "Complete Quest Type: Bounty",
+      "level": "Menu",
+      "category": "checks_quest_types",
+      "key": "bounty"
+    },
+    {
+      "id": 28052506,
+      "name": "Complete Quest Type: Rescue",
+      "level": "Menu",
+      "category": "checks_quest_types",
+      "key": "rescue"
+    },
+    {
+      "id": 28052507,
+      "name": "Complete Quest Type: Defence",
+      "level": "Menu",
+      "category": "checks_quest_types",
+      "key": "defence"
+    },
+    {
+      "id": 28052508,
+      "name": "Complete Quest Type: Research",
+      "level": "Menu",
+      "category": "checks_quest_types",
+      "key": "research"
+    },
+    {
+      "id": 28052509,
+      "name": "Complete Quest Type: Investigation",
+      "level": "Menu",
+      "category": "checks_quest_types",
+      "key": "investigation"
+    },
+    {
+      "id": 28052510,
+      "name": "Complete Quest Type: Assault",
+      "level": "Menu",
+      "category": "checks_quest_types",
+      "key": "assault"
+    },
+    {
+      "id": 28052511,
+      "name": "Complete Quest Type: Donation",
+      "level": "Menu",
+      "category": "checks_quest_types",
+      "key": "donation"
+    },
+    {
+      "id": 28052512,
+      "name": "Complete Quest Type: Territory",
+      "level": "Menu",
+      "category": "checks_quest_types",
+      "key": "territory"
+    },
+    {
+      "id": 28052513,
+      "name": "Complete Quest Type: Vehicle",
+      "level": "Menu",
+      "category": "checks_quest_types",
+      "key": "vehicle"
+    },
+    {
+      "id": 28052601,
+      "name": "Story: Living Legend / Find Doctor",
+      "level": "Menu",
+      "category": "checks_story_milestones",
+      "key": "lttz_ll_find_doctor",
+      "tasks": [
+        "lttz_ll_find_doctor"
+      ]
+    },
+    {
+      "id": 28052602,
+      "name": "Story: Living Legend / Visit Agro Ug",
+      "level": "Menu",
+      "category": "checks_story_milestones",
+      "key": "lttz_ll_visit_agro_ug",
+      "tasks": [
+        "lttz_ll_visit_agro_ug"
+      ]
+    },
+    {
+      "id": 28052603,
+      "name": "Story: Living Legend / Visit Barkeep",
+      "level": "Menu",
+      "category": "checks_story_milestones",
+      "key": "lttz_ll_visit_barkeep",
+      "tasks": [
+        "lttz_ll_visit_barkeep"
+      ]
+    },
+    {
+      "id": 28052604,
+      "name": "Story: Living Legend / Visit Blackjack",
+      "level": "Menu",
+      "category": "checks_story_milestones",
+      "key": "lttz_ll_visit_blackjack",
+      "tasks": [
+        "lttz_ll_visit_blackjack"
+      ]
+    },
+    {
+      "id": 28052605,
+      "name": "Story: Living Legend / Call North",
+      "level": "Menu",
+      "category": "checks_story_milestones",
+      "key": "lttz_ll_call_north",
+      "tasks": [
+        "lttz_ll_call_north"
+      ]
+    },
+    {
+      "id": 28052606,
+      "name": "Story: Living Legend / Breakthrough",
+      "level": "Menu",
+      "category": "checks_story_milestones",
+      "key": "lttz_ll_breakthrough",
+      "tasks": [
+        "lttz_ll_breakthrough"
+      ]
+    },
+    {
+      "id": 28052607,
+      "name": "Story: Living Legend / Turn Off Brain Scorcher",
+      "level": "Menu",
+      "category": "checks_story_milestones",
+      "key": "lttz_ll_turn_off_brain_scorcher",
+      "tasks": [
+        "lttz_ll_turn_off_brain_scorcher"
+      ]
+    },
+    {
+      "id": 28052608,
+      "name": "Story: Living Legend / Visit Beard",
+      "level": "Menu",
+      "category": "checks_story_milestones",
+      "key": "lttz_ll_visit_beard",
+      "tasks": [
+        "lttz_ll_visit_beard"
+      ]
+    },
+    {
+      "id": 28052609,
+      "name": "Story: Living Legend / Meet Rogue",
+      "level": "Menu",
+      "category": "checks_story_milestones",
+      "key": "lttz_ll_meet_rogue",
+      "tasks": [
+        "lttz_ll_meet_rogue"
+      ]
+    },
+    {
+      "id": 28052610,
+      "name": "Story: Living Legend / Fetch Gauss",
+      "level": "Menu",
+      "category": "checks_story_milestones",
+      "key": "lttz_ll_fetch_gauss",
+      "tasks": [
+        "lttz_ll_fetch_gauss"
+      ]
+    },
+    {
+      "id": 28052611,
+      "name": "Story: Living Legend / Path Pripyat",
+      "level": "Menu",
+      "category": "checks_story_milestones",
+      "key": "lttz_ll_path_pripyat",
+      "tasks": [
+        "lttz_ll_path_pripyat"
+      ]
+    },
+    {
+      "id": 28052612,
+      "name": "Story: Living Legend / Medical Supplies",
+      "level": "Menu",
+      "category": "checks_story_milestones",
+      "key": "lttz_ll_medical_supplies",
+      "tasks": [
+        "lttz_ll_medical_supplies"
+      ]
+    },
+    {
+      "id": 28052613,
+      "name": "Story: Living Legend / Attack On Titan",
+      "level": "Menu",
+      "category": "checks_story_milestones",
+      "key": "lttz_ll_attack_on_titan",
+      "tasks": [
+        "lttz_ll_attack_on_titan"
+      ]
+    },
+    {
+      "id": 28052614,
+      "name": "Story: Living Legend / Find Documents",
+      "level": "Menu",
+      "category": "checks_story_milestones",
+      "key": "lttz_ll_find_documents",
+      "tasks": [
+        "lttz_ll_find_documents"
+      ]
+    },
+    {
+      "id": 28052615,
+      "name": "Story: Living Legend / Eidolon Start",
+      "level": "Menu",
+      "category": "checks_story_milestones",
+      "key": "lttz_ll_eidolon_start",
+      "tasks": [
+        "lttz_ll_eidolon_start"
+      ]
+    },
+    {
+      "id": 28052616,
+      "name": "Story: Living Legend / Eidolon",
+      "level": "Menu",
+      "category": "checks_story_milestones",
+      "key": "lttz_ll_eidolon",
+      "tasks": [
+        "lttz_ll_eidolon"
+      ]
+    },
+    {
+      "id": 28052617,
+      "name": "Story: Living Legend / Strelok Objective",
+      "level": "Menu",
+      "category": "checks_story_milestones",
+      "key": "lttz_ll_strelok_objective",
+      "tasks": [
+        "lttz_ll_strelok_objective"
+      ]
+    },
+    {
+      "id": 28052618,
+      "name": "Story: Living Legend / Chernobyl Raid",
+      "level": "Menu",
+      "category": "checks_story_milestones",
+      "key": "lttz_ll_chernobyl_raid",
+      "tasks": [
+        "lttz_ll_chernobyl_raid"
+      ]
+    },
+    {
+      "id": 28052619,
+      "name": "Story: Living Legend / Crucible",
+      "level": "Menu",
+      "category": "checks_story_milestones",
+      "key": "lttz_ll_crucible",
+      "tasks": [
+        "lttz_ll_crucible"
+      ]
+    },
+    {
+      "id": 28052620,
+      "name": "Story: Living Legend / Answers",
+      "level": "Menu",
+      "category": "checks_story_milestones",
+      "key": "lttz_ll_answers",
+      "tasks": [
+        "lttz_ll_answers"
+      ]
+    },
+    {
+      "id": 28052621,
+      "name": "Story: Living Legend / Finish",
+      "level": "Menu",
+      "category": "checks_story_milestones",
+      "key": "lttz_ll_finish",
+      "tasks": [
+        "lttz_ll_finish_dolg",
+        "lttz_ll_finish_killer",
+        "lttz_ll_finish_stalker",
+        "lttz_ll_finish_csky",
+        "lttz_ll_finish_freedom",
+        "lttz_ll_finish_ecolog"
+      ]
+    },
+    {
+      "id": 28052622,
+      "name": "Story: Mortal Sin / Start",
+      "level": "Menu",
+      "category": "checks_story_milestones",
+      "key": "lttz_ms_start",
+      "tasks": [
+        "lttz_ms_start_dolg",
+        "lttz_ms_start_killer",
+        "lttz_ms_start_stalker",
+        "lttz_ms_start_csky",
+        "lttz_ms_start_freedom",
+        "lttz_ms_start_ecolog"
+      ]
+    },
+    {
+      "id": 28052623,
+      "name": "Story: Mortal Sin / Red Forester",
+      "level": "Menu",
+      "category": "checks_story_milestones",
+      "key": "lttz_ms_red_forester",
+      "tasks": [
+        "lttz_ms_red_forester"
+      ]
+    },
+    {
+      "id": 28052624,
+      "name": "Story: Mortal Sin / Red Forest Attackers",
+      "level": "Menu",
+      "category": "checks_story_milestones",
+      "key": "lttz_ms_red_forest_attackers",
+      "tasks": [
+        "lttz_ms_red_forest_attackers"
+      ]
+    },
+    {
+      "id": 28052625,
+      "name": "Story: Mortal Sin / Runaway",
+      "level": "Menu",
+      "category": "checks_story_milestones",
+      "key": "lttz_ms_runaway",
+      "tasks": [
+        "lttz_ms_runaway"
+      ]
+    },
+    {
+      "id": 28052626,
+      "name": "Story: Mortal Sin / Needle Haystack",
+      "level": "Menu",
+      "category": "checks_story_milestones",
+      "key": "lttz_ms_needle_haystack",
+      "tasks": [
+        "lttz_ms_needle_haystack"
+      ]
+    },
+    {
+      "id": 28052627,
+      "name": "Story: Mortal Sin / Report",
+      "level": "Menu",
+      "category": "checks_story_milestones",
+      "key": "lttz_ms_report",
+      "tasks": [
+        "lttz_ms_report_dolg",
+        "lttz_ms_report_killer",
+        "lttz_ms_report_stalker",
+        "lttz_ms_report_csky",
+        "lttz_ms_report_freedom",
+        "lttz_ms_report_ecolog"
+      ]
+    },
+    {
+      "id": 28052628,
+      "name": "Story: Mortal Sin / Ambush",
+      "level": "Menu",
+      "category": "checks_story_milestones",
+      "key": "lttz_ms_ambush",
+      "tasks": [
+        "lttz_ms_ambush_dolg",
+        "lttz_ms_ambush_killer",
+        "lttz_ms_ambush_stalker",
+        "lttz_ms_ambush_csky",
+        "lttz_ms_ambush_freedom",
+        "lttz_ms_ambush_ecolog"
+      ]
+    },
+    {
+      "id": 28052629,
+      "name": "Story: Mortal Sin / Dark Crusade",
+      "level": "Menu",
+      "category": "checks_story_milestones",
+      "key": "lttz_ms_dark_crusade",
+      "tasks": [
+        "lttz_ms_dark_crusade"
+      ]
+    },
+    {
+      "id": 28052630,
+      "name": "Story: Mortal Sin / Protect Miracle Machine",
+      "level": "Menu",
+      "category": "checks_story_milestones",
+      "key": "lttz_ms_protect_miracle_machine",
+      "tasks": [
+        "lttz_ms_protect_miracle_machine"
+      ]
+    },
+    {
+      "id": 28052631,
+      "name": "Story: Mortal Sin / Protect Brain Scorcher",
+      "level": "Menu",
+      "category": "checks_story_milestones",
+      "key": "lttz_ms_protect_brain_scorcher",
+      "tasks": [
+        "lttz_ms_protect_brain_scorcher"
+      ]
+    },
+    {
+      "id": 28052632,
+      "name": "Story: Mortal Sin / To War",
+      "level": "Menu",
+      "category": "checks_story_milestones",
+      "key": "lttz_ms_to_war",
+      "tasks": [
+        "lttz_ms_to_war"
+      ]
+    },
+    {
+      "id": 28052633,
+      "name": "Story: Mortal Sin / Urban Warfare",
+      "level": "Menu",
+      "category": "checks_story_milestones",
+      "key": "lttz_ms_urban_warfare",
+      "tasks": [
+        "lttz_ms_urban_warfare_dolg",
+        "lttz_ms_urban_warfare_killer",
+        "lttz_ms_urban_warfare_stalker",
+        "lttz_ms_urban_warfare_csky",
+        "lttz_ms_urban_warfare_freedom",
+        "lttz_ms_urban_warfare_ecolog"
+      ]
+    },
+    {
+      "id": 28052634,
+      "name": "Story: Mortal Sin / War Prisoner",
+      "level": "Menu",
+      "category": "checks_story_milestones",
+      "key": "lttz_ms_war_prisoner",
+      "tasks": [
+        "lttz_ms_war_prisoner"
+      ]
+    },
+    {
+      "id": 28052635,
+      "name": "Story: Mortal Sin / Contact Lost",
+      "level": "Menu",
+      "category": "checks_story_milestones",
+      "key": "lttz_ms_contact_lost",
+      "tasks": [
+        "lttz_ms_contact_lost"
+      ]
+    },
+    {
+      "id": 28052636,
+      "name": "Story: Mortal Sin / Destruction Site",
+      "level": "Menu",
+      "category": "checks_story_milestones",
+      "key": "lttz_ms_destruction_site",
+      "tasks": [
+        "lttz_ms_destruction_site"
+      ]
+    },
+    {
+      "id": 28052637,
+      "name": "Story: Mortal Sin / Hospital Assault",
+      "level": "Menu",
+      "category": "checks_story_milestones",
+      "key": "lttz_ms_hospital_assault",
+      "tasks": [
+        "lttz_ms_hospital_assault"
+      ]
+    },
+    {
+      "id": 28052638,
+      "name": "Story: Mortal Sin / Heart Zone",
+      "level": "Menu",
+      "category": "checks_story_milestones",
+      "key": "lttz_ms_heart_zone",
+      "tasks": [
+        "lttz_ms_heart_zone"
+      ]
+    },
+    {
+      "id": 28052639,
+      "name": "Story: Mortal Sin / Decisive Blow",
+      "level": "Menu",
+      "category": "checks_story_milestones",
+      "key": "lttz_ms_decisive_blow",
+      "tasks": [
+        "lttz_ms_decisive_blow"
+      ]
+    },
+    {
+      "id": 28052640,
+      "name": "Story: Mortal Sin / Confrontation",
+      "level": "Menu",
+      "category": "checks_story_milestones",
+      "key": "lttz_ms_confrontation",
+      "tasks": [
+        "lttz_ms_confrontation"
+      ]
+    },
+    {
+      "id": 28052641,
+      "name": "Story: Mortal Sin / Endgame",
+      "level": "Menu",
+      "category": "checks_story_milestones",
+      "key": "lttz_ms_endgame",
+      "tasks": [
+        "lttz_ms_endgame"
+      ]
+    },
+    {
+      "id": 28052642,
+      "name": "Story: Mortal Sin / Choice",
+      "level": "Menu",
+      "category": "checks_story_milestones",
+      "key": "lttz_ms_choice",
+      "tasks": [
+        "lttz_ms_choice"
+      ]
+    },
+    {
+      "id": 28052643,
+      "name": "Story: Mortal Sin / Zone Hero",
+      "level": "Menu",
+      "category": "checks_story_milestones",
+      "key": "lttz_ms_zone_hero",
+      "tasks": [
+        "lttz_ms_zone_hero_dolg",
+        "lttz_ms_zone_hero_killer",
+        "lttz_ms_zone_hero_stalker",
+        "lttz_ms_zone_hero_csky",
+        "lttz_ms_zone_hero_freedom",
+        "lttz_ms_zone_hero_ecolog"
+      ]
+    },
+    {
+      "id": 28052644,
+      "name": "Story: Operation Afterglow / Encrypted Transmission",
+      "level": "Menu",
+      "category": "checks_story_milestones",
+      "key": "lttz_oa_encrypted_transmission",
+      "tasks": [
+        "lttz_oa_encrypted_transmission"
+      ]
+    },
+    {
+      "id": 28052645,
+      "name": "Story: Operation Afterglow / Rally Point",
+      "level": "Menu",
+      "category": "checks_story_milestones",
+      "key": "lttz_oa_rally_point",
+      "tasks": [
+        "lttz_oa_rally_point"
+      ]
+    },
+    {
+      "id": 28052646,
+      "name": "Story: Operation Afterglow / Report",
+      "level": "Menu",
+      "category": "checks_story_milestones",
+      "key": "lttz_oa_report",
+      "tasks": [
+        "lttz_oa_report"
+      ]
+    },
+    {
+      "id": 28052647,
+      "name": "Story: Operation Afterglow / Special Delivery",
+      "level": "Menu",
+      "category": "checks_story_milestones",
+      "key": "lttz_oa_special_delivery",
+      "tasks": [
+        "lttz_oa_special_delivery"
+      ]
+    },
+    {
+      "id": 28052648,
+      "name": "Story: Operation Afterglow / Undercover Agent",
+      "level": "Menu",
+      "category": "checks_story_milestones",
+      "key": "lttz_oa_undercover_agent",
+      "tasks": [
+        "lttz_oa_undercover_agent"
+      ]
+    },
+    {
+      "id": 28052649,
+      "name": "Story: Operation Afterglow / Search Unit",
+      "level": "Menu",
+      "category": "checks_story_milestones",
+      "key": "lttz_oa_search_unit",
+      "tasks": [
+        "lttz_oa_search_unit"
+      ]
+    },
+    {
+      "id": 28052650,
+      "name": "Story: Operation Afterglow / Strelok",
+      "level": "Menu",
+      "category": "checks_story_milestones",
+      "key": "lttz_oa_strelok",
+      "tasks": [
+        "lttz_oa_strelok"
+      ]
+    },
+    {
+      "id": 28052651,
+      "name": "Story: Operation Afterglow / Rogue",
+      "level": "Menu",
+      "category": "checks_story_milestones",
+      "key": "lttz_oa_rogue",
+      "tasks": [
+        "lttz_oa_rogue"
+      ]
+    },
+    {
+      "id": 28052652,
+      "name": "Story: Operation Afterglow / Stitch",
+      "level": "Menu",
+      "category": "checks_story_milestones",
+      "key": "lttz_oa_stitch",
+      "tasks": [
+        "lttz_oa_stitch"
+      ]
+    },
+    {
+      "id": 28052653,
+      "name": "Story: Operation Afterglow / Loose Ends",
+      "level": "Menu",
+      "category": "checks_story_milestones",
+      "key": "lttz_oa_loose_ends",
+      "tasks": [
+        "lttz_oa_loose_ends"
+      ]
     }
   ],
   "content_inventory": {
@@ -1511,10 +2162,8 @@
       "fake_start"
     ],
     "remaining_rosters": [
-      "task_types",
       "equipment_tiers",
       "ranks",
-      "story_milestones",
       "x_labs"
     ],
     "artefact_scope": {
@@ -1882,6 +2531,47 @@
       "base_id": 28100000,
       "maximum": 10000,
       "name": "Defeat {count} Enemies"
+    },
+    "checks_side_task_milestones": {
+      "base_id": 28120000,
+      "maximum": 10000,
+      "name": "Complete {count} Side Tasks"
     }
+  },
+  "task_functors": {
+    "actor_has_fetch_item": "fetch",
+    "general_fetch_task": "fetch",
+    "multifetch_status_functor": "fetch",
+    "drx_sl_quest_item_task_status": "fetch",
+    "delivery_task": "delivery",
+    "general_delivery": "delivery",
+    "drx_sl_retrieve_item_task_status": "recovery",
+    "recover_item_on_corpse_status_functor": "recovery",
+    "recover_item_on_corpse_target_functor": "recovery",
+    "mutants_in_map_target": "hunting",
+    "bounty_task": "bounty",
+    "general_bounty_task": "bounty",
+    "top_10_task_status_functor": "bounty",
+    "hostage_task": "rescue",
+    "spy_task_status_functor": "rescue",
+    "gd_task_status_functor": "defence",
+    "barrier_defense_target_functor": "defence",
+    "faction_base_defense_target": "defence",
+    "anomaly_scanner_task_status": "research",
+    "measure_task": "research",
+    "general_measure": "research",
+    "chimera_scan_status": "research",
+    "recover_mutant_data_status": "research",
+    "task_type_ecolog_gathered_tissue_samples": "research",
+    "fate_task": "investigation",
+    "general_fate": "investigation",
+    "assault_task_status_functor": "assault",
+    "assault_task_target_functor": "assault",
+    "drx_sl_money_task_status": "donation",
+    "drx_sl_money_task_target": "donation",
+    "dominance_task_status_functor": "territory",
+    "smart_control_task_status_functor": "territory",
+    "veh_destroy_sf": "vehicle",
+    "veh_destroy_tf": "vehicle"
   }
 }

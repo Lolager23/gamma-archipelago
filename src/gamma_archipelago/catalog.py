@@ -14,10 +14,22 @@ LOCATION_NAMES: dict[str, int] = {
 }
 KILL_MILESTONE_BASE: int = _data["milestones"]["checks_kill_milestones"]["base_id"]
 MAX_KILL_MILESTONE: int = _data["milestones"]["checks_kill_milestones"]["maximum"]
+SIDE_TASK_MILESTONE_BASE: int = _data["milestones"]["checks_side_task_milestones"]["base_id"]
+MAX_SIDE_TASK_MILESTONE: int = _data["milestones"]["checks_side_task_milestones"]["maximum"]
 LOCATION_NAMES.update(
     {
-        f"Defeat {count} Enemies": KILL_MILESTONE_BASE + count
+        _data["milestones"]["checks_kill_milestones"]["name"].format(
+            count=count
+        ): KILL_MILESTONE_BASE + count
         for count in range(1, MAX_KILL_MILESTONE + 1)
+    }
+)
+LOCATION_NAMES.update(
+    {
+        _data["milestones"]["checks_side_task_milestones"]["name"].format(
+            count=count
+        ): SIDE_TASK_MILESTONE_BASE + count
+        for count in range(1, MAX_SIDE_TASK_MILESTONE + 1)
     }
 )
 ALL_LOCATION_IDS = frozenset(LOCATION_NAMES.values())
@@ -35,11 +47,15 @@ MAX_SNAPSHOT_BYTES = 131072
 
 
 def enabled_location_ids(
-    checks: frozenset[str], kill_milestones: tuple[int, ...] = (10, 25, 50, 100)
+    checks: frozenset[str],
+    kill_milestones: tuple[int, ...] = (10, 25, 50, 100),
+    side_task_milestones: tuple[int, ...] = (5, 10, 20, 40),
 ) -> frozenset[int]:
     locations = frozenset(
         identity for identity, category in LOCATION_CATEGORIES.items() if category in checks
     )
     if "checks_kill_milestones" in checks:
         locations |= frozenset(KILL_MILESTONE_BASE + count for count in kill_milestones)
+    if "checks_side_task_milestones" in checks:
+        locations |= frozenset(SIDE_TASK_MILESTONE_BASE + count for count in side_task_milestones)
     return locations

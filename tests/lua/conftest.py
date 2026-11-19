@@ -24,6 +24,7 @@ def lua():
         "loadout",
         "combat",
         "collection",
+        "tasks",
         "state",
         "settlements",
         "notifications",

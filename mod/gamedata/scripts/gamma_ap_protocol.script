@@ -85,6 +85,8 @@ function parse_confirmed(content, key, allowed)
         local id = canonical_number(lines[index]:match("^check|(.*)$"))
         local milestone = id and id > gamma_ap_catalog.kill_milestone_base
             and id <= gamma_ap_catalog.kill_milestone_base + gamma_ap_catalog.kill_milestone_maximum
+        milestone = milestone or (id and id > gamma_ap_catalog.side_task_milestone_base
+            and id <= gamma_ap_catalog.side_task_milestone_base + gamma_ap_catalog.side_task_milestone_maximum)
         if (not known[id] and (allowed or not milestone)) or checked[id] then
             return nil, "Unknown, disabled or duplicate confirmed check"
         end

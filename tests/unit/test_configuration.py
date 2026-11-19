@@ -43,6 +43,9 @@ def test_default_configuration_is_immutable_and_deterministically_serialized():
             "checks_faction_first_kills",
             "checks_kill_milestones",
             "checks_artefacts",
+            "checks_quest_types",
+            "checks_story_milestones",
+            "checks_side_task_milestones",
         }
     )
     + REWARD_OPTIONS,
