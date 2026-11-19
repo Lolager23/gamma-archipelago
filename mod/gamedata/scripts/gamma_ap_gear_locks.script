@@ -1,5 +1,28 @@
 -- AP mode 2 is a permission lock; mode 1 only omits the initial equipment.
 
+local pickup_flags = nil
+local pickup_wrapper = nil
+
+function install_pickup_guard(configuration)
+    if not configuration or not configuration.expanded
+        or configuration.options.rewards_starting_gear_unlocks ~= 1 then return true end
+    local binder = rawget(_G, "bind_stalker_ext")
+    if not binder or type(binder.actor_on_item_before_pickup) ~= "function" then
+        return false, "Equipment locks require the native pickup binder"
+    end
+    if binder.actor_on_item_before_pickup ~= pickup_wrapper then
+        local delegate = binder.actor_on_item_before_pickup
+        pickup_wrapper = function(...)
+            -- The pinned binder reuses its flags without resetting them. Clear
+            -- the previous dispatch before delegates run current mod callbacks.
+            if pickup_flags then pickup_flags.ret_value = true end
+            return delegate(...)
+        end
+        binder.actor_on_item_before_pickup = pickup_wrapper
+    end
+    return true
+end
+
 local function locked(state, item)
     local configuration = state.configuration
     if not configuration or not configuration.expanded or not item then return false end
@@ -10,6 +33,11 @@ end
 
 function before(state, item, flags)
     if locked(state, item) then flags.ret_value = false end
+end
+
+function before_pickup(state, item, flags)
+    pickup_flags = flags
+    before(state, item, flags)
 end
 
 function taken(state, item)
