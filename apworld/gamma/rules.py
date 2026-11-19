@@ -64,6 +64,11 @@ def apply_access_rules(world: "GammaWorld", catalog: dict[str, Any]) -> None:
             "rewards_progressive_tools" in world.configuration.rewards
             and category == "checks_gear_upgrades"
         )
+        if (
+            category == "checks_gear_upgrades"
+            and "rewards_workshop_access" in world.configuration.rewards
+        ):
+            names.append("Workshop Access: Upgrades")
         previous = location.access_rule
         # Global activities deliberately wait for full zone access. This is a
         # conservative guarantee, not a claim that every species lives in Cordon.

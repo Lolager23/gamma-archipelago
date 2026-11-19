@@ -9,7 +9,7 @@ from gamma_archipelago.web_planner import metadata, player_document, preview
 
 def test_metadata_and_all_presets_match_authoritative_catalogues():
     data = metadata()
-    assert len(data["checks"]) == 16 and len(data["rewards"]) == 8
+    assert len(data["checks"]) == 16 and len(data["rewards"]) == 10
     assert len(data["gear"]) == 9 and len(data["quantities"]) == 4
     assert len(data["goals"]) == 6 and len(data["levels"]) == 33
     for values in presets().values():
@@ -26,7 +26,7 @@ def test_metadata_and_all_presets_match_authoritative_catalogues():
         assert result["reward_slots"] == result["network_checks"]
         assert result["digest"] == configuration.digest
     full = preview(presets()["full_story"], {})
-    assert (full["network_checks"], full["reward_types"]) == (264, 88)
+    assert (full["network_checks"], full["reward_types"]) == (264, 95)
 
 
 def test_custom_totals_and_insufficient_progression_slots():

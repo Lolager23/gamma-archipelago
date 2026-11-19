@@ -48,6 +48,11 @@ supported entry points before installation, and delegate permitted actions to
 their captured native methods. The AP world and PDA use matching conservative
 upgrade requirements; physical supplies remain owned by the ordinary game.
 
+[Workshop and recipe access](workshop-access.md) extend the same explicit guards
+with catalogue-backed permanent permissions. They use the existing saved unlock
+set. Recipe groups map to the supported native recipe toolkit indices; native
+knowledge and component checks remain the captured method's responsibility.
+
 ## State and failure boundaries
 
 The AP server owns completed location checks and the ordered item history. The

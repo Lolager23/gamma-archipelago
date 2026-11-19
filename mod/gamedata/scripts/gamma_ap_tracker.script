@@ -53,6 +53,8 @@ local function blocked(state, row, regions, psi)
     end
     if config.rewards_progressive_tools == 1 and row.category == "checks_gear_upgrades"
         and gamma_ap_workshop.tools_level(state) < 3 then return "Expert tool permission required" end
+    if config.rewards_workshop_access == 1 and row.category == "checks_gear_upgrades"
+        and not state.unlocks.workshop_upgrade then return "Workshop upgrade permission required" end
     local group = equipment[row.category]
     if group and config["starting_"..group] == 2 and not state.unlocks["gear_"..group] then
         return "Equipment permission required: " .. group

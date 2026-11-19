@@ -33,6 +33,8 @@ CHECK_OPTIONS = (
     "checks_faction_standing",
 )
 REWARD_OPTIONS = (
+    "rewards_workshop_access",
+    "rewards_recipe_access",
     "rewards_progressive_tools",
     "rewards_loot_stashes",
     "rewards_progression_stashes",
@@ -103,6 +105,8 @@ SUPPORTED_CHECKS = frozenset(
 )
 SUPPORTED_REWARDS: frozenset[str] = frozenset(
     {
+        "rewards_workshop_access",
+        "rewards_recipe_access",
         "rewards_progressive_tools",
         "rewards_loot_stashes",
         "rewards_progression_stashes",

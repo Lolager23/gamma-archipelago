@@ -12,5 +12,9 @@ EXPANSION_LIMITS = {
     "optional_check_policy": 2,
 }
 EXPANSION_DEFAULTS = dict.fromkeys(EXPANSION_LIMITS, 0)
-LEGACY_REWARD_DEFAULTS = {"rewards_progressive_tools": 0}
+LEGACY_REWARD_DEFAULTS = {
+    "rewards_progressive_tools": 0,
+    "rewards_workshop_access": 0,
+    "rewards_recipe_access": 0,
+}
 LEGACY_CHECK_DEFAULTS = {"checks_shops": 0, "checks_faction_standing": 0}

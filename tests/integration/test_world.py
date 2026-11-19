@@ -205,7 +205,7 @@ def test_loot_stash_pool_is_optional_seeded_and_fits_even_one_check():
         assert any("Loot Stash:" in name for name in names)
         assert "Basic Toolkit" in names
         assert set(world.fill_slot_data()["item_ids"]) == ITEM_IDS - {
-            28051801,
+            *range(28051801, 28052000),
             28051201,
             *range(28051301, 28051309),
             *range(28051401, 28051405),
@@ -214,7 +214,7 @@ def test_loot_stash_pool_is_optional_seeded_and_fits_even_one_check():
             *range(28051701, 28051733),
         }
         assert enabled_item_ids(world.configuration.rewards) == ITEM_IDS - {
-            28051801,
+            *range(28051801, 28052000),
             28051201,
             *range(28051301, 28051309),
             *range(28051401, 28051405),
