@@ -1,0 +1,8 @@
+{
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "node --check app.js && node --check ui.js && node --check form_state.js",
+    "test": "node --test ../../tests/web/test_form_state.mjs"
+  }
+}

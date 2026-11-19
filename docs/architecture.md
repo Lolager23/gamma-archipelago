@@ -52,11 +52,19 @@ tests/unit/                    Python behaviour tests
 tests/lua/                     Lua adapter and state tests
 tests/integration/             Real AP generation/server checks
 tools/                         Verify, build, deploy and environment checks
+web/generator/                 Buildless local seed workbench UI
 docs/                          Decisions, workflow and test evidence
 ```
 
 The catalogue is the source of truth. The build emits a Lua table and checks the
 world/client against the same data. Published IDs are never recycled.
+
+The optional [seed workbench](generator-web-app.md) reuses core configuration and
+catalogue projections. `web_estimates` owns explicitly provisional time estimates;
+`web_generation` owns bounded upstream subprocess execution; `web_server` owns
+loopback HTTP. The browser owns its draft form only. These modules do not alter
+session/save ownership or access the game bridge. Generated sessions remain in a
+separate tooling directory, and no generation request launches the game.
 
 ## Isolation boundary
 

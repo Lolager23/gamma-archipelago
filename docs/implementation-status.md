@@ -46,6 +46,10 @@ Each PR links its exact behaviour, save policy and acceptance document. Full
 presets expose 257 network checks and 87 potential item IDs, with finite subsets
 selected by options. Local events never become extra network locations.
 
+The additional [generator web app PR #35](https://github.com/Lolager23/gamma-archipelago/pull/35)
+is stacked on #34. Its [guide](generator-web-app.md) covers local seed generation,
+catalogue displays and provisional playtime estimates.
+
 The [v1 checklist](version-one-release.md) owns release gates; the
 [acceptance matrix](multiworld-acceptance.md) owns playtests. Earlier planning and
 pilot documents remain as dated design/evidence; this index describes the

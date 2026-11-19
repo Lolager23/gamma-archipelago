@@ -1,5 +1,58 @@
 # Verification record
 
+## Generator extended QA and fixes: 19 November 2026
+
+The full verifier passed **653 covered + 32 untraced Python/Lua tests**, plus
+**five Node frontend regressions**: 690 tests total. All owned Python runtime
+modules reached 100% measured lines and branches, and existing Lua executable-line
+gates passed. Lua branch and numeric JavaScript coverage are not measured.
+
+Browser testing reproduced No Starting Weapons permanently overwriting normal
+firearms/melee choices. The fix preserves draft state separately from normalized
+previews. On/off controls and a downloaded YAML now restore the original modes.
+Pending/invalid edits clear old totals. Reserved player names now block downloads,
+and exported names match upstream trimming. Incomplete JSON bodies are refused;
+timeouts and nesting limits return bounded errors. Brackets/escapes in strings
+remain valid. A backend-stop test also found a stale connected banner, now fixed;
+restart plus another edit recovered the existing draft and generation controls.
+
+All six presets passed browser count checks. Six presets times two boundary
+seeds generated exact preview IDs, reward IDs and settings. Three repeated-seed
+cases reproduced placements/settings. Two actual concurrent HTTP requests
+produced one seed and one busy refusal; a later request succeeded. The complete
+suite also retains 6,000 preset seeds, category/goal matrices, ten real-server
+cases, packaged-client/APWorld loading and reproducible-package checks.
+
+A browser download using the maximum 64-bit seed succeeded. Search/no-match,
+custom/duplicate milestones, invalid seed/name controls, lock restoration and
+server recovery were exercised. Private logs are under `D:/GAMMAAPTools` as
+`web-qa-reproductions.log`, `web-qa-real-generation.log` and
+`web-qa-full-verification.log`; the browser image is
+`diagnostics/generator-qa.jpg`. No game launch, save change, mod deployment,
+merge or public/hosted publication occurred. The app remains local-only.
+
+## Generator web app: 19 November 2026
+
+The complete verifier passed with 645 covered tests and 17 untraced
+generation/server tests: **662 passed**. All owned Python runtime modules,
+including the four web modules, reached 100% measured line and branch coverage.
+Existing Lua executable-line gates still passed; Lua branch coverage is not
+measured. JavaScript module syntax checks now run in the verifier as well.
+
+The additional integration case generated and inspected a real downloadable AP
+seed ZIP. In browser checks, the full preset displayed 257 checks / 87 eligible
+reward types; invalid zone settings and duplicate milestone thresholds blocked
+generation. Starting-lock controls, reward search, calculator keyboard input,
+actual seed ZIP download and actual YAML download were exercised. No browser
+console errors/warnings were observed. The narrow layout had no page overflow;
+the roster table retains its own horizontal scroll. This is manual browser
+evidence, not numeric JavaScript coverage or GAMMA engine acceptance.
+
+The web generation runtime and session storage use separate tooling directories.
+The local verifier log is `D:/GAMMAAPTools/web-generator-verification.log`.
+No game launch, save changes, deployment, server start or merge occurred.
+See the [workbench guide](generator-web-app.md) for setup and estimate limits.
+
 ## Expanded candidate automation: 19 November 2026
 
 Step 30's complete local verifier passed on Windows with Python 3.12.3 and the
