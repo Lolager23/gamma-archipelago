@@ -53,7 +53,7 @@ def test_default_configuration_is_immutable_and_deterministically_serialized():
             "checks_rank_milestones",
         }
     )
-    + REWARD_OPTIONS,
+    + tuple(name for name in REWARD_OPTIONS if name != "rewards_loot_stashes"),
 )
 def test_unimplemented_adapters_are_never_silently_enabled(name):
     values = defaults()

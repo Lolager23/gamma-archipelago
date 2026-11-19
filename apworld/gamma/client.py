@@ -10,7 +10,13 @@ from CommonClient import CommonContext, get_base_parser, server_loop
 from NetUtils import ClientStatus, NetworkItem
 
 from gamma_archipelago.bridge import FileBridge
-from gamma_archipelago.catalog import GAME, LOCATION_IDS, enabled_location_ids
+from gamma_archipelago.catalog import (
+    GAME,
+    ITEM_SECTIONS,
+    LOCATION_IDS,
+    enabled_item_ids,
+    enabled_location_ids,
+)
 from gamma_archipelago.configuration import (
     ConfigurationError,
     SeedConfiguration,
@@ -83,6 +89,13 @@ class GammaContext(CommonContext):
                     raise ProtocolError("Generation configuration digest does not match")
                 if version == 1 and self.configuration.to_values() != defaults():
                     raise ProtocolError("Expanded configuration requires schema 2")
+                if version == 2 and (
+                    self.configuration.checks != {"checks_maps"}
+                    or self.configuration.rewards
+                    or self.configuration.goal != "pilot_tour"
+                    or any(mode == 2 for _, mode in self.configuration.gear)
+                ):
+                    raise ProtocolError("Expanded checks and rewards require schema 3")
             self.expanded = version == 3
             allowed = (
                 enabled_location_ids(
@@ -95,9 +108,17 @@ class GammaContext(CommonContext):
             )
             if self.expanded and slot_data.get("location_ids") != sorted(allowed):
                 raise ProtocolError("Seed check manifest does not match this client build")
+            item_ids = (
+                enabled_item_ids(self.configuration.rewards)
+                if self.expanded
+                else frozenset(ITEM_SECTIONS)
+            )
+            if "item_ids" in slot_data and slot_data["item_ids"] != sorted(item_ids):
+                raise ProtocolError("Seed item manifest does not match this client build")
             self.session = self.session or SessionCoordinator(key)
             self.session.bind_configuration(configuration_key)
             self.session.bind_locations(allowed)
+            self.session.bind_items(item_ids)
             self.bridge.allowed_locations = allowed
             self.require_configuration = version in (2, 3)
             if self.require_configuration:

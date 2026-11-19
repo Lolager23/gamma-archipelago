@@ -73,6 +73,7 @@ def test_callbacks_polling_save_restore_and_initial_inventory(lua):
         "monster_on_net_spawn",
         "actor_on_item_take",
         "actor_on_item_take_from_box",
+        "physic_object_on_use_callback",
     }
     set_incoming(engine)
     module.actor_on_update()
@@ -155,6 +156,20 @@ def test_reward_failures_and_session_mismatch_are_reported(lua):
     engine.now += 1000
     module.actor_on_update()
     assert "another AP seed" in list(engine.logs.values())[-1]
+
+
+def test_pending_reward_does_not_block_exploration_or_falsely_acknowledge_delivery(lua):
+    module, engine = load_game(lua)
+    set_incoming(engine)
+    engine.fail_reward = True
+    for name in ("l01_escape", "l02_garbage", "l05_bar"):
+        engine.now += 1000
+        engine.level = name
+        module.actor_on_update()
+    packet = engine.files["D:/AnomalyAP/appdata/archipelago\\outgoing.txt"]
+    snapshot = decode_outgoing(packet, KEY)
+    assert snapshot.received_count == 0 and snapshot.goal_complete
+    assert len(snapshot.checked_locations) == 3
 
 
 def test_write_open_write_and_close_failures_are_reported(lua):

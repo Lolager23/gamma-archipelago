@@ -27,6 +27,7 @@ def lua():
         "tasks",
         "equipment_checks",
         "rank",
+        "stashes",
         "state",
         "settlements",
         "notifications",

@@ -1,0 +1,33 @@
+-- DXML requires the modxml_ prefix; this adds only AP-owned marker definitions.
+
+local definitions = [[
+<gamma_ap_loot hint="st_ui_pda_secret">
+    <level_map spot="gamma_ap_loot_spot" pointer="quest_pointer"/>
+    <mini_map spot="gamma_ap_loot_spot"/>
+</gamma_ap_loot>
+<gamma_ap_loot_spot width="12" height="12" alignment="c" stretch="1">
+    <texture a="255" r="255" g="255" b="255">ui_inGame2_PDA_icon_secret</texture>
+</gamma_ap_loot_spot>
+<gamma_ap_progression hint="st_ui_pda_secret">
+    <level_map spot="gamma_ap_progression_spot" pointer="quest_pointer"/>
+    <mini_map spot="gamma_ap_progression_spot"/>
+</gamma_ap_progression>
+<gamma_ap_progression_spot width="12" height="12" alignment="c" stretch="1">
+    <texture a="255" r="255" g="144" b="16">ui_inGame2_PDA_icon_secret</texture>
+</gamma_ap_progression_spot>
+]]
+
+function patch(file, xml)
+    local name = file:gsub("/", "\\")
+    if name ~= "ui\\map_spots.xml" and name ~= "ui\\map_spots_16.xml"
+        and name ~= "ui\\map_spots_219.xml" then return end
+    local root = xml:query("map_spots")[1]
+    if root and not xml:query("gamma_ap_loot")[1] then
+        xml:insertFromXMLString(definitions, root, #root.kids + 1)
+    end
+end
+
+function on_xml_read()
+    RegisterScriptCallback("on_xml_read", patch)
+    registered = true
+end

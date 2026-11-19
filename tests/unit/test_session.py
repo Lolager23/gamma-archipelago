@@ -76,3 +76,20 @@ def test_seed_manifest_is_bound_and_rejects_disabled_or_changed_checks():
     session.accept_confirmed(MAP_LOCATION_IDS)
     with pytest.raises(ProtocolError, match="changed"):
         session.bind_locations(LOCATION_IDS)
+
+
+def test_reward_manifest_rejects_disabled_items_and_cannot_change_within_a_session():
+    from gamma_archipelago.catalog import ITEM_IDS
+
+    session = SessionCoordinator(KEY)
+    custom = next(iter(ITEM_IDS - set(ITEM_SECTIONS)))
+    with pytest.raises(ProtocolError, match="unsupported item"):
+        session.accept_history((custom,))
+    for invalid in (frozenset(), frozenset({42}), frozenset(range(MAX_ITEMS + 1))):
+        with pytest.raises(ProtocolError, match="Unsupported seed item"):
+            session.bind_items(invalid)
+    session.bind_items(ITEM_IDS)
+    session.bind_items(ITEM_IDS)
+    session.accept_history((custom,))
+    with pytest.raises(ProtocolError, match="changed"):
+        session.bind_items(frozenset(ITEM_SECTIONS))

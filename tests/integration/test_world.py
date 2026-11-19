@@ -9,7 +9,7 @@ from test.general import setup_multiworld
 from worlds.apquest.world import APQuestWorld
 from worlds.gamma import GammaWorld
 
-from gamma_archipelago.catalog import GAME, ITEM_NAMES, LOCATION_NAMES
+from gamma_archipelago.catalog import GAME, ITEM_NAMES, ITEM_SECTIONS, LOCATION_NAMES
 
 pytestmark = pytest.mark.integration
 ROOT = Path(__file__).resolve().parents[2]
@@ -53,7 +53,9 @@ def test_one_thousand_pilot_seeds_are_fully_filled_and_beatable():
         multiworld = generate(seed)
         locations = multiworld.get_locations(1)
         assert len(locations) == 33
-        assert {location.item.name for location in locations} == set(ITEM_NAMES)
+        assert {location.item.name for location in locations} == {
+            name for name, identity in ITEM_NAMES.items() if identity in ITEM_SECTIONS
+        }
         assert multiworld.can_beat_game()
         assert all(multiworld.state.can_reach(location) for location in locations)
 
@@ -189,3 +191,32 @@ def test_rank_category_generates_exactly_the_eight_supported_ranks():
     assert len(multiworld.get_locations()) == 8
     assert all(location.item for location in multiworld.get_locations())
     assert multiworld.can_beat_game()
+
+
+def test_loot_stash_pool_is_optional_seeded_and_fits_even_one_check():
+    from gamma_archipelago.catalog import ITEM_IDS, enabled_item_ids
+
+    placements = []
+    for seed in (1, 1, 2):
+        multiworld = setup_multiworld(GammaWorld, seed=seed, options={"rewards_loot_stashes": 1})
+        distribute_items_restrictive(multiworld)
+        world = multiworld.worlds[1]
+        names = [location.item.name for location in multiworld.get_locations()]
+        assert any("Loot Stash:" in name for name in names)
+        assert "Basic Toolkit" in names
+        assert set(world.fill_slot_data()["item_ids"]) == ITEM_IDS
+        assert enabled_item_ids(world.configuration.rewards) == ITEM_IDS
+        assert multiworld.can_beat_game()
+        placements.append(names)
+    assert placements[0] == placements[1] and placements[0] != placements[2]
+    single = setup_multiworld(
+        GammaWorld,
+        options={
+            "checks_maps": 0,
+            "checks_kill_milestones": 1,
+            "kill_milestones": [1],
+            "rewards_loot_stashes": 1,
+        },
+    )
+    distribute_items_restrictive(single)
+    assert "Loot Stash:" in next(iter(single.get_locations())).item.name
