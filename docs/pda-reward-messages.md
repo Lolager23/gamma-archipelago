@@ -48,3 +48,12 @@ server restart. The separate generation test already used APQuest correctly.
 
 No new map/reward category or goal is enabled by this PR. Deployment and actual
 PDA visual acceptance must be recorded separately; do not infer them from tests.
+
+## Protocol ID compatibility
+
+Foreign item IDs use Archipelago 0.6.8's signed 53-bit range
+(`-9007199254740991` through `9007199254740991`). Notice identities and
+acknowledgements preserve their canonical decimal strings in Lua, so large IDs
+cannot be rounded into another transfer. Negative zero, leading zeros and values
+outside that range are rejected. This fixes the earlier ten-digit restriction;
+local GAMMA location IDs and receipt bounds remain unchanged.
