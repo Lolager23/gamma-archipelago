@@ -54,11 +54,18 @@ function receive(state, item_id)
         return false, "The selected Haruka skill has not initialized"
     end
     local receipt = state.received_count + 1
-    local plan = state.skill_plans[receipt] or build_plan(skill, levels, stats, increments)
-    if not plan or plan.skill ~= skill then return false, "The installed skill schema is incompatible" end
+    local candidate = build_plan(skill, levels, stats, increments)
+    local plan = state.skill_plans[receipt] or candidate
+    if not candidate or plan.skill ~= skill then return false, "The installed skill schema is incompatible" end
     state.skill_plans[receipt] = plan
-    for key,value in pairs(plan.levels) do levels[key] = value end
-    for key,value in pairs(plan.stats) do stats[key] = value end
+    -- Once the target level exists, retry only its effects. Native XP and later
+    -- levels may advance while recalculation is pending and must never roll back.
+    if plan.levels.current_level and levels.current_level < plan.levels.current_level then
+        local experience = math.max(levels.experience, plan.levels.experience)
+        for key,value in pairs(plan.levels) do levels[key] = value end
+        levels.experience = experience
+        for key,value in pairs(plan.stats) do stats[key] = value end
+    end
     if recalculate and not pcall(recalculate) then
         return false, "Skill effects failed to recalculate; the saved target will retry"
     end
