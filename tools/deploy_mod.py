@@ -21,12 +21,18 @@ def main() -> None:
     )
     source_root = ROOT / ("mod" if arguments.component == "pilot" else "probes")
     destination = require_safe_child(root, f"mods/{name}")
-    for source in source_root.rglob("*"):
-        if source.is_file():
-            relative = source.relative_to(source_root)
-            target = require_safe_child(root, str(destination.relative_to(root) / relative))
-            target.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copy2(source, target)
+    sources = [
+        (source, source.relative_to(source_root))
+        for source in source_root.rglob("*")
+        if source.is_file()
+    ]
+    if arguments.component == "probes":
+        relative = Path("gamedata/scripts/gamma_ap_paths.script")
+        sources.append((ROOT / "mod" / relative, relative))
+    for source, relative in sources:
+        target = require_safe_child(root, str(destination.relative_to(root) / relative))
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source, target)
     print(f"Deployed copied files to {destination}; enable only in Archipelago DEV profile.")
 
 

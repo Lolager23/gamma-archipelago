@@ -31,7 +31,7 @@ def test_packages_are_reproducible_and_load_from_apworld(tmp_path):
     with ZipFile(outputs[2]) as archive:
         assert set(archive.namelist()) == {
             f"gamedata/scripts/gamma_ap_probe_{name}.script" for name in ("capture", "game")
-        }
+        } | {"gamedata/scripts/gamma_ap_paths.script"}
     runtime = Path(os.environ.get("AP_RUNTIME_ROOT", "D:/GAMMAAPTools/ap-runtime"))
     isolated = tmp_path / "runtime"
     shutil.copytree(

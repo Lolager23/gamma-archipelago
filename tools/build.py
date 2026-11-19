@@ -25,12 +25,17 @@ def generate_catalogues() -> None:
     )
 
 
-def package(source: Path, destination: Path, prefix: str = "") -> None:
+def package(
+    source: Path, destination: Path, prefix: str = "", extras: dict[str, Path] | None = None
+) -> None:
+    entries = {
+        prefix + path.relative_to(source).as_posix(): path
+        for path in source.rglob("*")
+        if path.is_file() and "__pycache__" not in path.parts
+    }
+    entries.update(extras or {})
     with ZipFile(destination, "w", compression=ZIP_DEFLATED) as archive:
-        for path in sorted(source.rglob("*")):
-            if not path.is_file() or "__pycache__" in path.parts:
-                continue
-            name = prefix + path.relative_to(source).as_posix()
+        for name, path in sorted(entries.items()):
             info = ZipInfo(name, date_time=(2026, 1, 1, 0, 0, 0))
             info.compress_type = ZIP_DEFLATED
             info.external_attr = 0o644 << 16
@@ -47,7 +52,8 @@ def main() -> None:
     ]
     package(ROOT / "apworld/gamma", packages[0], "gamma/")
     package(ROOT / "mod", packages[1])
-    package(ROOT / "probes", packages[2])
+    shared_path = "gamedata/scripts/gamma_ap_paths.script"
+    package(ROOT / "probes", packages[2], extras={shared_path: ROOT / "mod" / shared_path})
     hashes = [f"{hashlib.sha256(path.read_bytes()).hexdigest()}  {path.name}" for path in packages]
     (destination / "SHA256SUMS").write_text("\n".join(hashes) + "\n", encoding="ascii")
     print("Built deterministic AP world and MO2 add-on packages.")

@@ -12,6 +12,14 @@ WATCHED_SCRIPTS = (
     "bind_stalker_ext.script",
     "task_manager.script",
     "treasure_manager.script",
+    "news_manager.script",
+    "haru_skills.script",
+    "ranks.script",
+    "xr_statistic.script",
+    "lc_extra_transitions.script",
+    "actor_effects.script",
+    "ui_pda.script",
+    "character_creation.script",
 )
 
 

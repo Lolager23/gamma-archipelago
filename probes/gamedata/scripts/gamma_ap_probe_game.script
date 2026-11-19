@@ -10,7 +10,7 @@ local reward_attempted = false
 
 local function allowed()
     local root = getFS():update_path("$app_data_root$", "")
-    return enabled and root:gsub("\\", "/"):lower():gsub("/+$", "") == "d:/anomalyap/appdata"
+    return enabled and gamma_ap_paths.appdata_root(root) ~= nil
 end
 
 local function emit(event, a, b, c)

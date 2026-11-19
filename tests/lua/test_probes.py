@@ -53,6 +53,12 @@ def observations(engine):
     return [parse_line(line) for line in engine.logs.values()]
 
 
+def test_probe_accepts_the_actual_engine_bin_parent_path(lua):
+    module, engine = load_probe(lua, root="d:/anomalyap/bin/..\\appdata\\")
+    module.actor_on_update()
+    assert any(item.event == "started" for item in observations(engine))
+
+
 def test_probe_registers_supported_hooks_and_bounds_update_logging(lua):
     module, engine = load_probe(lua)
     assert set(engine.callbacks.keys()) == {

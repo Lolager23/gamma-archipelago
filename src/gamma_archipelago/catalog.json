@@ -2,13 +2,92 @@
   "game": "S.T.A.L.K.E.R. GAMMA",
   "schema_version": 1,
   "items": [
-    {"id": 28051001, "name": "Basic Toolkit", "section": "itm_basickit", "classification": "useful"},
-    {"id": 28051002, "name": "Medkit", "section": "medkit", "classification": "filler"},
-    {"id": 28051003, "name": "Bandage", "section": "bandage", "classification": "filler"}
+    {
+      "id": 28051001,
+      "name": "Basic Toolkit",
+      "section": "itm_basickit",
+      "classification": "useful"
+    },
+    {
+      "id": 28051002,
+      "name": "Medkit",
+      "section": "medkit",
+      "classification": "filler"
+    },
+    {
+      "id": 28051003,
+      "name": "Bandage",
+      "section": "bandage",
+      "classification": "filler"
+    }
   ],
   "locations": [
-    {"id": 28052001, "name": "Cordon: First Arrival", "level": "l01_escape"},
-    {"id": 28052002, "name": "Garbage: First Arrival", "level": "l02_garbage"},
-    {"id": 28052003, "name": "Rostok: First Arrival", "level": "l05_bar"}
-  ]
+    {
+      "id": 28052001,
+      "name": "Cordon: First Arrival",
+      "level": "l01_escape"
+    },
+    {
+      "id": 28052002,
+      "name": "Garbage: First Arrival",
+      "level": "l02_garbage"
+    },
+    {
+      "id": 28052003,
+      "name": "Rostok: First Arrival",
+      "level": "l05_bar"
+    }
+  ],
+  "content_inventory": {
+    "status": "source inventory; individual engine acceptance pending",
+    "levels": [
+      "k00_marsh",
+      "l01_escape",
+      "l02_garbage",
+      "l03_agroprom",
+      "k01_darkscape",
+      "l04_darkvalley",
+      "l05_bar",
+      "l06_rostok",
+      "l07_military",
+      "l08_yantar",
+      "l09_deadcity",
+      "l10_limansk",
+      "l10_radar",
+      "l10_red_forest",
+      "l11_hospital",
+      "l11_pripyat",
+      "l12_stancia",
+      "l12_stancia_2",
+      "l13_generators",
+      "l03u_agr_underground",
+      "l04u_labx18",
+      "l08u_brainlab",
+      "l10u_bunker",
+      "l12u_sarcofag",
+      "l12u_control_monolith",
+      "l13u_warlab",
+      "zaton",
+      "jupiter",
+      "jupiter_underground",
+      "pripyat",
+      "labx8",
+      "k02_trucks_cemetery",
+      "y04_pole"
+    ],
+    "excluded_levels": [
+      "fake_start"
+    ],
+    "remaining_rosters": [
+      "settlements",
+      "mutant_species",
+      "stalker_factions",
+      "artefacts",
+      "task_types",
+      "equipment_tiers",
+      "ranks",
+      "story_milestones",
+      "x_labs"
+    ]
+  }
 }
