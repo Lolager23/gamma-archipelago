@@ -438,3 +438,46 @@ async def test_legacy_equipment_manifest_keeps_only_selected_permissions_enabled
         connected_context(
             {**slot, "location_ids": [float(value) for value in sorted(MAP_LOCATION_IDS)]}
         )
+
+
+@run_async
+async def test_reused_seed_identity_rejects_old_configuration_game_snapshots(tmp_path):
+    from gamma_archipelago.bridge import FileBridge
+    from gamma_archipelago.catalog import MAP_LOCATION_IDS
+    from gamma_archipelago.configuration import build_configuration, defaults
+
+    old = build_configuration(defaults())
+    current = build_configuration({**defaults(), "starting_money": 50})
+    bridge = FileBridge(tmp_path, allowed_root=tmp_path)
+    context = adapter.GammaContext(bridge=bridge)
+    context.server_seed_name, context.team, context.slot = "reused-seed", 0, 1
+    context.server, context.send_msgs = object(), AsyncMock()
+    context.on_package(
+        "Connected",
+        {
+            "slot_data": {
+                "schema_version": 3,
+                "pilot": False,
+                "configuration": current.to_values(),
+                "configuration_key": current.digest,
+                "location_ids": sorted(MAP_LOCATION_IDS),
+            }
+        },
+    )
+    key = context.session.session_key
+    source = bridge.directory / "outgoing.txt"
+    body = "received|0\ncheck|28052001\ngoal|0\nend|1\n"
+    source.write_text(f"GAMMA_AP_OUT|1\nsession|{key}\n" + body)
+    with pytest.raises(ProtocolError):
+        await context.poll_game_once()
+    context.send_msgs.assert_not_called()
+    source.write_text(f"GAMMA_AP_OUT|3\nsession|{key}\nconfiguration|{old.digest}\n" + body)
+    with pytest.raises(ProtocolError):
+        await context.poll_game_once()
+    context.send_msgs.assert_not_called()
+    source.write_text(f"GAMMA_AP_OUT|3\nsession|{key}\nconfiguration|{current.digest}\n" + body)
+    await context.poll_game_once()
+    assert context.send_msgs.call_args.args[0][0] == {
+        "cmd": "LocationChecks",
+        "locations": [28052001],
+    }

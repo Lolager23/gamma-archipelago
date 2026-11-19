@@ -105,6 +105,8 @@ function actor_on_update()
     if not incoming then report_error(reason); return end
     local configuration, configuration_error = read_configuration(incoming)
     if incoming.configuration_key and not configuration then report_error(configuration_error); return end
+    local pickup_ready, pickup_error = gamma_ap_gear_locks.install_pickup_guard(configuration)
+    if not pickup_ready then report_error(pickup_error); return end
     local quest_ready, quest_error = gamma_ap_quest_keys.install(function() return state end)
     if configuration and configuration.expanded and configuration.options.rewards_quest_keys == 1
         and not quest_ready then report_error(quest_error); return end
@@ -196,7 +198,7 @@ function actor_on_item_take_from_box(box, item)
 end
 
 function actor_on_item_before_pickup(item, flags)
-    gamma_ap_gear_locks.before(state, item, flags)
+    gamma_ap_gear_locks.before_pickup(state, item, flags)
 end
 
 function actor_on_item_before_use(item, flags)
@@ -256,6 +258,8 @@ function on_game_start()
         local configuration, reason = read_configuration(incoming)
         if configuration then
             state.configuration = gamma_ap_configuration.copy(configuration)
+            local pickup_ready, pickup_error = gamma_ap_gear_locks.install_pickup_guard(configuration)
+            if not pickup_ready then report_error(pickup_error) end
             gamma_ap_quest_keys.install(function() return state end)
             gamma_ap_zone_keys.install(function() return state end)
             local prepared, error = gamma_ap_loadout.prepare(state, configuration)

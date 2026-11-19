@@ -13,6 +13,14 @@ def configured_game(lua, **values):
     game, engine = load_game(lua)
     lua.execute("""
         engine.objects={}; engine.meta={}; engine.money=1000
+        -- The pinned native pickup binder reuses this table without resetting it.
+        local pickup_flags={ret_value=true}
+        bind_stalker_ext={actor_on_item_before_pickup=function(item)
+            if engine.veto_before then pickup_flags.ret_value=false end
+            engine.callbacks.actor_on_item_before_pickup(item,pickup_flags)
+            if engine.veto_after then pickup_flags.ret_value=false end
+            return pickup_flags.ret_value
+        end}
         engine.creation={new_game_faction='stalker',new_game_loadout='detector,pda,gun,knife,medkit'}
         axr_main={config={
             r_value=function(self,section,key) return engine.creation[key] end,
@@ -62,6 +70,7 @@ def configured_game(lua, **values):
     add(9, "food", "S_FOOD", "i_food", 0)
     add(10, "quest_token", "II_ATTCH", "i_quest", 0)
     configuration = build_configuration({**defaults(), **values})
+    engine.configuration_key = configuration.digest
     engine.files[CONFIG_PATH] = encode_configuration(KEY, configuration)
     engine.files["D:/AnomalyAP/appdata/archipelago\\incoming.txt"] = encode_incoming(
         KEY, (28051003,), configuration.digest
@@ -225,3 +234,11 @@ def test_missing_or_mismatched_configuration_refuses_delivery_and_pda_waits_for_
     state.configuration_key = "b" * 64
     parsed = lua.globals().gamma_ap_configuration.parse(original, KEY, configuration.digest)
     assert lua.globals().gamma_ap_loadout.apply(state, parsed)[0] is False
+
+
+def test_configured_save_cannot_downgrade_to_an_unbound_legacy_snapshot(lua):
+    state = lua.globals().gamma_ap_state.new_state()
+    state.configuration_key = "b" * 64
+    accepted, reason = lua.globals().gamma_ap_loadout.apply(state, None)
+    assert accepted is False and "matching companion configuration" in reason
+    assert state.configuration_key == "b" * 64 and state.received_count == 0

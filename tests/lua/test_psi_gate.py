@@ -1,6 +1,16 @@
 from .test_stashes import poll, progress, stash_game
 
 
+def test_psi_pickup_veto_does_not_block_the_next_ordinary_item(lua):
+    game, engine = stash_game(lua, items=(), rewards_progression_stashes=1)
+    poll(game, engine)
+    helmet = lua.globals().add_item(50, "good_psy_helmet", "II_ATTCH", "i_quest", 0)
+    bandage = lua.globals().add_item(51, "bandage", "S_FOOD", "i_medical", 0)
+    pickup = lua.globals().bind_stalker_ext.actor_on_item_before_pickup
+    assert pickup(helmet) is False
+    assert pickup(bandage) is True
+
+
 def test_native_calibrated_helmet_cannot_bypass_the_enabled_orange_stash_claim(lua):
     game, engine = stash_game(lua, items=(28051201,), rewards_progression_stashes=1)
     lua.execute("""

@@ -131,6 +131,9 @@ class GammaContext(CommonContext):
                 self.configuration is None or self.configuration.goal == "pilot_tour"
             )
             self.require_configuration = version in (2, 3)
+            self.bridge.configuration_key = (
+                configuration_key if self.require_configuration else None
+            )
             if self.require_configuration:
                 self.bridge.write_configuration(
                     self.session.session_key, self.configuration, self.expanded
