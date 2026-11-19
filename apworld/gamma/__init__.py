@@ -72,6 +72,8 @@ class GammaWorld(World):
             regions[source].connect(regions[destination])
             regions[destination].connect(regions[source])
         for location in _catalog["locations"]:
+            if location["category"] not in self.configuration.checks:
+                continue
             region = regions[location["level"]]
             region.locations.append(
                 GammaLocation(self.player, location["name"], location["id"], region)
@@ -79,16 +81,16 @@ class GammaWorld(World):
 
     def create_items(self) -> None:
         self.multiworld.itempool.extend(self.create_item(name) for name in self.item_name_to_id)
-        extra = len(self.location_name_to_id) - len(self.item_name_to_id)
+        extra = len(self.multiworld.get_locations(self.player)) - len(self.item_name_to_id)
         self.multiworld.itempool.extend(
             self.create_item(self.get_filler_item_name()) for _ in range(extra)
         )
 
     def set_rules(self) -> None:
         self.multiworld.completion_condition[self.player] = lambda state: all(
-            state.can_reach_location(name, self.player)
-            for name, identity in self.location_name_to_id.items()
-            if identity in LOCATION_IDS
+            state.can_reach_region(location["level"], self.player)
+            for location in _catalog["locations"]
+            if location["id"] in LOCATION_IDS
         )
 
     def fill_slot_data(self) -> dict[str, object]:
@@ -98,7 +100,9 @@ class GammaWorld(World):
             "goal": "visit_all_pilot_regions",
             "configuration": self.configuration.to_values(),
             "configuration_key": self.configuration.digest,
-            "location_ids": sorted(self.location_name_to_id.values()),
+            "location_ids": sorted(
+                location.address for location in self.multiworld.get_locations(self.player)
+            ),
         }
 
     def get_filler_item_name(self) -> str:

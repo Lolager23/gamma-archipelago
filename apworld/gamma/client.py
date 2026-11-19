@@ -10,7 +10,7 @@ from CommonClient import CommonContext, get_base_parser, server_loop
 from NetUtils import ClientStatus, NetworkItem
 
 from gamma_archipelago.bridge import FileBridge
-from gamma_archipelago.catalog import ALL_LOCATION_IDS, GAME, LOCATION_IDS
+from gamma_archipelago.catalog import GAME, LOCATION_IDS, enabled_location_ids
 from gamma_archipelago.configuration import (
     ConfigurationError,
     SeedConfiguration,
@@ -84,7 +84,9 @@ class GammaContext(CommonContext):
                 if version == 1 and self.configuration.to_values() != defaults():
                     raise ProtocolError("Expanded configuration requires schema 2")
             self.expanded = version == 3
-            allowed = ALL_LOCATION_IDS if self.expanded else LOCATION_IDS
+            allowed = (
+                enabled_location_ids(self.configuration.checks) if self.expanded else LOCATION_IDS
+            )
             if self.expanded and slot_data.get("location_ids") != sorted(allowed):
                 raise ProtocolError("Seed check manifest does not match this client build")
             self.session = self.session or SessionCoordinator(key)

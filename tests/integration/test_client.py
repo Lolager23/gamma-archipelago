@@ -44,7 +44,7 @@ def connected_context(slot_data=None):
 
 @run_async
 async def test_expanded_seed_manifest_is_checked_before_bridge_publication():
-    from gamma_archipelago.catalog import ALL_LOCATION_IDS
+    from gamma_archipelago.catalog import MAP_LOCATION_IDS as ALL_LOCATION_IDS
     from gamma_archipelago.configuration import build_configuration, defaults
 
     configuration = build_configuration(defaults())
@@ -63,6 +63,32 @@ async def test_expanded_seed_manifest_is_checked_before_bridge_publication():
             connected_context({**slot, "location_ids": manifest})
     with pytest.raises(ProtocolError, match="pilot world"):
         connected_context({**slot, "schema_version": 3.0})
+
+
+@run_async
+async def test_settlement_only_client_rejects_map_checks_without_losing_goal_observation():
+    from gamma_archipelago.catalog import enabled_location_ids
+    from gamma_archipelago.configuration import build_configuration, defaults
+
+    configuration = build_configuration({**defaults(), "checks_maps": 0, "checks_settlements": 1})
+    allowed = enabled_location_ids(configuration.checks)
+    context = connected_context(
+        {
+            "schema_version": 3,
+            "pilot": False,
+            "configuration": configuration.to_values(),
+            "configuration_key": configuration.digest,
+            "location_ids": sorted(allowed),
+        }
+    )
+    assert context.session.allowed_locations == allowed
+    context.send_msgs = AsyncMock()
+    context.bridge.read_game = lambda key: GameSnapshot(key, 0, frozenset(), True)
+    await context.poll_game_once()
+    assert context.send_msgs.call_args.args[0][-1]["status"] == ClientStatus.CLIENT_GOAL
+    context.bridge.read_game = lambda key: GameSnapshot(key, 0, LOCATION_IDS, False)
+    with pytest.raises(ProtocolError, match="disabled"):
+        await context.poll_game_once()
 
 
 @run_async

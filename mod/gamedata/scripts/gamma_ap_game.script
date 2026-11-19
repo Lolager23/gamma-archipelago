@@ -41,7 +41,7 @@ local function write_outgoing()
     return true
 end
 
-local function read_confirmed(key)
+local function read_confirmed(key, allowed)
     local path, reason = bridge_path("confirmed_checks.txt")
     if not path then return nil, reason end
     local file = io.open(path, "rb")
@@ -49,7 +49,7 @@ local function read_confirmed(key)
     local content = file:read(131073)
     local closed = file:close()
     if not closed then return nil, "Confirmed-check read close failed" end
-    return gamma_ap_protocol.parse_confirmed(content, key)
+    return gamma_ap_protocol.parse_confirmed(content, key, allowed)
 end
 
 local function read_configuration(incoming)
@@ -78,15 +78,17 @@ function actor_on_update()
     next_poll = now + 500
     local incoming, reason = read_incoming()
     if not incoming then report_error(reason); return end
-    local confirmed, confirmed_error = read_confirmed(incoming.session_key)
-    if not confirmed then report_error(confirmed_error); return end
     local configuration, configuration_error = read_configuration(incoming)
     if incoming.configuration_key and not configuration then report_error(configuration_error); return end
+    local enabled = gamma_ap_state.enabled_locations(configuration)
+    local confirmed, confirmed_error = read_confirmed(incoming.session_key, enabled)
+    if not confirmed then report_error(confirmed_error); return end
     local bound, bind_error = gamma_ap_state.bind_session(state, incoming)
     if not bound then report_error(bind_error); return end
     local ready, loadout_error = gamma_ap_loadout.apply(state, configuration)
     if not ready then report_error(loadout_error); return end
     state.expanded = configuration and configuration.expanded or false
+    state.enabled_checks = enabled
     local success, delivery_error = gamma_ap_state.apply_pending(state, incoming, give_item)
     if not success then report_error(delivery_error); return end
     gamma_ap_state.merge_confirmed(state, confirmed)
@@ -96,6 +98,11 @@ function actor_on_update()
     local notified, notice_error = gamma_ap_notifications.poll(state)
     if not notified then report_error(notice_error); return end
     last_error = nil
+end
+
+function actor_on_interaction(kind, object, name)
+    if not db.actor or not db.actor:alive() then return end
+    gamma_ap_settlements.observe(state, kind, object, name, level.name())
 end
 
 function save_state(data)
@@ -127,5 +134,6 @@ function on_game_start()
     RegisterScriptCallback("actor_on_update", actor_on_update)
     RegisterScriptCallback("save_state", save_state)
     RegisterScriptCallback("load_state", load_state)
+    RegisterScriptCallback("actor_on_interaction", actor_on_interaction)
     printf("[GAMMA AP] Pilot loaded; multiplayer roots are forbidden")
 end

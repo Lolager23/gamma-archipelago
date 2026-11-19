@@ -3,7 +3,19 @@
 function new_state()
     return { session_key = nil, received_count = 0, checks = {}, applied_items = {}, notices_seen = {},
         configuration_key=nil, loadout_prepared=false, loadout_initialized=false, starting_pda_mode=0,
-        expanded=false }
+        expanded=false, enabled_checks=enabled_locations(nil), visited_maps={} }
+end
+
+function enabled_locations(configuration)
+    local enabled = {}
+    if configuration and configuration.expanded then
+        for id, category in pairs(gamma_ap_catalog.location_categories) do
+            if configuration.options[category] == 1 then enabled[id] = true end
+        end
+    else
+        for id in pairs(gamma_ap_catalog.pilot_ids) do enabled[id] = true end
+    end
+    return enabled
 end
 
 function copy_state(state)
@@ -19,6 +31,11 @@ function copy_state(state)
     result.starting_pda_mode = state.starting_pda_mode or 0
     result.loadout_plan = gamma_ap_loadout.copy_plan(state.loadout_plan)
     result.expanded = state.expanded == true
+    for id, value in pairs(state.visited_maps or {}) do result.visited_maps[id] = value end
+    if state.enabled_checks then
+        result.enabled_checks = {}
+        for id, value in pairs(state.enabled_checks) do result.enabled_checks[id] = value end
+    end
     return result
 end
 
@@ -54,8 +71,9 @@ end
 
 function check_level(state, level_name)
     local location_id = gamma_ap_catalog.location_by_level[level_name]
-    if location_id and (state.expanded or gamma_ap_catalog.pilot_ids[location_id]) then
-        state.checks[location_id] = true
+    if location_id then
+        state.visited_maps[location_id] = true
+        if state.enabled_checks[location_id] then state.checks[location_id] = true end
     end
 end
 

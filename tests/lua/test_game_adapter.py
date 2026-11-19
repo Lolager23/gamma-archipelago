@@ -59,7 +59,12 @@ def saved_state(lua, module):
 
 def test_callbacks_polling_save_restore_and_initial_inventory(lua):
     module, engine = load_game(lua)
-    assert set(engine.callbacks.keys()) == {"actor_on_update", "save_state", "load_state"}
+    assert set(engine.callbacks.keys()) == {
+        "actor_on_update",
+        "save_state",
+        "load_state",
+        "actor_on_interaction",
+    }
     set_incoming(engine)
     module.actor_on_update()
     module.actor_on_update()

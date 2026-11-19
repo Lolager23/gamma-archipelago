@@ -48,21 +48,21 @@ function encode_outgoing(state)
         "received|" .. tostring(state.received_count) }
     local count = 0
     for _, id in ipairs(gamma_ap_catalog.location_ids) do
-        if state.checks[id] and (state.expanded or gamma_ap_catalog.pilot_ids[id]) then
+        if state.checks[id] and state.enabled_checks[id] then
             count = count + 1
             lines[#lines + 1] = "check|" .. tostring(id)
         end
     end
     local complete = true
     for id in pairs(gamma_ap_catalog.pilot_ids) do
-        if not state.checks[id] then complete = false end
+        if not state.checks[id] and not state.visited_maps[id] then complete = false end
     end
     lines[#lines + 1] = "goal|" .. (complete and "1" or "0")
     lines[#lines + 1] = "end|" .. tostring(count)
     return table.concat(lines, "\n") .. "\n"
 end
 
-function parse_confirmed(content, key)
+function parse_confirmed(content, key, allowed)
     if type(content) ~= "string" or #content > 131072 or content:sub(-1) ~= "\n" then
         return nil, "Incomplete or oversized confirmed-check snapshot"
     end
@@ -77,6 +77,7 @@ function parse_confirmed(content, key)
     end
     local known, checked = {}, {}
     for _, id in ipairs(gamma_ap_catalog.location_ids) do known[id] = true end
+    known = allowed or known
     for index = 3, #lines - 1 do
         local id = canonical_number(lines[index]:match("^check|(.*)$"))
         if not known[id] or checked[id] then return nil, "Unknown or duplicate confirmed check" end

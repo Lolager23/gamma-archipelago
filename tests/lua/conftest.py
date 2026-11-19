@@ -23,6 +23,7 @@ def lua():
         "equipment",
         "loadout",
         "state",
+        "settlements",
         "notifications",
     ):
         path = ROOT / "mod/gamedata/scripts" / f"gamma_ap_{name}.script"

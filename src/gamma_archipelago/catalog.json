@@ -219,6 +219,189 @@
       "name": "Meadow: First Arrival",
       "level": "y04_pole",
       "category": "checks_maps"
+    },
+    {
+      "id": 28052101,
+      "name": "Rookie Village: First Entry",
+      "level": "l01_escape",
+      "category": "checks_settlements",
+      "smarts": [
+        "esc_smart_terrain_2_12"
+      ],
+      "radius_metres": 50
+    },
+    {
+      "id": 28052102,
+      "name": "Old Farmstead: First Entry",
+      "level": "l01_escape",
+      "category": "checks_settlements",
+      "smarts": [
+        "esc_smart_terrain_5_7"
+      ],
+      "radius_metres": 50
+    },
+    {
+      "id": 28052103,
+      "name": "Southern Checkpoint: First Entry",
+      "level": "l01_escape",
+      "category": "checks_settlements",
+      "smarts": [
+        "esc_smart_terrain_3_16"
+      ],
+      "radius_metres": 50
+    },
+    {
+      "id": 28052104,
+      "name": "Clear Sky Base: First Entry",
+      "level": "k00_marsh",
+      "category": "checks_settlements",
+      "smarts": [
+        "mar_smart_terrain_base"
+      ],
+      "radius_metres": 50
+    },
+    {
+      "id": 28052105,
+      "name": "Train Depot: First Entry",
+      "level": "l02_garbage",
+      "category": "checks_settlements",
+      "smarts": [
+        "gar_smart_terrain_3_5"
+      ],
+      "radius_metres": 50
+    },
+    {
+      "id": 28052106,
+      "name": "Agroprom Research Institute: First Entry",
+      "level": "l03_agroprom",
+      "category": "checks_settlements",
+      "smarts": [
+        "agr_smart_terrain_1_6"
+      ],
+      "radius_metres": 50
+    },
+    {
+      "id": 28052107,
+      "name": "Agroprom Factory: First Entry",
+      "level": "l03_agroprom",
+      "category": "checks_settlements",
+      "smarts": [
+        "agr_smart_terrain_4_4"
+      ],
+      "radius_metres": 50
+    },
+    {
+      "id": 28052108,
+      "name": "Bandit Base: First Entry",
+      "level": "l04_darkvalley",
+      "category": "checks_settlements",
+      "smarts": [
+        "val_smart_terrain_7_4"
+      ],
+      "radius_metres": 50
+    },
+    {
+      "id": 28052109,
+      "name": "Rostok: First Entry",
+      "level": "l05_bar",
+      "category": "checks_settlements",
+      "smarts": [
+        "bar_visitors",
+        "bar_dolg_general",
+        "bar_dolg_bunker"
+      ],
+      "radius_metres": 50
+    },
+    {
+      "id": 28052110,
+      "name": "Freedom Base: First Entry",
+      "level": "l07_military",
+      "category": "checks_settlements",
+      "smarts": [
+        "mil_smart_terrain_7_7"
+      ],
+      "radius_metres": 50
+    },
+    {
+      "id": 28052111,
+      "name": "Sakharov Bunker: First Entry",
+      "level": "l08_yantar",
+      "category": "checks_settlements",
+      "smarts": [
+        "yan_smart_terrain_6_4"
+      ],
+      "radius_metres": 50
+    },
+    {
+      "id": 28052112,
+      "name": "Mercenary Base: First Entry",
+      "level": "l09_deadcity",
+      "category": "checks_settlements",
+      "smarts": [
+        "cit_killers"
+      ],
+      "radius_metres": 50
+    },
+    {
+      "id": 28052113,
+      "name": "Sin Mine Barracks: First Entry",
+      "level": "l10_red_forest",
+      "category": "checks_settlements",
+      "smarts": [
+        "red_smart_terrain_3_2"
+      ],
+      "radius_metres": 50
+    },
+    {
+      "id": 28052114,
+      "name": "Monolith Cultural Center: First Entry",
+      "level": "l11_pripyat",
+      "category": "checks_settlements",
+      "smarts": [
+        "pri_monolith"
+      ],
+      "radius_metres": 50
+    },
+    {
+      "id": 28052115,
+      "name": "Skadovsk: First Entry",
+      "level": "zaton",
+      "category": "checks_settlements",
+      "smarts": [
+        "zat_stalker_base_smart"
+      ],
+      "radius_metres": 50
+    },
+    {
+      "id": 28052116,
+      "name": "Yanov Station: First Entry",
+      "level": "jupiter",
+      "category": "checks_settlements",
+      "smarts": [
+        "jup_a6"
+      ],
+      "radius_metres": 50
+    },
+    {
+      "id": 28052117,
+      "name": "Hermann Bunker: First Entry",
+      "level": "jupiter",
+      "category": "checks_settlements",
+      "smarts": [
+        "jup_b41"
+      ],
+      "radius_metres": 50
+    },
+    {
+      "id": 28052118,
+      "name": "Laundromat: First Entry",
+      "level": "pripyat",
+      "category": "checks_settlements",
+      "smarts": [
+        "pri_a16",
+        "pri_a16_mlr_copy"
+      ],
+      "radius_metres": 50
     }
   ],
   "content_inventory": {
@@ -262,7 +445,6 @@
       "fake_start"
     ],
     "remaining_rosters": [
-      "settlements",
       "mutant_species",
       "stalker_factions",
       "artefacts",

@@ -43,7 +43,7 @@ def test_world_uses_real_upstream_types_and_catalogue():
 
 def test_world_generation_rejects_unsupported_options_instead_of_ignoring_them():
     world = generate(123).worlds[1]
-    world.options.checks_settlements.value = 1
+    world.options.checks_artefacts.value = 1
     with pytest.raises(OptionError, match="Not implemented"):
         world.generate_early()
 
@@ -69,3 +69,19 @@ def test_deterministic_generation_and_mixed_game_multiworld():
     multiworld = generate(1234, mixed=True)
     assert multiworld.can_beat_game()
     assert all(location.item is not None for location in multiworld.get_locations())
+
+
+@pytest.mark.parametrize("maps,settlements,count", [(1, 0, 33), (0, 1, 18), (1, 1, 51)])
+def test_category_manifests_pools_and_reachability(maps, settlements, count):
+    from gamma_archipelago.catalog import enabled_location_ids
+
+    multiworld = setup_multiworld(
+        GammaWorld, seed=88, options={"checks_maps": maps, "checks_settlements": settlements}
+    )
+    distribute_items_restrictive(multiworld)
+    world = multiworld.worlds[1]
+    expected = enabled_location_ids(world.configuration.checks)
+    assert len(multiworld.get_locations(1)) == len(expected) == count
+    assert set(world.fill_slot_data()["location_ids"]) == expected
+    assert all(location.item is not None for location in multiworld.get_locations(1))
+    assert multiworld.can_beat_game()

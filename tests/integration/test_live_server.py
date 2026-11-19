@@ -16,8 +16,8 @@ from Utils import restricted_loads
 from worlds.gamma.client import GammaContext
 
 from gamma_archipelago.bridge import FileBridge
-from gamma_archipelago.catalog import ALL_LOCATION_IDS as LOCATION_IDS
 from gamma_archipelago.catalog import ITEM_SECTIONS
+from gamma_archipelago.catalog import MAP_LOCATION_IDS as LOCATION_IDS
 
 ROOT = Path(__file__).resolve().parents[2]
 pytestmark = [pytest.mark.integration, pytest.mark.server]
