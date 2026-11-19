@@ -47,6 +47,10 @@ class FileBridge:
             os.fsync(stream.fileno())
         os.replace(temporary, destination)
 
+    def reset_notices(self, session_key: str) -> None:
+        """Remove stale client notices before publishing a connected seed's data."""
+        self._write_atomic("notices", encode_notices(session_key, ()))
+
     def write_notices(self, session_key: str, notices: tuple[Notice, ...]) -> None:
         source = require_safe_child(self.game_root, "appdata/archipelago/notices_ack.txt")
         try:
