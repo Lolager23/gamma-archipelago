@@ -1,6 +1,13 @@
 # Branch-by-branch work
 
-Branches are sequential by default. Each includes tests and documentation for its
+On 19 November 2026 the user authorised implementing this roadmap as a PR stack:
+each numbered step gets its own branch/PR based on the preceding step. Existing
+prerequisites are stacked as PR #3 (MCM) → PR #4 (plan), preserving history.
+Each implementation PR records its preceding PR, automated results and remaining
+live acceptance. Draft status does not imply completion. Do not merge or release
+the stack automatically.
+
+Each branch includes tests and documentation for its
 own behaviour. The [expanded checklist](expansion-plan.md) defines category
 options, exact proposed triggers, rewards, notification wording and exit criteria.
 The rows below are PR-sized increments; they are not completed implementations.
@@ -53,9 +60,10 @@ without importing every experimental script into the shipped add-on.
 | 29 | `codex/release-hardening` | Stage 7: compatibility, performance, migration, clean install/uninstall, independent review, docs and licence audit. |
 | 30 | `codex/version-one-release` | Supported requested categories/goals, reproducible packages, checksums, tagged release and maintenance guide. Explicit release approval required. |
 
-Start each branch from updated `main` after its prerequisites merge. If deliberate
-stacking is necessary, name the dependency and target the appropriate base; do not
-mix the new feature into an existing unrelated PR. Stash, reputation and skill
+For this authorised implementation stack, start each branch from the preceding
+step and target that branch in its PR. Name the dependency and preserve published
+history. Retarget after merges when instructed; do not mix a new feature into an
+existing unrelated PR. Stash, reputation and skill
 work have separate adapters but still use the same receipt/state authority.
 
 If an increment becomes too large, split it by observable behaviour and update
