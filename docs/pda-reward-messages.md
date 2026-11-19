@@ -38,6 +38,32 @@ It does not broadcast other players' joins into this game's PDA.
 
 ## Startup and reconnect notices
 
+All automatic AP broadcasts (received rewards, sent rewards and joins) wait for
+the native `on_loading_screen_dismissed` callback. An alive actor or an advancing
+companion heartbeat is insufficient: actor updates can run while loading and at
+the **Enter the Zone** prompt. The presentation gate additionally requires a
+later device frame, zero precache frames, a present level, a living actor and an
+unpaused device. It fails closed if those native signals cannot be inspected.
+There is no timeout that releases notices behind the loading screen.
+
+New-game initialization, save loading, actor destruction and the loading-screen
+key prompt close the gate again. This transient flag is not saved. Deferred
+transfer notices remain unacknowledged and unseen until actual display; normal
+receipt application, loadout preparation and check synchronization continue.
+Presence starts observing live heartbeat advances after the gate opens, so a
+cached file still cannot announce a join. Already displayed transfer identities
+retain their existing save/load deduplication.
+
+Source basis: the installed development `callbacks_gameobject.script` forwards
+the prompt and dismissal separately. The pinned
+[Monolith loading implementation](https://github.com/themrdemonized/xray-monolith/blob/7289a03f19a3cc712d9fc4cf6122345984c8c094/src/xrGame/GamePersistent.cpp)
+emits dismissal from `update_game_loaded` and from the no-keypress path; its
+frame loop stops the loading renderer afterwards. The extra frame and precache
+checks avoid displaying from inside the dismissal callback. The extracted
+Anomaly `lua_help.script` documents `device().frame`, `precache_frame` and
+`is_paused`. Saved-profile loose-file inspection is source evidence; native
+timing and the engine's loaded winner still require Owen's verification.
+
 The connected companion atomically publishes optional `presence.txt` version 1:
 header `GAMMA_AP_PRESENCE|1`, session key, configuration digest (or `-` for an
 unconfigured legacy pilot), a 16-hex connection epoch and monotonic sequence,
@@ -116,3 +142,10 @@ disconnect/reconnect, no-PDA broadcasts and a cached sidecar while the companion
 stopped. These native checks are **not run**. Automated tests exercise their
 equivalent decisions with a mocked engine and actual AP connection/reconnection
 traffic separately.
+
+Loading-readiness acceptance additionally needs: leave **Enter the Zone** visible
+while rewards arrive; confirm no AP popup is displayed; enter the world and
+confirm pending notices appear once. Repeat after a save reload and a map
+transition, and with the loading keypress option disabled. These native checks
+remain **not run**. Previously displayed history is retained; this fix does not
+erase or replay earlier popups.

@@ -102,6 +102,7 @@ function encode_ack(key, seen)
 end
 
 function poll(state)
+    if not gamma_ap_readiness.ready() then return true end
     local root = gamma_ap_paths.appdata_root(getFS():update_path("$app_data_root$", ""))
     if not root then return false, "PDA notices require the isolated appdata root" end
     local file = io.open(root .. "archipelago\\notices.txt", "rb")

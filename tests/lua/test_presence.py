@@ -4,7 +4,7 @@ from gamma_archipelago.notifications import Notice, encode_notices
 from gamma_archipelago.presence import encode_presence
 
 from .assertions import assert_lua_error
-from .test_game_adapter import load_game, saved_state, set_incoming
+from .test_game_adapter import enter_world, load_game, saved_state, set_incoming
 from .test_loadout import configured_game
 
 KEY, CONFIG, EPOCH = "a" * 64, "b" * 64, "c" * 16
@@ -60,6 +60,7 @@ def test_load_new_connection_and_reconnection_after_timeout_announce_once(lua):
     tick(game, engine, 2)
     data = saved_state(lua, game)
     game.load_state(data)
+    enter_world(engine)
     tick(game, engine, 2)
     assert len(engine.news) == 1
     tick(game, engine, 3)
@@ -127,6 +128,7 @@ def test_join_and_transfer_broadcasts_work_without_a_pda_and_do_not_replay(lua, 
         end
     """)
     game.on_game_start()
+    enter_world(engine)
     engine.creation.new_game_faction = None
     notice_path = "D:/AnomalyAP/appdata/archipelago\\notices.txt"
     engine.files[notice_path] = encode_notices(
@@ -148,6 +150,7 @@ def test_join_and_transfer_broadcasts_work_without_a_pda_and_do_not_replay(lua, 
     ]
     assert len(engine.created) == 1
     game.load_state(saved_state(lua, game))
+    enter_world(engine)
     tick(game, engine, 3, configuration=configuration.digest)
     tick(game, engine, 4, configuration=configuration.digest)
     assert len(engine.news) == 4 and len(engine.created) == 1
