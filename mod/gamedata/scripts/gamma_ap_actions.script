@@ -1,0 +1,41 @@
+-- Explicit development actions. These never change AP checks or receipt state.
+
+local TOOLKIT_SECTION = "itm_basickit"
+local DROP_HEIGHT_METRES = 0.2 -- Clear ground collision before the item settles.
+
+function can_spawn()
+    local root = gamma_ap_paths.appdata_root(getFS():update_path("$app_data_root$", ""))
+    if not root then
+        return false
+    end
+    return level.present() and db.actor ~= nil and db.actor:alive()
+end
+
+local function notify(message_id)
+    printf("[GAMMA AP] %s", message_id)
+    news_manager.send_tip(db.actor, message_id, nil, nil, 5000)
+end
+
+function spawn_basic_tools()
+    -- Recheck on click: a menu may have been built before a death or unload.
+    if not can_spawn() then
+        printf("[GAMMA AP] Toolkit test requires a living player in the development game")
+        return false
+    end
+    if not ini_sys:section_exist(TOOLKIT_SECTION) then
+        notify("gamma_ap_tools_spawn_failed")
+        return false
+    end
+    local actor = db.actor
+    local feet = actor:position()
+    local position = vector():set(feet.x, feet.y + DROP_HEIGHT_METRES, feet.z)
+    -- Deliberately omit a parent ID: spawn on the ground, not inside inventory.
+    local ok, object = pcall(alife_create, TOOLKIT_SECTION, position,
+        actor:level_vertex_id(), actor:game_vertex_id())
+    if not ok or not object then
+        notify("gamma_ap_tools_spawn_failed")
+        return false
+    end
+    notify("gamma_ap_tools_spawned")
+    return true
+end

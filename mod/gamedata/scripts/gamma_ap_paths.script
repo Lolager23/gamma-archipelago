@@ -1,0 +1,19 @@
+-- Engine aliases can contain bin/.. even when they refer to the same directory.
+
+function appdata_root(root)
+    if type(root) ~= "string" then return nil end
+    local path = root:gsub("\\", "/"):lower()
+    if not path:match("^d:/") then return nil end
+    local parts = {}
+    for part in path:sub(4):gmatch("[^/]+") do
+        if part == ".." then
+            if #parts == 0 then return nil end
+            table.remove(parts)
+        elseif part ~= "." then
+            if part:find('[%c<>:"|?*]') or part:match("[ .]$") then return nil end
+            parts[#parts + 1] = part
+        end
+    end
+    if "d:/" .. table.concat(parts, "/") ~= "d:/anomalyap/appdata" then return nil end
+    return "D:/AnomalyAP/appdata/"
+end
