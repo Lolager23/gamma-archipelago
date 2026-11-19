@@ -19,6 +19,7 @@ documents for the part of the task they own:
 | [Expanded checklist](docs/expansion-plan.md) | Requested category options, PDA messages, reward contracts and staged acceptance |
 | [Expansion two](docs/expansion-two-plan.md) | Tracker, optional rewards, scouting, quotas and progression/pacing increments |
 | [Expansion acceptance](docs/expansion-two-acceptance.md) | Current stacked PR index, automation limits and Owen's native acceptance matrix |
+| [Expansion merge review](docs/expansion-two-merge-review.md) | Authorized sequential merges, source corrections and exact-head evidence |
 | [Branch roadmap](docs/branch-roadmap.md) | Increment boundaries and branch dependencies |
 | [Randomisation plan](docs/randomisation-plan.md) | Candidate content, MVP and final product goals |
 | [Development environment](docs/development-environment.md) | Backups, isolation, installation and restore |

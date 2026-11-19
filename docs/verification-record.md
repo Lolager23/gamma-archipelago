@@ -7,10 +7,12 @@ scouting/shared hints, finite shop/goodwill checks, distinct discovery quotas,
 tool/workshop/known-recipe permissions, resumable permission supplies, four supply
 package categories, capped carry capacity, progression budgets, opening protection
 and independent pacing settings. See the [stack and native matrix](expansion-two-acceptance.md)
-and [plan](expansion-two-plan.md). This is an **unmerged draft stack** on PDA
-localization #38; the unrelated compatibility investigation #39 stays independent.
+and [plan](expansion-two-plan.md). The initial implementation was an **unmerged
+draft stack** on PDA localization #38, with compatibility investigation #39
+independent. The subsequent [user-authorized merge review](expansion-two-merge-review.md)
+records source validation, fixes and canonical PR outcomes separately.
 
-The complete final verifier **passed** in its separate tooling runtime: **980
+The original implementation verifier **passed** in its separate tooling runtime: **980
 covered Python/Lua, 54 untraced generator/server and seven Node tests, 1,041 total**.
 Owned Python runtime modules reached 100% measured lines/branches and Lua reached
 100% measured executable lines. Lua branch and numeric JavaScript coverage are
@@ -34,7 +36,8 @@ reserved for Owen. No game was launched or loaded; no installation, profile,
 save, deployed companion/APWorld, running user AP session or local-only developer
 panel was changed. Protected normal game roots were untouched. The original
 checkout and existing user work were preserved; implementation lives in isolated
-source worktrees and the stacked branches. No PR was merged or release published.
+source worktrees and the stacked branches. That initial implementation task did
+not merge PRs or publish a release; the later authorized merge pass is separate.
 
 ## PDA grammar and translation resources: 19 November 2026
 

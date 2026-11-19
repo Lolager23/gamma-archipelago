@@ -1,9 +1,10 @@
 # Implementation and PR index
 
 The subsequent [Steps 31–40 delivery index](expansion-two-acceptance.md) records
-the new tracker/reward/pacing draft stack. Those PRs are **unmerged**; native
-acceptance remains **not run**. The thirty merged increments below retain their
-historical status and evidence.
+the new tracker/reward/pacing increments. Owen then authorized sequential source
+review/fixes/merges; see the [review record](expansion-two-merge-review.md) and
+canonical PR states. Native acceptance remains **not run**. The thirty merged
+increments below retain their historical status and evidence.
 
 All thirty increments below have been reviewed, verified and merged individually,
 along with MCM #3, planning #4, diagnostic probes #2 and the local generator #35.

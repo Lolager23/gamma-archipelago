@@ -5,6 +5,9 @@ original thirty increments, starting on `codex/pda-tracker` from PDA localizatio
 PR #38. Its table defines the new dependencies and acceptance contracts.
 The [delivery and acceptance index](expansion-two-acceptance.md) links implemented
 drafts and records the remaining manual game and release gates.
+Owen subsequently authorized sequential source review/fixes/merges; the
+[merge-validation record](expansion-two-merge-review.md) records that decision
+without closing native acceptance or public-release gates.
 
 Implementation update: the [PR/status index](implementation-status.md) records the
 thirty merged implementation steps and remaining engine acceptance. Owen later

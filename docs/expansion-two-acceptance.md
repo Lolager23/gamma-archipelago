@@ -1,11 +1,12 @@
 # Expansion two: delivery and native acceptance
 
-Source implementation is delivered as stacked **draft** PRs, starting at PDA
-localization #38. Nothing in this stack is merged or deployed automatically.
-The compatibility investigation #39 remains independent. Check the current PR
-head's CI rather than importing a green result from its parent.
+Source implementation was delivered as stacked draft PRs starting at PDA
+localization #38. Owen subsequently authorized sequential source review, fixes
+and merges, documented in the [review record](expansion-two-merge-review.md).
+Deployment and native acceptance remain separate. The PR links give canonical
+merge states; check each reviewed head's CI rather than its parent's result.
 
-| Step | Draft PR | Implemented contract |
+| Step | PR | Implemented contract |
 |---|---|---|
 | 31 | [#40](https://github.com/Lolager23/gamma-archipelago/pull/40) | PDA tracker, regional/status filters and progression summary |
 | 32 | [#41](https://github.com/Lolager23/gamma-archipelago/pull/41) | Scouting/shared hints, finite purchase/goodwill checks, next reward previews |
@@ -47,11 +48,14 @@ coverage and Lua branch coverage are not measured. Package/catalogue/localizatio
 parity, archive loading, reproducible packaging, lint, typing and per-module
 coverage gates stay enabled without exclusions or lowered thresholds.
 
-The final complete local verifier passed **980 covered Python/Lua + 54 untraced
+The original implementation verifier passed **980 covered Python/Lua + 54 untraced
 generator/server + seven Node tests: 1,041 total**. Owned Python runtime modules
 reached 100% measured line and branch coverage; Lua reached 100% measured
 executable-line coverage. Final-head Windows/Linux evidence is retained with each
 PR; it must be checked again if that head changes.
+The subsequent review adds roster-aware saved-discovery validation, optional
+opening placement constraints and 150 precollected-psi-key seed cases. Updated
+review-run counts and current-head CI are recorded on the linked PRs.
 
 Native APIs were inspected in the pinned baseline and active development overrides.
 Workshop recipes still need ordinary knowledge/materials; permissions do not
