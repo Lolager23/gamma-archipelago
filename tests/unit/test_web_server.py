@@ -62,24 +62,27 @@ def test_metadata_assets_preview_and_exports(web):
 
 
 @pytest.mark.parametrize(
-    "method,path,headers,status",
+    "method,path,headers,status,reason",
     [
-        ("GET", "/../pyproject.toml", {}, 404),
-        ("POST", "/api/unknown", {}, 404),
-        ("GET", "/", {"Host": "attacker.test"}, 403),
-        ("POST", "/api/preview", {"Origin": "https://attacker.test"}, 403),
-        ("POST", "/api/preview", {"Origin": ""}, 403),
-        ("POST", "/api/preview", {"Content-Type": "text/plain"}, 400),
-        ("POST", "/api/preview", {"Content-Length": "65537"}, 400),
-        ("POST", "/api/preview", {"Content-Length": "nonsense"}, 400),
-        ("POST", "/api/preview", {"Content-Length": "0"}, 400),
+        ("GET", "/../pyproject.toml", {}, 404, "Not found"),
+        ("POST", "/api/unknown", {}, 404, "Not found"),
+        ("GET", "/", {"Host": "attacker.test"}, 403, "local workbench address"),
+        ("POST", "/api/preview", {"Origin": "https://attacker.test"}, 403, "originate"),
+        ("POST", "/api/preview", {"Origin": ""}, 403, "originate"),
+        ("POST", "/api/preview", {"Content-Type": "text/plain"}, 400, "application/json"),
+        ("POST", "/api/preview", {"Content-Length": "65537"}, 400, "1–65536 bytes"),
+        ("POST", "/api/preview", {"Content-Length": "nonsense"}, 400, "invalid literal"),
+        ("POST", "/api/preview", {"Content-Length": "0"}, 400, "1–65536 bytes"),
     ],
 )
 def test_http_boundaries_refuse_foreign_origins_paths_and_bad_sizes(
-    web, method, path, headers, status
+    web, method, path, headers, status, reason
 ):
-    payload = None if method == "GET" or "Content-Length" in headers else {"options": defaults()}
-    assert web[0](method, path, payload, headers)[0] == status
+    # These requests are rejected from headers/route alone. A body can race the
+    # early close on Windows, aborting the socket before the response is read.
+    actual, _, response = web[0](method, path, None, headers)
+    assert actual == status
+    assert reason in json.loads(response)["error"]
 
 
 @pytest.mark.parametrize(
