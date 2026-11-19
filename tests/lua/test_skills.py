@@ -83,3 +83,42 @@ def test_skill_cap_is_successful_without_adding_another_level(lua):
     assert lua.globals().haru_skills.skills_levels.strength.current_level == 15
     state = lua.globals().gamma_ap_state.new_state()
     assert lua.globals().gamma_ap_skills.receive(state, 28051401)[0] is False
+
+
+@pytest.mark.parametrize("item", range(28051401, 28051404))
+@pytest.mark.parametrize("natural_level", [1, 2])
+def test_recalculation_retry_preserves_xp_and_levels_earned_since_first_attempt(
+    lua, item, natural_level
+):
+    game, engine = skill_game(lua, item)
+    engine.fail_recalculate = True
+    poll(game, engine)
+    assert progress(lua, game).received_count == 0
+    skill = lua.globals().gamma_ap_catalog.skill_rewards[item]
+    api = lua.globals().haru_skills
+    levels, stats = api.skills_levels[skill], api.skills_stats[skill]
+    levels.experience = 1200
+    if natural_level == 2:
+        levels.current_level = 2
+        levels.prev_requirement, levels.requirement = 1687.5, 2812.5
+        levels.experience, stats.effect = 2000, 1.2
+    expected_levels, expected_stats = dict(levels.items()), dict(stats.items())
+    game.load_state(saved_state(lua, game))
+    engine.fail_recalculate = False
+    poll(game, engine)
+    assert progress(lua, game).received_count == 1
+    assert dict(levels.items()) == expected_levels
+    assert dict(stats.items()) == expected_stats
+    assert engine.recalculations == 1
+
+
+@pytest.mark.parametrize("value", [None, float("nan"), 16])
+def test_saved_skill_plan_does_not_bypass_native_schema_validation_on_retry(lua, value):
+    game, engine = skill_game(lua)
+    engine.fail_recalculate = True
+    poll(game, engine)
+    lua.globals().haru_skills.skills_levels.strength.current_level = value
+    engine.fail_recalculate = False
+    poll(game, engine)
+    assert progress(lua, game).received_count == 0
+    assert "schema is incompatible" in list(engine.logs.values())[-1]
