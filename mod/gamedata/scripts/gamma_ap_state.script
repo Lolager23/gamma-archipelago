@@ -4,7 +4,7 @@ function new_state()
     return { session_key = nil, received_count = 0, checks = {}, applied_items = {}, notices_seen = {},
         configuration_key=nil, loadout_prepared=false, loadout_initialized=false, starting_pda_mode=0,
         expanded=false, enabled_checks=enabled_locations(nil), visited_maps={},
-        combat=gamma_ap_combat.copy(nil) }
+        combat=gamma_ap_combat.copy(nil), artefact_sources={}, applying_reward=false }
 end
 
 function enabled_locations(configuration)
@@ -38,6 +38,7 @@ function copy_state(state)
     result.loadout_plan = gamma_ap_loadout.copy_plan(state.loadout_plan)
     result.expanded = state.expanded == true
     result.combat = gamma_ap_combat.copy(state.combat)
+    for id, source in pairs(state.artefact_sources or {}) do result.artefact_sources[id] = source end
     for id, value in pairs(state.visited_maps or {}) do result.visited_maps[id] = value end
     if state.enabled_checks then
         result.enabled_checks = {}

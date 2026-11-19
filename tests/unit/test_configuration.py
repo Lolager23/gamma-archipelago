@@ -42,6 +42,7 @@ def test_default_configuration_is_immutable_and_deterministically_serialized():
             "checks_mutant_first_kills",
             "checks_faction_first_kills",
             "checks_kill_milestones",
+            "checks_artefacts",
         }
     )
     + REWARD_OPTIONS,

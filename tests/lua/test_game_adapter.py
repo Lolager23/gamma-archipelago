@@ -71,6 +71,8 @@ def test_callbacks_polling_save_restore_and_initial_inventory(lua):
         "monster_on_hit_callback",
         "npc_on_net_spawn",
         "monster_on_net_spawn",
+        "actor_on_item_take",
+        "actor_on_item_take_from_box",
     }
     set_incoming(engine)
     module.actor_on_update()
