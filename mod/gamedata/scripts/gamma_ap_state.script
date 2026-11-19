@@ -48,3 +48,7 @@ function check_level(state, level_name)
     local location_id = gamma_ap_catalog.location_by_level[level_name]
     if location_id then state.checks[location_id] = true end
 end
+
+function merge_confirmed(state, checked)
+    for id in pairs(checked) do state.checks[id] = true end
+end

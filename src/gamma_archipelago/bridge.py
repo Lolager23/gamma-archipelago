@@ -13,7 +13,13 @@ from .notifications import (
     pending_batch,
 )
 from .paths import require_isolated_root, require_safe_child
-from .protocol import GameSnapshot, ProtocolError, decode_outgoing, encode_incoming
+from .protocol import (
+    GameSnapshot,
+    ProtocolError,
+    decode_outgoing,
+    encode_confirmed,
+    encode_incoming,
+)
 
 
 class FileBridge:
@@ -45,6 +51,9 @@ class FileBridge:
         except UnicodeDecodeError as exc:
             raise ProtocolError("Notice acknowledgements must be ASCII data") from exc
         self._write_atomic("notices", encode_notices(session_key, pending_batch(notices, seen)))
+
+    def write_confirmed(self, session_key: str, location_ids: frozenset[int]) -> None:
+        self._write_atomic("confirmed_checks", encode_confirmed(session_key, location_ids))
 
     def read_game(self, session_key: str) -> GameSnapshot | None:
         source = require_safe_child(self.game_root, "appdata/archipelago/outgoing.txt")

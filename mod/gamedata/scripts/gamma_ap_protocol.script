@@ -49,3 +49,26 @@ function encode_outgoing(state)
     lines[#lines + 1] = "end|" .. tostring(count)
     return table.concat(lines, "\n") .. "\n"
 end
+
+function parse_confirmed(content, key)
+    if type(content) ~= "string" or #content > 131072 or content:sub(-1) ~= "\n" then
+        return nil, "Incomplete or oversized confirmed-check snapshot"
+    end
+    local lines = {}
+    for line in content:gmatch("([^\n]*)\n") do lines[#lines + 1] = line end
+    if #lines < 3 or lines[1] ~= "GAMMA_AP_CONFIRMED|1" or lines[2] ~= "session|" .. key then
+        return nil, "Confirmed-check protocol or session mismatch"
+    end
+    local count = canonical_number(lines[#lines]:match("^end|(.*)$"))
+    if not count or count ~= #lines - 3 or count > #gamma_ap_catalog.location_ids then
+        return nil, "Confirmed-check count mismatch"
+    end
+    local known, checked = {}, {}
+    for _, id in ipairs(gamma_ap_catalog.location_ids) do known[id] = true end
+    for index = 3, #lines - 1 do
+        local id = canonical_number(lines[index]:match("^check|(.*)$"))
+        if not known[id] or checked[id] then return nil, "Unknown or duplicate confirmed check" end
+        checked[id] = true
+    end
+    return checked
+end

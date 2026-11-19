@@ -128,7 +128,10 @@ def test_real_generation_server_item_delivery_and_reconnect(tmp_path, mixed_game
                 restored.set_save(
                     restricted_loads(zlib.decompress(Path(server.save_filename).read_bytes()))
                 )
-                await client.disconnect()
+                expected_notice_ids = set(client.session.notices)
+                await client.shutdown()
+                client = GammaContext(bridge=bridge)
+                client.auth = "GammaPilot"
                 async with websockets.serve(
                     partial(MultiServer.server, ctx=restored), "127.0.0.1", 0
                 ) as restarted:
@@ -143,6 +146,11 @@ def test_real_generation_server_item_delivery_and_reconnect(tmp_path, mixed_game
                         == ClientStatus.CLIENT_GOAL
                     )
                     assert len(client.session.item_ids) == 3
+                    await client.poll_game_once()
+                    await wait_until(lambda: expected_notice_ids <= client.session.notices.keys())
+                    assert (
+                        (bridge.directory / "confirmed_checks.txt").read_text().endswith("end|3\n")
+                    )
                     await client.disconnect()
             finally:
                 await client.shutdown()
