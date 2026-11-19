@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>GAMMA · Seed workbench</title>
+    <meta
+      name="description"
+      content="Plan and generate a GAMMA Archipelago seed, with live check and reward rosters and adjustable playtime estimates."
+    />
+    <link rel="stylesheet" href="/style.css" />
+    <script type="module" src="/app.js"></script>
+  </head>
+  <body>
+    <aside class="rail">
+      <a class="brand" href="/" aria-label="GAMMA workbench home"
+        ><span class="brand-mark">A</span
+        ><span>GAMMA<span class="brand-sub">ARCHIPELAGO</span></span></a
+      >
+      <div class="rail-rule"></div>
+      <div class="rail-label">PLANNING TOOLS</div>
+      <a class="nav-active" href="#workbench">Seed workbench</a
+      ><a href="#catalogue">Check & reward explorer</a
+      ><a href="#playtime">Playtime calculator</a>
+      <div class="rail-bottom">
+        <span class="version">1.0.0rc1</span>
+        <p>Private development candidate<br />Archipelago 0.6.8</p>
+        <p>Expanded in-game acceptance<br />is pending.</p>
+      </div>
+    </aside>
+    <main id="workbench">
+      <header>
+        <span class="eyebrow">S.T.A.L.K.E.R. / ANOMALY / GAMMA</span
+        ><span class="local-badge">LOCAL GENERATOR</span>
+      </header>
+      <section class="intro">
+        <div>
+          <h1>Build your next<br /><span>journey into the Zone.</span></h1>
+          <p>
+            Choose the milestones. Shape the rewards.<br />Know what you’re
+            signing up for before you enter.
+          </p>
+        </div>
+        <div class="zone-seal" aria-hidden="true">
+          <span>☢</span><small>THE ZONE AWAITS</small>
+        </div>
+      </section>
+      <div id="connection" role="status">Connecting to the local planner…</div>
+      <section class="setup panel" aria-label="Seed setup">
+        <label>Starting preset<select id="preset"></select></label
+        ><label
+          >Player name<input
+            id="player"
+            maxlength="16"
+            value="GammaPlayer"
+            autocomplete="off" /></label
+        ><label
+          >Seed number
+          <div class="seed-input">
+            <input
+              id="seed"
+              aria-label="Seed number"
+              inputmode="numeric"
+              value="20261119"
+              maxlength="20"
+            /><button
+              id="random-seed"
+              type="button"
+              aria-label="Choose a random seed"
+            >
+              ↻
+            </button>
+          </div></label
+        ><label>Completion goal<select id="goal"></select></label>
+      </section>
+      <section class="stats" aria-label="Seed totals">
+        <div class="stat">
+          <span>NETWORK CHECKS</span><strong id="check-total">—</strong
+          ><small>Each check holds one reward</small>
+        </div>
+        <div class="stat">
+          <span>ELIGIBLE REWARD TYPES</span><strong id="reward-total">—</strong
+          ><small id="required-total">Progression and supply rewards</small>
+        </div>
+        <div class="stat">
+          <span>ESTIMATED GOAL ROUTE</span><strong id="time-total">—</strong
+          ><small>Adjustable, uncalibrated estimate</small>
+        </div>
+      </section>
+      <div class="workspace">
+        <div class="editor">
+          <section class="panel categories">
+            <div class="section-heading">
+              <div>
+                <span class="eyebrow">MAKE IT YOUR RUN</span>
+                <h2>What counts. What drops.</h2>
+              </div>
+              <span id="preset-status" class="subtle"
+                >Preset configuration</span
+              >
+            </div>
+            <div class="tabs" role="tablist" aria-label="Configuration">
+              <button
+                id="tab-checks"
+                role="tab"
+                aria-selected="true"
+                aria-controls="checks-pane"
+                data-tab="checks"
+              >
+                Checks</button
+              ><button
+                id="tab-rewards"
+                role="tab"
+                aria-selected="false"
+                aria-controls="rewards-pane"
+                data-tab="rewards"
+              >
+                Rewards</button
+              ><button
+                id="tab-loadout"
+                role="tab"
+                aria-selected="false"
+                aria-controls="loadout-pane"
+                data-tab="loadout"
+              >
+                Starting loadout
+              </button>
+            </div>
+            <div id="checks-pane" role="tabpanel" aria-labelledby="tab-checks">
+              <p class="section-note">
+                Choose the actions that send checks to Archipelago.
+              </p>
+              <div id="check-options" class="option-grid"></div>
+              <div class="milestones">
+                <label
+                  >Kill totals
+                  <input
+                    id="kill-milestones"
+                    value="10, 25, 50, 100"
+                    aria-describedby="milestone-help" /></label
+                ><label
+                  >Side-task totals
+                  <input
+                    id="task-milestones"
+                    value="5, 10, 20, 40"
+                    aria-describedby="milestone-help" /></label
+                ><small id="milestone-help"
+                  >Comma-separated, increasing totals. 1–20 milestones, each
+                  from 1 to 10,000.</small
+                >
+              </div>
+            </div>
+            <div
+              id="rewards-pane"
+              role="tabpanel"
+              aria-labelledby="tab-rewards"
+              hidden
+            >
+              <p class="section-note">
+                Eligible reward types form a randomized pool. Progression
+                permissions appear once; supplies can repeat.
+              </p>
+              <div id="reward-options" class="option-grid"></div>
+              <label class="toggle-extra"
+                ><input id="unlock-travel" type="checkbox" /> Offer one optional
+                settlement trip when a zone key is received</label
+              >
+              <p class="section-note">
+                Three base supply types are always available. White stashes use
+                the finite Cordon roster. Haruka levels require the matching
+                skill mod.
+              </p>
+            </div>
+            <div
+              id="loadout-pane"
+              role="tabpanel"
+              aria-labelledby="tab-loadout"
+              hidden
+            >
+              <p class="section-note">
+                Absent removes starting gear; AP locked also requires receiving
+                its equipment permission.
+              </p>
+              <div id="gear-options" class="loadout-grid"></div>
+              <div id="quantity-options" class="loadout-grid"></div>
+              <label class="toggle-extra"
+                ><input id="no-weapons" type="checkbox" /> No starting weapons
+                (firearms and melee)</label
+              >
+            </div>
+          </section>
+          <section id="catalogue" class="panel catalogue">
+            <div class="section-heading">
+              <div>
+                <span class="eyebrow">LIVE CATALOGUE</span>
+                <h2>Explore your seed</h2>
+              </div>
+              <span id="roster-count" class="subtle"></span>
+            </div>
+            <div class="catalogue-controls">
+              <label class="search-label"
+                ><span class="sr-only">Search enabled checks or rewards</span
+                ><input
+                  id="search"
+                  type="search"
+                  placeholder="Search names, categories or regions…" /></label
+              ><select id="roster-kind" aria-label="Catalogue type">
+                <option value="checks">Enabled checks</option>
+                <option value="rewards">Eligible rewards</option>
+              </select>
+            </div>
+            <div class="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th id="detail-heading">Region</th>
+                  </tr>
+                </thead>
+                <tbody id="roster"></tbody>
+              </table>
+            </div>
+            <p class="section-note">
+              Local goal events are excluded. This is an option preview, not a
+              generated spoiler or a claim about encounter availability.
+            </p>
+          </section>
+        </div>
+        <aside class="summary">
+          <section class="panel run-summary">
+            <span class="eyebrow">YOUR EXPEDITION</span>
+            <h2 id="goal-summary">Planning your route</h2>
+            <p id="summary-copy">Select a preset to begin.</p>
+            <div class="summary-line">
+              <span>Reward slots</span><strong id="slots-summary">—</strong>
+            </div>
+            <div class="summary-line">
+              <span>Required progression items</span
+              ><strong id="progression-summary">—</strong>
+            </div>
+            <div class="summary-line">
+              <span>Goal-route sessions</span
+              ><strong id="sessions-summary">—</strong>
+            </div>
+            <div
+              id="validation"
+              class="validation"
+              role="status"
+              aria-live="polite"
+            >
+              Checking settings…
+            </div>
+            <button id="generate" class="primary" disabled>
+              Generate seed ZIP</button
+            ><button id="export" class="secondary" disabled>
+              Download player YAML
+            </button>
+            <p class="section-note">
+              Generates one GAMMA player using the local AP runtime. For
+              mixed-game sessions, add this YAML alongside your friends’ player
+              files in Archipelago.
+            </p>
+            <div id="generation-status" role="status" aria-live="polite"></div>
+          </section>
+          <section class="boundary-note">
+            <span class="eyebrow">DEVELOPMENT ONLY</span>
+            <p>
+              Generation creates a seed archive. Start its server and companion
+              separately, then launch GAMMA Dev through Mod Organizer.
+            </p>
+            <p>
+              Keep world, client and add-on versions together. Use a fresh Loner
+              in Cordon.
+            </p>
+          </section>
+        </aside>
+      </div>
+      <section id="playtime" class="panel calculator">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">PLAN YOUR EVENINGS</span>
+            <h2>How long in the Zone?</h2>
+          </div>
+          <span class="estimate-tag">HEURISTIC · NOT TELEMETRY</span>
+        </div>
+        <p class="section-note">
+          Tune these assumptions to your playstyle. Estimates are scenarios, not
+          measured completion times.
+        </p>
+        <div class="calculator-layout">
+          <div id="assumption-options" class="assumption-grid"></div>
+          <div class="time-results">
+            <span>GOAL-ORIENTED RUN</span><strong id="goal-range">—</strong
+            ><span>ALL ENABLED CHECKS</span
+            ><strong id="completion-range">—</strong
+            ><small id="session-copy"></small>
+            <div id="breakdown"></div>
+          </div>
+        </div>
+        <details>
+          <summary>How the estimate is calculated</summary>
+          <p id="estimate-method"></p>
+          <p>
+            No measured playtime data is available yet. Encounter luck, faction
+            access, task availability, deaths and other players can extend a run
+            beyond this range. Checking every location is optional for most
+            goals.
+          </p>
+        </details>
+      </section>
+      <footer>
+        <span>GAMMA ARCHIPELAGO · SEED WORKBENCH</span
+        ><span>Local planning. Deliberate progression.</span>
+      </footer>
+    </main>
+  </body>
+</html>

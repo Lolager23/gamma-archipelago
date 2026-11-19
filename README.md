@@ -18,6 +18,14 @@ See the [implementation/PR index](docs/implementation-status.md),
 [remaining engine acceptance](docs/multiworld-acceptance.md).
 The full preset has 257 network checks. Local progression events are separate.
 
+## Seed workbench
+
+The [local generator web app](docs/generator-web-app.md) provides preset/category
+controls, exact check and reward catalogues, adjustable playtime estimates, player
+YAML downloads and real seed ZIP generation. Run `python tools/run_generator_web.py`
+after preparing its separate runtime as documented, then open
+`http://127.0.0.1:38290`. It does not launch the game or deploy the mod.
+
 ## Development and acceptance
 
 The normal multiplayer installations `D:/Anomaly` and `D:/GAMMA` are protected.

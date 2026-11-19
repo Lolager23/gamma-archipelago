@@ -1,5 +1,27 @@
 # Verification record
 
+## Generator web app: 19 November 2026
+
+The complete verifier passed with 645 covered tests and 17 untraced
+generation/server tests: **662 passed**. All owned Python runtime modules,
+including the four web modules, reached 100% measured line and branch coverage.
+Existing Lua executable-line gates still passed; Lua branch coverage is not
+measured. JavaScript module syntax checks now run in the verifier as well.
+
+The additional integration case generated and inspected a real downloadable AP
+seed ZIP. In browser checks, the full preset displayed 257 checks / 87 eligible
+reward types; invalid zone settings and duplicate milestone thresholds blocked
+generation. Starting-lock controls, reward search, calculator keyboard input,
+actual seed ZIP download and actual YAML download were exercised. No browser
+console errors/warnings were observed. The narrow layout had no page overflow;
+the roster table retains its own horizontal scroll. This is manual browser
+evidence, not numeric JavaScript coverage or GAMMA engine acceptance.
+
+The web generation runtime and session storage use separate tooling directories.
+The local verifier log is `D:/GAMMAAPTools/web-generator-verification.log`.
+No game launch, save changes, deployment, server start or merge occurred.
+See the [workbench guide](generator-web-app.md) for setup and estimate limits.
+
 ## Expanded candidate automation: 19 November 2026
 
 Step 30's complete local verifier passed on Windows with Python 3.12.3 and the

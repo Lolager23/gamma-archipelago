@@ -38,6 +38,8 @@ def main() -> None:
     run("-m", "ruff", "check", "src", "apworld", "tools", "tests")
     run("-m", "ruff", "format", "--check", "src", "apworld", "tools", "tests")
     run("-m", "mypy", "src/gamma_archipelago")
+    for filename in ("app.js", "ui.js"):
+        subprocess.run(["node", "--check", str(ROOT / "web/generator" / filename)], check=True)
     run("tools/build.py")
     run(
         "tools/bootstrap_ap.py", "--source", arguments.ap_source, "--destination", arguments.ap_root
