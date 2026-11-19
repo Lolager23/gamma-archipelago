@@ -1,6 +1,7 @@
 """A real upstream generator, MultiServer and CommonClient over a loopback websocket."""
 
 import asyncio
+import zlib
 from functools import partial
 from pathlib import Path
 
@@ -11,6 +12,7 @@ import pytest
 import websockets
 from CommonClient import CommonContext
 from NetUtils import ClientStatus
+from Utils import restricted_loads
 from worlds.gamma.client import GammaContext
 
 from gamma_archipelago.bridge import FileBridge
@@ -109,6 +111,32 @@ def test_real_generation_server_item_delivery_and_reconnect(tmp_path, mixed_game
                 assert client.session.item_ids and len(client.session.item_ids) == 3
                 await client.poll_game_once()
                 assert server.location_checks[(client.team, client.slot)] == set(LOCATION_IDS)
+                # Persist the actual server state and reconnect to a new server
+                # context, rather than treating socket reconnect as restart proof.
+                server.save_filename = str(tmp_path / "pilot.apsave")
+                server.saving = True
+                assert server.save(now=True)
+                restored = MultiServer.Context("127.0.0.1", 0, None, None, 1, 10, False)
+                restored.load(str(archives[0]))
+                restored.set_save(
+                    restricted_loads(zlib.decompress(Path(server.save_filename).read_bytes()))
+                )
+                await client.disconnect()
+                async with websockets.serve(
+                    partial(MultiServer.server, ctx=restored), "127.0.0.1", 0
+                ) as restarted:
+                    await client.connect(f"127.0.0.1:{restarted.sockets[0].getsockname()[1]}")
+                    await wait_until(
+                        lambda: client.server is not None and len(client.items_received) == 3
+                    )
+                    assert client.session.session_key == key
+                    assert restored.location_checks[(client.team, client.slot)] == set(LOCATION_IDS)
+                    assert (
+                        restored.client_game_state[(client.team, client.slot)]
+                        == ClientStatus.CLIENT_GOAL
+                    )
+                    assert len(client.session.item_ids) == 3
+                    await client.disconnect()
             finally:
                 await client.shutdown()
                 if quest is not None:
