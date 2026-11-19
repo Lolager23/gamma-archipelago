@@ -25,7 +25,7 @@ function previews(state)
     local tasks,standing = {},{}
     for id in pairs(state.enabled_checks) do
         if not state.checks[id] then
-            if id > gamma_ap_catalog.side_task_milestone_base then tasks[#tasks+1] = id
+            if id > gamma_ap_catalog.side_task_milestone_base and id <= gamma_ap_catalog.side_task_milestone_base + gamma_ap_catalog.side_task_milestone_maximum then tasks[#tasks+1] = id
             elseif gamma_ap_catalog.location_categories[id] == "checks_faction_standing" then standing[#standing+1] = id end
         end
     end

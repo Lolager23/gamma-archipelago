@@ -2,7 +2,15 @@
 
 from dataclasses import dataclass
 
-from Options import Choice, DefaultOnToggle, OptionList, PerGameCommonOptions, Range, Toggle
+from Options import (
+    Choice,
+    DefaultOnToggle,
+    OptionList,
+    OptionSet,
+    PerGameCommonOptions,
+    Range,
+    Toggle,
+)
 
 
 class ChecksMaps(DefaultOnToggle):
@@ -223,8 +231,65 @@ class ChecksFactionStanding(Toggle):
     display_name = "Checks: Faction standing"
 
 
+class DiscoveryMode(Choice):
+    """Existing per-type checks, or one check for each of the first N distinct qualifying types."""
+
+    display_name = "Discovery mode"
+    option_per_type = 0
+    option_first_n_distinct = 1
+    default = 0
+
+
+class MutantDiscoveryCount(Range):
+    """Quota count; zero means all non-excluded mutant types. Used only in quota mode."""
+
+    display_name = "Distinct mutant quota"
+    range_start = 0
+    range_end = 25
+    default = 0
+
+
+class FactionDiscoveryCount(MutantDiscoveryCount):
+    """Quota count; zero means all non-excluded factions."""
+
+    display_name = "Distinct faction quota"
+    range_end = 13
+
+
+class ArtefactDiscoveryCount(MutantDiscoveryCount):
+    """Quota count; zero means all non-excluded artefact types."""
+
+    display_name = "Distinct artefact quota"
+    range_end = 66
+
+
+class DiscoveryExclusions(OptionSet):
+    """Canonical catalogue tokens, such as faction:stalker or artefact:af_atom."""
+
+    display_name = "Excluded discovery types"
+    default = frozenset()
+
+
+class OptionalCheckPolicy(Choice):
+    """Treatment of fragile named-shop and faction-standing checks."""
+
+    display_name = "Missable service check policy"
+    option_exclude_progression = 0
+    option_omit = 1
+    option_allow_progression = 2
+    default = 0
+
+
 @dataclass
 class GammaOptions(PerGameCommonOptions):
+    mutant_discovery_mode: DiscoveryMode
+    mutant_discovery_count: MutantDiscoveryCount
+    faction_discovery_mode: DiscoveryMode
+    faction_discovery_count: FactionDiscoveryCount
+    artefact_discovery_mode: DiscoveryMode
+    artefact_discovery_count: ArtefactDiscoveryCount
+    discovery_exclusions: DiscoveryExclusions
+    optional_check_policy: OptionalCheckPolicy
     checks_shops: ChecksShops
     checks_faction_standing: ChecksFactionStanding
     scouting_mode: ScoutingMode

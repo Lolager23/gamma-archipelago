@@ -37,6 +37,11 @@ item/recipient metadata and its heartbeat. This channel cannot apply receipts or
 complete checks. Shop and standing callbacks delegate to a finite service-check
 module and mutate only the central game state.
 
+[Discovery quotas](discovery-quotas.md) select fixed milestone IDs from catalogue
+rosters. The world/client share a pure configured selection; the game adapter
+persists only distinct source IDs in central save state. Generated Lua metadata
+keeps selection and observation mappings aligned with published IDs.
+
 ## State and failure boundaries
 
 The AP server owns completed location checks and the ordered item history. The

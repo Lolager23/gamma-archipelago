@@ -124,7 +124,7 @@ def generate_catalogues() -> None:
         lines.extend(
             f'    ["{loc["key"]}"] = {loc["id"]},'
             for loc in catalogue["locations"]
-            if loc["category"] == category
+            if loc["category"] == category and "quota_group" not in loc
         )
         lines.append("}")
     lines.append("upgrade_locations = {")
@@ -155,7 +155,7 @@ def generate_catalogues() -> None:
     lines.append(f"side_task_milestone_maximum = {milestone['maximum']}")
     lines.append("artefact_locations = {")
     for loc in catalogue["locations"]:
-        if loc["category"] == "checks_artefacts":
+        if loc["category"] == "checks_artefacts" and "quota_group" not in loc:
             lines.extend(f'    ["{alias}"] = {loc["id"]},' for alias in loc["aliases"])
     lines.append("}")
     milestone = catalogue["milestones"]["checks_kill_milestones"]
@@ -173,7 +173,7 @@ def generate_catalogues() -> None:
         lines.extend(
             f'    ["{loc["key"]}"] = {loc["id"]},'
             for loc in catalogue["locations"]
-            if loc["category"] == category
+            if loc["category"] == category and "quota_group" not in loc
         )
         lines.append("}")
     lines.append("pilot_ids = {[28052001]=true, [28052002]=true, [28052003]=true}")

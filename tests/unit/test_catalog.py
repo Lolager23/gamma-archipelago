@@ -14,8 +14,8 @@ def test_pilot_catalogue_has_unique_stable_ids_and_explicit_item_sections():
     catalogue = json.loads(files("gamma_archipelago").joinpath("catalog.json").read_text())
     assert len(ITEM_NAMES) == len(catalogue["items"]) == 87
     assert len(ITEM_SECTIONS) == 3
-    assert len(LOCATION_NAMES) == len(ALL_LOCATION_IDS) == 20256
-    assert len(catalogue["locations"]) == 256
+    assert len(LOCATION_NAMES) == len(ALL_LOCATION_IDS) == 20360
+    assert len(catalogue["locations"]) == 360
     assert len(LOCATION_IDS) == 3
     assert all(0 < value < 2**31 for value in [*ITEM_SECTIONS, *LOCATION_IDS])
     assert set(ITEM_SECTIONS.values()) == {"itm_basickit", "medkit", "bandage"}
@@ -27,7 +27,7 @@ def test_direct_ap_rewards_cannot_inject_eligible_artefacts_asynchronously():
         alias
         for location in catalogue["locations"]
         if location["category"] == "checks_artefacts"
-        for alias in location["aliases"]
+        for alias in location.get("aliases", [])
     }
     payloads = {section for item in catalogue["items"] for section in item.get("contents", [])}
     assert aliases.isdisjoint(set(ITEM_SECTIONS.values()) | payloads)

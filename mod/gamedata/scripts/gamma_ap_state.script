@@ -9,7 +9,7 @@ function new_state()
         goal_complete=false, rank_highest=-1, unlocks={}, quest_pending={}, gear_grants={}, zone_disabled={}, travel_used={}, travel_selection=nil,
         reputation_targets={}, skill_plans=gamma_ap_skills.copy(nil),
         allowed_items=enabled_items(nil), configuration=nil, stashes=gamma_ap_stashes.copy(nil),
-        artefact_sources={}, applying_reward=false, scout_requests={} }
+        artefact_sources={}, applying_reward=false, scout_requests={}, discoveries={} }
 end
 
 function enabled_items(configuration)
@@ -43,6 +43,7 @@ function enabled_locations(configuration)
     else
         for id in pairs(gamma_ap_catalog.pilot_ids) do enabled[id] = true end
     end
+    if configuration and configuration.expanded then return gamma_ap_discovery.select(configuration,enabled) end
     return enabled
 end
 
@@ -76,6 +77,7 @@ function copy_state(state)
     result.skill_plans = gamma_ap_skills.copy(state.skill_plans)
     for key,value in pairs(state.reputation_targets or {}) do result.reputation_targets[key] = value end
     result.configuration = gamma_ap_configuration.copy(state.configuration)
+    result.discoveries = gamma_ap_discovery.copy(state.discoveries)
     result.stashes = gamma_ap_stashes.copy(state.stashes)
     if state.allowed_items then
         result.allowed_items = {}

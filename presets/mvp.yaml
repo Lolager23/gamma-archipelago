@@ -43,6 +43,13 @@
     "starting_money": 100,
     "scouting_mode": 0,
     "reward_previews": 0,
+    "mutant_discovery_mode": 0,
+    "mutant_discovery_count": 0,
+    "faction_discovery_mode": 0,
+    "faction_discovery_count": 0,
+    "artefact_discovery_mode": 0,
+    "artefact_discovery_count": 0,
+    "optional_check_policy": 0,
     "goal": 2,
     "no_starting_weapons": 0,
     "kill_milestones": [
@@ -58,6 +65,7 @@
       40
     ],
     "zone_unlock_travel": 0,
-    "pda_tracker": 1
+    "pda_tracker": 1,
+    "discovery_exclusions": []
   }
 }

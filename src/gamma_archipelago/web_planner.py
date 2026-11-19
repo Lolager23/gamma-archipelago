@@ -7,7 +7,7 @@ from collections.abc import Mapping
 from importlib.resources import files
 from typing import Any, cast
 
-from .catalog import GAME, enabled_item_ids, enabled_location_ids
+from .catalog import GAME, enabled_item_ids
 from .configuration import (
     CHECK_OPTIONS,
     GEAR_OPTIONS,
@@ -16,6 +16,7 @@ from .configuration import (
     REWARD_OPTIONS,
     build_configuration,
 )
+from .discovery import configured_location_ids
 from .presets import presets
 from .web_estimates import ASSUMPTIONS, estimate_playtime
 
@@ -63,7 +64,7 @@ def catalogue() -> dict[str, Any]:
 
 def metadata() -> dict[str, object]:
     data = catalogue()
-    check_counts = Counter(row["category"] for row in data["locations"])
+    check_counts = Counter(row["category"] for row in data["locations"] if "quota_group" not in row)
     check_counts.update({"checks_kill_milestones": 4, "checks_side_task_milestones": 4})
     reward_counts = Counter(row.get("category") for row in data["items"])
     return {
@@ -106,9 +107,7 @@ def player_document(name: object, values: Mapping[str, object]) -> dict[str, obj
 def preview(values: Mapping[str, object], assumptions: Mapping[str, object]) -> dict[str, object]:
     configuration = build_configuration(values)
     data = catalogue()
-    ids = enabled_location_ids(
-        configuration.checks, configuration.kill_milestones, configuration.side_task_milestones
-    )
+    ids = configured_location_ids(configuration)
     checks = [dict(row) for row in data["locations"] if row["id"] in ids]
     for category, thresholds in (
         ("checks_kill_milestones", configuration.kill_milestones),
