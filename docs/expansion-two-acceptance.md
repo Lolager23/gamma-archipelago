@@ -65,18 +65,26 @@ commands. Shop checks are three named first purchases; goodwill has four finite
 thresholds and does not claim a guaranteed trader-stock tier. Quotas count distinct
 types, never repeated kills of the same type. Time estimates remain uncalibrated.
 
-## Owen's native acceptance: not run
+## Owen's native acceptance: pending
+
+On 19 November 2026 Owen reported an opening-tracker crash on deployed `8d92818`.
+The DEV log reaches the native child update. The focused
+[row-lifetime correction](https://github.com/Lolager23/gamma-archipelago/pull/54)
+and garbage-collection regressions are documented in the
+[tracker notes](pda-tracker.md). Automated correction does not change this native
+failure into a pass; Owen's re-verification remains pending.
 
 For each merged increment, first follow the development guide's verified full
 appdata/profile/configuration backup and isolated deployment procedure. Keep the
 local-only developer panel. Use matching world, companion and add-on revisions,
 fresh Loner/Cordon development saves and MO2's **Archipelago DEV** profile.
-These are future manual acceptance steps; this implementation task performs no
-deployment, launch, save load or installed-game write.
+The matrix tracks manual acceptance separately from source/CI checks. The original
+implementation task performed no deployment or game launch; later authorized
+development deployments and user playtests have their own dated evidence.
 
 | Area | Evidence to capture | Status |
 |---|---|---|
-| PDA | Tab layout/aspect ratios, other PDA tabs, filters, pagination, refresh, completed/available/blocked reasons and goal tracker | Not run |
+| PDA | Tab layout/aspect ratios, other PDA tabs, filters, pagination, refresh, completed/available/blocked reasons and goal tracker | Failed on `8d92818`: opening crash. Row-lifetime fix awaits Owen's re-verification |
 | No-PDA | Bridge continues, protected PDA arrives before needing it, tab returns after acquisition/reload | Not run |
 | Services/hints | Correct traders, paid purchase once, goodwill thresholds, recipient labels, local/shared hint privacy and next reward toggle | Not run |
 | Discovery | First 15 distinct qualifying types, repeated types, exclusions, quota cap, save/reload and rollback | Not run |
