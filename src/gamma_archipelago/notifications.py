@@ -10,7 +10,9 @@ MAX_NOTICES = MAX_ITEMS * 2
 MAX_NOTICE_BATCH = 16
 MAX_ACK_BYTES = 1048576
 _NUMBER = r"(?:0|[1-9][0-9]{0,9})"
-NOTICE_ID = re.compile(rf"(?:r:{_NUMBER}|s:{_NUMBER}:{_NUMBER}:{_NUMBER})")
+_ITEM = r"-?(?:0|[1-9][0-9]{0,15})"
+MAX_NETWORK_ID = 2**53 - 1
+NOTICE_ID = re.compile(rf"(?:r:{_NUMBER}|s:{_NUMBER}:{_NUMBER}:{_ITEM})")
 
 
 class NoticeSessionMismatch(ProtocolError):
@@ -18,9 +20,12 @@ class NoticeSessionMismatch(ProtocolError):
 
 
 def _valid_identity(value: str) -> bool:
-    return bool(NOTICE_ID.fullmatch(value)) and (
-        not value.startswith("r:") or int(value[2:]) < MAX_ITEMS
-    )
+    if not NOTICE_ID.fullmatch(value):
+        return False
+    if value.startswith("r:"):
+        return int(value[2:]) < MAX_ITEMS
+    item = value.rsplit(":", 1)[1]
+    return item != "-0" and abs(int(item)) <= MAX_NETWORK_ID
 
 
 def clean_label(value: str) -> str:
