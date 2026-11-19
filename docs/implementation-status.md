@@ -1,8 +1,9 @@
 # Implementation and PR index
 
-All thirty increments have a draft PR based on the previous branch. Prerequisites
-are MCM #3 and planning #4. No merge/public release is implied. Old callback-probe
-PR #2 stays a separate draft; relevant findings/history were incorporated in step 2.
+All thirty increments have a PR recorded below. Prerequisites are MCM #3 and
+planning #4. Callback-probe PR #2 is a separate diagnostic increment; its relevant
+findings/history were incorporated in step 2. PR merge state and engine acceptance
+are distinct; a merged implementation does not establish a public release.
 
 Every row has automated evidence and a step document. Expanded in-game acceptance
 is **not run**, reserved for Owen after merge. Earlier accepted pilot reload and
