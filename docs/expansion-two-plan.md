@@ -24,6 +24,10 @@ history. Run the complete verifier and inspect Windows/Linux CI for every head.
 Use independent tooling runtimes; never change installed source, local developer
 panel, protected multiplayer trees or running AP sessions for these PRs.
 
+The [delivery index and native acceptance matrix](expansion-two-acceptance.md)
+link the stacked PRs and distinguish source automation from Owen's remaining
+game verification and balance calibration.
+
 ## Options and semantics
 
 New gameplay systems are explicit APWorld choices in validated slot data and
@@ -91,7 +95,7 @@ not measure walking, repair or random-spawn waiting.
 | 37 | Implemented; full verifier passed (981 tests) | Not run |
 | 38 | Implemented; full verifier passed (988 tests) | Not run |
 | 39 | Implemented; full verifier passed (1,034 tests) | Not run; calibration pending |
-| 40 | Not implemented | Not run; release gates remain |
+| 40 | Implemented; full verifier passed (1,041 tests) | Not run; release gates remain |
 
 Research references inspected 19 November 2026, used as design ideas rather than
 Anomaly API evidence:

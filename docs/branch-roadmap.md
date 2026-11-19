@@ -3,6 +3,8 @@
 The [second expansion stack](expansion-two-plan.md) adds Steps 31–40 after the
 original thirty increments, starting on `codex/pda-tracker` from PDA localization
 PR #38. Its table defines the new dependencies and acceptance contracts.
+The [delivery and acceptance index](expansion-two-acceptance.md) links implemented
+drafts and records the remaining manual game and release gates.
 
 Implementation update: the [PR/status index](implementation-status.md) records the
 thirty merged implementation steps and remaining engine acceptance. Owen later

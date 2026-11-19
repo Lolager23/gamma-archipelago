@@ -75,30 +75,46 @@ export function loadoutOptions(metadata, options, change) {
 }
 
 export function advancedOptions(metadata, options, change) {
-  $("advanced-options").replaceChildren(...metadata.advanced.map(({key,label,maximum,choices}) => {
-    const row = element("label",label);
-    const input = document.createElement(choices ? "select" : "input");
-    input.setAttribute("aria-label", label);
-    if (choices) choices.forEach((text,index) => input.add(new Option(text,index)));
-    else { input.type="number"; input.min=0; input.max=maximum; input.step=1; }
-    input.dataset.option=key; input.dataset.advanced="true"; input.value=options[key];
-    input.addEventListener("change",() => change(key,input.value==="" ? null : Number(input.value)));
-    row.append(input); return row;
-  }));
-  $("discovery-exclusions").replaceChildren(...metadata.discovery_types.map(({token}) => {
-    const option = new Option(token.replaceAll("_"," "),token);
-    option.selected=options.discovery_exclusions.includes(token); return option;
-  }));
+  $("advanced-options").replaceChildren(
+    ...metadata.advanced.map(({ key, label, maximum, choices }) => {
+      const row = element("label", label);
+      const input = document.createElement(choices ? "select" : "input");
+      input.setAttribute("aria-label", label);
+      if (choices) {
+        choices.forEach((text, index) => input.add(new Option(text, index)));
+      } else {
+        input.type = "number";
+        input.min = 0;
+        input.max = maximum;
+        input.step = 1;
+      }
+      input.dataset.option = key;
+      input.dataset.advanced = "true";
+      input.value = options[key];
+      input.addEventListener("change", () =>
+        change(key, input.value === "" ? null : Number(input.value)),
+      );
+      row.append(input);
+      return row;
+    }),
+  );
+  $("discovery-exclusions").replaceChildren(
+    ...metadata.discovery_types.map(({ token }) => {
+      const option = new Option(token.replaceAll("_", " "), token);
+      option.selected = options.discovery_exclusions.includes(token);
+      return option;
+    }),
+  );
 }
 
 export function syncAdvanced(options) {
   document.querySelectorAll("[data-advanced]").forEach((node) => {
-    node.value=options[node.dataset.option];
-    const match=node.dataset.option.match(/^(mutant|faction|artefact)_discovery_count$/);
-    node.disabled=Boolean(match) && options[`${match[1]}_discovery_mode`]===0;
+    node.value = options[node.dataset.option];
+    const match = node.dataset.option.match(/^(mutant|faction|artefact)_discovery_count$/);
+    node.disabled = Boolean(match) && options[`${match[1]}_discovery_mode`] === 0;
   });
-  $("kill-milestones").disabled=options.grind_profile>0;
-  $("task-milestones").disabled=options.grind_profile>0;
+  $("kill-milestones").disabled = options.grind_profile > 0;
+  $("task-milestones").disabled = options.grind_profile > 0;
 }
 
 const assumptionLabels = {

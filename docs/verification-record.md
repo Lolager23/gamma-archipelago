@@ -1,5 +1,41 @@
 # Verification record
 
+## Second expansion source stack: 19 November 2026
+
+Steps 31–40 implement the requested tracker, regional/progression displays,
+scouting/shared hints, finite shop/goodwill checks, distinct discovery quotas,
+tool/workshop/known-recipe permissions, resumable permission supplies, four supply
+package categories, capped carry capacity, progression budgets, opening protection
+and independent pacing settings. See the [stack and native matrix](expansion-two-acceptance.md)
+and [plan](expansion-two-plan.md). This is an **unmerged draft stack** on PDA
+localization #38; the unrelated compatibility investigation #39 stays independent.
+
+The complete final verifier **passed** in its separate tooling runtime: **980
+covered Python/Lua, 54 untraced generator/server and seven Node tests, 1,041 total**.
+Owned Python runtime modules reached 100% measured lines/branches and Lua reached
+100% measured executable lines. Lua branch and numeric JavaScript coverage are
+not measured. The suite retains 9,000 preset seeds, category/goal/pacing matrices,
+168 additional combined seeds, actual APWorld archive loading, reproducible
+packaging and real server sessions. Each PR's final-head Windows/Linux evidence
+and downloaded CI package checksums are retained separately under
+`D:/GAMMAAPTools/diagnostics/expansion-two`.
+
+New actual-generation regressions verify gifts and starting-from-pool depletion,
+schema-4 identity, report packaging and explicit placement spoilers. Combined
+two-GAMMA/APQuest traffic exercises initial items, every check/reward, server
+save/restart and older synthetic acknowledgement replay. A combined LuaJIT test
+resumes a partial package, preserves normal reload effects and rolls back
+permissions/carry. These use synthetic game snapshots or mocked native APIs.
+Browser checks exercised the new local controls, exclusions, invalid-configuration
+refusal and recovery. No native game acceptance is inferred from those results.
+
+Native verification, playtime calibration and release acceptance are **not run**,
+reserved for Owen. No game was launched or loaded; no installation, profile,
+save, deployed companion/APWorld, running user AP session or local-only developer
+panel was changed. Protected normal game roots were untouched. The original
+checkout and existing user work were preserved; implementation lives in isolated
+source worktrees and the stacked branches. No PR was merged or release published.
+
 ## PDA grammar and translation resources: 19 November 2026
 
 Implemented English grammar and translation-ready whole-sentence game resources;
