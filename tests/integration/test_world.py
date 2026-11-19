@@ -402,3 +402,21 @@ def test_scorcher_goal_requires_reaching_x19_with_psi_protection():
     assert event.address is None and event.parent_region.name == "l10u_bunker"
     assert multiworld.worlds[1].fill_slot_data()["goal"] == "brain_scorcher"
     assert multiworld.can_beat_game()
+
+
+def test_meet_strelok_goal_respects_living_legend_permission_and_story_route():
+    multiworld = setup_multiworld(
+        GammaWorld,
+        seed=24,
+        options={
+            "goal": 3,
+            "checks_story_milestones": 1,
+            "rewards_quest_keys": 1,
+            "rewards_zone_keys": 1,
+        },
+    )
+    distribute_items_restrictive(multiworld)
+    event = multiworld.get_location("Conclude Strelok's First Conversation", 1)
+    assert event.address is None and event.parent_region.name == "pripyat"
+    assert multiworld.worlds[1].fill_slot_data()["goal"] == "meet_strelok"
+    assert multiworld.can_beat_game()

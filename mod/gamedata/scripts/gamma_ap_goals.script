@@ -1,5 +1,8 @@
 -- Observe real game facts; receiving coordinates or a quest key is not victory.
 
+local story_factions = {actor_stalker=true, actor_csky=true, actor_dolg=true,
+    actor_freedom=true, actor_ecolog=true, actor_killer=true}
+
 function poll(state)
     local configuration = state.configuration
     if not configuration or configuration.options.goal == 0 or state.goal_complete then return true end
@@ -16,6 +19,15 @@ function poll(state)
         local ok, disabled = pcall(has_alife_info, "bar_deactivate_radar_done")
         if not ok then return false, "Cannot inspect the native Brain Scorcher shutdown state" end
         state.goal_complete = disabled == true
+    elseif configuration.options.goal == 3 then
+        local ok, supported, met = pcall(function()
+            local valid = not has_alife_info("story_mode_disabled")
+                and not has_alife_info("faction_limited_playthrough")
+                and story_factions[character_community(db.actor)] == true
+            return valid, has_alife_info("living_legend_strelok_start") == true
+        end)
+        if not ok or not supported then return false, "Strelok goals require a supported story-enabled faction" end
+        state.goal_complete = met
     end
     return true
 end
