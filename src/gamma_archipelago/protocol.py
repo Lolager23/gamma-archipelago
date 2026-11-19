@@ -46,7 +46,7 @@ def encode_incoming(
 
 def encode_confirmed(session_key: str, location_ids: frozenset[int]) -> str:
     validate_session_key(session_key)
-    if not location_ids <= ALL_LOCATION_IDS:
+    if len(location_ids) > MAX_ITEMS or not location_ids <= ALL_LOCATION_IDS:
         raise ProtocolError("Confirmed checks contain an unsupported location")
     lines = ["GAMMA_AP_CONFIRMED|1", f"session|{session_key}"]
     lines.extend(f"check|{identity}" for identity in sorted(location_ids))

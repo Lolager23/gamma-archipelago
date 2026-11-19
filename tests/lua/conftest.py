@@ -22,6 +22,7 @@ def lua():
         "configuration",
         "equipment",
         "loadout",
+        "combat",
         "state",
         "settlements",
         "notifications",

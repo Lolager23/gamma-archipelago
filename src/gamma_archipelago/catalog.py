@@ -12,6 +12,14 @@ ITEM_EFFECTS: dict[int, str] = {item["id"]: item.get("effect", "item") for item 
 LOCATION_NAMES: dict[str, int] = {
     location["name"]: location["id"] for location in _data["locations"]
 }
+KILL_MILESTONE_BASE: int = _data["milestones"]["checks_kill_milestones"]["base_id"]
+MAX_KILL_MILESTONE: int = _data["milestones"]["checks_kill_milestones"]["maximum"]
+LOCATION_NAMES.update(
+    {
+        f"Defeat {count} Enemies": KILL_MILESTONE_BASE + count
+        for count in range(1, MAX_KILL_MILESTONE + 1)
+    }
+)
 ALL_LOCATION_IDS = frozenset(LOCATION_NAMES.values())
 # Public compatibility default for version 1/2 three-map seeds.
 LOCATION_IDS = frozenset({28052001, 28052002, 28052003})
@@ -26,7 +34,12 @@ MAX_ITEMS = 4000
 MAX_SNAPSHOT_BYTES = 131072
 
 
-def enabled_location_ids(checks: frozenset[str]) -> frozenset[int]:
-    return frozenset(
+def enabled_location_ids(
+    checks: frozenset[str], kill_milestones: tuple[int, ...] = (10, 25, 50, 100)
+) -> frozenset[int]:
+    locations = frozenset(
         identity for identity, category in LOCATION_CATEGORIES.items() if category in checks
     )
+    if "checks_kill_milestones" in checks:
+        locations |= frozenset(KILL_MILESTONE_BASE + count for count in kill_milestones)
+    return locations

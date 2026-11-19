@@ -85,7 +85,9 @@ class GammaContext(CommonContext):
                     raise ProtocolError("Expanded configuration requires schema 2")
             self.expanded = version == 3
             allowed = (
-                enabled_location_ids(self.configuration.checks) if self.expanded else LOCATION_IDS
+                enabled_location_ids(self.configuration.checks, self.configuration.kill_milestones)
+                if self.expanded
+                else LOCATION_IDS
             )
             if self.expanded and slot_data.get("location_ids") != sorted(allowed):
                 raise ProtocolError("Seed check manifest does not match this client build")

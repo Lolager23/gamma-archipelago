@@ -1,6 +1,6 @@
 import pytest
 
-from gamma_archipelago.catalog import ALL_LOCATION_IDS, MAP_LOCATION_IDS, enabled_location_ids
+from gamma_archipelago.catalog import MAP_LOCATION_IDS, enabled_location_ids
 from gamma_archipelago.configuration import encode_configuration
 from gamma_archipelago.protocol import ProtocolError, decode_outgoing, encode_confirmed
 
@@ -98,4 +98,4 @@ def test_goal_observation_is_independent_of_map_checks_and_disabled_confirmation
             encode_confirmed(KEY, MAP_LOCATION_IDS), KEY, state.enabled_checks
         )
     )
-    assert allowed == ALL_LOCATION_IDS - MAP_LOCATION_IDS
+    assert allowed.isdisjoint(MAP_LOCATION_IDS) and len(allowed) == 18

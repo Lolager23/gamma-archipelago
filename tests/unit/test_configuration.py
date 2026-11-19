@@ -30,7 +30,22 @@ def test_default_configuration_is_immutable_and_deterministically_serialized():
     assert len(configuration.digest) == 64
 
 
-@pytest.mark.parametrize("name", CHECK_OPTIONS[2:] + REWARD_OPTIONS)
+@pytest.mark.parametrize(
+    "name",
+    tuple(
+        name
+        for name in CHECK_OPTIONS
+        if name
+        not in {
+            "checks_maps",
+            "checks_settlements",
+            "checks_mutant_first_kills",
+            "checks_faction_first_kills",
+            "checks_kill_milestones",
+        }
+    )
+    + REWARD_OPTIONS,
+)
 def test_unimplemented_adapters_are_never_silently_enabled(name):
     values = defaults()
     values[name] = 1

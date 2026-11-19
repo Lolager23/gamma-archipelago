@@ -89,6 +89,7 @@ function actor_on_update()
     if not ready then report_error(loadout_error); return end
     state.expanded = configuration and configuration.expanded or false
     state.enabled_checks = enabled
+    gamma_ap_combat.configure(state.combat, configuration)
     local success, delivery_error = gamma_ap_state.apply_pending(state, incoming, give_item)
     if not success then report_error(delivery_error); return end
     gamma_ap_state.merge_confirmed(state, confirmed)
@@ -103,6 +104,22 @@ end
 function actor_on_interaction(kind, object, name)
     if not db.actor or not db.actor:alive() then return end
     gamma_ap_settlements.observe(state, kind, object, name, level.name())
+end
+
+function npc_on_death_callback(victim, killer)
+    gamma_ap_combat.observe(state, "faction", victim, killer)
+end
+
+function monster_on_death_callback(victim, killer)
+    gamma_ap_combat.observe(state, "mutant", victim, killer)
+end
+
+function monster_on_hit_callback(victim, amount, direction, killer, bone)
+    if bone == "from_death_callback" then monster_on_death_callback(victim, killer) end
+end
+
+function creature_spawned(victim)
+    gamma_ap_combat.spawned(state, victim)
 end
 
 function save_state(data)
@@ -135,5 +152,10 @@ function on_game_start()
     RegisterScriptCallback("save_state", save_state)
     RegisterScriptCallback("load_state", load_state)
     RegisterScriptCallback("actor_on_interaction", actor_on_interaction)
+    RegisterScriptCallback("npc_on_death_callback", npc_on_death_callback)
+    RegisterScriptCallback("monster_on_death_callback", monster_on_death_callback)
+    RegisterScriptCallback("monster_on_hit_callback", monster_on_hit_callback)
+    RegisterScriptCallback("npc_on_net_spawn", creature_spawned)
+    RegisterScriptCallback("monster_on_net_spawn", creature_spawned)
     printf("[GAMMA AP] Pilot loaded; multiplayer roots are forbidden")
 end

@@ -8,6 +8,13 @@ from gamma_archipelago.session import SessionCoordinator
 KEY = "a" * 64
 
 
+def test_known_milestone_universe_is_not_an_unbounded_seed_snapshot():
+    from gamma_archipelago.catalog import ALL_LOCATION_IDS
+
+    with pytest.raises(ProtocolError):
+        encode_confirmed(KEY, ALL_LOCATION_IDS)
+
+
 def test_confirmed_checks_are_canonical_and_only_accept_known_locations(tmp_path):
     encoded = encode_confirmed(KEY, LOCATION_IDS)
     assert encoded == (

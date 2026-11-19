@@ -47,8 +47,11 @@ function encode_outgoing(state)
     local lines = { "GAMMA_AP_OUT|1", "session|" .. state.session_key,
         "received|" .. tostring(state.received_count) }
     local count = 0
-    for _, id in ipairs(gamma_ap_catalog.location_ids) do
-        if state.checks[id] and state.enabled_checks[id] then
+    local ids = {}
+    for id in pairs(state.enabled_checks) do ids[#ids+1] = id end
+    table.sort(ids)
+    for _, id in ipairs(ids) do
+        if state.checks[id] then
             count = count + 1
             lines[#lines + 1] = "check|" .. tostring(id)
         end
@@ -72,7 +75,7 @@ function parse_confirmed(content, key, allowed)
         return nil, "Confirmed-check protocol or session mismatch"
     end
     local count = canonical_number(lines[#lines]:match("^end|(.*)$"))
-    if not count or count ~= #lines - 3 or count > #gamma_ap_catalog.location_ids then
+    if not count or count ~= #lines - 3 or count > 4000 then
         return nil, "Confirmed-check count mismatch"
     end
     local known, checked = {}, {}
@@ -80,7 +83,11 @@ function parse_confirmed(content, key, allowed)
     known = allowed or known
     for index = 3, #lines - 1 do
         local id = canonical_number(lines[index]:match("^check|(.*)$"))
-        if not known[id] or checked[id] then return nil, "Unknown or duplicate confirmed check" end
+        local milestone = id and id > gamma_ap_catalog.kill_milestone_base
+            and id <= gamma_ap_catalog.kill_milestone_base + gamma_ap_catalog.kill_milestone_maximum
+        if (not known[id] and (allowed or not milestone)) or checked[id] then
+            return nil, "Unknown, disabled or duplicate confirmed check"
+        end
         checked[id] = true
     end
     return checked

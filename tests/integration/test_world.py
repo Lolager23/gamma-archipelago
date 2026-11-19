@@ -85,3 +85,47 @@ def test_category_manifests_pools_and_reachability(maps, settlements, count):
     assert set(world.fill_slot_data()["location_ids"]) == expected
     assert all(location.item is not None for location in multiworld.get_locations(1))
     assert multiworld.can_beat_game()
+
+
+@pytest.mark.parametrize(
+    "category,count",
+    [
+        ("checks_mutant_first_kills", 25),
+        ("checks_faction_first_kills", 13),
+        ("checks_kill_milestones", 3),
+    ],
+)
+def test_combat_categories_and_custom_milestones_generate_exactly(category, count):
+    from gamma_archipelago.catalog import enabled_location_ids
+
+    multiworld = setup_multiworld(
+        GammaWorld,
+        seed=51,
+        options={
+            "checks_maps": 0,
+            category: 1,
+            "kill_milestones": [1, 9, 10000],
+        },
+    )
+    distribute_items_restrictive(multiworld)
+    world = multiworld.worlds[1]
+    assert len(multiworld.get_locations(1)) == count
+    assert set(world.fill_slot_data()["location_ids"]) == enabled_location_ids(
+        world.configuration.checks, world.configuration.kill_milestones
+    )
+    assert all(location.item for location in multiworld.get_locations())
+    assert multiworld.can_beat_game()
+
+
+def test_single_threshold_seed_has_one_reward_without_pool_overflow():
+    multiworld = setup_multiworld(
+        GammaWorld,
+        options={
+            "checks_maps": 0,
+            "checks_kill_milestones": 1,
+            "kill_milestones": [1],
+        },
+    )
+    distribute_items_restrictive(multiworld)
+    assert len(multiworld.get_locations()) == 1
+    assert next(iter(multiworld.get_locations())).item is not None
