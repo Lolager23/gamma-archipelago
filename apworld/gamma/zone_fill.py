@@ -32,7 +32,8 @@ def place_zone_keys(world: "GammaWorld", catalog: dict[str, Any]) -> None:
     }
     if any(item.name in world.options.non_local_items.value for item in keys.values()):
         raise OptionError(
-            "Zone-key progression must remain local; remove remaining zone keys from non_local_items"
+            "Zone-key progression must remain local; "
+            "remove remaining zone keys from non_local_items"
         )
     held = {item.name for item in world.multiworld.precollected_items[world.player]}
     held_levels = {level for name, level in levels.items() if name in held}
