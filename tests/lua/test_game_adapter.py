@@ -13,10 +13,14 @@ def load_game(lua):
         """
         engine = {now=1000, root="D:/AnomalyAP/appdata/", alive=true, level="l01_escape",
                   files={}, logs={}, created={}, callbacks={}, fail_open=false,
-                  fail_write=false, fail_close=false, fail_reward=false}
+                  fail_write=false, fail_close=false, fail_reward=false,
+                  frame=100, precache=0, paused=false, present=true}
         db = {actor={alive=function() return engine.alive end}}
         time_global = function() return engine.now end
-        level = {name=function() return engine.level end}
+        level = {name=function() return engine.level end,
+                 present=function() return engine.present end}
+        device=function() return {frame=engine.frame,precache_frame=engine.precache,
+                                 is_paused=function() return engine.paused end} end
         getFS = function() return {update_path=function() return engine.root end} end
         printf = function(format, value) engine.logs[#engine.logs+1]=string.format(format,value) end
         RegisterScriptCallback = function(name,callback) engine.callbacks[name]=callback end
@@ -48,7 +52,13 @@ def load_game(lua):
     lua.globals().gamma_ap_presence.io = lua.globals().mock_io
     lua.globals().gamma_ap_scouting.io = lua.globals().mock_io
     module.on_game_start()
+    enter_world(lua.globals().engine)
     return module, lua.globals().engine
+
+
+def enter_world(engine):
+    engine.callbacks.on_loading_screen_dismissed()
+    engine.frame += 1
 
 
 def set_incoming(engine, items=ITEMS, key=KEY):
@@ -65,6 +75,9 @@ def test_callbacks_polling_save_restore_and_initial_inventory(lua):
     module, engine = load_game(lua)
     assert set(engine.callbacks.keys()) == {
         "actor_on_update",
+        "on_loading_screen_key_prompt",
+        "on_loading_screen_dismissed",
+        "actor_on_net_destroy",
         "save_state",
         "load_state",
         "actor_on_interaction",

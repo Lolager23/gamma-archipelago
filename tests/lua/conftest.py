@@ -43,6 +43,7 @@ def lua():
         "state",
         "settlements",
         "notice_text",
+        "readiness",
         "notifications",
         "presence",
         "tracker",

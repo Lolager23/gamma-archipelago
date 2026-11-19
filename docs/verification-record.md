@@ -19,6 +19,35 @@ recorded in the PR; native kill/reward/marker acceptance remains **not run**. Th
 increment does not deploy, launch the game or alter the current AP session,
 saves, local developer panel or normal installation.
 
+## Defer AP popups until the world is visible: 19 November 2026
+
+Branch `codex/defer-notices-until-world-ready` fixes the reported received/sent
+reward and join popups appearing during loading. Two reproducing regressions
+failed on `6b73c5a`: a living actor with precaching active, and a living actor at
+the entry prompt even with zero precache frames. Both displayed all three kinds
+of message before screen dismissal.
+
+One transient presentation gate now waits for native dismissal, a later device
+frame, zero precache frames, an unpaused device and a living actor in a present
+level. Loading state and notice acknowledgements remain separate from receipt
+application. Mocked-engine regressions cover both loading stages, same-frame
+dismissal, failed/missing native APIs, pause/actor/level/precache conditions,
+new-game/load/prompt/destroy resets, deferred display, saved identities and no
+repeated rewards. The all-Lua pass completed **572 tests**, with 100% measured
+executable lines; Lua branch coverage is not measured.
+
+The complete local verifier **passed**: 1,055 covered Python/Lua tests, 57
+untraced generator/server tests and seven Node tests (**1,119 total**), including
+the 9,000-preset seed matrix. Every owned Python module measured 100% lines and
+branches; all measured Lua executable lines reached 100%. Current-head
+Windows/Linux checks and retained package evidence are recorded with the PR.
+In-game acceptance is **not run**: Owen still needs to hold
+the entry screen open while rewards arrive, dismiss it and check one-time popup
+delivery, then repeat after reload/transition and with keypress loading disabled.
+No game was launched, installed code deployed, session restarted or private
+developer panel changed for this source fix. No IDs, bridge or save schemas
+changed; already-displayed history remains intact.
+
 ## Startup join notices: 19 November 2026
 
 Branch `codex/startup-notifications` adds an optional authenticated-player

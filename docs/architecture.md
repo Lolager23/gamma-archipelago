@@ -27,6 +27,9 @@ sidecars. See [PDA messages](pda-reward-messages.md) for coordinated bundle upgr
 An optional live-presence sidecar supplies the authenticated slot name and an
 advancing connection heartbeat for startup/reconnect PDA notices. Its transient
 game cache owns only presentation; it never enters save, item or check state.
+Automatic join/transfer display also shares one transient loading-readiness gate:
+native screen dismissal followed by a later unpaused, non-precaching world frame.
+This gate never delays or acknowledges item/check state.
 
 The [PDA tracker](pda-tracker.md) reads a detached view from the game-state owner.
 Generated catalogue metadata and a stateless requirement projection supply its
