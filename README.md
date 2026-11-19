@@ -1,7 +1,9 @@
 # GAMMA Archipelago
 
 Private **1.0.0rc1 candidate** for S.T.A.L.K.E.R. Anomaly with G.A.M.M.A.
-The implementation covers thirty reviewable increments. Engine acceptance
+The thirty core increments and local generator have been individually reviewed
+and merged. The [merge audit](docs/merge-review-record.md) records fixes and checks.
+Engine acceptance
 belongs to Owen after each merge; this is not an accepted or publicly released v1.
 
 | Feature | Implemented scope |

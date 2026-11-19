@@ -1,5 +1,42 @@
 # Verification record
 
+## Sequential merge review: 19 November 2026
+
+At Owen's explicit instruction, PRs #2–#35 were reviewed, fixed where required,
+verified and merged individually in dependency order. PR #36 reconciles the
+checklist and this audit. The [merge record](merge-review-record.md) lists each
+reviewed head, merge commit, local counts and substantive fixes. Windows and
+Ubuntu CI passed before each merge; an additional REST audit confirmed successful
+check runs on all 34 recorded review heads. The final checklist uses the same gates.
+
+The complete current verifier passes **719 covered Python/Lua + 32 untraced
+generator/server + five Node tests: 756 total**. Every owned Python runtime module
+measures 100% lines/branches; measured Lua executable lines pass their gates.
+Lua branch and numeric JavaScript coverage are not measured. The seed matrix
+retains 6,000 preset seeds, 231 category singles/pairs and 60 full-option goal
+seeds. Real AP server/restart and web generation use actual upstream traffic and
+seed archives, with synthetic game snapshots and mocked native APIs.
+
+Review regressions cover exact signed-53-bit foreign notice IDs, skill retry
+progress, story-key prerequisites, formerly failing zone fills, reused native
+pickup flags, invalid travel vertices, settings-bound outgoing snapshots,
+confirmed starting-money reductions and clearing stale client-owned notices.
+Existing earlier regressions remain in the suite. The complete local logs,
+review notes and exact-head audit are under `D:/GAMMAAPTools/merge-review`.
+
+The actual private candidate at PR #34 review head `ec1f47e` rebuilt identically
+twice; all 60 payload hashes/sizes and its exact source revision were verified.
+Its manifest keeps engine acceptance not run and publication unapproved. This
+is packaging evidence, not acceptance of a finished game.
+
+No game was launched or loaded, no add-on was deployed, and no normal/development
+game root, MO2 profile or save was changed during this merge pass. Existing
+worktrees and the running local app were preserved; they do not automatically
+update to merged main. Expanded engine acceptance and independent human release
+review remain not run. The earlier pilot acceptance below remains valid on its
+original evidence basis. Earlier sections retain their dated counts/observations;
+they are superseded by this entry for current source and merge status.
+
 ## Generator extended QA and fixes: 19 November 2026
 
 The full verifier passed **653 covered + 32 untraced Python/Lua tests**, plus
@@ -211,7 +248,7 @@ Upstream warns that its optional `_speedups` extension is absent; the supported
 pure Python fallback is used. Real-server tests run without coverage tracing due
 to the local Python/C-backed YAML interaction described in the development guide.
 
-## Remaining acceptance
+## Earlier foundation acceptance backlog (historical)
 
 The callback-probe increment has its own [source findings and evidence matrix](callback-probes.md).
 Its local verifier passes 140 covered tests plus two real-server tests, with 100%
@@ -233,7 +270,7 @@ has been marked passed.
 - Every expanded category, PDA message and alternate goal remains planned until
   implemented and accepted through the [expanded checklist](expansion-plan.md).
 
-Foundation PR #1 was merged by the user's instruction. Callback-probe PR #2 and
-MCM PR #3 remain draft at this observation. Later validation must identify its
+At that foundation observation, PR #1 was merged by the user's instruction while
+callback-probe PR #2 and MCM PR #3 were drafts. Later validation must identify its
 actual source commit. No normal multiplayer saves are used, and no claim of
 in-world multiplayer compatibility is made.

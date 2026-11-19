@@ -20,8 +20,8 @@ The preparer performs only local file operations and Git reads.
 
 | Gate | Current state |
 |---|---|
-| Thirty implementation increments with reviewable PRs | Implemented; see the PR index |
-| Local verifier, coverage, real AP loading/server and seed matrix | Passed at PR #34 review: 674 tests; see verification record |
+| Thirty implementation increments and local generator | Reviewed and merged individually; see the PR index and merge audit |
+| Local verifier, coverage, real AP loading/server and seed matrix | Passed: 756 tests after merge-review fixes; see verification record |
 | Windows and Linux CI | Check current PR head, not an older green revision |
 | Per-merge engine checks, two MVP playthroughs and every alternate goal | Not run for expanded scope |
 | Engine performance and mod interactions | Not run |
@@ -37,7 +37,7 @@ own recorded acceptance. Python 3.12 and AP 0.6.8 are the tested tooling version
 
 ## Maintenance
 
-1. Merge/retest in order. Record commit, seed/preset, native versions and evidence
+1. Review/merge focused follow-ups with passing CI. Record commit, seed/preset, native versions and evidence
    for each actual result in the verification record.
 2. Fix defects on focused `codex/<fix>` branches with reproducing regressions.
    Preserve published history and IDs.

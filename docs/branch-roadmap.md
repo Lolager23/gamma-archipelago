@@ -1,8 +1,12 @@
 # Branch-by-branch work
 
 Implementation update: the [PR/status index](implementation-status.md) records the
-30-step candidate and remaining engine acceptance. The planning text below is
-retained as the original specification and milestone history.
+thirty merged implementation steps and remaining engine acceptance. Owen later
+explicitly authorized sequential review/fixes/merges, completed for PRs #2–#35;
+PR #36 reconciles this status. See the [merge audit](merge-review-record.md).
+The planning text below is retained as the original specification and milestone
+history, including its earlier prohibition on unrequested merges. Public release
+and native acceptance remain separate decisions.
 
 On 19 November 2026 the user authorised implementing this roadmap as a PR stack:
 each numbered step gets its own branch/PR based on the preceding step. Existing

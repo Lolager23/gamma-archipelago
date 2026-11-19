@@ -1,9 +1,10 @@
 # Implementation and PR index
 
-All thirty increments have a PR recorded below. Prerequisites are MCM #3 and
-planning #4. Callback-probe PR #2 is a separate diagnostic increment; its relevant
-findings/history were incorporated in step 2. PR merge state and engine acceptance
-are distinct; a merged implementation does not establish a public release.
+All thirty increments below have been reviewed, verified and merged individually,
+along with MCM #3, planning #4, diagnostic probes #2 and the local generator #35.
+The [merge audit](merge-review-record.md) records exact reviewed heads, merge
+commits, fixes and evidence. This final status reconciliation is PR #36.
+Merged implementation and engine acceptance are distinct; this is not a public release.
 
 Every row has automated evidence and a step document. Expanded in-game acceptance
 is **not run**, reserved for Owen after merge. Earlier accepted pilot reload and
@@ -47,7 +48,7 @@ presets expose 257 network checks and 87 potential item IDs, with finite subsets
 selected by options. Local events never become extra network locations.
 
 The additional [generator web app PR #35](https://github.com/Lolager23/gamma-archipelago/pull/35)
-is stacked on #34. Its [guide](generator-web-app.md) covers local seed generation,
+was reviewed and merged after #34. Its [guide](generator-web-app.md) covers local seed generation,
 catalogue displays and provisional playtime estimates.
 
 The [v1 checklist](version-one-release.md) owns release gates; the

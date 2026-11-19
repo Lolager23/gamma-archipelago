@@ -1,13 +1,96 @@
 # Expanded randomiser: staged checklist
 
-Implementation update: the [PR/status index](implementation-status.md) records the
-30-step candidate and remaining engine acceptance. The planning text below is
-retained as the original specification and milestone history.
+Updated **19 November 2026**, after the individual reviews and merges of PRs
+#2–#35, through merged implementation `ddb9ee8`. All thirty core increments and
+the local generator are merged in source. This checklist/audit reconciliation is
+PR #36. Expanded deployment and in-game acceptance remain pending.
 
-Requested 18 November 2026. This is the implementation plan, not a list of
-features already available. This increment changes documentation only. The user
-explicitly selected verification and planning rather than implementing PDA
-messages now. Keep the existing local pilot running on its present schema.
+Checkboxes below describe the action on that line: **implemented**, **automated
+test passed**, or **in-game acceptance recorded**. A checked implementation or
+mock/server test does not close an unchecked engine acceptance item. Every stage
+still has an open engine/release exit gate. Earlier pilot acceptance stays valid
+on its stated evidence basis.
+
+## Current status at a glance
+
+| Stage | Implemented / automated evidence | Still to validate or finish |
+|---|---|---|
+| 0 — pilot and inventory | User-accepted pilot reload/third-map trigger; source/roster inventory | Independent remaining reward/goal capture, live recovery, callback probes and baseline compatibility |
+| 1 — PDA and recovery | Named transfers, bounded queues, deduplication and real AP restart tests | Actual PDA history/rendering, no-PDA restoration and game recovery |
+| 2 — options and exploration | 14 check / 7 reward options, starting loadouts, 33 maps, 18 settlements | Actual map/hub entries, starter variants and extra-transition coverage |
+| 3 — activity checks | Mutants/factions, artefacts, quests/story, equipment and rank adapters | Native credit/provenance, milestone semantics, encounters and saved counters |
+| 4 — stash, reputation, skills | White/orange stashes, goodwill and Haruka adapters | Actual containers/claims, trader tiers, stats and integration compatibility |
+| 5 — permissions and travel | Quest/equipment/zone keys, native guards, optional travel and solver rules | Every entry route, real permission enforcement and travel safety/recovery |
+| 6 — goals | All five alternate goals plus development tour; generator/server regressions | Actual qualifying condition and completion packet for each goal |
+| 7 — balance/release | Six presets, 6,000-seed matrix, recovery/package hardening and private candidate | Playthrough balance, performance, install/upgrade/removal, independent review and release gates |
+| Additional — local generator | Presets, catalogues, estimates, YAML/seed downloads and browser recovery tested | Playtime calibration against real runs; general engine acceptance is separate |
+
+Latest complete automation: **756 tests passed** (719 covered Python/Lua,
+32 untraced generator/server, five Node frontend). All owned Python runtime
+modules measured 100% lines/branches; Lua executable-line gates passed, without
+a Lua branch or numeric JavaScript coverage claim. Windows/Linux push and PR
+checks passed on every reviewed implementation head. See the
+[verification record](verification-record.md), [merge audit](merge-review-record.md)
+and [PR #35 checks](https://github.com/Lolager23/gamma-archipelago/pull/35/checks).
+
+Foundation PR #1 had already merged. PRs #2–#35 were subsequently reviewed,
+fixed where needed, fully verified and merged individually into main. PR #3
+(MCM) and #4 (plan) precede Steps 01–30 (#5–#34); #35 adds the local web app.
+Probe PR #2 remains a separately packaged diagnostic component. The audit records
+reviewed heads, merge commits and fixes. Use the [exact PR index](implementation-status.md).
+
+## What is next
+
+1. When Owen is ready for acceptance, close the development game/client/server,
+   back up the entire
+   appdata/profile/configuration trees, and deploy matching world/client/add-on
+   revisions only into the isolated development installation. Follow the
+   [development guide](development-guide.md), using MO2 and fresh Loner/Cordon
+   acceptance saves. Do not reuse the normal multiplayer installation or saves.
+2. Start with pilot recovery/callback evidence, then PDA incoming/outgoing/self
+   messages. Continue through exploration, activity checks, rewards, locks/travel
+   and goals using each step's acceptance document. Record commit, seed/preset,
+   baseline, result and evidence; fix failures with reproducing regressions.
+3. Complete the release matrix: two fresh MVP runs, a real in-game mixed
+   multiworld, every alternate goal, migration/recovery and performance. A goal
+   demonstrated during an MVP run can also supply that goal's evidence.
+4. Fix acceptance failures on focused branches with reproducing regressions,
+   then rerun the affected native acceptance against the matching bundle.
+5. Close the independent human review/licence/compatibility gates before any public v1 decision.
+   The existing archive is a private, unaccepted candidate, not a public release.
+
+Owen reserved engine verification for after each merge and requested no further
+automated game launches. This update launches nothing, deploys nothing and does
+not infer that a feature is already installed from its source implementation.
+
+## Remaining implementation/polish and supported limits
+
+No numbered core implementation branch remains unstarted or unmerged. Follow-up
+coding is driven by the open acceptance cases, with these limits explicit:
+
+- [ ] Complete the original PDA localization/article/plural polish. Current
+  transfer templates are English; full localized grammar is not implemented.
+- [ ] Calibrate playtime and reward/progression balance using recorded runs;
+  current estimates are adjustable, uncalibrated scenarios.
+- [ ] Resolve baseline third-party failures that affect a supported integration;
+  four failures were classified, not repaired by the AP stack.
+- [ ] Fix any defects found in post-merge engine acceptance and repeat affected
+  regressions/acceptance. Their existence or severity is not assumed in advance.
+
+The bounded candidate uses 27 white stash types in a finite Cordon container
+roster, one protected orange psi-helmet claim, three quest-chain permissions,
+four Haruka skills and nine curated travel hubs with fallback. These are not
+arbitrary progression-stash placements, every native quest stage, or universal
+support for other skill/engine mods. Zone-key placement uses a local randomized
+exploration chain; other rewards can cross players. Native encounter/task
+availability and other faction/start routes still need engine evidence. In-world
+co-op, transition randomization, DeathLink and the other
+[stretch goals](randomisation-plan.md#exploratory-stretch-goals) remain separate,
+unimplemented investigations, not checked-off candidate features.
+
+Generation does not inspect the receiving game's installed mod versions. Runtime
+guards keep incompatible skill/reward application pending; actual dependency and
+winning-script compatibility must be established before accepting that integration.
 
 ## Verified starting point
 
@@ -24,17 +107,18 @@ messages now. Keep the existing local pilot running on its present schema.
 - [ ] Independently capture the third reward and pilot goal packet.
 - [ ] Record older-save rollback and client/server reconnect/restart cases.
 
-These observations are from the deployed `a7995ef` add-on on the MCM branch;
-they are not new functionality in this documentation branch. The detailed
+These earlier observations are from the deployed `a7995ef` add-on on the MCM
+branch; they do not validate the later expanded implementation. The detailed
 [verification record](verification-record.md) separates engine, server and user
 evidence. A received-item counter is not proof that every game save reloads safely.
 
 ## Configuration contract
 
-Every category below gets an independent APWorld generation option. Names here
-are proposed public names, to be frozen during the options branch. New categories
-start disabled until their branch meets acceptance. Provide Pilot, MVP and Full
-presets with explicit YAML examples; do not silently enable untested features.
+The sections below retain the requested acceptance contract. Each listed
+category now has an independent APWorld generation option; the public names
+were fixed in the options branch. Optional categories default off, and six
+explicit presets are provided. A preset enabling a feature does not establish
+its engine acceptance. Step documents own the implemented roster and limits.
 
 Generation determines enabled checks, thresholds, reward pools, goal, starting
 access and rule assumptions. Export that manifest in `slot_data` and validate it
@@ -53,11 +137,11 @@ with bounded supplies; do not require every reward category to be enabled.
 
 ## Optional starting-gear restrictions
 
-Add independent APWorld options for the starting loadout, all defaulting to the
-ordinary supported loadout. These are seed-generation settings, not changes to
-the current pilot or a running save. Freeze the chosen loadout in slot data.
+Independent APWorld options now control the starting loadout, defaulting to the
+ordinary supported loadout. These are seed-generation settings, not edits to a
+running save. The chosen loadout is frozen in slot data.
 
-| Equipment group | Proposed restricted start |
+| Equipment group | Restricted-start contract |
 |---|---|
 | Detector | No starting detector; advanced detection checks require later access. |
 | PDA | No starting PDA; restore its map/task functionality when acquired/unlocked. |
@@ -74,13 +158,13 @@ weapons, and a separate **No Starting Firearms** selection that keeps a knife
 unless its own restriction is enabled. Publish the exact affected item groups;
 do not infer weapons or armour from item names, weight or price.
 
-For durable equipment, distinguish these proposed modes:
+For durable equipment, the implemented modes are:
 
 - **Normal:** use the ordinary starting loadout and ordinary acquisition rules.
 - **Absent at start:** omit the initial item; later looting, buying and using it
   work normally. This does not create a permanent equipment permission gate.
 - **Locked until AP unlock:** omit the initial item and gate the corresponding
-  equipment capability until its AP reward is applied. Implement this later with
+  equipment capability until its AP reward is applied. Enforce this with
   explicit acquisition/use rules; finding a physical item must not bypass the
   chosen permission lock. The unlock supplies a documented usable baseline item
   where needed, rather than leaving the player with an unusable permission.
@@ -112,13 +196,13 @@ combined restrictions and full multiworld progression spheres. Guarantee viable
 early checks and recovery equipment without depending on lucky loot or an item
 behind its own requirement. Reject unsupported unsafe starts clearly.
 
-## Checks: required categories and precise proposed triggers
+## Checks: requested categories and acceptance triggers
 
 All checks are finite and monotonic. Threshold lists are sorted, unique and capped
 at generation time. A repeatable activity never becomes an unlimited check farm.
 Keep the three published pilot location IDs and never recycle an ID.
 
-| Proposed option | Trigger and completion rule | Investigation and acceptance |
+| Option | Trigger and completion rule | Investigation and acceptance |
 |---|---|---|
 | `checks_maps` | One first-arrival check for every supported playable map, including underground maps. Loading or starting there counts. | Inventory actual level IDs; exclude menu/test levels explicitly. Keep the existing Cordon/Garbage/Rostok IDs. Verify every entry through the engine. |
 | `checks_settlements` | First physical entry into a defined major-settlement volume on its map. | Curate named hubs, stable coordinates and radii; a map visit alone is insufficient. Repeated entry and overlapping volumes must not duplicate a check. |
@@ -143,7 +227,7 @@ silently remove a requested category after a failed probe.
 
 ## Rewards: required categories and behaviour
 
-| Proposed option | Reward behaviour | Required constraints |
+| Option | Reward behaviour | Required constraints |
 |---|---|---|
 | `rewards_loot_stashes` | Reveal a white stash coordinate containing basic or higher-tier nonessential loot. | Seeded quality tiers and loot families; include ammo-calibre families where supported. Explicitly interpret stash calibre as both quality and optional ammo specialization. No required key is hidden in a filler stash. |
 | `rewards_progression_stashes` | Reveal an orange stash coordinate with guaranteed, seeded progression contents. | Stable stash identity, reachable placement, protected contents, one claim and recoverable save state. Colour supplements a text label. Model access and local collection of its key in world logic; the coordinate alone is not possession of the key. |
@@ -165,13 +249,13 @@ must not reroll, disappear because the box was previously empty, or grant a seco
 copy after loading. A local stash-claim event can award its internal progression
 key without creating an unplanned second AP check or item.
 
-Proposed zone-key travel policy: one optional trip on unlock to one designated
+Zone-key travel acceptance policy: one optional trip on unlock to one designated
 safe settlement in the newly unlocked zone, once other protection/story
 requirements are met. Never teleport automatically. For a zone without a viable
 hub, offer an already unlocked safe settlement instead. Persist eligibility and
 consumption; show the chosen destination. Resolve hostile hubs, unavailable
 guides, fees, current fast-travel restrictions and extra-transition mods before
-shipping this policy. This is a design proposal requiring playtest validation.
+accepting this policy. The curated-hub implementation still requires engine validation.
 
 ## PDA reward messages: first feature increment
 
@@ -194,9 +278,9 @@ foreign-game item names through that recipient game's data package. References:
 [network protocol 0.6.8](https://github.com/ArchipelagoMW/Archipelago/blob/0.6.8/docs/network%20protocol.md),
 [CommonClient 0.6.8](https://github.com/ArchipelagoMW/Archipelago/blob/0.6.8/CommonClient.py).
 
-The current bridge carries item IDs only. Plan a versioned metadata extension,
-with explicit v1 compatibility/migration tests, rather than silently changing
-the wire format. Incoming messages occur after successful in-game application;
+The original pilot bridge carried item IDs only. The implemented stack adds a
+versioned metadata/notice channel with legacy compatibility regressions.
+Incoming messages occur after successful in-game application;
 queued or failed rewards must not announce success. Outgoing messages require
 server confirmation of a transfer from our slot, not just a local check write.
 Do not claim the other game's item has physically applied.
@@ -240,9 +324,9 @@ configuration. When gating is enabled, remove or reconcile ordinary bypasses.
 
 ## Execution checklist and branch order
 
-See [branch roadmap](branch-roadmap.md) for the individual PR boundaries. Each
-stage can require several small branches. A source hook is a lead until its
-callback arguments and save behaviour have been observed in the installed build.
+See the [PR index](implementation-status.md) for the completed branch boundaries
+and each linked step document for source details. Implementation/automated work
+is ticked below; actual engine exit conditions remain open until recorded.
 
 ### Stage 0: close the pilot and inventory compatibility
 
@@ -250,51 +334,69 @@ callback arguments and save behaviour have been observed in the installed build.
   see the verification record for confirmation versus captured evidence.
 - [ ] Independently capture the remaining reward and actual goal packet.
 - [ ] Verify disconnect/reconnect and wrong-seed refusal in a disposable dev save.
-- [ ] Record the exact GAMMA/engine/AP/mod baseline and active MO2 file winners.
-- [ ] Classify existing third-party script errors; resolve those affecting a
-  planned integration before treating it as supported.
-- [ ] Inventory all requested content rosters and real callbacks/info portions.
-- [ ] Record credit rules, task identities, equipment tiers and lab roster.
-- [ ] Identify authoritative starter grants, faction/difficulty loadouts and PDA
-  dependencies before defining supported restricted-start combinations.
+- [x] Record the pinned GAMMA/engine/AP baseline and inspect active source winners.
+- [x] Classify the four existing third-party script failures.
+- [x] Inventory the supported content, callbacks/info portions, credit rules,
+  task identities, equipment tiers and five-lab roster (Steps 02, 07–13, 26).
+- [x] Inspect starter grants, faction/difficulty loadouts and PDA dependencies;
+  implement the documented fresh Loner/Cordon acceptance baseline.
+- [ ] Confirm current MO2 winners and observe callback arguments/save behaviour
+  on the installed build using the [probe checklist](callback-probes.md).
+- [ ] Resolve any classified baseline failure affecting a supported adapter;
+  test other faction/difficulty/custom-loadout variants before claiming support.
 
 Exit: repeatable pilot evidence and a finite manifest/probe backlog; no claim that
 current inventory receipts prove crash-safe recovery.
 
 ### Stage 1: PDA messages and durable session recovery
 
-- [ ] Preserve sender, recipient, foreign item name and known unlock kind.
-- [ ] Implement versioned bridge metadata and PDA incoming/outgoing messages.
-- [ ] Verify one correct notice for self-rewards and each confirmed transfer.
-- [ ] Define save rollback and notification replay policy; separate permanent
-  unlock reconciliation from consumable replacement.
-- [ ] Verify AP server restart and game/client restart with persisted state.
+- [x] Preserve sender, recipient, foreign item name and known unlock kind.
+- [x] Implement versioned metadata, English incoming/outgoing PDA notices,
+  self-reward deduplication and bounded no-PDA queues (Steps 03/04/19).
+- [x] Verify notice attribution/deduplication, confirmed transfers and durable
+  server/client recovery in mocked game and real AP server tests.
+- [x] Document rollback/replay policy, separating permanent unlocks from
+  consumables; older-save consumable replay remains an explicit limitation.
+- [ ] Observe actual PDA text/history/sound, correct names and one self-notice
+  in GAMMA, including delayed display after restoring a PDA.
+- [ ] Verify game/client/server restart, offline checks, old-save rollback and
+  failed reward/display handling in disposable development saves.
+- [ ] Finish localized templates/article/plural polish; current templates are English.
 
 Exit: a live two-player or mixed-game test proves both directions and names;
 reconnect/load do not spam or create rewards twice because a notice failed.
 
 ### Stage 2: options, catalogue and exploration
 
-- [ ] Implement all category options and typed, versioned slot manifest.
-- [ ] Add independent starting-loadout omissions and the No Starting Weapons
-  preset; initialize once before AP grants and preserve later earned inventory.
-- [ ] Add every supported map, preserving pilot IDs.
-- [ ] Add every curated major settlement using actual entry volumes.
-- [ ] Build a real region graph from current transitions, including extra routes.
-- [ ] Verify all-off rejection, each toggle alone, presets and pool sizing.
+- [x] Implement 14 check / 7 reward options and typed, versioned slot data.
+- [x] Implement nine gear modes/groups, four supply percentages, No Starting
+  Weapons and the restricted preset; starter omission is once before AP grants.
+- [x] Add all 33 supported map arrivals, preserving the three pilot IDs.
+- [x] Add 18 curated settlement checks using native smart-terrain entry volumes.
+- [x] Build the curated baseline region graph and generation/access rules.
+- [x] Test disabled-category isolation, all-off rejection, category singles/pairs,
+  preset settings and required-pool sizing (Steps 05–08/27).
+- [ ] Observe every supported map/hub trigger in the engine, including overlap,
+  starting/loading there and disabled-category behaviour.
+- [ ] Compare the graph and native route guards against all installed extra
+  transitions; demonstrate starter variants and preservation of earned gear.
 
 Exit: all map/settlement checks can be generated and demonstrated, with no checks
 leaking from disabled categories and no IDs depending on option order.
 
 ### Stage 3: combat, collection, tasks, equipment and rank
 
-- [ ] First mutant species and first stalker faction kills, independently toggled.
-- [ ] Finite cumulative kill thresholds with defined credit and deduplication.
-- [ ] Artefact types with tested pickup/trade/crafting provenance rules.
-- [ ] Quest-type first completions and bounded side-task completion totals.
-- [ ] Gear upgrade, armour tier, firearm tier and knife tier milestones.
-- [ ] Story milestones and Stalker Rank thresholds.
-- [ ] Save all counters/sets; test downgrade, reset, duplicate callback and reload.
+- [x] Implement independent first-kill rosters: 25 mutants and 13 factions.
+- [x] Implement finite cumulative kill thresholds with credit/deduplication rules.
+- [x] Implement 66 artefact acquisitions and mocked provenance/replay tests.
+- [x] Implement 13 quest types, finite side-task totals and 53 story checks.
+- [x] Implement 20 upgrade/armour/firearm/knife milestones and eight rank checks.
+- [x] Save monotonic counters/sets and test duplicate, downgrade/reset and
+  save/load behaviour through the Lua harness (Steps 09–13).
+- [ ] Demonstrate native attribution/provenance, actual task completion, equipment
+  semantics and ranks; cover negative triggers and AP-injected feedback.
+- [ ] Verify saved counters across actual reload/death and establish that required
+  species, factions, artefacts/tasks and NPCs remain obtainable on supported runs.
 
 Exit: every check category has a fixed roster, engine evidence and corresponding
 AP reachability assumptions. Active quests or naturally earned skill gains must
@@ -302,59 +404,103 @@ not create unbounded feedback through AP rewards.
 
 ### Stage 4: stash, reputation and skill rewards
 
-- [ ] White loot stashes with quality/ammo-family options.
-- [ ] Orange progression stashes with guaranteed contents and local claim events.
-- [ ] Reputation bonuses with demonstrated trader-tier changes.
-- [ ] Skill level rewards through the supported installed stat-mod adapter.
-- [ ] Classify every reward as consumable, permanent permission or claimed stash;
-  verify the recovery policy separately for each.
+- [x] Implement 27 white stash quality/ammo-family types in the finite Cordon roster.
+- [x] Implement the protected orange Cordon psi-helmet stash and local claim event.
+- [x] Implement bounded goodwill for eight factions and native trader eligibility.
+- [x] Implement four Haruka skill rewards with cap/API guards and recalculation.
+- [x] Classify effects and test planned receipts, retries, caps, save state and
+  uncertain native creation outcomes separately (Steps 14–17/29).
+- [ ] Inspect actual white/orange markers, physical containers/contents and saved
+  claims, including empty/previously used caches and failed native grants.
+- [ ] Demonstrate native trader-tier changes and actual Haruka stats/UI, including
+  missing/incompatible integration and capped rewards.
+- [ ] Validate each reward recovery policy in the engine; mock idempotence does
+  not establish exactly-once item creation across a crash/save boundary.
 
 Exit: direct grants and stash contents survive save/load under the documented
 policy, and disabled categories impose no new locks or missing dependencies.
 
 ### Stage 5: quest and zone keys
 
-- [ ] Implement quest-stage permissions and ordinary-source replacement.
-- [ ] Add AP-locked starting-equipment permissions and their required unlock
-  rewards, including PDA restoration, usable baseline gear and queued messages.
-- [ ] Implement zone access permissions across normal, extra, scripted and
-  fast-travel routes. Preserve return travel and the starting safe region.
-- [ ] Offer and persist one optional settlement trip after a zone unlock.
-- [ ] Model protection, trader, stash and story prerequisites in AP logic.
-- [ ] Test self-locks, hostile hubs, death, load in a locked area and old saves.
-- [ ] Test no-detector, no-PDA and no-weapons starts individually and combined;
-  verify early progression, bought/looted gear policy and duplicate starter grants.
+- [x] Implement three quest-chain keys and deferred native task-grant replay.
+- [x] Implement nine AP equipment permissions, baseline grants and no-PDA queues.
+- [x] Implement 32 zone keys with native/scripted transition guards and a local
+  randomized exploration chain; Cordon remains the free starting region.
+- [x] Implement preview/confirmation and saved one-trip consumption for nine
+  curated hubs with safe fallback and native travel restrictions.
+- [x] Model equipment, psi protection, stash/PDA and story access in AP logic;
+  reject insufficient pools and test self-locks and bounded recovery.
+- [x] Exercise restricted starts, hostile/unavailable hubs, native route guards,
+  purchased/scripted inventory and save/load with mocks (Steps 18–21/27/29).
+- [ ] Demonstrate quest progression enforcement and every supported actual entry
+  route, including extra transitions/guides and packet-hook same-zone fallback.
+- [ ] Play no-detector/no-PDA/no-weapons starts alone and combined; verify early
+  checks, restored capabilities, starter grants, bought/looted gear and messages.
+- [ ] Verify hostile/missing hubs, one-time travel, protection/story restrictions,
+  death/locked-zone loads, rollback and native-disable ownership in the engine.
 
 Exit: game enforcement matches generator access rules; no progression key is
 placed behind itself and every supported configuration has a completion route.
 
 ### Stage 6: five goal choices
 
-- [ ] Get Psi Protection.
-- [ ] Disable Brain Scorcher.
-- [ ] Meet Strelok.
-- [ ] Complete Living Legend.
-- [ ] Visit all X-Labs in the published roster.
-- [ ] Verify exactly one server goal transition after the chosen actual condition.
-- [ ] Test every goal against applicable category and gating combinations.
+- [x] Implement Get Psi Protection using the usable calibrated-helmet condition.
+- [x] Implement Brain Scorcher using its native shutdown state.
+- [x] Implement Meet Strelok using the canonical completed first dialogue.
+- [x] Implement Living Legend using the terminal story milestone.
+- [x] Implement All Labs using X18, X16, X19, X8 and War Lab; ordinary underground
+  maps do not count (Steps 22–26).
+- [x] Test goal/category independence, premature completion guards, solver gates
+  and actual AP completion packets with synthetic game snapshots.
+- [ ] Record a real qualifying condition and completion packet for each of the
+  five goals, without premature/repeated completion, on supported fresh saves.
+- [ ] Confirm actual story/faction prerequisites and local goal observation when
+  related check categories are disabled.
 
 Exit: one fresh successful engine playthrough per supported goal, plus regression
 tests for premature completion, disabled related check categories and lost packets.
 
 ### Stage 7: balance and release
 
-- [ ] Publish presets, configuration examples and unsupported combinations.
-- [ ] Run at least 1,000 deterministic seeds for each supported preset, individual
-  option tests, pairwise combinations and targeted goal/gate adversarial seeds.
+- [x] Commit six presets/YAML examples, supported limits and rejected combinations.
+- [x] Run 1,000 deterministic seeds for each preset, category singles/pairs and
+  targeted full-option goal/gate tests; keep Windows/Linux CI green.
+- [x] Implement real-server mixed-game/restart tests, strict save/identity checks,
+  legacy compatibility, portable packages and archive loading (Steps 28/29).
+- [x] Document compatibility, rollback/removal limits and third-party licence
+  boundaries; prepare and hash-check the private unaccepted candidate (Step 30).
 - [ ] Complete two fresh MVP playthroughs and a real mixed-game multiworld.
-- [ ] Test clean install, upgrade/migration, uninstall and save recovery.
+- [ ] Verify actual clean install, upgrade/migration and save recovery. Removal
+  from an active gated campaign is unsupported; test documented backup restore
+  or a clean non-AP save instead of promising arbitrary live uninstall.
 - [ ] Measure callback/poll cost and notification bursts on the pinned build.
-- [ ] Complete independent playtesting, compatibility, licences and release docs.
+- [ ] Complete independent human review/playtesting, compatibility sign-off,
+  licence choice and final accepted release documentation/checksums.
+- [ ] Obtain a separate v1 publication decision before tagging/releasing; no
+  public release or repository visibility change has been performed.
 
 Exit: every supported requested category and goal has implementation, tests and
 engine evidence; unresolved features are labelled and discussed rather than
 advertised as complete. Multiplayer here means Archipelago multiworld; in-world
 xrRazom co-op remains a separate investigation and installation.
+
+### Additional delivery: local APWorld generator (PR #35)
+
+- [x] Implement local preset/category/loadout/goal controls and exact searchable
+  check/reward projections using the shared configuration/catalogue core.
+- [x] Implement adjustable goal/full-clear/session estimates with explicit
+  assumptions, player YAML export and actual local seed ZIP generation.
+- [x] Validate six preset displays, 64-bit seed limits, repeatability, exact
+  generated manifests, concurrent-generation refusal and later recovery.
+- [x] Reproduce/fix draft-loadout overwrites, stale totals, reserved/trimmed names,
+  incomplete requests and the lost-backend banner; add five frontend regressions.
+- [x] Exercise real browser ZIP/YAML downloads, search, milestone/name/seed
+  validation, backend stop/restart and the responsive layout.
+- [ ] Calibrate playtime ranges and useful reward/progression balance with real
+  GAMMA runs. Browser/server acceptance does not close engine gates above.
+
+The app is **local-only**, as requested. See its [guide](generator-web-app.md)
+and the latest [QA evidence](verification-record.md). No hosted deployment is planned.
 
 ## Structure and verification rules
 
