@@ -120,6 +120,32 @@ async def test_custom_side_task_manifest_is_used_by_the_client():
 
 
 @run_async
+async def test_configured_stash_item_manifests_and_history_are_validated():
+    from gamma_archipelago.catalog import ITEM_IDS, MAP_LOCATION_IDS
+    from gamma_archipelago.configuration import build_configuration, defaults
+
+    configuration = build_configuration({**defaults(), "rewards_loot_stashes": 1})
+    slot = {
+        "schema_version": 3,
+        "pilot": False,
+        "configuration": configuration.to_values(),
+        "configuration_key": configuration.digest,
+        "location_ids": sorted(MAP_LOCATION_IDS),
+        "item_ids": sorted(ITEM_IDS),
+    }
+    context = connected_context(slot)
+    custom = next(iter(ITEM_IDS - set(ITEM_SECTIONS)))
+    context.items_received = [NetworkItem(custom, 1, 2)]
+    context.on_package("ReceivedItems", {})
+    assert context.session.item_ids == (custom,)
+    for invalid in ([], [42], None):
+        with pytest.raises(ProtocolError, match="item manifest"):
+            connected_context({**slot, "item_ids": invalid})
+    with pytest.raises(ProtocolError, match="schema 3"):
+        connected_context({**slot, "schema_version": 2})
+
+
+@run_async
 async def test_seed_configuration_is_validated_and_bound_before_bridge_publication():
     from gamma_archipelago.configuration import build_configuration, defaults
 

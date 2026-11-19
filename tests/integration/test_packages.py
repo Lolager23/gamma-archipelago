@@ -44,8 +44,12 @@ def test_packages_are_reproducible_and_load_from_apworld(tmp_path):
                 "tasks",
                 "equipment_checks",
                 "rank",
+                "stashes",
             )
-        } | {"gamedata/configs/text/eng/st_gamma_archipelago.xml"}
+        } | {
+            "gamedata/configs/text/eng/st_gamma_archipelago.xml",
+            "gamedata/scripts/modxml_gamma_ap_stashes.script",
+        }
     with ZipFile(outputs[2]) as archive:
         assert set(archive.namelist()) == {
             f"gamedata/scripts/gamma_ap_probe_{name}.script" for name in ("capture", "game")

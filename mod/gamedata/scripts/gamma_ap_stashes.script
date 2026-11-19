@@ -1,0 +1,177 @@
+-- Additive loot packages in a frozen roster of native Cordon world containers.
+
+function copy(progress)
+    local result = {order={}, records={}, marker_cursor=0}
+    if not progress then return result end
+    result.marker_cursor = progress.marker_cursor
+    for _,index in ipairs(progress.order) do
+        result.order[#result.order+1] = index
+        local record = progress.records[index]
+        local cloned = {item_id=record.item_id, cache_id=record.cache_id, cache_name=record.cache_name,
+            level=record.level, opened=record.opened, claimed=record.claimed,
+            next_action=record.next_action, actions={}}
+        for _,action in ipairs(record.actions) do
+            cloned.actions[#cloned.actions+1] = {section=action.section,
+                created_id=action.created_id, created_name=action.created_name, uncertain=action.uncertain}
+        end
+        result.records[index] = cloned
+    end
+    return result
+end
+
+local function cache_level(object)
+    return alife():level_name(game_graph():vertex(object.m_game_vertex_id):level_id())
+end
+
+local function resolve(record)
+    local object = alife_object(record.cache_id)
+    if not object or object:name() ~= record.cache_name or object.parent_id ~= 65535
+        or not IsInvbox(nil, object:clsid()) or cache_level(object) ~= record.level then
+        return nil, "The recorded AP stash container is unavailable; contents will not reroll"
+    end
+    return object
+end
+
+local function choose_cache(state, item_id, receipt)
+    if not treasure_manager or type(treasure_manager.caches) ~= "table" then return nil end
+    local candidates = {}
+    for id in pairs(treasure_manager.caches) do
+        local object = alife_object(id)
+        local expected = object and gamma_ap_catalog.stash_containers[object:name()]
+        if expected and object.parent_id == 65535 and IsInvbox(nil, object:clsid())
+            and cache_level(object) == expected then
+            candidates[#candidates+1] = {id=id, name=object:name(), level=expected}
+        end
+    end
+    table.sort(candidates, function(a,b)
+        return a.name < b.name or (a.name == b.name and a.id < b.id)
+    end)
+    if #candidates == 0 then return nil end
+    local seed = tonumber(state.session_key:sub(1,8), 16) + receipt * 31 + item_id
+    return candidates[(seed % #candidates) + 1]
+end
+
+local function marker(state, record)
+    local count = 0
+    for _,index in ipairs(state.stashes.order) do
+        local other = state.stashes.records[index]
+        if other.cache_id == record.cache_id and not other.claimed then count = count + 1 end
+    end
+    local ok = pcall(function()
+        if count == 0 then
+            level.map_remove_object_spot(record.cache_id, "gamma_ap_loot")
+        else
+            local hint = "Archipelago loot stash: " .. tostring(count) .. " package(s)"
+            if level.map_has_object_spot(record.cache_id, "gamma_ap_loot") == 0 then
+                level.map_add_object_spot_ser(record.cache_id, "gamma_ap_loot", hint)
+            else level.map_change_spot_hint(record.cache_id, "gamma_ap_loot", hint) end
+        end
+    end)
+    if not ok then return false, "Cannot reveal AP stash coordinates through the PDA map API" end
+    return true
+end
+
+function receive(state, item_id)
+    if not state.session_key or not state.expanded or not state.allowed_items[item_id]
+        or not gamma_ap_catalog.stash_contents[item_id] then
+        return false, "This stash reward is not enabled in the current seed"
+    end
+    local patcher = rawget(_G, "modxml_gamma_ap_stashes")
+    if not patcher or patcher.registered ~= true then
+        return false, "AP stash markers require the installed Monolith DXML integration"
+    end
+    local receipt = state.received_count + 1
+    local record = state.stashes.records[receipt]
+    if record and record.item_id ~= item_id then return false, "Conflicting pending stash receipt" end
+    if not record then
+        if #state.stashes.order >= 4000 then return false, "AP stash history exceeds the supported bound" end
+        for _,section in ipairs(gamma_ap_catalog.stash_contents[item_id]) do
+            if not ini_sys:section_exist(section) then return false, "An approved AP stash loot section is unavailable" end
+        end
+        local candidate = choose_cache(state, item_id, receipt)
+        if not candidate then return false, "Waiting for the native Cordon stash roster to initialize" end
+        record = {item_id=item_id, cache_id=candidate.id, cache_name=candidate.name,
+            level=candidate.level, opened=false, claimed=false, next_action=1, actions={}}
+        for _,section in ipairs(gamma_ap_catalog.stash_contents[item_id]) do
+            record.actions[#record.actions+1] = {section=section}
+        end
+        state.stashes.records[receipt] = record
+        state.stashes.order[#state.stashes.order+1] = receipt
+    end
+    local object, reason = resolve(record)
+    if not object then return false, reason end
+    return marker(state, record)
+end
+
+function open(state, box, who)
+    if not state.session_key or not state.expanded or #state.stashes.order == 0
+        or not db.actor or not db.actor:alive() or not box or not who
+        or who:id() ~= db.actor:id() then return end
+    for _,index in ipairs(state.stashes.order) do
+        local record = state.stashes.records[index]
+        if record.cache_id == box:id() and record.cache_name == box:name()
+            and record.level == level.name() then record.opened = true end
+    end
+end
+
+function take(state, box, item)
+    if not state.session_key or not state.expanded or not item or #state.stashes.order == 0 then return end
+    for _,index in ipairs(state.stashes.order) do
+        local record = state.stashes.records[index]
+        if record.opened and not record.claimed and (not box or box:id() == record.cache_id) then
+            for _,action in ipairs(record.actions) do
+                if action.created_id == item:id() and action.created_name == item:name()
+                    and action.section == item:section() then record.claimed = true end
+            end
+        end
+    end
+end
+
+local function spawn_action(action, box)
+    if action.uncertain then return false, "AP stash creation has an uncertain result; automatic retry is blocked" end
+    local ok, created = pcall(alife_create_item, action.section, box)
+    if not ok then
+        action.uncertain = true
+        return false, "AP stash creation has an uncertain result; automatic retry is blocked"
+    end
+    if not created then return false, "AP stash item creation failed; the saved plan will retry" end
+    local identified, id, name = pcall(function()
+        local value = type(created.id) == "function" and created:id() or created.id
+        return value, created:name()
+    end)
+    if not identified or type(id) ~= "number" or id < 1 or id > 65534 or id ~= math.floor(id)
+        or type(name) ~= "string" or #name < 1 or #name > 512 then
+        action.uncertain = true
+        return false, "AP stash creation returned an unsupported object identity"
+    end
+    action.created_id, action.created_name = id, name
+    return true
+end
+
+function poll(state)
+    local progress = state.stashes
+    if not state.session_key or not state.expanded or #progress.order == 0 then return true end
+    local work = 0
+    for _,index in ipairs(progress.order) do
+        local record = progress.records[index]
+        if record.opened and record.next_action <= #record.actions then
+            local valid, reason = resolve(record)
+            if not valid then return false, reason end
+            local box = level.object_by_id(record.cache_id)
+            if box and box:name() == record.cache_name then
+                while record.next_action <= #record.actions and work < 8 do
+                    local ok, problem = spawn_action(record.actions[record.next_action], box)
+                    if not ok then return false, problem end
+                    record.next_action = record.next_action + 1
+                    work = work + 1
+                end
+            end
+        end
+        if work >= 8 then break end
+    end
+    progress.marker_cursor = (progress.marker_cursor % #progress.order) + 1
+    local record = progress.records[progress.order[progress.marker_cursor]]
+    local valid, reason = resolve(record)
+    if not valid then return false, reason end
+    return marker(state, record)
+end

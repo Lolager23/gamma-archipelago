@@ -12,7 +12,8 @@ from gamma_archipelago.catalog import (
 
 def test_pilot_catalogue_has_unique_stable_ids_and_explicit_item_sections():
     catalogue = json.loads(files("gamma_archipelago").joinpath("catalog.json").read_text())
-    assert len(ITEM_NAMES) == len(ITEM_SECTIONS) == len(catalogue["items"]) == 3
+    assert len(ITEM_NAMES) == len(catalogue["items"]) == 30
+    assert len(ITEM_SECTIONS) == 3
     assert len(LOCATION_NAMES) == len(ALL_LOCATION_IDS) == 20249
     assert len(catalogue["locations"]) == 249
     assert len(LOCATION_IDS) == 3
@@ -28,4 +29,5 @@ def test_direct_ap_rewards_cannot_inject_eligible_artefacts_asynchronously():
         if location["category"] == "checks_artefacts"
         for alias in location["aliases"]
     }
-    assert aliases.isdisjoint(ITEM_SECTIONS.values())
+    payloads = {section for item in catalogue["items"] for section in item.get("contents", [])}
+    assert aliases.isdisjoint(set(ITEM_SECTIONS.values()) | payloads)

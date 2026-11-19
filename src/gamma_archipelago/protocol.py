@@ -3,7 +3,7 @@
 import re
 from dataclasses import dataclass
 
-from .catalog import ALL_LOCATION_IDS, ITEM_SECTIONS, LOCATION_IDS, MAX_ITEMS, MAX_SNAPSHOT_BYTES
+from .catalog import ALL_LOCATION_IDS, ITEM_IDS, LOCATION_IDS, MAX_ITEMS, MAX_SNAPSHOT_BYTES
 
 
 class ProtocolError(ValueError):
@@ -33,7 +33,7 @@ def encode_incoming(
     session_key: str, item_ids: tuple[int, ...], configuration_key: str | None = None
 ) -> str:
     validate_session_key(session_key)
-    if len(item_ids) > MAX_ITEMS or any(item_id not in ITEM_SECTIONS for item_id in item_ids):
+    if len(item_ids) > MAX_ITEMS or any(item_id not in ITEM_IDS for item_id in item_ids):
         raise ProtocolError("Incoming history contains too many items or an unsupported item")
     lines = [f"GAMMA_AP_IN|{2 if configuration_key is not None else 1}", f"session|{session_key}"]
     if configuration_key is not None:

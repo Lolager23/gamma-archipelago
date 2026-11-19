@@ -6,7 +6,13 @@ from importlib.resources import files
 _data = json.loads(files("gamma_archipelago").joinpath("catalog.json").read_text(encoding="utf-8"))
 GAME: str = _data["game"]
 SCHEMA_VERSION: int = _data["schema_version"]
-ITEM_SECTIONS: dict[int, str] = {item["id"]: item["section"] for item in _data["items"]}
+ITEM_SECTIONS: dict[int, str] = {
+    item["id"]: item["section"] for item in _data["items"] if "section" in item
+}
+ITEM_IDS = frozenset(item["id"] for item in _data["items"])
+ITEM_CATEGORIES: dict[int, str | None] = {
+    item["id"]: item.get("category") for item in _data["items"]
+}
 ITEM_NAMES: dict[str, int] = {item["name"]: item["id"] for item in _data["items"]}
 ITEM_EFFECTS: dict[int, str] = {item["id"]: item.get("effect", "item") for item in _data["items"]}
 LOCATION_NAMES: dict[str, int] = {
@@ -44,6 +50,14 @@ LOCATION_CATEGORIES: dict[int, str] = {loc["id"]: loc["category"] for loc in _da
 CONNECTIONS: tuple[tuple[str, str], ...] = tuple(tuple(pair) for pair in _data["connections"])
 MAX_ITEMS = 4000
 MAX_SNAPSHOT_BYTES = 131072
+
+
+def enabled_item_ids(rewards: frozenset[str]) -> frozenset[int]:
+    return frozenset(
+        identity
+        for identity, category in ITEM_CATEGORIES.items()
+        if category is None or category in rewards
+    )
 
 
 def enabled_location_ids(

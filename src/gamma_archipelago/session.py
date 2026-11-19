@@ -4,7 +4,7 @@ import hashlib
 import json
 from dataclasses import dataclass, field
 
-from .catalog import ALL_LOCATION_IDS, ITEM_SECTIONS, LOCATION_IDS, MAX_ITEMS
+from .catalog import ALL_LOCATION_IDS, ITEM_IDS, ITEM_SECTIONS, LOCATION_IDS, MAX_ITEMS
 from .notifications import MAX_NOTICES, Notice, validate_notice
 from .protocol import GameSnapshot, ProtocolError, validate_session_key
 
@@ -28,6 +28,15 @@ class SessionCoordinator:
     configuration_bound: bool = False
     allowed_locations: frozenset[int] = LOCATION_IDS
     locations_bound: bool = False
+    allowed_items: frozenset[int] = frozenset(ITEM_SECTIONS)
+    items_bound: bool = False
+
+    def bind_items(self, items: frozenset[int]) -> None:
+        if not items or len(items) > MAX_ITEMS or not items <= ITEM_IDS:
+            raise ProtocolError("Unsupported seed item manifest")
+        if self.items_bound and items != self.allowed_items:
+            raise ProtocolError("Seed item manifest changed within the same session")
+        self.allowed_items, self.items_bound = items, True
 
     def bind_locations(self, locations: frozenset[int]) -> None:
         if not locations or len(locations) > MAX_ITEMS or not locations <= ALL_LOCATION_IDS:
@@ -55,7 +64,9 @@ class SessionCoordinator:
         self.checked_locations.update(checked)
 
     def accept_history(self, item_ids: tuple[int, ...]) -> None:
-        if len(item_ids) > MAX_ITEMS or any(item_id not in ITEM_SECTIONS for item_id in item_ids):
+        if len(item_ids) > MAX_ITEMS or any(
+            item_id not in self.allowed_items for item_id in item_ids
+        ):
             raise ProtocolError("Server history contains an unsupported item or exceeds the limit")
         if item_ids[: len(self.item_ids)] != self.item_ids:
             raise ProtocolError("Server item history changed or became shorter; resynchronise")

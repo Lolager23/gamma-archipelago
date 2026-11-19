@@ -1,6 +1,6 @@
 {
   "game": "S.T.A.L.K.E.R. GAMMA",
-  "schema_version": 1,
+  "schema_version": 2,
   "items": [
     {
       "id": 28051001,
@@ -19,6 +19,423 @@
       "name": "Bandage",
       "section": "bandage",
       "classification": "filler"
+    },
+    {
+      "id": 28051101,
+      "name": "Basic Loot Stash: Supplies",
+      "classification": "filler",
+      "effect": "loot_stash",
+      "category": "rewards_loot_stashes",
+      "contents": [
+        "bandage",
+        "bandage",
+        "medkit"
+      ]
+    },
+    {
+      "id": 28051102,
+      "name": "Basic Loot Stash: 9x18",
+      "classification": "filler",
+      "effect": "loot_stash",
+      "category": "rewards_loot_stashes",
+      "contents": [
+        "bandage",
+        "bandage",
+        "medkit",
+        "ammo_9x18_fmj"
+      ]
+    },
+    {
+      "id": 28051103,
+      "name": "Basic Loot Stash: 9x19",
+      "classification": "filler",
+      "effect": "loot_stash",
+      "category": "rewards_loot_stashes",
+      "contents": [
+        "bandage",
+        "bandage",
+        "medkit",
+        "ammo_9x19_fmj"
+      ]
+    },
+    {
+      "id": 28051104,
+      "name": "Basic Loot Stash: 5.45x39",
+      "classification": "filler",
+      "effect": "loot_stash",
+      "category": "rewards_loot_stashes",
+      "contents": [
+        "bandage",
+        "bandage",
+        "medkit",
+        "ammo_5.45x39_fmj"
+      ]
+    },
+    {
+      "id": 28051105,
+      "name": "Basic Loot Stash: 5.56x45",
+      "classification": "filler",
+      "effect": "loot_stash",
+      "category": "rewards_loot_stashes",
+      "contents": [
+        "bandage",
+        "bandage",
+        "medkit",
+        "ammo_5.56x45_ss190"
+      ]
+    },
+    {
+      "id": 28051106,
+      "name": "Basic Loot Stash: 7.62x39",
+      "classification": "filler",
+      "effect": "loot_stash",
+      "category": "rewards_loot_stashes",
+      "contents": [
+        "bandage",
+        "bandage",
+        "medkit",
+        "ammo_7.62x39_fmj"
+      ]
+    },
+    {
+      "id": 28051107,
+      "name": "Basic Loot Stash: 7.62x51",
+      "classification": "filler",
+      "effect": "loot_stash",
+      "category": "rewards_loot_stashes",
+      "contents": [
+        "bandage",
+        "bandage",
+        "medkit",
+        "ammo_7.62x51_fmj"
+      ]
+    },
+    {
+      "id": 28051108,
+      "name": "Basic Loot Stash: 7.62x54R",
+      "classification": "filler",
+      "effect": "loot_stash",
+      "category": "rewards_loot_stashes",
+      "contents": [
+        "bandage",
+        "bandage",
+        "medkit",
+        "ammo_7.62x54_7h1"
+      ]
+    },
+    {
+      "id": 28051109,
+      "name": "Basic Loot Stash: 12 Gauge",
+      "classification": "filler",
+      "effect": "loot_stash",
+      "category": "rewards_loot_stashes",
+      "contents": [
+        "bandage",
+        "bandage",
+        "medkit",
+        "ammo_12x70_buck"
+      ]
+    },
+    {
+      "id": 28051110,
+      "name": "Field Loot Stash: Supplies",
+      "classification": "filler",
+      "effect": "loot_stash",
+      "category": "rewards_loot_stashes",
+      "contents": [
+        "bandage",
+        "bandage",
+        "bandage",
+        "medkit_army",
+        "antirad"
+      ]
+    },
+    {
+      "id": 28051111,
+      "name": "Field Loot Stash: 9x18",
+      "classification": "filler",
+      "effect": "loot_stash",
+      "category": "rewards_loot_stashes",
+      "contents": [
+        "bandage",
+        "bandage",
+        "bandage",
+        "medkit_army",
+        "antirad",
+        "ammo_9x18_fmj",
+        "ammo_9x18_fmj"
+      ]
+    },
+    {
+      "id": 28051112,
+      "name": "Field Loot Stash: 9x19",
+      "classification": "filler",
+      "effect": "loot_stash",
+      "category": "rewards_loot_stashes",
+      "contents": [
+        "bandage",
+        "bandage",
+        "bandage",
+        "medkit_army",
+        "antirad",
+        "ammo_9x19_fmj",
+        "ammo_9x19_fmj"
+      ]
+    },
+    {
+      "id": 28051113,
+      "name": "Field Loot Stash: 5.45x39",
+      "classification": "filler",
+      "effect": "loot_stash",
+      "category": "rewards_loot_stashes",
+      "contents": [
+        "bandage",
+        "bandage",
+        "bandage",
+        "medkit_army",
+        "antirad",
+        "ammo_5.45x39_fmj",
+        "ammo_5.45x39_fmj"
+      ]
+    },
+    {
+      "id": 28051114,
+      "name": "Field Loot Stash: 5.56x45",
+      "classification": "filler",
+      "effect": "loot_stash",
+      "category": "rewards_loot_stashes",
+      "contents": [
+        "bandage",
+        "bandage",
+        "bandage",
+        "medkit_army",
+        "antirad",
+        "ammo_5.56x45_ss190",
+        "ammo_5.56x45_ss190"
+      ]
+    },
+    {
+      "id": 28051115,
+      "name": "Field Loot Stash: 7.62x39",
+      "classification": "filler",
+      "effect": "loot_stash",
+      "category": "rewards_loot_stashes",
+      "contents": [
+        "bandage",
+        "bandage",
+        "bandage",
+        "medkit_army",
+        "antirad",
+        "ammo_7.62x39_fmj",
+        "ammo_7.62x39_fmj"
+      ]
+    },
+    {
+      "id": 28051116,
+      "name": "Field Loot Stash: 7.62x51",
+      "classification": "filler",
+      "effect": "loot_stash",
+      "category": "rewards_loot_stashes",
+      "contents": [
+        "bandage",
+        "bandage",
+        "bandage",
+        "medkit_army",
+        "antirad",
+        "ammo_7.62x51_fmj",
+        "ammo_7.62x51_fmj"
+      ]
+    },
+    {
+      "id": 28051117,
+      "name": "Field Loot Stash: 7.62x54R",
+      "classification": "filler",
+      "effect": "loot_stash",
+      "category": "rewards_loot_stashes",
+      "contents": [
+        "bandage",
+        "bandage",
+        "bandage",
+        "medkit_army",
+        "antirad",
+        "ammo_7.62x54_7h1",
+        "ammo_7.62x54_7h1"
+      ]
+    },
+    {
+      "id": 28051118,
+      "name": "Field Loot Stash: 12 Gauge",
+      "classification": "filler",
+      "effect": "loot_stash",
+      "category": "rewards_loot_stashes",
+      "contents": [
+        "bandage",
+        "bandage",
+        "bandage",
+        "medkit_army",
+        "antirad",
+        "ammo_12x70_buck",
+        "ammo_12x70_buck"
+      ]
+    },
+    {
+      "id": 28051119,
+      "name": "Advanced Loot Stash: Supplies",
+      "classification": "useful",
+      "effect": "loot_stash",
+      "category": "rewards_loot_stashes",
+      "contents": [
+        "bandage",
+        "bandage",
+        "bandage",
+        "medkit_scientic",
+        "stimpack",
+        "drug_psy_blockade"
+      ]
+    },
+    {
+      "id": 28051120,
+      "name": "Advanced Loot Stash: 9x18",
+      "classification": "useful",
+      "effect": "loot_stash",
+      "category": "rewards_loot_stashes",
+      "contents": [
+        "bandage",
+        "bandage",
+        "bandage",
+        "medkit_scientic",
+        "stimpack",
+        "drug_psy_blockade",
+        "ammo_9x18_fmj",
+        "ammo_9x18_fmj",
+        "ammo_9x18_fmj"
+      ]
+    },
+    {
+      "id": 28051121,
+      "name": "Advanced Loot Stash: 9x19",
+      "classification": "useful",
+      "effect": "loot_stash",
+      "category": "rewards_loot_stashes",
+      "contents": [
+        "bandage",
+        "bandage",
+        "bandage",
+        "medkit_scientic",
+        "stimpack",
+        "drug_psy_blockade",
+        "ammo_9x19_fmj",
+        "ammo_9x19_fmj",
+        "ammo_9x19_fmj"
+      ]
+    },
+    {
+      "id": 28051122,
+      "name": "Advanced Loot Stash: 5.45x39",
+      "classification": "useful",
+      "effect": "loot_stash",
+      "category": "rewards_loot_stashes",
+      "contents": [
+        "bandage",
+        "bandage",
+        "bandage",
+        "medkit_scientic",
+        "stimpack",
+        "drug_psy_blockade",
+        "ammo_5.45x39_fmj",
+        "ammo_5.45x39_fmj",
+        "ammo_5.45x39_fmj"
+      ]
+    },
+    {
+      "id": 28051123,
+      "name": "Advanced Loot Stash: 5.56x45",
+      "classification": "useful",
+      "effect": "loot_stash",
+      "category": "rewards_loot_stashes",
+      "contents": [
+        "bandage",
+        "bandage",
+        "bandage",
+        "medkit_scientic",
+        "stimpack",
+        "drug_psy_blockade",
+        "ammo_5.56x45_ss190",
+        "ammo_5.56x45_ss190",
+        "ammo_5.56x45_ss190"
+      ]
+    },
+    {
+      "id": 28051124,
+      "name": "Advanced Loot Stash: 7.62x39",
+      "classification": "useful",
+      "effect": "loot_stash",
+      "category": "rewards_loot_stashes",
+      "contents": [
+        "bandage",
+        "bandage",
+        "bandage",
+        "medkit_scientic",
+        "stimpack",
+        "drug_psy_blockade",
+        "ammo_7.62x39_fmj",
+        "ammo_7.62x39_fmj",
+        "ammo_7.62x39_fmj"
+      ]
+    },
+    {
+      "id": 28051125,
+      "name": "Advanced Loot Stash: 7.62x51",
+      "classification": "useful",
+      "effect": "loot_stash",
+      "category": "rewards_loot_stashes",
+      "contents": [
+        "bandage",
+        "bandage",
+        "bandage",
+        "medkit_scientic",
+        "stimpack",
+        "drug_psy_blockade",
+        "ammo_7.62x51_fmj",
+        "ammo_7.62x51_fmj",
+        "ammo_7.62x51_fmj"
+      ]
+    },
+    {
+      "id": 28051126,
+      "name": "Advanced Loot Stash: 7.62x54R",
+      "classification": "useful",
+      "effect": "loot_stash",
+      "category": "rewards_loot_stashes",
+      "contents": [
+        "bandage",
+        "bandage",
+        "bandage",
+        "medkit_scientic",
+        "stimpack",
+        "drug_psy_blockade",
+        "ammo_7.62x54_7h1",
+        "ammo_7.62x54_7h1",
+        "ammo_7.62x54_7h1"
+      ]
+    },
+    {
+      "id": 28051127,
+      "name": "Advanced Loot Stash: 12 Gauge",
+      "classification": "useful",
+      "effect": "loot_stash",
+      "category": "rewards_loot_stashes",
+      "contents": [
+        "bandage",
+        "bandage",
+        "bandage",
+        "medkit_scientic",
+        "stimpack",
+        "drug_psy_blockade",
+        "ammo_12x70_buck",
+        "ammo_12x70_buck",
+        "ammo_12x70_buck"
+      ]
     }
   ],
   "locations": [
@@ -2905,5 +3322,24 @@
       "wpn_axe2": 4,
       "wpn_axe3": 5
     }
+  },
+  "stash_containers": {
+    "esc_treasure_1": "l01_escape",
+    "esc_treasure_10": "l01_escape",
+    "esc_treasure_11": "l01_escape",
+    "esc_treasure_12": "l01_escape",
+    "esc_treasure_13": "l01_escape",
+    "esc_treasure_14": "l01_escape",
+    "esc_treasure_15": "l01_escape",
+    "esc_treasure_16": "l01_escape",
+    "esc_treasure_17": "l01_escape",
+    "esc_treasure_2": "l01_escape",
+    "esc_treasure_3": "l01_escape",
+    "esc_treasure_4": "l01_escape",
+    "esc_treasure_5": "l01_escape",
+    "esc_treasure_6": "l01_escape",
+    "esc_treasure_7": "l01_escape",
+    "esc_treasure_8": "l01_escape",
+    "esc_treasure_9": "l01_escape"
   }
 }

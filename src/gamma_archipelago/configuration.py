@@ -85,7 +85,7 @@ SUPPORTED_CHECKS = frozenset(
         "checks_rank_milestones",
     }
 )
-SUPPORTED_REWARDS: frozenset[str] = frozenset()
+SUPPORTED_REWARDS: frozenset[str] = frozenset({"rewards_loot_stashes"})
 SUPPORTED_GOALS = frozenset({"pilot_tour"})
 SUPPORTED_START_MODES = frozenset({0, 1})
 

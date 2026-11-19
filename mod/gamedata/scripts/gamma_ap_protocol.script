@@ -35,7 +35,7 @@ function parse_incoming(content)
     for line_index = first_item, #lines - 1 do
         local index_text, id_text = lines[line_index]:match("^item|([^|]+)|([^|]+)$")
         local index, item_id = canonical_number(index_text), canonical_number(id_text)
-        if index ~= line_index - first_item or not gamma_ap_catalog.item_sections[item_id] then
+        if index ~= line_index - first_item or not gamma_ap_catalog.item_effects[item_id] then
             return nil, "Unknown item or nonsequential item history"
         end
         items[#items + 1] = item_id

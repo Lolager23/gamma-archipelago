@@ -12,6 +12,7 @@ from gamma_archipelago.catalog import (
     LOCATION_IDS,
     LOCATION_NAMES,
     SIDE_TASK_MILESTONE_BASE,
+    enabled_item_ids,
 )
 from gamma_archipelago.configuration import OPTION_NAMES, SeedConfiguration, build_configuration
 
@@ -109,9 +110,23 @@ class GammaWorld(World):
                 )
 
     def create_items(self) -> None:
-        names = list(self.item_name_to_id)
+        names = [item["name"] for item in _catalog["items"] if "category" not in item]
+        stashes = [
+            item["name"]
+            for item in _catalog["items"]
+            if item.get("category") == "rewards_loot_stashes"
+        ]
+        enabled = "rewards_loot_stashes" in self.configuration.rewards
         for index in range(len(self.multiworld.get_locations(self.player))):
-            name = names[index] if index < len(names) else self.get_filler_item_name()
+            if enabled and (index == 0 or (index > 3 and self.random.randrange(3) == 0)):
+                name = self.random.choice(stashes)
+            else:
+                supply_index = index - int(enabled)
+                name = (
+                    names[supply_index]
+                    if supply_index < len(names)
+                    else self.get_filler_item_name()
+                )
             self.multiworld.itempool.append(self.create_item(name))
 
     def set_rules(self) -> None:
@@ -131,6 +146,7 @@ class GammaWorld(World):
             "location_ids": sorted(
                 location.address for location in self.multiworld.get_locations(self.player)
             ),
+            "item_ids": sorted(enabled_item_ids(self.configuration.rewards)),
         }
 
     def get_filler_item_name(self) -> str:

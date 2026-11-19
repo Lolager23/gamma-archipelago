@@ -1,5 +1,16 @@
 -- Companion-validated configuration, bound to the digest in the v2 item snapshot.
 
+function copy(configuration)
+    if not configuration then return nil end
+    local result = {digest=configuration.digest, expanded=configuration.expanded, options={}, thresholds={}}
+    for name,value in pairs(configuration.options) do result.options[name] = value end
+    for name,values in pairs(configuration.thresholds) do
+        result.thresholds[name] = {}
+        for _,value in ipairs(values) do result.thresholds[name][#result.thresholds[name]+1] = value end
+    end
+    return result
+end
+
 function parse(content, key, digest)
     if type(content) ~= "string" or #content > 131072 or content:sub(-1) ~= "\n" then
         return nil, "Incomplete or oversized configuration snapshot"

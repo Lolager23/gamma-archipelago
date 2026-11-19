@@ -85,6 +85,9 @@ below to perform a live game run before progressing to the next implementation P
   catalogue and Lua table with `tools/build.py`; do not edit generated copies.
   Never recycle published IDs. Schema/ID changes need a migration or documented
   breaking version, with compatibility evidence.
+- DXML entry points use the engine-required `modxml_gamma_ap_*.script` prefix;
+  other game scripts retain `gamma_ap_`. Add AP-owned XML nodes through the
+  installed DXML hook instead of replacing another mod's complete XML files.
 - Validate protocol versions, seed/team/slot identity, IDs, sizes and receipt order
   before mutation. Use fixed filenames, bounded polling and data-only snapshots.
   Keep one writer per direction and atomic client snapshot replacement. Never
