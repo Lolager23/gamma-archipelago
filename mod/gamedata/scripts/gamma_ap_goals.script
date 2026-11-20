@@ -3,6 +3,18 @@
 local story_factions = {actor_stalker=true, actor_csky=true, actor_dolg=true,
     actor_freedom=true, actor_ecolog=true, actor_killer=true}
 
+function left_dialog(state, npc_id, level_name)
+    if not state.session_key or state.refused_save or not state.expanded
+        or not state.configuration or state.configuration.options.goal ~= 6
+        or state.goal_complete or not db.actor or not db.actor:alive() then return true end
+    if level_name ~= "l01_escape" or type(npc_id) ~= "number"
+        or npc_id ~= math.floor(npc_id) or npc_id < 1 or npc_id > 65534 then return true end
+    local ok,story = pcall(get_object_story_id,npc_id)
+    if not ok then return false,"Cannot identify the dialogue partner for the Sidorovich goal" end
+    if story == "esc_m_trader" then state.goal_complete = true end
+    return true
+end
+
 function poll(state)
     local configuration = state.configuration
     if not configuration or configuration.options.goal == 0 or state.goal_complete then return true end

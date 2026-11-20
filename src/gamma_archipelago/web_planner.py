@@ -64,6 +64,7 @@ GOAL_LABELS = (
     "Meet Strelok",
     "Finish Living Legend",
     "Visit all five X-Labs",
+    "Talk to Sidorovich (quick pilot)",
 )
 
 

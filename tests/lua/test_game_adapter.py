@@ -81,6 +81,7 @@ def test_callbacks_polling_save_restore_and_initial_inventory(lua):
         "save_state",
         "load_state",
         "actor_on_interaction",
+        "actor_on_leave_dialog",
         "npc_on_death_callback",
         "monster_on_death_callback",
         "monster_on_hit_callback",

@@ -374,6 +374,24 @@ def test_psi_goal_models_sakharov_acquisition_as_a_local_event_without_network_s
     assert multiworld.can_beat_game()
 
 
+def test_sidorovich_goal_is_local_and_needs_no_psi_helmet_or_additional_check_slot():
+    from BaseClasses import CollectionState
+
+    multiworld = setup_multiworld(GammaWorld, options={"goal": 6, "rewards_zone_keys": 1})
+    state = CollectionState(multiworld)
+    assert not multiworld.completion_condition[1](state)
+    event = multiworld.get_location("Talk to Sidorovich", 1)
+    assert event.address is None and event.item.code is None
+    assert event.parent_region.name == "l01_escape" and event.can_reach(state)
+    assert "Obtain Calibrated Helmet from Sakharov" not in {
+        location.name for location in multiworld.get_locations()
+    }
+    state.collect(event.item, prevent_sweep=True)
+    assert multiworld.completion_condition[1](state)
+    assert multiworld.worlds[1].fill_slot_data()["goal"] == "talk_sidorovich"
+    assert len(multiworld.worlds[1].fill_slot_data()["location_ids"]) == 33
+
+
 def test_zone_chain_fills_previous_failure_seeds_and_keeps_yantar_before_psi_routes():
     from BaseClasses import CollectionState
 

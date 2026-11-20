@@ -190,6 +190,11 @@ function actor_on_interaction(kind, object, name)
     gamma_ap_settlements.observe(state, kind, object, name, level.name())
 end
 
+function actor_on_leave_dialog(npc_id)
+    local ok,reason = gamma_ap_goals.left_dialog(state,npc_id,level.name())
+    if not ok then report_error(reason) end
+end
+
 function npc_on_death_callback(victim, killer)
     gamma_ap_combat.observe(state, "faction", victim, killer)
 end
@@ -308,6 +313,7 @@ function on_game_start()
     RegisterScriptCallback("save_state", save_state)
     RegisterScriptCallback("load_state", load_state)
     RegisterScriptCallback("actor_on_interaction", actor_on_interaction)
+    RegisterScriptCallback("actor_on_leave_dialog", actor_on_leave_dialog)
     RegisterScriptCallback("npc_on_death_callback", npc_on_death_callback)
     RegisterScriptCallback("monster_on_death_callback", monster_on_death_callback)
     RegisterScriptCallback("monster_on_hit_callback", monster_on_hit_callback)

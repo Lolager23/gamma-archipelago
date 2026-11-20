@@ -17,7 +17,7 @@ def add_goal_events(
     item_type: type[Item],
 ) -> None:
     if (
-        world.configuration.goal != "pilot_tour"
+        world.configuration.goal not in {"pilot_tour", "talk_sidorovich"}
         and "rewards_progression_stashes" not in world.configuration.rewards
     ):
         claim = location_type(
@@ -29,6 +29,14 @@ def add_goal_events(
             )
         )
         regions["l08_yantar"].locations.append(claim)
+    if world.configuration.goal == "talk_sidorovich":
+        conversation = location_type(
+            world.player, "Talk to Sidorovich", None, regions["l01_escape"]
+        )
+        conversation.place_locked_item(
+            item_type("Talked to Sidorovich", ItemClassification.progression, None, world.player)
+        )
+        regions["l01_escape"].locations.append(conversation)
     if world.configuration.goal in {"brain_scorcher", "meet_strelok", "living_legend"}:
         shutdown = location_type(
             world.player, "Shut Down Brain Scorcher", None, regions["l10u_bunker"]
@@ -81,7 +89,11 @@ def add_goal_events(
 
 
 def set_goal_rule(world: "GammaWorld", catalog: dict[str, Any]) -> None:
-    if world.configuration.goal == "psi_protection":
+    if world.configuration.goal == "talk_sidorovich":
+        world.multiworld.completion_condition[world.player] = lambda state: state.has(
+            "Talked to Sidorovich", world.player
+        )
+    elif world.configuration.goal == "psi_protection":
         world.multiworld.completion_condition[world.player] = lambda state: state.has(
             "Calibrated Psi Protection", world.player
         )

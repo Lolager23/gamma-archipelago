@@ -20,7 +20,7 @@ VALID = encode_configuration(KEY, CONFIG)
         "GAMMA_AP_CONFIG|1\n",
         VALID.replace("option|goal|0", "option|unknown|0"),
         VALID.replace("option|goal|0", "option|goal|01"),
-        VALID.replace("option|goal|0", "option|goal|6"),
+        VALID.replace("option|goal|0", "option|goal|7"),
         VALID.replace("option|goal|0\n", ""),
         VALID.replace("option|goal|0", "option|checks_maps|1"),
         VALID.replace("threshold|kill_milestones|10", "threshold|unknown|10"),

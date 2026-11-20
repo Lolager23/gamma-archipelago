@@ -52,6 +52,7 @@
     <string id="gamma_ap_pda_goal_3"><text>Meet Strelok</text></string>
     <string id="gamma_ap_pda_goal_4"><text>Living Legend</text></string>
     <string id="gamma_ap_pda_goal_5"><text>Visit all X-Labs</text></string>
+    <string id="gamma_ap_pda_goal_6"><text>Talk to Sidorovich</text></string>
     <string id="gamma_ap_pda_unbound"><text>Start a matching AP session</text></string>
     <string id="gamma_ap_pda_disabled"><text>Tracker disabled by this seed</text></string>
     <string id="gamma_ap_pda_offline"><text>Server connectivity not reported by this snapshot</text></string>

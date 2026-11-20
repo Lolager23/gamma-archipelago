@@ -12,7 +12,7 @@ def test_metadata_and_all_presets_match_authoritative_catalogues():
     data = metadata()
     assert len(data["checks"]) == 17 and len(data["rewards"]) == 15
     assert len(data["gear"]) == 9 and len(data["quantities"]) == 4
-    assert len(data["goals"]) == 6 and len(data["levels"]) == 33
+    assert len(data["goals"]) == 7 and len(data["levels"]) == 33
     for values in presets().values():
         configuration = build_configuration(values)
         result = preview(values, {})
@@ -24,6 +24,13 @@ def test_metadata_and_all_presets_match_authoritative_catalogues():
         assert result["digest"] == configuration.digest
     full = preview(presets()["full_story"], {})
     assert (full["network_checks"], full["reward_types"]) == (273, 100)
+
+
+def test_quick_pilot_estimates_goal_separately_from_optional_map_completion():
+    result = preview(presets()["pilot"], {})
+    assert result["estimates"]["breakdown_hours"]["goal_baseline"] == 0.1
+    assert result["estimates"]["goal_hours"][1] < 1
+    assert result["estimates"]["completion_hours"][0] > 1
 
 
 def test_custom_totals_and_insufficient_progression_slots():
