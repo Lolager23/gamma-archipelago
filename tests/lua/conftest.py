@@ -35,6 +35,7 @@ def lua():
         "skills",
         "quest_keys",
         "gear_locks",
+        "zone_recovery",
         "zone_keys",
         "travel",
         "goals",

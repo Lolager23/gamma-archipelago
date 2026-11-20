@@ -1,0 +1,70 @@
+-- The native void packet hook cannot veto a load. Never reload inside its trigger.
+function is_changer(object)
+    if not clsid then return false end
+    local id = object:clsid()
+    return id == clsid.level_changer or id == clsid.level_changer_s
+end
+
+local function distance_squared(a, b)
+    return (a.x-b.x)^2 + (a.y-b.y)^2 + (a.z-b.z)^2
+end
+
+local function transitions()
+    local result = {}
+    for _,entry in pairs(db.storage or {}) do
+        local object = entry.object
+        if object then
+            if is_changer(object) then
+                result[#result+1] = {object=object}
+            elseif lc_extra_transitions and lc_extra_transitions.lc_pool then
+                local data = lc_extra_transitions.lc_pool[object:section()]
+                if data then
+                    result[#result+1] = {position=object:position(),
+                        radius=(tonumber(data.trigger_radius) or 6)+10}
+                end
+            end
+        end
+    end
+    return result
+end
+
+local function outside(position, changers)
+    for _,changer in ipairs(changers) do
+        if changer.object then
+            if changer.object:inside(position, 10) then return false end
+        elseif distance_squared(position, changer.position) <= changer.radius^2 then
+            return false
+        end
+    end
+    return true
+end
+
+function redirect(packet)
+    local graph, actor = game_graph(), db.actor
+    local current, origin = level.name(), actor:position()
+    local changers = transitions()
+    local best, closest = nil, math.huge
+    -- Game-graph IDs are unsigned 16-bit; 65535 is the invalid sentinel.
+    -- This bounded recovery search runs only after an already accepted denial.
+    for id=0,65534 do
+        if not graph:valid_vertex_id(id) then break end
+        local vertex = graph:vertex(id)
+        if alife():level_name(vertex:level_id()) == current then
+            local position, lvid = vertex:level_point(), vertex:level_vertex_id()
+            local distance = distance_squared(position, origin)
+            if lvid < 4294967295 and distance >= 900 and distance < closest
+                and outside(position, changers) then
+                best, closest = {gvid=id, lvid=lvid, position=position}, distance
+            end
+        end
+    end
+    -- Forwarding the denied destination or reusing the trigger point is unsafe.
+    assert(best, "AP zone recovery found no graph point outside transitions; load an earlier save")
+    packet:w_begin(13)
+    packet:w_u16(best.gvid)
+    packet:w_u32(best.lvid)
+    packet:w_vec3(best.position)
+    packet:w_vec3(vector():set(0, actor:direction():getH(), 0))
+    packet:r_seek(2)
+    printf("[GAMMA AP] Destination locked; recovering outside transition triggers in the current zone")
+end

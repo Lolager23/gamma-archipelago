@@ -1,5 +1,32 @@
 # Verification record
 
+## Locked-zone loading loop: 20 November 2026
+
+Owen's attempted locked-Agroprom trip **failed** in GAMMA Dev. The retained private
+log shows repeated transition inspection failures followed by denied packets,
+same-zone autosaves and reloads. The class helper was incorrectly named
+`IsLevelChanger`; the extracted baseline exports `isLc` and native class IDs.
+The late void packet hook reused the actor's position inside the trigger. Pinned
+Monolith `alife_update_manager.cpp`, `level_changer.cpp` and `UIGameSP.cpp` confirm
+that the hook cannot cancel loading, and silent changers bypass the enabled flag.
+
+Branch `codex/fix-locked-zone-loop` uses class IDs, guards native spawn/scripted
+entry points, and redirects an already accepted denied packet to a graph point
+outside transition volumes in the source map. No cached pre-save position or
+save-format change is needed. Tests model the silent-trigger reload cycle,
+an existing trigger-position save, normal disables/unlock ownership, extra-mod
+side effects, delayed calls, unknown targets and delegate composition. The
+no-recovery-point case reports that an earlier save is required, rather than
+repeating an unsafe packet. Full verifier and current-head Windows/Linux CI
+results belong on the PR; focused runs do not meet the complete coverage gate.
+
+The stuck development process was closed with Owen's permission. Before changes
+to installed files, 1,442 private backup files were copied and SHA-256 verified;
+the current server recorded eight checks and eight rewards. Do not reset the
+session or replace its saves. Native verification of the fix is **not run**,
+reserved for Owen; no automatic game launch is permitted. See
+[zone access keys](zone-access-keys.md) for the remaining recovery limitations.
+
 ## Source-check causes in PDA announcements: 19 November 2026
 
 Branch `codex/pda-check-announcements` adds the earning check to the end of sent

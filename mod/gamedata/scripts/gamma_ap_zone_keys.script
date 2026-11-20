@@ -1,6 +1,9 @@
 -- Guard the engine's authoritative M_CHANGE_LEVEL packet, including extra routes.
 local packet_wrapper = nil
 local script_wrapper = nil
+local immediate_wrapper = nil
+local spawn_wrapper = nil
+local extra_wrapper = nil
 local get_state = nil
 local storage_cursor = nil
 
@@ -17,6 +20,7 @@ function allowed(state, destination)
 end
 
 local function destination(gvid)
+    if type(gvid) ~= "number" or gvid < 0 or gvid >= 65535 or gvid ~= math.floor(gvid) then return nil end
     local graph = game_graph()
     if not graph:valid_vertex_id(gvid) then return nil end
     return alife():level_name(graph:vertex(gvid):level_id())
@@ -29,7 +33,7 @@ end
 
 function poll(state)
     if not enabled(state) or not db.storage then return true end
-    if type(IsLevelChanger) ~= "function" or not utils_stpk
+    if not clsid or not utils_stpk
         or type(utils_stpk.get_level_changer_data) ~= "function" then
         return false, "Cannot inspect native transition destination APIs"
     end
@@ -39,23 +43,75 @@ function poll(state)
         storage_cursor = id
         if not id then break end
         local object = entry.object
-        if object and IsLevelChanger(object) then
-            local ok, data = pcall(utils_stpk.get_level_changer_data, alife_object(id))
-            if not ok or not data then return false, "Cannot inspect native transition destination" end
-            local permitted = allowed(state, destination(data.dest_game_vertex_id))
-            if state.zone_disabled[id] and state.zone_disabled[id] ~= object:name() then
-                state.zone_disabled[id] = nil
-            end
-            if not permitted and object:is_level_changer_enabled() then
-                object:enable_level_changer(false)
-                state.zone_disabled[id] = object:name()
-            elseif permitted and state.zone_disabled[id] then
-                object:enable_level_changer(true)
-                state.zone_disabled[id] = nil
-            end
+        if object and gamma_ap_zone_recovery.is_changer(object) then
+            local ok, reason = guard_changer(state, object, id)
+            if not ok then return false, reason end
         end
     end
     return true
+end
+
+function guard_changer(state, object, id)
+    if not utils_stpk or type(utils_stpk.get_level_changer_data) ~= "function" then
+        return false, "Cannot inspect native transition destination APIs"
+    end
+    local ok, data = pcall(utils_stpk.get_level_changer_data, alife_object(id))
+    if not ok or not data then return false, "Cannot inspect native transition destination" end
+    local permitted = allowed(state, destination(data.dest_game_vertex_id))
+    if state.zone_disabled[id] and state.zone_disabled[id] ~= object:name() then state.zone_disabled[id] = nil end
+    if not permitted and object:is_level_changer_enabled() then
+        object:enable_level_changer(false)
+        state.zone_disabled[id] = object:name()
+    elseif permitted and state.zone_disabled[id] then
+        object:enable_level_changer(true)
+        state.zone_disabled[id] = nil
+    end
+    return true
+end
+
+local function travel_guard(delegate)
+    return function(pos, lvid, gvid, ...)
+        if not allowed(get_state(), destination(gvid)) then
+            printf("[GAMMA AP] Scripted travel requires a zone key")
+            return false
+        end
+        return delegate(pos, lvid, gvid, ...)
+    end
+end
+
+local function install_early_guards()
+    local binder = bind_level_changer and bind_level_changer.lchanger_binder
+    if binder and binder.net_spawn ~= spawn_wrapper then
+        local delegate = binder.net_spawn
+        spawn_wrapper = function(self, ...)
+            local spawned = delegate(self, ...)
+            -- Before load_state, permissions/ownership still belong to the old
+            -- transient state. Do not disable a changer against that stale view.
+            if spawned and get_state().session_key and enabled(get_state()) then
+                local ok, reason = guard_changer(get_state(), self.object, self.object:id())
+                if not ok then printf("[GAMMA AP] %s", reason) end
+            end
+            return spawned
+        end
+        binder.net_spawn = spawn_wrapper
+    end
+    if type(change_level_now) == "function" and change_level_now ~= immediate_wrapper then
+        immediate_wrapper = travel_guard(change_level_now)
+        _G.change_level_now = immediate_wrapper
+    end
+    local extra = lc_extra_transitions
+    if extra and type(extra.teleport_actor) == "function" and extra.teleport_actor ~= extra_wrapper then
+        local delegate = extra.teleport_actor
+        extra_wrapper = function(actor, object, ...)
+            local data = object and extra.lc_pool and extra.lc_pool[object:section()]
+            if enabled(get_state()) and (not data or not allowed(get_state(), destination(tonumber(data.to_gvid)))) then
+                printf("[GAMMA AP] Extra transition requires a zone key")
+                return false
+            end
+            return delegate(actor, object, ...)
+        end
+        extra.teleport_actor = extra_wrapper
+    end
 end
 
 function install(state_reader)
@@ -63,6 +119,7 @@ function install(state_reader)
     if type(CALifeUpdateManager__on_before_change_level) ~= "function" or type(ChangeLevel) ~= "function" then
         return false, "Zone keys require the native transition packet and scripted travel hooks"
     end
+    install_early_guards()
     if CALifeUpdateManager__on_before_change_level ~= packet_wrapper then
         local delegate = CALifeUpdateManager__on_before_change_level
         packet_wrapper = function(packet)
@@ -72,16 +129,7 @@ function install(state_reader)
                 local target = destination(packet:r_u16())
                 packet:r_seek(2)
                 if not allowed(state, target) then
-                    -- Native engine changes cannot be cancelled here. Redirect
-                    -- before native save/cleanup to the current safe actor position.
-                    local actor = db.actor
-                    packet:w_begin(13)
-                    packet:w_u16(actor:game_vertex_id())
-                    packet:w_u32(actor:level_vertex_id())
-                    packet:w_vec3(actor:position())
-                    packet:w_vec3(vector():set(0, actor:direction():getH(), 0))
-                    packet:r_seek(2)
-                    printf("[GAMMA AP] Destination locked; remaining in the current zone")
+                    gamma_ap_zone_recovery.redirect(packet)
                 end
             end
             return delegate(packet)
@@ -89,14 +137,7 @@ function install(state_reader)
         _G.CALifeUpdateManager__on_before_change_level = packet_wrapper
     end
     if ChangeLevel ~= script_wrapper then
-        local delegate = ChangeLevel
-        script_wrapper = function(pos, lvid, gvid, ...)
-            if not allowed(get_state(), destination(gvid)) then
-                printf("[GAMMA AP] Scripted travel requires a zone key")
-                return false
-            end
-            return delegate(pos, lvid, gvid, ...)
-        end
+        script_wrapper = travel_guard(ChangeLevel)
         _G.ChangeLevel = script_wrapper
     end
     return true
