@@ -52,7 +52,8 @@ check/receipt processing continues when the optional shop UI is unavailable.
 Published IDs **28052921–28052929** are new. The earlier `checks_shops` option and
 its IDs retain their original first-ordinary-purchase behaviour; buying an AP
 contract is independent of that category. The new default zero is omitted from
-the configuration digest, preserving existing seed identities and location sets.
+the configuration digest and wire option records, preserving existing seed
+identities, location sets and disabled-shop configurations for the previous add-on.
 Enable the option in a **new seed**, upgrade world/client/add-on together, and
 use a fresh Dev character for that seed. Existing bound characters are not reset
 or silently attached to another seed. The current Brain Scorcher session stays

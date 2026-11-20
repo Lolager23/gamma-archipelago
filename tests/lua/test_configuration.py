@@ -74,3 +74,20 @@ def test_pre_travel_configuration_defaults_the_optional_field_without_changing_i
     lines[-1] = f"end|{len(lines) - 4}"
     parsed = lua.globals().gamma_ap_configuration.parse("\n".join(lines) + "\n", KEY, CONFIG.digest)
     assert parsed.options.zone_unlock_travel == 0
+
+
+@pytest.mark.parametrize("enabled", [0, 1])
+def test_disabled_paid_shop_option_keeps_the_previous_addon_wire_compatible(lua, enabled):
+    configuration = build_configuration({**defaults(), "checks_shop_purchases": enabled})
+    # The previous add-on has the identical parser but does not know this new name.
+    lua.globals().gamma_ap_catalog.config_limits.checks_shop_purchases = None
+    lua.globals().gamma_ap_catalog.config_defaults.checks_shop_purchases = None
+    packet = encode_configuration(KEY, configuration, expanded=True)
+    parsed = lua.globals().gamma_ap_configuration.parse(packet, KEY, configuration.digest)
+    if enabled:
+        assert_lua_error(parsed)
+        assert "option|checks_shop_purchases|1" in packet
+    else:
+        assert not isinstance(parsed, tuple)
+        assert parsed.digest == configuration.digest
+        assert "option|checks_shop_purchases|" not in packet

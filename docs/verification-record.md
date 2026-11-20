@@ -10,6 +10,10 @@ The catalogue remains authoritative; the web workbench exposes the toggle,
 selected prices and currency budget. Existing default configuration identities
 remain unchanged. New checks require a new seed and matching fresh Dev character.
 
+A backward-compatibility regression also reproduces the previous add-on refusing
+an unknown new option even when zero. The encoder now omits only that disabled
+wire record; enabled shops still advertise it and require the matching add-on.
+
 Regressions cover payment once, affordability, wrong trader/session/configuration,
 receipt-history conflicts, confirmed-check recovery, offline writes, uncertain
 payment persistence, save migration/refusal, hidden scouting, native delegation,
