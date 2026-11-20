@@ -1,31 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <w>
-    <!-- Attached to the PDA background (-34 y); keep below the native tab row. -->
+    <!-- Background-relative origin stays clear of the native PDA tabs. -->
     <main x="28" y="100" width="750" height="620"/>
-    <summary x="0" y="0" width="750" height="90" vert_interval="2" always_show_scroll="0"/>
-    <refresh x="0" y="96" width="110" height="26"><text font="letterica16">gamma_ap_pda_refresh</text><texture>ui_inGame2_pda_button</texture></refresh>
-    <region x="112" y="96" width="250" height="26"><text font="letterica16">gamma_ap_pda_all_regions</text><texture>ui_inGame2_pda_button</texture></region>
-    <status x="364" y="96" width="150" height="26"><text font="letterica16">gamma_ap_pda_all</text><texture>ui_inGame2_pda_button</texture></status>
-    <previous x="516" y="96" width="100" height="26"><text font="letterica16">gamma_ap_pda_previous</text><texture>ui_inGame2_pda_button</texture></previous>
-    <next x="618" y="96" width="100" height="26"><text font="letterica16">gamma_ap_pda_next</text><texture>ui_inGame2_pda_button</texture></next>
-    <head_status x="8" y="130" width="82" height="20"><text font="letterica16">gamma_ap_pda_status_header</text></head_status>
-    <head_region x="98" y="130" width="100" height="20"><text font="letterica16">gamma_ap_pda_region_header</text></head_region>
-    <head_check x="206" y="130" width="241" height="20"><text font="letterica16">gamma_ap_pda_check_header</text></head_check>
-    <head_progress x="484" y="130" width="266" height="20"><text font="letterica16">gamma_ap_pda_progress_header</text></head_progress>
-    <details x="0" y="156" width="475" height="402" vert_interval="6" always_show_scroll="0"/>
-    <progress x="484" y="156" width="266" height="402" vert_interval="4" always_show_scroll="0"/>
-    <page x="0" y="564" width="475" height="18"><text font="letterica16"/></page>
-    <select x="0" y="590" width="195" height="26"><text font="letterica16">gamma_ap_pda_select</text><texture>ui_inGame2_pda_button</texture></select>
-    <scout x="197" y="590" width="278" height="26"><text font="letterica16">gamma_ap_pda_scout</text><texture>ui_inGame2_pda_button</texture></scout>
-    <progress_next x="484" y="590" width="266" height="26"><text font="letterica16">gamma_ap_pda_progress_next</text><texture>ui_inGame2_pda_button</texture></progress_next>
-    <!-- Row templates use independent cells; native text measurement determines row height. -->
+    <summary x="0" y="0" width="750" height="76" vert_interval="1" always_show_scroll="0"/>
+    <checks x="0" y="82" width="190" height="28"><text font="letterica16">gamma_ap_pda_checks</text><texture>ui_inGame2_pda_button</texture></checks>
+    <progression x="194" y="82" width="240" height="28"><text font="letterica16">gamma_ap_pda_progression</text><texture>ui_inGame2_pda_button</texture></progression>
+    <refresh x="638" y="82" width="112" height="28"><text font="letterica16">gamma_ap_pda_refresh</text><texture>ui_inGame2_pda_button</texture></refresh>
+    <checks_page x="0" y="122" width="750" height="444">
+        <region_label x="0" y="0" width="438" height="18"><text font="letterica16" r="170" g="170" b="170">gamma_ap_pda_region_header</text></region_label>
+        <status_label x="450" y="0" width="300" height="18"><text font="letterica16" r="170" g="170" b="170">gamma_ap_pda_status_header</text></status_label>
+        <region x="0" y="22" width="438" height="28"><text font="letterica16"/><texture>ui_inGame2_pda_button</texture></region>
+        <status x="450" y="22" width="300" height="28"><text font="letterica16"/><texture>ui_inGame2_pda_button</texture></status>
+        <hint x="0" y="56" width="750" height="18"><text font="letterica16" r="170" g="170" b="170">gamma_ap_pda_filter_hint</text></hint>
+        <details x="0" y="80" width="750" height="204" item_height="48" vert_interval="3" always_show_scroll="0">
+            <font font="letterica16" r="225" g="225" b="215"/>
+        </details>
+        <page x="0" y="294" width="500" height="20"><text font="letterica16"/></page>
+        <previous x="520" y="290" width="110" height="26"><text font="letterica16">gamma_ap_pda_previous</text><texture>ui_inGame2_pda_button</texture></previous>
+        <next x="638" y="290" width="112" height="26"><text font="letterica16">gamma_ap_pda_next</text><texture>ui_inGame2_pda_button</texture></next>
+        <selection_label x="0" y="330" width="500" height="20"><text font="letterica16" r="170" g="170" b="170">gamma_ap_pda_selection</text></selection_label>
+        <scout x="520" y="326" width="230" height="28"><text font="letterica16">gamma_ap_pda_scout</text><texture>ui_inGame2_pda_button</texture></scout>
+        <selection x="0" y="364" width="750" height="80" vert_interval="2" always_show_scroll="0"/>
+    </checks_page>
+    <progress_page x="0" y="122" width="750" height="444">
+        <heading x="0" y="0" width="750" height="20"><text font="letterica16" r="170" g="170" b="170">gamma_ap_pda_progress_heading</text></heading>
+        <progress x="0" y="28" width="750" height="416" vert_interval="6" always_show_scroll="0"/>
+    </progress_page>
+    <notice x="0" y="570" width="750" height="48" vert_interval="1" always_show_scroll="0"/>
+    <!-- Native factories own all rows; measured text remains inside scroll viewports. -->
     <summary_row x="0" y="0" width="730" height="16"><text font="letterica16" complex_mode="1" vert_align="t"/></summary_row>
-    <progress_row x="0" y="0" width="246" height="16"><text font="letterica16" complex_mode="1" vert_align="t"/></progress_row>
-    <check_row x="0" y="0" width="455" height="16">
-        <status x="8" y="8" width="82" height="16"><text font="letterica16" complex_mode="1" vert_align="t"/></status>
-        <region x="98" y="8" width="100" height="16"><text font="letterica16" complex_mode="1" vert_align="t"/></region>
-        <name x="206" y="8" width="241" height="16"><text font="letterica16" complex_mode="1" vert_align="t"/></name>
-        <reason x="8" y="0" width="439" height="16"><text font="letterica16" complex_mode="1" vert_align="t" r="170" g="170" b="170"/></reason>
-        <reward x="8" y="0" width="439" height="16"><text font="letterica16" complex_mode="1" vert_align="t"/></reward>
-    </check_row>
+    <selection_row x="0" y="0" width="730" height="16"><text font="letterica16" complex_mode="1" vert_align="t"/></selection_row>
+    <progress_row x="0" y="0" width="730" height="16"><text font="letterica16" complex_mode="1" vert_align="t"/></progress_row>
+    <notice_row x="0" y="0" width="730" height="16"><text font="letterica16" complex_mode="1" vert_align="t" r="185" g="185" b="185"/></notice_row>
 </w>

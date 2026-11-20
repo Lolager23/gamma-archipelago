@@ -104,6 +104,11 @@ its original evidence; it does not validate these additions or in-world multipla
 
 ## Remaining work
 
+Tracker redesign acceptance: verify the separate Checks/Progression pages,
+right-click backwards on both filters, direct row selection and scouting,
+empty/page-edge states, long names and supported aspect ratios. Source/model
+verification does not replace this native check; it remains not run for Owen.
+
 - Complete the native matrix and calibrate short/standard/extended playtimes.
 - Address compatibility or balance defects exposed by those runs; retain failing
   evidence and test the matching bundle after each fix.

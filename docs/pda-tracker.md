@@ -1,5 +1,51 @@
 # Step 31: PDA tracker and regional checklist
 
+## Tracker redesign: 20 November 2026
+
+The page now separates **Checks** and **Progression**. A persistent header shows
+the goal, completion/availability totals and reward application counts. Connection,
+delivery and scouting feedback have their own footer, so they do not displace the
+goal or checklist. The selected tab has a brighter text colour. Both page bodies
+share a rectangle but only the active one is shown.
+
+Checks opens with the **Available** filter. Region and status have visible labels
+and an instruction: left-click cycles forward, right-click cycles backward,
+wrapping at either end. Right-click is handled through the native script window's
+`OnMouse` override and absolute cursor/rectangle hit tests. A button-click callback
+alone cannot handle it: native `CUIButton` only emits its click event for the left
+button. Other mouse input retains the native delegate.
+
+The full-width native list shows four checks per page. Each measured row has a
+text status, region and check name; status colours are supplementary. Clicking a
+row selects it directly and highlights it. Requirements and the scouted reward's
+recipient appear below, beside an explicit **Scout reward** action. Empty filters
+explain how to recover and disable scouting; Previous/Next disable at page edges.
+The old indirect Select next check button is removed. Selection follows the same
+location ID across live updates, and feedback clears when the selection/session
+changes. Completed checks do not display the generic encounter-availability caveat.
+
+Progression has one full-width scroll view for counters, forthcoming scouted
+rewards, equipment/deliveries, unlocked permissions, lab visits, then locked
+permissions. Groups come from the detached tracker projection, not parsing
+English text; the legacy flat projection remains available. Hidden ten-entry
+pagination is removed.
+Highest rank uses the catalogue's named thresholds rather than printing rank
+points as a "rank index". All new labels live in the English translation resources.
+
+Native list rows come from `CUIListBox.AddTextItem`, whose C++ factory owns their
+lifetime; text-only scroll rows still use XML factories. Never substitute
+Lua-constructed userdata in a non-adopting AddWindow call. Cache unchanged rows
+and preserve scrolling on data refresh, while filter/page navigation resets its
+list. Long names, reasons and rewards remain inside measured scroll viewports.
+
+Primary source probes at Monolith `7289a03` checked `uiscriptwnd_script2.cpp`
+(`OnMouse`), `UIButton.cpp`, `UIListBox.cpp`, `UIListBoxItem.cpp` and the associated
+Lua exports, plus extracted Anomaly `ui_scenes_dlg.xml` list/font configuration.
+The layout model and any exported preview use synthetic data and substitute
+fonts; they are **not native rendering evidence**. Owen must verify right-click,
+selection/highlight, scrolling, other PDA tabs and aspect ratios in GAMMA Dev.
+No APWorld/client, generation, published ID, save or bridge schema changes.
+
 ## Scroll-row lifetime correction: 19 November 2026
 
 Owen's opening-tracker crash reaches the native child update through

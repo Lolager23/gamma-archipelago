@@ -1,5 +1,27 @@
 # Verification record
 
+## Tracker clarity and reverse navigation: 20 November 2026
+
+Branch `codex/tracker-redesign` replaces the dense mixed checklist/progression
+columns with separate Checks/Progression pages and a shared goal/count header.
+Checks are directly selectable native list rows with contextual requirements,
+scouting and reward recipients. Region/status filters support backward right-click
+navigation through the engine's actual `OnMouse` extension; ordinary button events
+alone do not deliver right-click. Default available checks, explicit empty states,
+disabled page-edge actions and named highest rank reduce ambiguous controls.
+
+Regressions cover reverse/wrapping navigation, mouse delegation/hit boundaries,
+hidden/disabled controls, direct selection and its location ID across live updates,
+cleared stale feedback, empty/unbound views, long text, independent viewports,
+refresh caching, scroll preservation and garbage collection before native-model
+updates. Layout contracts account for mutually exclusive page bodies and retain
+the original native-tab clearance and userdata-lifetime regressions. The full
+verifier and exact-head Windows/Linux results are recorded on the PR.
+
+Native acceptance is **not run**, reserved for Owen. No game launch, seed reset,
+progression/receipt mutation, APWorld/client change or save-format migration is
+part of the redesign. Any diagram/preview is synthetic layout evidence only.
+
 ## Locked-zone loading loop: 20 November 2026
 
 Owen's attempted locked-Agroprom trip **failed** in GAMMA Dev. The retained private
