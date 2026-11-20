@@ -42,7 +42,6 @@ function ap_tracker_window:__init() super()
     end
     self.xml:InitTextWnd("progress_page:heading",self.progress_page)
     self.details = self.xml:InitListBox("checks_page:details",self.checks_page)
-    self.details:ShowSelectedItem(true)
     self.selection = self.xml:InitScrollView("checks_page:selection",self.checks_page)
     self.progress = self.xml:InitScrollView("progress_page:progress",self.progress_page)
     self.page = self.xml:InitTextWnd("checks_page:page",self.checks_page)

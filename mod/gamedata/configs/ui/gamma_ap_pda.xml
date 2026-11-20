@@ -12,7 +12,7 @@
         <region x="0" y="22" width="438" height="28"><text font="letterica16"/><texture>ui_inGame2_pda_button</texture></region>
         <status x="450" y="22" width="300" height="28"><text font="letterica16"/><texture>ui_inGame2_pda_button</texture></status>
         <hint x="0" y="56" width="750" height="18"><text font="letterica16" r="170" g="170" b="170">gamma_ap_pda_filter_hint</text></hint>
-        <details x="0" y="80" width="750" height="204" item_height="48" vert_interval="3" always_show_scroll="0">
+        <details x="0" y="80" width="750" height="204" item_height="48" vert_interval="3" always_show_scroll="0" can_select="1">
             <font font="letterica16" r="225" g="225" b="215"/>
         </details>
         <page x="0" y="294" width="500" height="20"><text font="letterica16"/></page>

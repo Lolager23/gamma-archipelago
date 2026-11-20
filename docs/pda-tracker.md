@@ -24,6 +24,11 @@ The old indirect Select next check button is removed. Selection follows the same
 location ID across live updates, and feedback clears when the selection/session
 changes. Completed checks do not display the generic encounter-availability caveat.
 
+The XML explicitly sets `can_select="1"`: native `InitScrollView`, also used by
+`InitListBox`, defaults that flag to zero. The misleading `ShowSelectedItem` Lua
+export aliases ordinary `Show` and does not enable selection. The test model
+matches those defaults; direct selection fails without the XML flag.
+
 Progression has one full-width scroll view for counters, forthcoming scouted
 rewards, equipment/deliveries, unlocked permissions, lab visits, then locked
 permissions. Groups come from the detached tracker projection, not parsing

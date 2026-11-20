@@ -93,9 +93,11 @@ def load_ui(lua):
         local function native_window()
             return setmetatable({children={}}, {__index=methods})
         end
-        methods.ShowSelectedItem=function(self,value) assert(value); self.highlight=true end
+        methods.ShowSelectedItem=methods.Show -- The native binding aliases Show, not selection.
         methods.GetSelectedIndex=function(self) return self.selected or -1 end
-        methods.SetSelectedIndex=function(self,value) self.selected=value end
+        methods.SetSelectedIndex=function(self,value)
+            if self.can_select then self.selected=value end
+        end
         methods.AddTextItem=function(self,value)
             -- Native factory: returned handles do not own/delete the native row.
             local row,text=native_window(),native_window()
@@ -145,6 +147,7 @@ def load_ui(lua):
             InitListBox=function(self,node,parent)
                 local control=init(node,parent); control.items={}; control.position=0
                 control.interval=tonumber(xml_nodes[node].vert_interval) or 0
+                control.can_select=tonumber(xml_nodes[node].can_select)==1
                 return control
             end,
             InitTextWnd=function(self,node,parent)
