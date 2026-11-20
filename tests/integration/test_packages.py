@@ -71,6 +71,8 @@ def test_packages_are_reproducible_and_load_from_apworld(tmp_path):
                 "goals",
                 "save_validation",
                 "stashes",
+                "shop",
+                "shop_ui",
             )
         } | {
             "gamedata/configs/text/eng/st_gamma_archipelago.xml",
@@ -81,6 +83,11 @@ def test_packages_are_reproducible_and_load_from_apworld(tmp_path):
             "gamedata/scripts/modxml_gamma_ap_stashes.script",
             "gamedata/configs/ui/textures_descr/ui_gamma_ap_stash.xml",
             "gamedata/textures/ui/gamma_ap_stash.dds",
+            "ARCHIPELAGO-ICON-LICENSE.txt",
+            "gamedata/configs/text/eng/st_gamma_ap_shop.xml",
+            "gamedata/configs/ui/gamma_ap_shop.xml",
+            "gamedata/configs/ui/textures_descr/ui_gamma_ap_shop.xml",
+            "gamedata/textures/ui/gamma_ap_shop.dds",
         }
     with ZipFile(outputs[2]) as archive:
         assert set(archive.namelist()) == {
@@ -110,7 +117,7 @@ assert str(GammaWorld.zip_path).endswith('gamma.apworld'), GammaWorld.zip_path
 container = APWorldContainer(str(GammaWorld.zip_path))
 container.read()
 assert container.world_version == Utils.Version(1, 0, 0)
-assert len(GammaWorld.location_name_to_id) == 20360
+assert len(GammaWorld.location_name_to_id) == 20369
 import worlds.gamma.client
 import gamma_archipelago
 assert str(gamma_archipelago.__file__).startswith(sys.argv[1]), gamma_archipelago.__file__

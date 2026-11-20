@@ -1,0 +1,20 @@
+<w>
+    <button x="14" y="80" width="114" height="22" stretch="1">
+        <texture>ui_inGame2_big_inventory_button</texture>
+        <text font="letterica16" align="c">gamma_ap_shop_open</text>
+    </button>
+    <panel x="14" y="110" width="300" height="598">
+        <title x="0" y="0" width="300" height="30"><text font="letterica18" color="ui_2"/></title>
+        <balance x="0" y="40" width="300" height="20"><text font="letterica16" color="ui_2"/></balance>
+        <offer x="0" y="72" width="300" height="140">
+            <icon x="0" y="0" width="38" height="38" stretch="1"><texture>gamma_ap_shop_icon</texture></icon>
+            <info x="46" y="0" width="254" height="102" vert_interval="0"/>
+            <buy x="0" y="110" width="300" height="24" stretch="1">
+                <texture>ui_inGame2_big_inventory_button</texture>
+                <text font="letterica16" align="c"/>
+            </buy>
+        </offer>
+        <footer x="0" y="510" width="300" height="84"><text font="letterica16" color="ui_3"/></footer>
+    </panel>
+    <info_row x="0" y="0" width="234" height="16"><text font="letterica16" color="ui_2"/></info_row>
+</w>

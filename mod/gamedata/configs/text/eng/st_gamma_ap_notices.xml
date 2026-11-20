@@ -66,6 +66,9 @@
     <string id="gamma_ap_cause_shop">
         <text>by making your first purchase from {value}</text>
     </string>
+    <string id="gamma_ap_cause_shop_purchase">
+        <text>by purchasing "{value}"</text>
+    </string>
     <string id="gamma_ap_cause_side_one">
         <text>by completing {value} side task</text>
     </string>
@@ -968,6 +971,33 @@
     </string>
     <string id="gamma_ap_cause_value_shop_46697273742050757263686173652066726f6d205369646f726f76696368">
         <text>First Purchase from Sidorovich</text>
+    </string>
+    <string id="gamma_ap_cause_value_shop_purchase_4261726d616e202d2042617220537570706c7920436f6e7472616374">
+        <text>Barman - Bar Supply Contract</text>
+    </string>
+    <string id="gamma_ap_cause_value_shop_purchase_4261726d616e202d20526f73746f6b2045787065646974696f6e20436f6e7472616374">
+        <text>Barman - Rostok Expedition Contract</text>
+    </string>
+    <string id="gamma_ap_cause_value_shop_purchase_4261726d616e202d20526f73746f6b20547261646520436f6e7472616374">
+        <text>Barman - Rostok Trade Contract</text>
+    </string>
+    <string id="gamma_ap_cause_value_shop_purchase_53616b6861726f76202d20536369656e746966696320537570706c7920436f6e7472616374">
+        <text>Sakharov - Scientific Supply Contract</text>
+    </string>
+    <string id="gamma_ap_cause_value_shop_purchase_53616b6861726f76202d2059616e7461722045787065646974696f6e20436f6e7472616374">
+        <text>Sakharov - Yantar Expedition Contract</text>
+    </string>
+    <string id="gamma_ap_cause_value_shop_purchase_53616b6861726f76202d2059616e74617220526573656172636820436f6e7472616374">
+        <text>Sakharov - Yantar Research Contract</text>
+    </string>
+    <string id="gamma_ap_cause_value_shop_purchase_5369646f726f76696368202d20436f72646f6e2045787065646974696f6e20436f6e7472616374">
+        <text>Sidorovich - Cordon Expedition Contract</text>
+    </string>
+    <string id="gamma_ap_cause_value_shop_purchase_5369646f726f76696368202d20436f72646f6e20537570706c7920436f6e7472616374">
+        <text>Sidorovich - Cordon Supply Contract</text>
+    </string>
+    <string id="gamma_ap_cause_value_shop_purchase_5369646f726f76696368202d20526f6f6b696520547261646520436f6e7472616374">
+        <text>Sidorovich - Rookie Trade Contract</text>
     </string>
     <string id="gamma_ap_cause_value_standing_31303030">
         <text>1000</text>

@@ -8,8 +8,8 @@ from .test_tracker import state_for, view
 ROOT = Path(__file__).resolve().parents[2]
 
 
-def load_ui(lua):
-    root = ElementTree.parse(ROOT / "mod/gamedata/configs/ui/gamma_ap_pda.xml").getroot()
+def load_ui(lua, *, xml_filename="gamma_ap_pda.xml", strings_filename="st_gamma_ap_pda.xml"):
+    root = ElementTree.parse(ROOT / "mod/gamedata/configs/ui" / xml_filename).getroot()
     nodes = {}
 
     def record(element, prefix=""):
@@ -28,7 +28,7 @@ def load_ui(lua):
         {
             node.get("id"): node.findtext("text")
             for node in ElementTree.parse(
-                ROOT / "mod/gamedata/configs/text/eng/st_gamma_ap_pda.xml"
+                ROOT / "mod/gamedata/configs/text/eng" / strings_filename
             ).getroot()
         }
     )
@@ -42,7 +42,10 @@ def load_ui(lua):
         methods.GetHeight=function(self) return self.height end
         methods.Show=function(self,value) self.shown=value end
         methods.IsShown=function(self) return self.shown~=false end
-        methods.Enable=function(self,value) self.enabled=value end
+        methods.Enable=function(self,value)
+            assert(type(value)=='boolean','native Enable expects a boolean')
+            self.enabled=value
+        end
         methods.IsEnabled=function(self) return self.enabled~=false end
         methods.SetTextColor=function(self,value) self.color=value end
         methods.OnMouse=function(self,x,y,event) self.delegated_mouse=event; return false end

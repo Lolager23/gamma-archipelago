@@ -169,7 +169,8 @@ export function showRoster(result, metadata) {
       category: labels[row.category] ?? "Base supplies",
       detail:
         kind === "checks"
-          ? (metadata.levels[row.level] ?? "Any region")
+          ? (metadata.levels[row.level] ?? "Any region") +
+            (Number.isInteger(row.price) ? ` · ${row.price.toLocaleString()} RU` : "")
           : title(row.classification),
     }))
     .filter((row) =>
@@ -178,7 +179,7 @@ export function showRoster(result, metadata) {
       ),
     );
   $("detail-heading").textContent =
-    kind === "checks" ? "Region" : "Classification";
+    kind === "checks" ? "Region / cost" : "Classification";
   $("roster-count").textContent = `${rows.length} shown`;
   $("roster").replaceChildren(
     ...rows.map((row) => {

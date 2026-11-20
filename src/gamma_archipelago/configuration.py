@@ -30,6 +30,7 @@ CHECK_OPTIONS = (
     "checks_story_milestones",
     "checks_rank_milestones",
     "checks_shops",
+    "checks_shop_purchases",
     "checks_faction_standing",
 )
 REWARD_OPTIONS = (
@@ -105,6 +106,7 @@ SUPPORTED_CHECKS = frozenset(
         "checks_knife_tiers",
         "checks_rank_milestones",
         "checks_shops",
+        "checks_shop_purchases",
         "checks_faction_standing",
     }
 )

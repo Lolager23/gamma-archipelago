@@ -32,7 +32,8 @@ LABELS = {
     "rewards_workshop_access": "Workshop action permissions",
     "rewards_recipe_access": "Recipe group permissions",
     "rewards_progressive_tools": "Progressive workshop tools",
-    "checks_shops": "Named trader purchases",
+    "checks_shops": "First ordinary trader purchases",
+    "checks_shop_purchases": "Buy Archipelago shop contracts (75,000 RU total)",
     "checks_faction_standing": "Faction goodwill milestones",
     "checks_maps": "Map arrivals",
     "checks_settlements": "Major settlements",
@@ -146,6 +147,7 @@ def preview(values: Mapping[str, object], assumptions: Mapping[str, object]) -> 
     budget = budget_pool(configuration, ids)
     required = len(budget.required)
     counts = Counter(row["category"] for row in checks)
+    shop_cost = sum(row.get("price", 0) for row in checks)
     return {
         "configuration": configuration.to_values(),
         "preview_kind": "settings_only",
@@ -170,6 +172,7 @@ def preview(values: Mapping[str, object], assumptions: Mapping[str, object]) -> 
         "network_checks": len(checks),
         "reward_types": len(rewards),
         "required_rewards": required,
+        "shop_cost_ru": shop_cost,
         "reward_slots": len(checks),
         "estimates": estimate_playtime(configuration, counts, assumptions),
         "notes": [
@@ -181,5 +184,13 @@ def preview(values: Mapping[str, object], assumptions: Mapping[str, object]) -> 
             "Zone keys stay local; other rewards can cross players in a multiworld.",
             "Local goal events do not consume network checks or reward slots.",
             "Fresh Loner/Cordon saves are the baseline. Expanded engine testing is pending.",
+            *(
+                [
+                    f"Selected AP contracts cost {shop_cost:,} RU total; "
+                    "income-grind time is uncalibrated."
+                ]
+                if shop_cost
+                else []
+            ),
         ],
     }

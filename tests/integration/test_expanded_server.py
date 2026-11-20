@@ -74,6 +74,7 @@ def test_two_gamma_slots_and_foreign_game_transfer_restart_and_each_goal(
             scouting_mode=2,
             reward_previews=1,
             checks_shops=1,
+            checks_shop_purchases=1,
             checks_faction_standing=1,
             checks_side_task_milestones=1,
         )

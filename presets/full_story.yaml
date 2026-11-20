@@ -20,6 +20,7 @@
     "checks_story_milestones": 1,
     "checks_rank_milestones": 1,
     "checks_shops": 1,
+    "checks_shop_purchases": 1,
     "checks_faction_standing": 1,
     "rewards_supply_medical": 1,
     "rewards_supply_maintenance": 1,

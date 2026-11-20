@@ -1,0 +1,12 @@
+# Generate this folder separately; it does not add a slot to the pilot example.
+name: GammaShopTest
+game: S.T.A.L.K.E.R. GAMMA
+requires:
+  version: 0.6.8
+S.T.A.L.K.E.R. GAMMA:
+  goal: pilot_tour
+  checks_maps: true
+  checks_shop_purchases: true
+  checks_shops: false
+  optional_check_policy: exclude_progression
+  scouting_mode: disabled

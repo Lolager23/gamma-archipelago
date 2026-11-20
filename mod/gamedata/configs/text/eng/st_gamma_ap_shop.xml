@@ -1,0 +1,86 @@
+<string_table>
+    <string id="gamma_ap_shop_back">
+        <text>Trader goods</text>
+    </string>
+    <string id="gamma_ap_shop_balance">
+        <text>Your money: %s RU</text>
+    </string>
+    <string id="gamma_ap_shop_buy">
+        <text>Buy for %s RU</text>
+    </string>
+    <string id="gamma_ap_shop_description_28052921">
+        <text>Purchase the Rookie Trade Contract check.</text>
+    </string>
+    <string id="gamma_ap_shop_description_28052922">
+        <text>Purchase the Cordon Supply Contract check.</text>
+    </string>
+    <string id="gamma_ap_shop_description_28052923">
+        <text>Purchase the Cordon Expedition Contract check.</text>
+    </string>
+    <string id="gamma_ap_shop_description_28052924">
+        <text>Purchase the Rostok Trade Contract check.</text>
+    </string>
+    <string id="gamma_ap_shop_description_28052925">
+        <text>Purchase the Bar Supply Contract check.</text>
+    </string>
+    <string id="gamma_ap_shop_description_28052926">
+        <text>Purchase the Rostok Expedition Contract check.</text>
+    </string>
+    <string id="gamma_ap_shop_description_28052927">
+        <text>Purchase the Yantar Research Contract check.</text>
+    </string>
+    <string id="gamma_ap_shop_description_28052928">
+        <text>Purchase the Scientific Supply Contract check.</text>
+    </string>
+    <string id="gamma_ap_shop_description_28052929">
+        <text>Purchase the Yantar Expedition Contract check.</text>
+    </string>
+    <string id="gamma_ap_shop_footer">
+        <text>One purchase per check. Rewards are sent through your AP companion. Close trade to resume normal reward delivery.</text>
+    </string>
+    <string id="gamma_ap_shop_hidden">
+        <text>Assigned reward is hidden.</text>
+    </string>
+    <string id="gamma_ap_shop_name_28052921">
+        <text>Sidorovich - Rookie Trade Contract</text>
+    </string>
+    <string id="gamma_ap_shop_name_28052922">
+        <text>Sidorovich - Cordon Supply Contract</text>
+    </string>
+    <string id="gamma_ap_shop_name_28052923">
+        <text>Sidorovich - Cordon Expedition Contract</text>
+    </string>
+    <string id="gamma_ap_shop_name_28052924">
+        <text>Barman - Rostok Trade Contract</text>
+    </string>
+    <string id="gamma_ap_shop_name_28052925">
+        <text>Barman - Bar Supply Contract</text>
+    </string>
+    <string id="gamma_ap_shop_name_28052926">
+        <text>Barman - Rostok Expedition Contract</text>
+    </string>
+    <string id="gamma_ap_shop_name_28052927">
+        <text>Sakharov - Yantar Research Contract</text>
+    </string>
+    <string id="gamma_ap_shop_name_28052928">
+        <text>Sakharov - Scientific Supply Contract</text>
+    </string>
+    <string id="gamma_ap_shop_name_28052929">
+        <text>Sakharov - Yantar Expedition Contract</text>
+    </string>
+    <string id="gamma_ap_shop_open">
+        <text>AP shop</text>
+    </string>
+    <string id="gamma_ap_shop_purchased">
+        <text>Purchased</text>
+    </string>
+    <string id="gamma_ap_shop_reward">
+        <text>Scouted reward: %s for %s</text>
+    </string>
+    <string id="gamma_ap_shop_title">
+        <text>Archipelago contracts</text>
+    </string>
+    <string id="gamma_ap_shop_uncertain">
+        <text>Payment needs review</text>
+    </string>
+</string_table>

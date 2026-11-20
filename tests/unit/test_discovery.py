@@ -71,7 +71,9 @@ def test_optional_policy_exclusion_normalization_and_legacy_identity():
     assert build_configuration(values).digest == build_configuration(legacy).digest
     assert normalize_exclusions(frozenset(TOKENS)) == tuple(sorted(TOKENS))
     assert normalize_exclusions(set()) == ()
-    included = build_configuration({**values, "checks_shops": 1, "checks_faction_standing": 1})
+    included = build_configuration(
+        {**values, "checks_shops": 1, "checks_shop_purchases": 1, "checks_faction_standing": 1}
+    )
     assert configured_location_ids(included) >= MISSABLE_IDS
     omitted = build_configuration({**included.to_values(), "optional_check_policy": 1})
     assert not MISSABLE_IDS & configured_location_ids(omitted)

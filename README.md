@@ -78,7 +78,12 @@ remaining acceptance, review and owner licence decisions.
 - [Primary resources](docs/resources.md), [verification record](docs/verification-record.md), [callback probes](docs/callback-probes.md), [hardening](docs/release-hardening.md).
 - [Change log](CHANGELOG.md), [licence review](docs/licence-review.md), [notice](NOTICE.md).
 
-Game files, assets, credentials and personal saves are not distributed. Install
+Anomaly/GAMMA game files, assets, credentials and personal saves are not distributed. Install
 Anomaly/GAMMA through official instructions. No affiliation with their owners or
 Archipelago is implied. In-world multiplayer and exploratory stretch goals remain
 separate future work.
+
+[Optional AP shop contracts](docs/shop-purchases.md) add nine named checks bought
+with game money at three traders. Enable `checks_shop_purchases` for a new seed.
+The official Archipelago icon carries its separate CC BY-NC 4.0 attribution in
+the mod package; it does not select a licence for this project's owned code.
