@@ -79,6 +79,8 @@ def test_packages_are_reproducible_and_load_from_apworld(tmp_path):
             "gamedata/configs/ui/gamma_ap_pda.xml",
             "gamedata/scripts/modxml_gamma_ap_pda.script",
             "gamedata/scripts/modxml_gamma_ap_stashes.script",
+            "gamedata/configs/ui/textures_descr/ui_gamma_ap_stash.xml",
+            "gamedata/textures/ui/gamma_ap_stash.dds",
         }
     with ZipFile(outputs[2]) as archive:
         assert set(archive.namelist()) == {

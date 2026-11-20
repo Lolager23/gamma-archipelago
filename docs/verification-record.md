@@ -1,5 +1,28 @@
 # Verification record
 
+## Empty stash interaction and rainbow markers: 20 November 2026
+
+Owen reported empty AP stashes. The old adapter marks the box opened but waits
+for its 500 ms poll to create contents; the active GAMMA inventory refreshes its
+loot contents on the next UI frame. Two retained regressions fail against that
+implementation: opening without an actor update, and reopening a legacy saved
+pending plan. The correction fills during use, keeps the existing action identities
+and bounded retry path, and counts actual claims instead of opens in the tracker.
+Failed protected-helmet creation also restores its prior permission, and refused
+saves cannot create loot through the interaction path.
+
+Both AP stash kinds now reference an original rainbow backpack DDS through an
+additive texture descriptor. The descriptor loader and resource lookup were
+checked against pinned Monolith `7289a03` (`MainMenu.cpp` and `UITextureMaster.cpp`).
+The generated texture was inspected at full size and downsampled to 12px; that
+preview is artwork evidence, not an in-game capture. Packaging permits only the
+exact regenerated binary icon and still rejects foreign assets and links.
+
+The complete verifier, coverage and current-head Windows/Linux results are
+recorded on the PR. Native stash opening, rainbow rendering and current-save
+recovery remain **not run**, for Owen. No new seed or character is required;
+already-recorded created objects are never inferred missing and replaced.
+
 ## Tracker clarity and reverse navigation: 20 November 2026
 
 Branch `codex/tracker-redesign` replaces the dense mixed checklist/progression

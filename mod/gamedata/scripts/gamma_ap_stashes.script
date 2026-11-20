@@ -114,18 +114,6 @@ function receive(state, item_id)
     return marker(state, record)
 end
 
-function open(state, box, who)
-    if not gamma_ap_loadout.pda_available(state) then return end
-    if not state.session_key or not state.expanded or #state.stashes.order == 0
-        or not db.actor or not db.actor:alive() or not box or not who
-        or who:id() ~= db.actor:id() then return end
-    for _,index in ipairs(state.stashes.order) do
-        local record = state.stashes.records[index]
-        if record.cache_id == box:id() and record.cache_name == box:name()
-            and record.level == level.name() then record.opened = true end
-    end
-end
-
 function take(state, box, item)
     if not state.session_key or not state.expanded or not item or #state.stashes.order == 0 then return end
     for _,index in ipairs(state.stashes.order) do
@@ -161,13 +149,55 @@ local function spawn_action(action, box)
     return true
 end
 
+local function fill_record(state, record, box, budget)
+    local protected = gamma_ap_catalog.progression_stashes[record.item_id] ~= nil
+    while record.next_action <= #record.actions and budget.remaining > 0 do
+        -- Pickup guards must permit our helmet during creation, but a failed
+        -- spawn must not leave its progression permission unlocked.
+        local previous = state.unlocks.calibrated_psi
+        if protected then state.unlocks.calibrated_psi = true end
+        local ok, problem = spawn_action(record.actions[record.next_action], protected and db.actor or box)
+        if not ok then state.unlocks.calibrated_psi = previous; return false, problem end
+        record.next_action = record.next_action + 1
+        budget.remaining = budget.remaining - 1
+    end
+    if protected and record.next_action > #record.actions then record.claimed = true end
+    return true
+end
+
+function open(state, box, who)
+    if not gamma_ap_loadout.pda_available(state) then return true end
+    if state.refused_save or not state.session_key or not state.expanded or #state.stashes.order == 0
+        or not db.actor or not db.actor:alive() or not box or not who
+        or who:id() ~= db.actor:id() then return true end
+    -- GAMMA refreshes the loot UI on the next UI frame, before our timed actor poll.
+    -- Fill here like the native treasure manager; do not prefill for NPC scavengers.
+    local budget = {remaining=64}
+    for _,index in ipairs(state.stashes.order) do
+        local record = state.stashes.records[index]
+        if record.cache_id == box:id() and record.cache_name == box:name()
+            and record.level == level.name() then
+            local valid, reason = resolve(record)
+            if not valid then return false, reason end
+            record.opened = true
+            if not markers_ready() then return false, "AP stash marker definitions are not ready; contents remain pending" end
+            local ok, problem = fill_record(state, record, box, budget)
+            if not ok then return false, problem end
+            if record.next_action <= #record.actions then
+                return false, "More AP stash contents are pending; close and reopen the loot screen to continue"
+            end
+        end
+    end
+    return true
+end
+
 function poll(state)
     local progress = state.stashes
     if not state.session_key or not state.expanded or #progress.order == 0 then return true end
     if not markers_ready() then
         return false, "AP stash DXML marker definitions are not ready; saved stashes remain pending"
     end
-    local work = 0
+    local budget = {remaining=8}
     for _,index in ipairs(progress.order) do
         local record = progress.records[index]
         if record.opened and record.next_action <= #record.actions then
@@ -175,18 +205,11 @@ function poll(state)
             if not valid then return false, reason end
             local box = level.object_by_id(record.cache_id)
             if box and box:name() == record.cache_name then
-                local protected = gamma_ap_catalog.progression_stashes[record.item_id] ~= nil
-                if protected then state.unlocks.calibrated_psi = true end
-                while record.next_action <= #record.actions and work < 8 do
-                    local ok, problem = spawn_action(record.actions[record.next_action], protected and db.actor or box)
-                    if not ok then return false, problem end
-                    record.next_action = record.next_action + 1
-                    work = work + 1
-                end
-                if protected and record.next_action > #record.actions then record.claimed = true end
+                local ok, problem = fill_record(state, record, box, budget)
+                if not ok then return false, problem end
             end
         end
-        if work >= 8 then break end
+        if budget.remaining == 0 then break end
     end
     progress.marker_cursor = (progress.marker_cursor % #progress.order) + 1
     local record = progress.records[progress.order[progress.marker_cursor]]

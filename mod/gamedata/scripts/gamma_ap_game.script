@@ -231,7 +231,8 @@ function actor_on_item_before_use(item, flags)
 end
 
 function physic_object_on_use_callback(box, who)
-    gamma_ap_stashes.open(state, box, who)
+    local ok, reason = gamma_ap_stashes.open(state, box, who)
+    if not ok then report_error(reason) end
 end
 
 function actor_on_task_callback(object, status, manager, id)

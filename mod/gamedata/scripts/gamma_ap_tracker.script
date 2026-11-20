@@ -132,7 +132,7 @@ function snapshot(state, total, problem, psi)
     local coordinates,claimed = 0,0
     for _,record in pairs(state.stashes.records) do
         coordinates = coordinates+1
-        if record.opened then claimed=claimed+1 end
+        if record.claimed then claimed=claimed+1 end
     end
     if coordinates > 0 then
         result.stash_delivery = "Stash deliveries: "..coordinates.." coordinates received, "..claimed.." claimed"
