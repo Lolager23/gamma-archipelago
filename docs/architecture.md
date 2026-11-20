@@ -35,6 +35,10 @@ native screen dismissal followed by a later unpaused, non-precaching world frame
 This gate never delays or acknowledges item/check state.
 
 The [PDA tracker](pda-tracker.md) reads a detached view from the game-state owner.
+The projection groups progression facts by status, unlocked/locked permissions
+and exploration without parsing presentation strings; its legacy flat list is
+retained. The UI's Checks/Progression pages and native list selection own no
+progression state.
 Generated catalogue metadata and a stateless requirement projection supply its
 regional/status pages. The UI owns only filters and page offsets; it cannot mark
 checks or acknowledge rewards. Its native tab wrapper delegates all other sections

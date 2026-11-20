@@ -1,6 +1,9 @@
 -- Engine UI boundary. Other PDA tabs retain their delegates; AP reads copied views.
 local singleton, wrapper = nil, nil
 local statuses = {"all", "completed", "available", "blocked"}
+local colors = {completed=0xffa3b49b, available=0xffecd39a, blocked=0xffd49a8e}
+local groups = {status="Equipment and deliveries",unlocked="Unlocked permissions",
+    exploration="Lab visits",locked="Locked permissions",legacy="Permissions and exploration"}
 
 function label(key, fallback)
     local text = game.translate_string("gamma_ap_pda_"..key)
@@ -8,7 +11,6 @@ function label(key, fallback)
 end
 
 local function set_text(control, value)
-    -- X-Ray's complex text parser recognizes backslash+n, not an LF character.
     control:SetTextComplexMode(true)
     local text = value:gsub("\r\n","\n"):gsub("\r","\n"):gsub("\n","\\n")
     control:SetText(text)
@@ -25,158 +27,198 @@ local function cache_key(values)
     return table.concat(parts)
 end
 
-local function field(xml, node, parent, value)
-    local control = xml:InitTextWnd(node,parent)
-    set_text(control,value)
-    return control
-end
-
-local function check_row(xml, values)
-    -- AddWindow does not adopt Lua-created userdata; use an engine-created row.
-    local row = xml:InitStatic("check_row",nil)
-    local bottom = 0
-    for index,name in ipairs({"status","region","name"}) do
-        local control = field(xml,"check_row:"..name,row,values[index])
-        bottom = math.max(bottom,control:GetHeight()+8)
-    end
-    for index,name in ipairs({"reason","reward"}) do
-        local control = field(xml,"check_row:"..name,row,values[index+3])
-        control:SetWndPos(vector2():set(8,bottom+6))
-        bottom = bottom+6+control:GetHeight()
-    end
-    resize(row,bottom+10)
-    return row
-end
-
 class "ap_tracker_window" (CUIScriptWnd)
 function ap_tracker_window:__init() super()
-    self.region_index, self.status_index, self.offset, self.progress_offset = 1, 1, 1, 1
-    self.selected_index,self.selected_id,self.feedback = 1,nil,""
+    self.region_index,self.region_count,self.status_index,self.offset = 1,1,3,1
+    self.selected_index,self.selected_id,self.feedback,self.page_name = 1,nil,"","checks"
     self.xml,self.drawn = CScriptXmlInit(),{}
     self.xml:ParseFile("gamma_ap_pda.xml")
-    -- Custom dialogs attach to the background, whose origin differs from its tabs.
     self.xml:InitWindow("main",0,self)
-    for _,name in ipairs({"summary","details","progress"}) do
-        self[name] = self.xml:InitScrollView(name,self)
+    self.checks_page = self.xml:InitStatic("checks_page",self)
+    self.progress_page = self.xml:InitStatic("progress_page",self)
+    for _,name in ipairs({"summary","notice"}) do self[name] = self.xml:InitScrollView(name,self) end
+    for _,name in ipairs({"region_label","status_label","hint","selection_label"}) do
+        self.xml:InitTextWnd("checks_page:"..name,self.checks_page)
     end
-    for _,name in ipairs({"head_status","head_region","head_check","head_progress"}) do
-        self.xml:InitTextWnd(name,self)
-    end
-    self.page = self.xml:InitTextWnd("page",self)
+    self.xml:InitTextWnd("progress_page:heading",self.progress_page)
+    self.details = self.xml:InitListBox("checks_page:details",self.checks_page)
+    self.selection = self.xml:InitScrollView("checks_page:selection",self.checks_page)
+    self.progress = self.xml:InitScrollView("progress_page:progress",self.progress_page)
+    self.page = self.xml:InitTextWnd("checks_page:page",self.checks_page)
+    self:Register(self.details,"check_list")
+    self:AddCallback("check_list",ui_events.LIST_ITEM_CLICKED,function() self:select_check() end,self)
     self.buttons = {}
-    for _,name in ipairs({"refresh","region","status","previous","next","progress_next","select","scout"}) do
-        local button = self.xml:Init3tButton(name,self)
+    for _,name in ipairs({"refresh","checks","progression","region","status","previous","next","scout"}) do
+        local top = name == "refresh" or name == "checks" or name == "progression"
+        local button = self.xml:Init3tButton(top and name or "checks_page:"..name,top and self or self.checks_page)
         self.buttons[name] = button
         self:Register(button,name)
         local action = name
-        self:AddCallback(name,ui_events.BUTTON_CLICKED,function() self:change(action) end,self)
+        self:AddCallback(name,ui_events.BUTTON_CLICKED,function() self:change(action,1) end,self)
     end
 end
 
-function ap_tracker_window:change(action)
-    if action == "region" then self.region_index,self.offset = self.region_index+1,1
-    elseif action == "status" then self.status_index,self.offset = self.status_index%4+1,1
+function ap_tracker_window:OnMouse(x,y,event)
+    if event == ui_events.WINDOW_RBUTTON_DOWN and self.checks_page:IsShown() then
+        local cursor = GetCursorPosition()
+        for _,name in ipairs({"region","status"}) do
+            local button,rect = self.buttons[name],Frect():set(0,0,0,0)
+            button:GetAbsoluteRect(rect)
+            if button:IsEnabled() and cursor.x >= rect.x1 and cursor.x <= rect.x2
+                and cursor.y >= rect.y1 and cursor.y <= rect.y2 then
+                self:change(name,-1)
+                return true
+            end
+        end
+    end
+    return CUIScriptWnd.OnMouse(self,x,y,event)
+end
+
+function ap_tracker_window:change(action,direction)
+    direction = direction or 1
+    if action == "region" then self.region_index = (self.region_index-1+direction)%self.region_count+1
+    elseif action == "status" then self.status_index = (self.status_index-1+direction)%#statuses+1
     elseif action == "next" then self.offset = self.offset+gamma_ap_tracker.PAGE_SIZE
     elseif action == "previous" then self.offset = math.max(1,self.offset-gamma_ap_tracker.PAGE_SIZE)
-    elseif action == "progress_next" then self.progress_offset = self.progress_offset+10
-    elseif action == "select" then self.selected_index = self.selected_index%gamma_ap_tracker.PAGE_SIZE+1
-    elseif action == "scout" then
+    elseif action == "checks" or action == "progression" then self.page_name = action
+    elseif action == "scout" and self.selected_id then
         local _,reason = gamma_ap_game.request_scout(self.selected_id)
         self.feedback = reason
     end
+    if action == "region" or action == "status" then self.offset = 1 end
     if action == "region" or action == "status" or action == "next" or action == "previous" then
-        self.details:ScrollToBegin()
-    elseif action == "progress_next" then self.progress:ScrollToBegin() end
+        self.selected_id,self.selected_index,self.feedback = nil,1,""
+        self.details:ScrollToBegin(); self.selection:ScrollToBegin()
+    end
+    self:refresh()
+end
+
+function ap_tracker_window:select_check()
+    local index = self.details:GetSelectedIndex()+1
+    if not self.visible_rows[index] then return end
+    self.selected_index,self.selected_id,self.feedback = index,self.visible_rows[index].id,""
+    self.selection:ScrollToBegin()
     self:refresh()
 end
 
 function ap_tracker_window:Update()
     CUIScriptWnd.Update(self)
     local now = time_global()
-    if not self.next_refresh or now >= self.next_refresh then
-        self.next_refresh = now+1000
-        self:refresh()
-    end
+    if not self.next_refresh or now >= self.next_refresh then self.next_refresh=now+1000; self:refresh() end
 end
 
 function ap_tracker_window:render_text(name, lines)
     local key = cache_key(lines)
     if self.drawn[name] == key then return end
-    local list = self[name]
-    local position = list:GetCurrentScrollPos()
+    local list,position = self[name],self[name]:GetCurrentScrollPos()
     list:Clear()
     for _,value in ipairs(lines) do
-        local control = field(self.xml,name.."_row",nil,value)
-        resize(control,control:GetHeight()+6)
+        local control = self.xml:InitTextWnd(name.."_row",nil)
+        set_text(control,value); resize(control,control:GetHeight()+6)
         list:AddWindow(control,true)
     end
     list:SetScrollPos(position)
     self.drawn[name] = key
 end
 
-function ap_tracker_window:render_checks(rows, view)
-    local values,keys = {},{}
+function ap_tracker_window:render_checks(rows)
+    local values,found = {},false
     for index,row in ipairs(rows) do
-        local reward = view.scouted and view.scouted[row.id]
-        local info = reward and (reward.item.." -> "..reward.player) or label("not_scouted","Reward not scouted")
-        values[index] = {(index==self.selected_index and "> " or "")..label(row.status,row.status),
-            row.region,row.name,row.reason,info}
-        keys[index] = cache_key(values[index])
+        values[index] = "["..label(row.status,row.status).."]  "..row.region.."\n"..row.name
+        if row.id == self.selected_id then self.selected_index,found = index,true end
     end
-    local key = cache_key(keys)
-    if self.drawn.details == key then return end
-    local position = self.details:GetCurrentScrollPos()
-    self.details:Clear()
-    for _,value in ipairs(values) do self.details:AddWindow(check_row(self.xml,value),true) end
-    self.details:SetScrollPos(position)
-    self.drawn.details = key
+    if self.selected_id and not found then self.selected_index,self.feedback = 1,""; self.selection:ScrollToBegin() end
+    local key = cache_key(values)
+    if self.drawn.details ~= key then
+        local position = self.details:GetCurrentScrollPos()
+        self.details:Clear()
+        for index,value in ipairs(values) do
+            -- AddTextItem creates native-owned rows; never AddWindow Lua userdata.
+            local item = self.details:AddTextItem("")
+            local text = item:GetTextItem()
+            text:SetWndPos(vector2():set(10,8))
+            text:SetWndSize(vector2():set(item:GetWidth()-24,16))
+            set_text(text,value); resize(item,text:GetHeight()+16)
+            item:SetTextColor(colors[rows[index].status])
+        end
+        self.details:SetScrollPos(position)
+        self.drawn.details = key
+    end
+    self.selected_index = math.min(self.selected_index,math.max(1,#rows))
+    self.selected_id = rows[self.selected_index] and rows[self.selected_index].id
+    if #rows > 0 and self.details:GetSelectedIndex() ~= self.selected_index-1 then self.details:SetSelectedIndex(self.selected_index-1) end
+    self.visible_rows = rows
+end
+
+function ap_tracker_window:refresh_selection(view)
+    local row = self.visible_rows[self.selected_index]
+    self.buttons.scout:Enable(row ~= nil)
+    if not row then self:render_text("selection",{label("empty","No checks match. Change the region or status filter.")}); return end
+    local reward = view.scouted and view.scouted[row.id]
+    local reason = row.status == "completed" and label("completed_details","This check has been completed.") or row.reason
+    local lines = {reason}
+    lines[#lines+1] = reward and (label("reward","Reward")..": "..reward.item.." | "..label("recipient","Recipient")..": "..reward.player)
+        or label("not_scouted","Reward not scouted. Select Scout reward to request a reveal.")
+    self:render_text("selection",lines)
 end
 
 function ap_tracker_window:refresh_summary(view)
-    local lines = {
-        string.format("%s: %d / %d | %s: %d | %s: %d",label("completed","Completed"),
-            view.completed,#view.rows,label("available","Available"),view.available,label("blocked","Blocked"),view.blocked),
-        string.format("%s: %d/%d (%d %s)",label("applied","Rewards applied"),view.applied,
-            view.total,view.pending,label("pending","pending")),
-        view.problem or view.connection_status or label("offline","Server connectivity not reported by this snapshot"),
-    }
+    self:render_text("summary",{
+        label("goal","Goal")..": "..label("goal_"..view.goal,tostring(view.goal)).." - "
+            ..label(view.goal_complete and "completed" or "incomplete",view.goal_complete and "Completed" or "Incomplete"),
+        string.format("%s: %d / %d    |    %s: %d    |    %s: %d",label("completed","Completed"),view.completed,
+            #view.rows,label("available","Available"),view.available,label("blocked","Blocked"),view.blocked),
+        string.format("%s: %d / %d    |    %s: %d",label("applied","Rewards applied"),view.applied,view.total,label("pending","Pending"),view.pending),
+    })
+    local lines = {view.problem or view.connection_status or label("offline","Server connectivity not reported by this snapshot")}
+    if self.feedback ~= "" then table.insert(lines,1,self.feedback) end
     if view.delivery or view.stash_delivery then lines[#lines+1] = view.delivery or view.stash_delivery end
-    if self.feedback ~= "" then lines[#lines+1] = self.feedback end
-    self:render_text("summary",lines)
+    self:render_text("notice",lines)
 end
 
 function ap_tracker_window:refresh_progress(view)
-    local lines = {
-        string.format("%s: %s (%s)",label("goal","Goal"),label("goal_"..view.goal,tostring(view.goal)),
-            view.goal_complete and label("completed","Completed") or label("incomplete","Incomplete")),
-        string.format("Kills: %d | Side tasks: %d | Rank index: %d",view.kills,view.tasks,view.rank),
-    }
+    local rank = label("unknown","Not recorded")
+    for _,definition in ipairs(gamma_ap_catalog.rank_locations) do
+        if view.rank >= definition.minimum then rank = label("rank_"..definition.name,definition.name) end
+    end
+    local lines = {label("kills","Kills")..": "..view.kills.."    |    "..label("tasks","Side tasks")..": "..view.tasks
+        .."    |    "..label("rank","Highest rank")..": "..rank}
     for _,preview in ipairs(view.previews or {}) do
         local reward = view.scouted and view.scouted[preview.id]
         lines[#lines+1] = preview.label..": "..(reward and reward.item.." -> "..reward.player
             or label("waiting_scout","Waiting for scouting data"))
     end
-    if self.progress_offset > #view.progression then self.progress_offset = 1 end
-    for index=self.progress_offset,math.min(self.progress_offset+9,#view.progression) do
-        lines[#lines+1] = view.progression[index]
+    local sections = view.progression_groups or {legacy=view.progression}
+    for _,key in ipairs({"status","unlocked","exploration","locked","legacy"}) do
+        if sections[key] and #sections[key] > 0 then
+            lines[#lines+1] = "[ "..label("group_"..key,groups[key]).." ]"
+            for _,entry in ipairs(sections[key]) do lines[#lines+1] = entry end
+        end
     end
     self:render_text("progress",lines)
 end
 
 function ap_tracker_window:refresh()
     local view = gamma_ap_game.tracker_view()
-    if not view.enabled or not view.bound then
-        self:render_text("summary",{view.enabled and label("unbound","Start a matching AP session")
-            or label("disabled","Tracker disabled by this seed")})
-        self.details:Clear(); self.progress:Clear(); self.page:SetText("")
-        self.drawn.details,self.drawn.progress,self.selected_id = nil,nil,nil
+    local ready = view.enabled and view.bound
+    self.checks_page:Show(ready and self.page_name == "checks")
+    self.progress_page:Show(ready and self.page_name == "progression")
+    for _,name in ipairs({"checks","progression","refresh","region","status"}) do self.buttons[name]:Enable(ready) end
+    for _,name in ipairs({"checks","progression"}) do
+        self.buttons[name]:TextControl():SetTextColor(self.page_name==name and 0xffecd39a or 0xffb5b5b5)
+    end
+    if not ready then
+        self:render_text("summary",{view.enabled and label("unbound","Start a matching AP session") or label("disabled","Tracker disabled by this seed")})
+        for _,name in ipairs({"details","selection","progress","notice"}) do self[name]:Clear(); self.drawn[name]=nil end
+        self.visible_rows,self.selected_id,self.selected_index,self.feedback = {},nil,1,""
+        self.buttons.scout:Enable(false); self.page:SetText("")
         return
     end
-    local regions = {label("all_regions","All regions")}
-    local ordered = {}
+    local regions,ordered = {label("all_regions","All regions")},{}
     for region in pairs(view.regions) do ordered[#ordered+1] = region end
     table.sort(ordered)
     for _,region in ipairs(ordered) do regions[#regions+1] = region end
+    self.region_count = #regions
     if self.region_index > #regions then self.region_index = 1 end
     local region = self.region_index > 1 and regions[self.region_index] or nil
     local status = self.status_index > 1 and statuses[self.status_index] or nil
@@ -184,13 +226,10 @@ function ap_tracker_window:refresh()
     self.offset = offset
     self.buttons.region:TextControl():SetText(regions[self.region_index])
     self.buttons.status:TextControl():SetText(label(statuses[self.status_index],statuses[self.status_index]))
-    if self.selected_index > #rows then self.selected_index = 1 end
-    self.selected_id = rows[self.selected_index] and rows[self.selected_index].id
-    self:refresh_summary(view)
-    self:render_checks(rows,view)
-    self.page:SetText(string.format("%d-%d / %d",total==0 and 0 or offset,
-        math.min(offset+gamma_ap_tracker.PAGE_SIZE-1,total),total))
-    self:refresh_progress(view)
+    self:render_checks(rows); self:refresh_selection(view); self:refresh_summary(view); self:refresh_progress(view)
+    self.page:SetText(string.format("%d-%d / %d",total==0 and 0 or offset,math.min(offset+#rows-1,total),total))
+    self.buttons.previous:Enable(offset>1)
+    self.buttons.next:Enable(offset+#rows<=total)
 end
 
 function get_ui()
@@ -203,10 +242,7 @@ function install()
     if not pda or type(pda.set_active_subdialog) ~= "function" then return false end
     if pda.set_active_subdialog == wrapper then return true end
     local delegate = pda.set_active_subdialog
-    wrapper = function(section)
-        if section == "eptArchipelago" then return get_ui() end
-        return delegate(section)
-    end
+    wrapper = function(section) return section == "eptArchipelago" and get_ui() or delegate(section) end
     pda.set_active_subdialog = wrapper
     return true
 end

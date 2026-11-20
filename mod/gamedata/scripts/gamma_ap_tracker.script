@@ -78,8 +78,15 @@ local function blocked(state, row, regions, psi)
     end
 end
 
+local function progression_entry(result, group, text)
+    result.progression[#result.progression+1] = text
+    local entries = result.progression_groups[group]
+    entries[#entries+1] = text
+end
+
 function snapshot(state, total, problem, psi)
     local result = {rows={}, regions={}, completed=0, available=0, blocked=0, progression={}}
+    result.progression_groups = {status={}, unlocked={}, exploration={}, locked={}}
     result.enabled = options(state).pda_tracker ~= 0
     result.bound = state.session_key ~= nil and not state.refused_save
     result.goal = state.configuration and state.configuration.options.goal or 0
@@ -108,21 +115,20 @@ function snapshot(state, total, problem, psi)
         for id in pairs(state.allowed_items) do
             if gamma_ap_catalog.permissions[id] == key then item_enabled = true end
         end
-        if item_enabled then result.progression[#result.progression+1] = prefix .. name end
+        if item_enabled then progression_entry(result,state.unlocks[key] and "unlocked" or "locked",prefix..name) end
     end
-    table.sort(result.progression)
-    result.progression[#result.progression+1] = psi and "Calibrated psi protection: usable" or "Calibrated psi protection: not confirmed"
+    progression_entry(result,"status",psi and "Calibrated psi protection: usable" or "Calibrated psi protection: not confirmed")
     for where in pairs(gamma_ap_catalog.lab_levels) do
         local visited = state.visited_maps[gamma_ap_catalog.location_by_level[where]]
-        result.progression[#result.progression+1] = (visited and "Visited: " or "Unvisited: ") .. gamma_ap_catalog.tracker_regions[where]
+        progression_entry(result,"exploration",(visited and "Visited: " or "Unvisited: ")..gamma_ap_catalog.tracker_regions[where])
     end
     if options(state).rewards_progressive_tools == 1 then
-        result.progression[#result.progression+1] = "Progressive tools: "..gamma_ap_workshop.tools_level(state).."/3"
+        progression_entry(result,"status","Progressive tools: "..gamma_ap_workshop.tools_level(state).."/3")
     end
     if options(state).rewards_convenience == 1 then
-        result.progression[#result.progression+1] = "AP carry permission: +"..gamma_ap_convenience.bonus(state).." kg (cap 15 kg)"
+        progression_entry(result,"status","AP carry permission: +"..gamma_ap_convenience.bonus(state).." kg (cap 15 kg)")
     end
-    if result.delivery then result.progression[#result.progression+1] = result.delivery end
+    if result.delivery then progression_entry(result,"status",result.delivery) end
     local coordinates,claimed = 0,0
     for _,record in pairs(state.stashes.records) do
         coordinates = coordinates+1
@@ -130,9 +136,10 @@ function snapshot(state, total, problem, psi)
     end
     if coordinates > 0 then
         result.stash_delivery = "Stash deliveries: "..coordinates.." coordinates received, "..claimed.." claimed"
-        result.progression[#result.progression+1] = result.stash_delivery
+        progression_entry(result,"status",result.stash_delivery)
     end
     table.sort(result.progression)
+    for _,entries in pairs(result.progression_groups) do table.sort(entries) end
     return result
 end
 

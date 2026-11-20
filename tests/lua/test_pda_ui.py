@@ -24,6 +24,14 @@ def load_ui(lua):
     for element in root:
         record(element)
     lua.globals().xml_nodes = lua.table_from(nodes)
+    lua.globals().translations = lua.table_from(
+        {
+            node.get("id"): node.findtext("text")
+            for node in ElementTree.parse(
+                ROOT / "mod/gamedata/configs/text/eng/st_gamma_ap_pda.xml"
+            ).getroot()
+        }
+    )
     lua.execute(r"""
         super=function() end
         clock=1000; time_global=function() return clock end
@@ -32,6 +40,18 @@ def load_ui(lua):
         methods.SetWndPos=function(self,pos) self.x,self.y=pos.x,pos.y end
         methods.GetWidth=function(self) return self.width end
         methods.GetHeight=function(self) return self.height end
+        methods.Show=function(self,value) self.shown=value end
+        methods.IsShown=function(self) return self.shown~=false end
+        methods.Enable=function(self,value) self.enabled=value end
+        methods.IsEnabled=function(self) return self.enabled~=false end
+        methods.SetTextColor=function(self,value) self.color=value end
+        methods.OnMouse=function(self,x,y,event) self.delegated_mouse=event; return false end
+        methods.GetAbsoluteRect=function(self,rect)
+            local x,y=self.x,self.y
+            local parent=self.parent
+            while parent do x=x+parent.x; y=y+parent.y; parent=parent.parent end
+            rect:set(x,y,x+self.width,y+self.height)
+        end
         methods.SetText=function(self,text,...)
             assert(select('#',...)==0,'native SetText accepts exactly one string')
             self.text=text
@@ -57,7 +77,7 @@ def load_ui(lua):
             self.callbacks=self.callbacks or {}; self.callbacks[name]=callback
         end
         methods.Clear=function(self)
-            self.items={}; self.position=0; self.cleared=(self.cleared or 0)+1
+            self.items={}; self.position=0; self.selected=-1; self.cleared=(self.cleared or 0)+1
         end
         methods.AddWindow=function(self,row,owned)
             assert(owned and row.width<=self.width)
@@ -73,6 +93,21 @@ def load_ui(lua):
         local function native_window()
             return setmetatable({children={}}, {__index=methods})
         end
+        methods.ShowSelectedItem=methods.Show -- The native binding aliases Show, not selection.
+        methods.GetSelectedIndex=function(self) return self.selected or -1 end
+        methods.SetSelectedIndex=function(self,value)
+            if self.can_select then self.selected=value end
+        end
+        methods.AddTextItem=function(self,value)
+            -- Native factory: returned handles do not own/delete the native row.
+            local row,text=native_window(),native_window()
+            row.width,row.height=self.width-20,48
+            text.width,text.height,text.text=row.width,16,value
+            row.children[1]=text; row.GetTextItem=function() return text end
+            methods.AddWindow(self,row,true)
+            text_controls[#text_controls+1]=text
+            return row
+        end
         CUIWindow=function()
             local native=native_window()
             local handle=setmetatable({native_pointer=native}, {
@@ -82,6 +117,9 @@ def load_ui(lua):
         end
         CUIScriptWnd=methods
         vector2=function() return {set=function(self,x,y) self.x,self.y=x,y; return self end} end
+        cursor={x=0,y=0}; GetCursorPosition=function() return cursor end
+        Frect=function() return {set=function(self,x1,y1,x2,y2)
+            self.x1,self.y1,self.x2,self.y2=x1,y1,x2,y2; return self end} end
         class=function(name) return function(base)
             local env=getfenv(2); local cls={}; cls.__index=cls
             setmetatable(cls,{__index=base,__call=function()
@@ -95,7 +133,7 @@ def load_ui(lua):
             control.node=node
             control.x,control.y=tonumber(attr.x) or 0,tonumber(attr.y) or 0
             control.width,control.height=tonumber(attr.width),tonumber(attr.height)
-            if parent then parent.children[#parent.children+1]=control end
+            if parent then parent.children[#parent.children+1]=control; control.parent=parent end
             if attr.initial_text then control.text=game.translate_string(attr.initial_text) end
             return control
         end
@@ -104,6 +142,12 @@ def load_ui(lua):
             InitScrollView=function(self,node,parent)
                 local control=init(node,parent); control.items={}; control.position=0
                 control.interval=tonumber(xml_nodes[node].vert_interval) or 0
+                return control
+            end,
+            InitListBox=function(self,node,parent)
+                local control=init(node,parent); control.items={}; control.position=0
+                control.interval=tonumber(xml_nodes[node].vert_interval) or 0
+                control.can_select=tonumber(xml_nodes[node].can_select)==1
                 return control
             end,
             InitTextWnd=function(self,node,parent)
@@ -115,8 +159,9 @@ def load_ui(lua):
                 local button=init(node,parent); local text=native_window()
                 button.TextControl=function() return text end; return button
             end} end
-        game={translate_string=function(key) return key end}
-        ui_events={BUTTON_CLICKED=1}
+        game={translate_string=function(key) return translations[key] or key end}
+        ui_events={BUTTON_CLICKED=10,LIST_ITEM_CLICKED=35,WINDOW_RBUTTON_DOWN=1,
+            WINDOW_RBUTTON_UP=4,WINDOW_LBUTTON_DOWN=0}
         pda={set_active_subdialog=function(section) return 'original:'..section end}
         callbacks={}; RegisterScriptCallback=function(name,callback) callbacks[name]=callback end
     """)
@@ -166,12 +211,11 @@ def test_tab_preserves_delegates_refreshes_filters_and_bounds_all_pages(lua):
     window.Update(window)
     lua.globals().clock = 2000
     window.Update(window)
-    for name in ("region", "status", "next", "previous", "refresh", "progress_next"):
+    for name in ("region", "status", "next", "previous", "refresh", "progression", "checks"):
         window.callbacks[name]()
     window.region_index = 999
-    window.progress_offset = 999
     window.refresh(window)
-    assert window.region_index == 1 and window.progress_offset == 1
+    assert window.region_index == 1
     assert lua.eval("rawequal")(module.get_ui(), window)
     lua.globals().game.translate_string = lambda key: "Localized"
     assert module.label("all", "fallback") == "Localized"
@@ -216,12 +260,13 @@ def test_scout_selection_and_next_milestone_rewards_are_displayed_from_metadata(
 
     lua.globals().gamma_ap_game = lua.table(tracker_view=lambda: current, request_scout=request)
     window = module.get_ui()
-    assert "Toolkit -> Friend" in panel_text(window.details)
+    assert "Reward: Toolkit | Recipient: Friend" in panel_text(window.selection)
     assert "Waiting for scouting data" in panel_text(window.progress)
-    window.callbacks["select"]()
+    window.details.SetSelectedIndex(window.details, 1)
+    window.callbacks["check_list"]()
     window.callbacks["scout"]()
     assert requested == [28052002]
-    assert "Requested" in panel_text(window.summary)
+    assert "Requested" in panel_text(window.notice)
 
 
 def test_dxml_adds_one_tab_without_replacing_existing_tabs_and_is_idempotent(lua):

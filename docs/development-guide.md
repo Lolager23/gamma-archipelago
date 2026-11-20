@@ -75,6 +75,21 @@ The same verification job runs on Windows and Linux through
 reports and experimental packages as run artifacts. The repository uses read-only
 workflow permissions. Check both job results on the PR before declaring CI passed.
 
+If GitHub refuses hosted jobs before any steps run because of account billing or
+spending limits, the repository variable `GAMMA_AP_SELF_HOSTED=true` selects local
+runners labelled `self-hosted,gamma-ap-windows-latest` and
+`self-hosted,gamma-ap-ubuntu-latest`. This changes only job placement: the Windows
+and Linux matrix, pinned actions/dependencies, complete verifier and retained
+artifacts remain identical. The matrix names identify their targets; record the
+actual local operating systems/Python versions rather than calling them hosted
+images. With the variable absent or false, the standard hosted runners are used.
+
+Use temporary repo-scoped runners under `D:/GAMMAAPTools`, only for reviewed code
+in the private repository. Do not install a permanent service or change billing.
+Remove registrations/credentials after the jobs finish and restore the variable
+to its previous state. Account billing remains a separate owner action; failed
+hosted runs must retain their original annotations rather than being marked passed.
+
 `python tools/build.py` writes deterministic `dist/gamma.apworld`,
 `dist/gamma-archipelago-mo2.zip` and `dist/SHA256SUMS`. Only owned code and data are
 packaged. The Lua and AP world catalogue copies are generated from

@@ -163,3 +163,26 @@ def test_game_exposes_only_a_detached_projection_and_handles_unavailable_psi_api
     assert any("psi protection: usable" in line for line in result.progression.values())
     result.rows[1].status = "changed"
     assert game.tracker_view().rows[1].status != "changed"
+
+
+def test_progression_groups_are_sorted_detached_and_preserve_every_legacy_entry(lua):
+    state = state_for(lua, rewards_zone_keys=1, rewards_progressive_tools=1, rewards_convenience=1)
+    state.unlocks.zone_l02_garbage = True
+    result = view(lua, state)
+    groups = result.progression_groups
+    flattened = []
+    for entries in groups.values():
+        values = list(entries.values())
+        assert values == sorted(values)
+        flattened.extend(values)
+    assert sorted(flattened) == sorted(result.progression.values())
+    assert all(text.startswith("Unlocked:") for text in groups.unlocked.values())
+    assert all(text.startswith("Locked:") for text in groups.locked.values())
+    assert len(groups.unlocked) == 1 and len(groups.locked) > 0
+    assert len(groups.exploration) == len(list(lua.globals().gamma_ap_catalog.lab_levels.keys()))
+    assert any("Progressive tools" in text for text in groups.status.values())
+    assert any("carry permission" in text for text in groups.status.values())
+    groups.unlocked[1] = "Changed UI copy"
+    assert view(lua, state).progression_groups.unlocked[1] != "Changed UI copy"
+    assert dict(state.unlocks.items()) == {"zone_l02_garbage": True}
+    assert not list(state.checks.keys())
