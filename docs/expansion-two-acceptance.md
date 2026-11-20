@@ -93,7 +93,7 @@ development deployments and user playtests have their own dated evidence.
 | Delivery | Partial supply failure, pending reason/cursor, normal reload, uncertain creation refusal and older-save consequences | Not run |
 | Packages | Native sections/box quantities, chosen calibre, economy and unwanted-supply frequency | Not run |
 | Convenience | +5/+10/+15 kg cap, other modifiers, new actor, reload and rollback | Not run |
-| Opening/access | Fresh short/standard/extended openings, all transition routes, map keys, psi/quest gates and actual reachable settlements | Not run |
+| Opening/access | Fresh short/standard/extended openings, all transition routes, map keys, psi/quest gates and actual reachable settlements | Failed: locked-Agroprom attempt caused a loading loop on 20 Nov; source fix requires Owen's native retest |
 | Multiplayer | In-game attribution and delivery between GAMMA slots and another game, offline checks, reconnect and restart | Not run |
 | Balance/release | Measured durations, grinding/rare encounter burden, deaths/waiting, install/upgrade/removal and independent human review | Not run |
 

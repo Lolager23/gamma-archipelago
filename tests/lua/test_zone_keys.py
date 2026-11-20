@@ -5,13 +5,17 @@ def zone_game(lua, **options):
     game, engine = stash_game(lua, items=(28051702,), rewards_zone_keys=1, **options)
     lua.execute("""
         engine.travels=0; engine.packet_calls=0
-        engine.graph={[1]='l01_escape',[2]='l02_garbage',[3]='l05_bar'}
+        engine.graph={[0]='l01_escape',[1]='l01_escape',[2]='l02_garbage',[3]='l05_bar'}
+        engine.points={[0]={x=1,y=2,z=3},[1]={x=100,y=2,z=3}}
+        clsid={level_changer=94,level_changer_s=95}
         vector=function() return {set=function(self,x,y,z)
             self.x=x;self.y=y;self.z=z;return self end} end
         game_graph=function() return {
             valid_vertex_id=function(self,id) return engine.graph[id]~=nil end,
             vertex=function(self,id)
-                return {level_id=function() return engine.graph[id] end} end} end
+                return {level_id=function() return engine.graph[id] end,
+                    level_point=function() return engine.points[id] end,
+                    level_vertex_id=function() return id+10 end} end} end
         db.actor.game_vertex_id=function() return 1 end
         db.actor.level_vertex_id=function() return 10 end
         db.actor.position=function() return {x=1,y=2,z=3} end
@@ -24,10 +28,13 @@ def zone_game(lua, **options):
         make_packet=function(gvid)
             return {destination=gvid,r_seek=function() end,
                 r_u16=function(self) return self.destination end,
-                w_begin=function(self,kind) assert(kind==13) end,
+                w_begin=function(self,kind) assert(kind==13);self.vectors=0 end,
                 w_u16=function(self,id) self.destination=id end,
                 w_u32=function(self,id) self.lvid=id end,
-                w_vec3=function(self,pos) self.position=pos end}
+                w_vec3=function(self,pos)
+                    self.vectors=self.vectors+1
+                    if self.vectors==1 then self.position=pos else self.heading=pos end
+                end}
         end
     """)
     return game, engine
@@ -38,7 +45,8 @@ def test_locked_destination_is_stopped_in_scripts_and_redirected_before_native_p
     game.on_game_start()
     packet = lua.globals().make_packet(2)
     lua.globals().CALifeUpdateManager__on_before_change_level(packet)
-    assert engine.final_destination == 1 and packet.lvid == 10
+    assert engine.final_destination == 1 and packet.lvid == 11
+    assert packet.position.x == 100 and packet.heading.y == 0.5
     assert lua.globals().ChangeLevel(None, 2, 2) is False
     poll(game, engine)
     assert progress(lua, game).received_count == 1
@@ -96,13 +104,14 @@ def test_online_changers_preserve_native_disabled_state_and_restore_only_ap_owne
     poll(game, engine)
     lua.execute("""
         db.storage={}; engine.changers={}
-        IsLevelChanger=function(obj) return obj.changer==true end
+        -- Match the installed baseline: there is no IsLevelChanger global.
+        isLc=function(obj) return obj:clsid()==94 end
         utils_stpk={get_level_changer_data=function(server)
             if engine.bad_changer then return nil end
             return {dest_game_vertex_id=server.destination}
         end}
         make_changer=function(id,name,active,target)
-            local obj={changer=true,active=active}
+            local obj={active=active,clsid=function() return 94 end}
             obj.name=function() return name end
             obj.is_level_changer_enabled=function(self) return self.active end
             obj.enable_level_changer=function(self,value) self.active=value end
