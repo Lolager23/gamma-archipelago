@@ -73,10 +73,10 @@ def test_dxml_appends_only_owned_marker_nodes_and_is_idempotent(lua, filename):
         "gamma_ap_progression",
         "gamma_ap_progression_spot",
     }
-    white = nodes.find("gamma_ap_loot_spot/texture").attrib
-    orange = nodes.find("gamma_ap_progression_spot/texture").attrib
-    assert (white["r"], white["g"], white["b"]) == ("255", "255", "255")
-    assert (orange["r"], orange["g"], orange["b"]) == ("255", "144", "16")
+    for kind in ("loot", "progression"):
+        texture = nodes.find(f"gamma_ap_{kind}_spot/texture")
+        assert texture.text == "gamma_ap_stash_rainbow"
+        assert texture.attrib == dict(a="255", r="255", g="255", b="255")
 
 
 @pytest.mark.parametrize("root", [None, "other"])

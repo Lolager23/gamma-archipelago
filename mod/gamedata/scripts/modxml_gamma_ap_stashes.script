@@ -10,7 +10,7 @@ local definitions = {
 ]]},
 {name="gamma_ap_loot_spot", xml=[[
 <gamma_ap_loot_spot width="12" height="12" alignment="c" stretch="1">
-    <texture a="255" r="255" g="255" b="255">ui_inGame2_PDA_icon_secret</texture>
+    <texture a="255" r="255" g="255" b="255">gamma_ap_stash_rainbow</texture>
 </gamma_ap_loot_spot>
 ]]},
 {name="gamma_ap_progression", xml=[[
@@ -21,7 +21,7 @@ local definitions = {
 ]]},
 {name="gamma_ap_progression_spot", xml=[[
 <gamma_ap_progression_spot width="12" height="12" alignment="c" stretch="1">
-    <texture a="255" r="255" g="144" b="16">ui_inGame2_PDA_icon_secret</texture>
+    <texture a="255" r="255" g="255" b="255">gamma_ap_stash_rainbow</texture>
 </gamma_ap_progression_spot>
 ]]},
 }

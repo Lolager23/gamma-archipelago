@@ -1,14 +1,16 @@
-# Step 15: orange progression stashes
+# Step 15: progression stashes
 
 Stack base: #18. `rewards_progression_stashes` adds one guaranteed progression
 coordinate item, ID 28051201, for a calibrated psi helmet in the named Cordon
 `esc_treasure_3` container. Its native description identifies the pipe near the
 Rookie Village. Missing/moved containers keep delivery pending rather than
-rerolling behind another gate. Existing white stashes keep their separate markers.
+rerolling behind another gate. Loot stashes keep their separate marker identities.
 
-Coordinates reveal an AP-owned orange marker. Only interaction with the recorded
+Coordinates reveal an AP-owned rainbow backpack marker with a progression text
+hint, replacing its original orange tint. Only interaction with the recorded
 box enables delivery. The protected helmet is created directly in the actor's
-inventory using the inspected native `good_psy_helmet` section, so NPC scavenging
+inventory during that use event using the inspected native `good_psy_helmet`
+section, so NPC scavenging
 cannot remove critical loot. The saved action/uncertain-creation policy from step
 14 applies. Successful creation claims the marker; merely receiving coordinates
 or taking unrelated items does not. No story task is auto-completed or granted.

@@ -182,10 +182,12 @@ def test_bounded_spawning_nil_retries_and_offline_box_waits(lua):
     poll(game, engine)
     record = progress(lua, game).stashes.records[1]
     box = engine.boxes[record.cache_id]
+    engine.fail_spawn = True
     game.physic_object_on_use_callback(box, lua.globals().db.actor)
+    calls = engine.spawn_calls
     engine.boxes[record.cache_id] = None
     poll(game, engine)
-    assert engine.spawn_calls == 0
+    assert engine.spawn_calls == calls
     engine.boxes[record.cache_id] = box
     engine.fail_spawn = True
     poll(game, engine)
@@ -205,8 +207,8 @@ def test_uncertain_creation_never_automatically_spawns_a_second_copy(lua, failur
     game, engine = stash_game(lua)
     poll(game, engine)
     record = progress(lua, game).stashes.records[1]
-    game.physic_object_on_use_callback(engine.boxes[record.cache_id], lua.globals().db.actor)
     engine[failure] = True
+    game.physic_object_on_use_callback(engine.boxes[record.cache_id], lua.globals().db.actor)
     poll(game, engine)
     assert progress(lua, game).stashes.records[1].actions[1].uncertain
     calls = engine.spawn_calls
@@ -258,8 +260,8 @@ def test_saved_stash_waits_for_verified_definitions_before_map_calls_or_spawning
     poll(game, engine)
     earlier = saved_state(lua, game)
     record = earlier.gamma_archipelago_v1.stashes.records[1]
-    game.physic_object_on_use_callback(engine.boxes[record.cache_id], lua.globals().db.actor)
-    stored = saved_state(lua, game)
+    stored = earlier
+    stored.gamma_archipelago_v1.stashes.records[1].opened = True
     lua.globals().modxml_gamma_ap_stashes.ready = lua.eval("function() return false end")
     lua.execute("""
         engine.map_calls=0
@@ -312,10 +314,11 @@ def test_progression_coordinates_require_the_fixed_box_and_deliver_protected_hel
     game.physic_object_on_use_callback(engine.boxes[1], lua.globals().db.actor)
     poll(game, engine)
     assert not list(engine.spawns.values())
-    game.physic_object_on_use_callback(engine.boxes[30], lua.globals().db.actor)
     engine.fail_spawn = True
+    game.physic_object_on_use_callback(engine.boxes[30], lua.globals().db.actor)
     poll(game, engine)
     assert not progress(lua, game).stashes.records[1].claimed
+    assert not progress(lua, game).unlocks.calibrated_psi
     engine.fail_spawn = False
     poll(game, engine)
     assert progress(lua, game).stashes.records[1].claimed

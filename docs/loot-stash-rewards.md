@@ -1,4 +1,4 @@
-# Step 14: optional white loot stashes
+# Step 14: optional loot stashes
 
 Stack base: rank PR #17. `rewards_loot_stashes` enables 27 coordinate items:
 Basic, Field and Advanced packages for supplies or eight ammunition families.
@@ -13,10 +13,14 @@ fixed payload before revealing coordinates; reload never rerolls it. Different
 packages can share a container. Native loot and native markers remain untouched.
 Missing containers or payload sections keep the receipt pending with an error.
 
-The Monolith DXML entry point adds AP-owned white and orange marker definitions
-to the installed PDA map XML through its additive hook. This step uses only the
-white marker. Opening the actual box enables a saved, bounded creation plan
-(eight objects per poll). Taking an identified AP-created item claims the marker;
+The Monolith DXML entry point adds AP-owned marker definitions to the installed
+PDA map XML through its additive hook. Both loot and progression markers now use
+an original rainbow backpack texture; their text hints distinguish their purpose.
+Opening the actual box fills its saved creation plan during the use callback,
+before GAMMA's next loot-screen refresh. The callback creates at most 64 objects;
+an exceptionally large shared-box backlog reports that reopening will continue it.
+The timed retry path still creates at most eight objects per poll.
+Taking an identified AP-created item claims the marker;
 remaining package actions still finish. Unrelated native loot cannot claim it.
 Creation failures retry; exceptions or unsupported returned identities stop
 automatic retry because creation may already have happened. Manual recovery is
@@ -63,3 +67,32 @@ definitions, failed insertion, and saved-plan recovery without duplicate spawnin
 The fix's native marker rendering and kill-triggered reward acceptance are
 **not run**. Its PR does not deploy code or change the current AP session, either
 game installation, the local developer panel or third-party compatibility fixes.
+
+## Empty loot-screen correction and rainbow markers
+
+The previous use callback only set `opened=true`; creation waited for a later
+500 ms actor poll. The active GAMMA inventory script (`LMode_Init` and `Update`)
+refreshes a box on its next UI frame, so that refresh can happen before any AP
+loot exists. Creation now runs in the same use event, matching the inspected
+native treasure manager's timing. It does not prefill unopened boxes for NPCs to
+scavenge, replace the native treasure manager or alter native loot/markers.
+Identity, PDA availability, live actor and marker readiness are checked before
+creation. Saved plans, completed action identities and uncertain-result stops
+remain authoritative. Previously opened but unfinished stashes resume on use;
+objects already recorded as created are never automatically replaced or duplicated.
+If recorded loot was taken or lost, this fix cannot safely infer a replacement.
+The tracker counts an actual saved claim, rather than merely opening the box.
+
+`tools/build_stash_icon.py` draws the original 64px rainbow backpack and emits a
+deterministic uncompressed RGBA DDS. Its additive texture descriptor is discovered
+by pinned Monolith's `CMainMenu::ReadTextureInfo`; `CUITextureMaster` resolves its
+owned texture ID. Both existing AP marker kinds remain separate and keep their
+saved names. The packager accepts binary bytes only for this exact, regenerated
+owned icon, leaving the rejection of foreign assets and linked files intact.
+
+Regressions reproduce the old empty interaction without an intervening actor
+update, recover legacy pending plans, verify bounded shared-box creation/reopening,
+refuse invalid containers and capability failures, and preserve saved delivery
+identities across reload. Other tests check DDS format, six colours, alpha, XML
+resolution, byte-preserving packaging and rejection of foreign/corrupt textures.
+Native rendering and stash interaction acceptance remain **not run**, for Owen.

@@ -10,6 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 sys.path.insert(0, str(ROOT / "tools"))
 from build_notice_strings import generate_notice_strings  # noqa: E402
+from build_stash_icon import TEXTURE_PATH, generate_stash_icon, stash_icon  # noqa: E402
 from build_tracker_catalog import tracker_lines  # noqa: E402
 
 from gamma_archipelago.configuration import (  # noqa: E402
@@ -251,20 +252,27 @@ def package(
             info.compress_type = ZIP_DEFLATED
             info.create_system = 3
             info.external_attr = 0o644 << 16
-            # All allowed payloads are owned UTF-8 source/text. Normalize checkout
-            # line endings so Windows and Linux package the same content.
-            archive.writestr(info, path.read_text(encoding="utf-8").encode("utf-8"))
+            # Only our byte-verified generated icon is binary; normalize text EOLs.
+            payload = (
+                path.read_bytes()
+                if path.suffix == ".dds"
+                else path.read_text(encoding="utf-8").encode("utf-8")
+            )
+            archive.writestr(info, payload)
 
 
 def validate_package_file(path: Path) -> None:
     if path.is_symlink() or path.is_junction() or path.stat().st_nlink > 1:
         raise ValueError("Package files must be independent copies, without links")
+    if path.name == Path(TEXTURE_PATH).name and path.read_bytes() == stash_icon():
+        return
     if path.suffix not in {".py", ".json", ".script", ".xml", ".md", ".txt"}:
         raise ValueError(f"Unexpected package source type: {path.suffix}")
 
 
 def main() -> None:
     generate_catalogues()
+    generate_stash_icon(require_safe_child(ROOT, "mod"))
     destination = require_safe_child(ROOT, "dist")
     destination.mkdir(exist_ok=True)
     packages = [
