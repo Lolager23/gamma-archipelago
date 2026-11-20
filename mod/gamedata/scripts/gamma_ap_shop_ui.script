@@ -1,0 +1,186 @@
+-- An additive, docked trader page. Native inventory widgets keep their ownership.
+local wrappers = {}
+
+local function label(key, fallback)
+    local resource = "gamma_ap_shop_"..key
+    local text = game.translate_string(resource)
+    return text ~= resource and text or fallback
+end
+
+local function text(control, value)
+    control:SetTextComplexMode(true)
+    local normalized = value:gsub("\n","\\n")
+    control:SetText(normalized)
+    control:AdjustHeightToText()
+end
+
+local function stock(window, shown)
+    window.npc_trade:Show(shown)
+    window.CC.npc_trade:Show(shown)
+    window.CC.npc_trade_bag:Show(shown)
+end
+
+local function size(control, width)
+    control:SetWndSize(vector2():set(width,control:GetHeight()))
+end
+
+local function make_row(window, ui, index)
+    local parent = ui.xml:InitStatic("panel:offer",ui.panel)
+    local row = {parent=parent}
+    parent:SetWndPos(vector2():set(0,72+(index-1)*144))
+    size(parent,ui.width)
+    row.icon = ui.xml:InitStatic("panel:offer:icon",parent)
+    row.info = ui.xml:InitScrollView("panel:offer:info",parent)
+    size(row.info,ui.width-46)
+    row.buy = ui.xml:Init3tButton("panel:offer:buy",parent)
+    size(row.buy,ui.width)
+    local callback = "gamma_ap_shop_buy_"..index
+    window:Register(row.buy,callback)
+    window:AddCallback(callback,ui_events.BUTTON_CLICKED,function()
+        if row.offer then
+            local _,reason = gamma_ap_game.buy_shop_check(row.offer.id,ui.session_key,ui.npc_id)
+            ui.feedback = reason
+            window:On_Item_Update()
+            refresh(window)
+        end
+    end,window)
+    return row
+end
+
+local function attach(window)
+    if window.gamma_ap_shop then return window.gamma_ap_shop end
+    local parent = window.npc_dialog
+    if not parent or type(parent.GetWidth)~="function" or type(parent.GetHeight)~="function"
+        or not window.npc_trade or not window.CC or not window.CC.npc_trade
+        or not window.CC.npc_trade_bag or type(window.On_Item_Update)~="function"
+        or parent:GetWidth()<280 or parent:GetHeight()<710 then return nil end
+    local ui = {xml=CScriptXmlInit(),open=false,rows={},feedback=""}
+    ui.xml:ParseFile("gamma_ap_shop.xml")
+    ui.width = window.npc_dialog:GetWidth()-28
+    ui.button = ui.xml:Init3tButton("button",window.npc_dialog)
+    ui.panel = ui.xml:InitStatic("panel",window.npc_dialog)
+    size(ui.panel,ui.width)
+    for _,name in ipairs({"title","balance","footer"}) do
+        ui[name] = ui.xml:InitTextWnd("panel:"..name,ui.panel)
+        size(ui[name],ui.width)
+    end
+    for index=1,3 do ui.rows[index] = make_row(window,ui,index) end
+    window:Register(ui.button,"gamma_ap_shop_toggle")
+    window:AddCallback("gamma_ap_shop_toggle",ui_events.BUTTON_CLICKED,function()
+        ui.open,ui.feedback = not ui.open,""
+        refresh(window)
+    end,window)
+    ui.panel:Show(false); ui.button:Show(false)
+    window.gamma_ap_shop = ui
+    return ui
+end
+
+local function show_offer(ui, row, offer)
+    row.offer = offer
+    row.parent:Show(offer~=nil)
+    if not offer then return end
+    local reward = offer.reward
+    local lines = {label("name_"..offer.id,offer.name),label("description_"..offer.id,offer.description),
+        reward and string.format(label("reward","Scouted reward: %s for %s"),reward.item,reward.player)
+        or label("hidden","Assigned reward is hidden.")}
+    local value = table.concat(lines,"\n")
+    if row.drawn ~= value then
+        row.info:Clear()
+        local control = ui.xml:InitTextWnd("info_row",nil)
+        size(control,ui.width-66); text(control,value)
+        row.info:AddWindow(control,true)
+        row.drawn = value
+    end
+    local status = offer.completed and label("purchased","Purchased")
+        or offer.uncertain and label("uncertain","Payment needs review")
+        or string.format(label("buy","Buy for %s RU"),tostring(offer.price))
+    row.buy:TextControl():SetText(status)
+    row.buy:Enable(not offer.completed and not offer.uncertain and offer.affordable)
+end
+
+function refresh(window)
+    local ui = window.gamma_ap_shop
+    if not ui then return end
+    ui.last_refresh = time_global()
+    ui.next_refresh = ui.last_refresh+500
+    local view = gamma_ap_game.shop_view()
+    local available = #view.rows>0 and window.mode=="trade" and window:IsShown()
+    ui.button:Show(available)
+    if not available then
+        if ui.hidden and window.mode=="trade" then stock(window,true) end
+        ui.hidden = false
+        ui.open,ui.feedback = false,""
+        ui.panel:Show(false)
+        return
+    end
+    if ui.session_key ~= view.session_key or ui.npc_id ~= view.npc_id then ui.open,ui.feedback = false,"" end
+    ui.session_key,ui.npc_id = view.session_key,view.npc_id
+    ui.balance_value = view.balance
+    ui.button:TextControl():SetText(ui.open and label("back","Trader goods") or label("open","AP shop"))
+    ui.panel:Show(ui.open)
+    if ui.open then stock(window,false)
+    elseif ui.hidden then stock(window,true) end
+    ui.hidden = ui.open
+    if not ui.open then return end
+    text(ui.title,label("title","Archipelago contracts"))
+    text(ui.balance,string.format(label("balance","Your money: %s RU"),tostring(view.balance)))
+    text(ui.footer,ui.feedback~="" and ui.feedback or label("footer","One purchase per check. Close trade to resume reward delivery."))
+    for index,row in ipairs(ui.rows) do show_offer(ui,row,view.rows[index]) end
+end
+
+local function tick(window)
+    local ui,now = window.gamma_ap_shop,time_global()
+    if not ui then return end
+    if not ui.next_refresh or now>=ui.next_refresh or now<ui.last_refresh then refresh(window); return end
+    -- Native cash can change while the trade UI pauses the world clock. Update
+    -- affordability immediately without polling the AP metadata file per frame.
+    if not ui.open then return end
+    local ok,balance = pcall(function() return db.actor:money() end)
+    local valid = ok and type(balance)=="number" and balance==math.floor(balance)
+        and balance>=0 and balance<=2147483647
+    if valid and balance~=ui.balance_value then
+        ui.balance_value = balance
+        text(ui.balance,string.format(label("balance","Your money: %s RU"),tostring(balance)))
+    end
+    for _,row in ipairs(ui.rows) do
+        local offer = row.offer
+        row.buy:Enable(valid and offer~=nil and not offer.completed and not offer.uncertain and balance>=offer.price)
+    end
+end
+
+local function pack(...)
+    return {n=select("#",...),...}
+end
+
+local function wrap(delegate, action)
+    return function(self,...)
+        local result = pack(delegate(self,...))
+        action(self)
+        return unpack(result,1,result.n)
+    end
+end
+
+function install(configuration)
+    if not configuration or not configuration.expanded or configuration.options.checks_shop_purchases ~= 1 then return true end
+    local class = ui_inventory and ui_inventory.UIInventory
+    if not class or type(class.TMode_Init) ~= "function" or type(class.Reset) ~= "function"
+        or type(class.Update) ~= "function" then return false,"AP shop needs the supported GAMMA trader inventory UI" end
+    for _,name in ipairs({"TMode_Init","Reset","Update"}) do
+        if class[name] ~= wrappers[name] then
+            local action = name=="TMode_Init" and function(window)
+                    if attach(window) then refresh(window)
+                    elseif not window.gamma_ap_shop_warning then
+                        printf("[GAMMA AP] Unsupported trader layout; AP shop needs the supported GAMMA inventory UI")
+                        window.gamma_ap_shop_warning = true
+                    end
+                end
+                or name=="Reset" and function(window)
+                    if window.gamma_ap_shop then window.gamma_ap_shop.open=false; window.gamma_ap_shop.feedback="" end
+                    refresh(window)
+                end or tick
+            wrappers[name] = wrap(class[name],action)
+            class[name] = wrappers[name]
+        end
+    end
+    return true
+end

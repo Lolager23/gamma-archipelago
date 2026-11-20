@@ -41,6 +41,8 @@ def lua():
         "goals",
         "save_validation",
         "stashes",
+        "shop",
+        "shop_ui",
         "state",
         "settlements",
         "notice_text",

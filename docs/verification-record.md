@@ -1,5 +1,29 @@
 # Verification record
 
+## Buyable AP shop contracts: 20 November 2026
+
+Branch `codex/shop-purchases` adds the default-off `checks_shop_purchases` option
+and nine new IDs, retaining the older ordinary-purchase checks unchanged. The
+docked native trader page uses descriptive contracts, exact prices, the credited
+official icon and scouted reward/recipient data only when enabled and known.
+The catalogue remains authoritative; the web workbench exposes the toggle,
+selected prices and currency budget. Existing default configuration identities
+remain unchanged. New checks require a new seed and matching fresh Dev character.
+
+A backward-compatibility regression also reproduces the previous add-on refusing
+an unknown new option even when zero. The encoder now omits only that disabled
+wire record; enabled shops still advertise it and require the matching add-on.
+
+Regressions cover payment once, affordability, wrong trader/session/configuration,
+receipt-history conflicts, confirmed-check recovery, offline writes, uncertain
+payment persistence, save migration/refusal, hidden scouting, native delegation,
+bounded refresh, live cash changes and clipped long-text scrolling. The full
+verifier and current-head Windows/Linux evidence are recorded on the PR. An
+independent Windows image decoder reproduced all 4,096 generated icon pixels.
+
+Native acceptance is **not run**, reserved for Owen. No game launch or current
+Brain Scorcher reset is part of this increment. See the [acceptance checklist](shop-purchases.md).
+
 ## Empty stash interaction and rainbow markers: 20 November 2026
 
 Owen reported empty AP stashes. The old adapter marks the box opened but waits

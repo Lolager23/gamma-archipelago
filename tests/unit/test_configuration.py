@@ -157,7 +157,7 @@ def test_travel_configuration_preserves_old_default_digest_and_requires_zone_key
         values.pop(name)
     for name in LEGACY_REWARD_DEFAULTS:
         values.pop(name)
-    for name in ("checks_shops", "checks_faction_standing"):
+    for name in ("checks_shops", "checks_shop_purchases", "checks_faction_standing"):
         values.pop(name)
     expected = hashlib.sha256(
         json.dumps(values, sort_keys=True, separators=(",", ":")).encode()

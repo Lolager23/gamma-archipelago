@@ -51,6 +51,12 @@ item/recipient metadata and its heartbeat. This channel cannot apply receipts or
 complete checks. Shop and standing callbacks delegate to a finite service-check
 module and mutate only the central game state.
 
+[Buyable shop contracts](shop-purchases.md) are a separate optional category.
+The native trader page reads a copied offer view. Its purchase callback delegates
+to the coordinator, which checks bridge identity/history and server confirmations
+before the shop adapter spends money. The same save owns paid checks and bounded
+uncertain payment intents; no physical tokens or independent shop ledger exists.
+
 [Discovery quotas](discovery-quotas.md) select fixed milestone IDs from catalogue
 rosters. The world/client share a pure configured selection; the game adapter
 persists only distinct source IDs in central save state. Generated Lua metadata

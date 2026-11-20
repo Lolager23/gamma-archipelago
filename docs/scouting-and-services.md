@@ -7,6 +7,7 @@ Stack base: Step 31 / PDA tracker PR #40. New APWorld options:
 | `scouting_mode` | `disabled` (0) | `local` (1) requests a selected check's real item/recipient. `shared_hints` (2) also creates a persistent AP location hint for an unchecked selected location. |
 | `reward_previews` | Off | Automatically scout the next incomplete side-task and faction-standing milestone; show the actual item and recipient in the PDA. |
 | `checks_shops` | Off | One paid purchase check at each of Sidorovich, Barman and Sakharov. Sales, free transfers, repeated purchases and other NPCs give no new checks. |
+| `checks_shop_purchases` | Off | Nine dedicated buyable AP contracts in the trader UI. Three prices per trader: 2,500/7,500/15,000 RU. Independent of ordinary purchases; see [shop contracts](shop-purchases.md). |
 | `checks_faction_standing` | Off | Four permanent checks when any supported non-hostile faction reaches 500/1,000/2,000/3,000 personal goodwill. These are goodwill milestones, not claims about a particular trader's stock tier. |
 
 The PDA uses four-row pages to leave room for reward details. Its Select/Scout

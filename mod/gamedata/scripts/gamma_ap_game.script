@@ -131,6 +131,7 @@ function actor_on_update()
         and not zones_ready then report_error(zone_error); return end
     local workshop_ready, workshop_error = gamma_ap_workshop.install(configuration,function() return state end)
     if not workshop_ready then report_error(workshop_error); return end
+    local shop_ready,shop_error = gamma_ap_shop_ui.install(configuration)
     register_task_hook()
     local supported, support_error = gamma_ap_tasks.supported(configuration)
     if not supported then report_error(support_error); return end
@@ -180,6 +181,7 @@ function actor_on_update()
     elseif not permitted then report_error(permission_error)
     elseif not zones then report_error(zone_problem)
     elseif not stashed then report_error(stash_error)
+    elseif not shop_ready then report_error(shop_error)
     else last_error = nil end
 end
 
@@ -353,4 +355,39 @@ end
 function actor_on_trade(item, sold, money)
     local ok,reason = gamma_ap_services.traded(state,item,sold,money)
     if not ok then report_error(reason) end
+end
+
+function shop_view()
+    local view = gamma_ap_shop.snapshot(state)
+    if #view.rows>0 and state.configuration and (state.configuration.options.scouting_mode or 0)>0 then
+        local scouting = gamma_ap_scouting.view(state,time_global())
+        for _,row in ipairs(view.rows) do row.reward = scouting.rewards[row.id] end
+    end
+    return view
+end
+
+function buy_shop_check(id, session_key, npc_id)
+    local incoming,reason = read_incoming()
+    if not incoming or incoming.session_key ~= state.session_key
+        or incoming.configuration_key ~= state.configuration_key then
+        return false,reason or "The AP shop session has changed; reopen the matching game"
+    end
+    local bound,binding_error = gamma_ap_state.bind_session(state,incoming)
+    if not bound then return false,binding_error end
+    local configuration,error = read_configuration(incoming)
+    if not configuration or configuration.options.checks_shop_purchases ~= 1 then
+        return false,error or "Paid shop checks are not enabled in this seed"
+    end
+    local confirmed,problem = read_confirmed(state.session_key,state.enabled_checks)
+    if not confirmed then return false,problem end
+    gamma_ap_state.merge_confirmed(state,confirmed)
+    local paid,message = gamma_ap_shop.purchase(state,id,session_key,npc_id)
+    if paid then
+        local written,error = write_outgoing()
+        if not written then
+            report_error(error)
+            return true,"Purchase saved locally; AP delivery will retry when the game resumes"
+        end
+    end
+    return paid,message
 end

@@ -30,6 +30,7 @@ CHECK_OPTIONS = (
     "checks_story_milestones",
     "checks_rank_milestones",
     "checks_shops",
+    "checks_shop_purchases",
     "checks_faction_standing",
 )
 REWARD_OPTIONS = (
@@ -105,6 +106,7 @@ SUPPORTED_CHECKS = frozenset(
         "checks_knife_tiers",
         "checks_rank_milestones",
         "checks_shops",
+        "checks_shop_purchases",
         "checks_faction_standing",
     }
 )
@@ -320,6 +322,8 @@ def encode_configuration(
             lines.extend(f"exclude|{token}" for token in configuration.discovery_exclusions)
         elif isinstance(value, list):
             lines.extend(f"threshold|{name}|{number}" for number in value)
+        elif name == "checks_shop_purchases" and value == 0:
+            continue  # Preserve the previous add-on's wire format when shops are disabled.
         else:
             lines.append(f"option|{name}|{value}")
     lines.append(f"end|{len(lines) - 3}")

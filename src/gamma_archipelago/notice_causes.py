@@ -34,6 +34,7 @@ CAUSE_TEMPLATES = {
     "artefact_types": "by finding {value} distinct artefact types",
     "standing": "by reaching {value} faction goodwill",
     "shop": "by making your first purchase from {value}",
+    "shop_purchase": 'by purchasing "{value}"',
     "firearm_upgrades_one": "by installing {value} firearm upgrade",
     "firearm_upgrades": "by installing {value} firearm upgrades",
     "armour_upgrades_one": "by installing {value} armour upgrade",
@@ -70,6 +71,7 @@ _categories = {
     "checks_knife_tiers": "knife",
     "checks_faction_standing": "standing",
     "checks_shops": "shop",
+    "checks_shop_purchases": "shop_purchase",
 }
 
 

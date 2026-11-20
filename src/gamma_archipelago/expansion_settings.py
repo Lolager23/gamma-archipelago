@@ -29,4 +29,8 @@ LEGACY_REWARD_DEFAULTS = {
     "rewards_workshop_access": 0,
     "rewards_recipe_access": 0,
 }
-LEGACY_CHECK_DEFAULTS = {"checks_shops": 0, "checks_faction_standing": 0}
+LEGACY_CHECK_DEFAULTS = {
+    "checks_shops": 0,
+    "checks_shop_purchases": 0,
+    "checks_faction_standing": 0,
+}

@@ -1,0 +1,16 @@
+Archipelago coloured icon, copyright 2022 Krista Corkos and Christopher Wilson.
+Licensed under Creative Commons Attribution-NonCommercial 4.0 International:
+https://creativecommons.org/licenses/by-nc/4.0/
+
+Source: ArchipelagoMW/Archipelago 0.6.8, commit
+54803be064fc7e80c4628777ed0b46a9390f255f, data/icon.png:
+https://github.com/ArchipelagoMW/Archipelago/blob/0.6.8/data/icon.png
+Source SHA-256: 55b8e964106cde2f52839e9bb5cdcceb95e427dce00a71892b116c91118e9273
+
+This texture is a format conversion and alpha-aware reduction from 512px PNG
+to 64px RGBA DDS for the noncommercial GAMMA Archipelago add-on. The design is
+unchanged. The icon's separate licence applies to this asset, not the project's
+original code. No endorsement by Archipelago or its artists is implied.
+
+Upstream artist attribution/licence reference:
+https://github.com/ArchipelagoMW/Archipelago/blob/0.6.8/worlds/lufia2ac/basepatch/ap_logo/LICENSE

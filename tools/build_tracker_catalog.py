@@ -46,6 +46,14 @@ def tracker_lines(catalogue: dict[str, Any]) -> list[str]:
         for row in catalogue["locations"]
         if row["category"] == "checks_shops"
     )
+    lines.extend(["}", "shop_offers = {"])
+    for row in catalogue["locations"]:
+        if row["category"] == "checks_shop_purchases":
+            lines.append(
+                f"    [{row['id']}]={{shop={quoted(row['shop'])},level={quoted(row['level'])},"
+                f"price={row['price']},name={quoted(row['name'])},"
+                f"description={quoted(row['description'])}}},"
+            )
     lines.extend(["}", "faction_standing_locations = {"])
     lines.extend(
         f"    [{row['minimum']}]={row['id']},"

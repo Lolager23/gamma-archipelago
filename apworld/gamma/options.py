@@ -338,7 +338,19 @@ class RewardPreviews(Toggle):
 class ChecksShops(Toggle):
     """One paid purchase check at each supported named trader; never one per repeat purchase."""
 
-    display_name = "Checks: Shops"
+    display_name = "Checks: First ordinary trader purchase"
+
+
+class ChecksShopPurchases(Toggle):
+    """Buy three named AP checks each at Sidorovich, Barman and Sakharov.
+
+    Each trader offers checks costing 2,500, 7,500 and 15,000 RU (75,000 RU total).
+    The Archipelago shop button is in the trader window. Purchases are saved once;
+    these are separate locations from the first ordinary trader purchase checks.
+    Named NPC availability follows the missable service-check policy.
+    """
+
+    display_name = "Checks: Buy Archipelago shop contracts"
 
 
 class ChecksFactionStanding(Toggle):
@@ -423,6 +435,7 @@ class GammaOptions(PerGameCommonOptions):
     discovery_exclusions: DiscoveryExclusions
     optional_check_policy: OptionalCheckPolicy
     checks_shops: ChecksShops
+    checks_shop_purchases: ChecksShopPurchases
     checks_faction_standing: ChecksFactionStanding
     scouting_mode: ScoutingMode
     reward_previews: RewardPreviews

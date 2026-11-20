@@ -1,0 +1,100 @@
+-- Paid location checks. The central save owns checks and uncertain payment intents.
+
+local function integer(value, low, high)
+    return type(value) == "number" and value == math.floor(value) and value >= low and value <= high
+end
+
+function copy(payments)
+    local result = {}
+    for id,payment in pairs(payments or {}) do
+        result[id] = {price=payment.price,balance_before=payment.balance_before}
+    end
+    return result
+end
+
+function validate(state)
+    if state.shop_payments == nil then return true end -- Old saves have no payment intents.
+    if type(state.shop_payments) ~= "table" then return false end
+    for id,payment in pairs(state.shop_payments) do
+        local offer = gamma_ap_catalog.shop_offers[id]
+        if not offer or type(payment) ~= "table" or payment.price ~= offer.price
+            or not integer(payment.balance_before,offer.price,2147483647)
+            or not state.session_key or not state.configuration
+            or state.configuration.options.checks_shop_purchases ~= 1 then return false end
+    end
+    return true
+end
+
+local function enabled(state)
+    return not state.refused_save and state.session_key and state.expanded
+        and state.configuration and state.configuration.options.checks_shop_purchases == 1
+end
+
+function context()
+    local ok, npc, story = pcall(function()
+        local window = ui_inventory.GUI
+        if not window or not window:IsShown() or window.mode ~= "trade" then return end
+        local partner = window:GetPartner()
+        local id = partner and partner:id()
+        if integer(id,1,65534) then return partner,get_object_story_id(id) end
+    end)
+    if ok then return npc,story end
+end
+
+function snapshot(state)
+    local result = {rows={},session_key=state.session_key}
+    if not enabled(state) or not db.actor or not db.actor:alive() then return result end
+    local npc,story = context()
+    if not npc or not story then return result end
+    local ok,balance = pcall(function() return db.actor:money() end)
+    if not ok or not integer(balance,0,2147483647) then return result end
+    result.npc_id,result.balance = npc:id(),balance
+    local ids = {}
+    for id,offer in pairs(gamma_ap_catalog.shop_offers) do
+        if offer.shop == story and offer.level == level.name() and state.enabled_checks[id]
+            and gamma_ap_zone_keys.allowed(state,offer.level) then ids[#ids+1] = id end
+    end
+    table.sort(ids)
+    for _,id in ipairs(ids) do
+        local offer = gamma_ap_catalog.shop_offers[id]
+        result.rows[#result.rows+1] = {id=id,name=offer.name,description=offer.description,
+            price=offer.price,completed=state.checks[id]==true,
+            uncertain=state.shop_payments[id]~=nil,affordable=balance>=offer.price}
+    end
+    return result
+end
+
+local function debit(state, id, price, before)
+    -- Save a conservative intent first. A callback error/read failure can leave
+    -- payment uncertain; never silently debit this check a second time.
+    state.shop_payments[id] = {price=price,balance_before=before}
+    pcall(function() db.actor:give_money(-price) end)
+    local read,after = pcall(function() return db.actor:money() end)
+    if read and after == before-price then
+        state.checks[id],state.shop_payments[id] = true,nil
+        return true,"Purchase saved; the check is queued for Archipelago"
+    end
+    if read and after == before then
+        state.shop_payments[id] = nil
+        return false,"The payment was not taken; the check remains available"
+    end
+    return false,"Payment result is uncertain; another charge is blocked pending review"
+end
+
+function purchase(state, id, session_key, npc_id)
+    if not enabled(state) or session_key ~= state.session_key
+        or not db.actor or not db.actor:alive() then return false,"The matching AP shop session is unavailable" end
+    local offer = gamma_ap_catalog.shop_offers[id]
+    local npc,story = context()
+    if not offer or not state.enabled_checks[id] or not npc or npc:id() ~= npc_id
+        or story ~= offer.shop or offer.level ~= level.name() then
+        return false,"This check is not sold by the current trader in this region"
+    end
+    if not gamma_ap_zone_keys.allowed(state,offer.level) then return false,"The trader's zone access key is required" end
+    if state.checks[id] then return false,"This check has already been purchased or confirmed" end
+    if state.shop_payments[id] then return false,"This check has an uncertain payment; another charge is blocked" end
+    local ok,balance = pcall(function() return db.actor:money() end)
+    if not ok or not integer(balance,0,2147483647) then return false,"Cannot read the player's money" end
+    if balance < offer.price then return false,"Not enough money for this check" end
+    return debit(state,id,offer.price,balance)
+end
