@@ -10,7 +10,8 @@ jobs:
       fail-fast: false
       matrix:
         os: [windows-latest, ubuntu-latest]
-    runs-on: ${{ matrix.os }}
+    # Temporary local runners can run the same jobs when hosted billing is blocked.
+    runs-on: ${{ vars.GAMMA_AP_SELF_HOSTED == 'true' && fromJSON(format('["self-hosted","gamma-ap-{0}"]', matrix.os)) || matrix.os }}
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
