@@ -125,6 +125,8 @@ function install(state_getter)
 end
 
 function before_key(state,dik,binding,disabled,flags)
+    if disabled or (actor_menu and type(actor_menu.is_hud_free) == "function"
+        and not actor_menu.is_hud_free()) then return end
     if not binding or not key_bindings then return end
     if binding == key_bindings.kWPN_FIRE or binding == key_bindings.kWPN_RELOAD
         or binding == key_bindings.kWPN_ZOOM then

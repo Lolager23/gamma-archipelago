@@ -18,8 +18,8 @@ routes. Its own callbacks already use `move_to_ruck`; no base scripts or engine
 files are patched. UI wrappers preserve delegates/returns and rebind to the
 current coordinator; warning resources use the existing loading-readiness gate.
 
-The full verifier passed 1,440 covered regressions, 71 untraced real
-generation/server cases and seven Node tests (1,518 total), with all
+The full verifier passed 1,442 covered regressions, 71 untraced real
+generation/server cases and seven Node tests (1,520 total), with all
 per-module coverage gates. All 111 unchanged private-panel tests passed.
 Exact-head Windows/Linux CI results belong to the PR evidence.
 Native acceptance is **not run** for Owen. This source-only increment changes no

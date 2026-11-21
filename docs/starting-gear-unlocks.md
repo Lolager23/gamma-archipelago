@@ -11,6 +11,8 @@ permission is required to equip/use it. Native UI guards deny equip/use actions;
 post-slot callbacks and a fixed 13-slot reconciliation move locked equipment into
 the actor's rucksack, preserving the object instead of dropping/deleting it.
 Weapon press/hold guards prevent use while native deactivation is pending.
+Menu-captured or engine-disabled input is left to its owner, preserving inventory
+clicks and other UI controls while world weapon actions remain locked.
 PDA entry, custom tool/device actions, device event consumption and NV activation
 also read the same permissions. Native battery charging and gun/armour maintenance
 remain available. Permission is saved before its baseline grant, allowing native

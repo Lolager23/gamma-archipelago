@@ -280,6 +280,23 @@ def test_warning_api_failure_does_not_allow_the_locked_action_or_crash_its_callb
     assert any("Cannot display" in message for message in engine.logs.values())
 
 
+@pytest.mark.parametrize("disabled,hud_free", [(True, True), (False, False)])
+def test_menu_captured_or_disabled_input_is_preserved_while_world_fire_stays_locked(
+    lua, disabled, hud_free
+):
+    game, engine = use_game(lua, "firearms")
+    install_native_ui(lua, game, engine)
+    engine.active = lua.globals().add_item(50, "gun", "WP_PM", "w_pistol", 0)
+    engine.hud_free = hud_free
+    lua.execute("actor_menu.is_hud_free=function() return engine.hud_free end")
+    flags = lua.table(ret_value=True)
+    game.on_before_key(0, 1, disabled, flags)
+    assert flags.ret_value is True
+    engine.hud_free = True
+    game.on_before_key(0, 1, False, flags)
+    assert flags.ret_value is False
+
+
 def test_wrappers_are_idempotent_preserve_another_mod_and_rebind_to_current_state(lua):
     game, engine = use_game(lua)
     install_native_ui(lua, game, engine)
