@@ -12,8 +12,11 @@ selects per-type mode. This source increment stacks on regional logic PR #67.
 Complete verifier passed 1,486 covered regressions, 72 untraced generation/server
 cases and seven Node tests (1,565 total). Owned Python measured line/branch
 coverage is 100%; every Lua executable-line gate passed, with no branch claim.
-All 111 unchanged private developer-panel tests passed. Exact-head Windows/Linux
-CI belongs to the PR evidence. Native acceptance is **not run**, reserved for Owen.
+All 111 unchanged private developer-panel tests passed. Initial Windows CI passed;
+Linux passed covered tests then reached the 15-minute cap during generation.
+The CI time allowance is now 25 minutes; all seed counts and coverage gates are
+unchanged. Exact-head Windows/Linux CI belongs to the PR evidence.
+Native acceptance is **not run**, reserved for Owen.
 No IDs or save/wire schemas changed. No deployment, session reset or game launch
 occurred; installed mod, panel, session configuration and archives remain unchanged.
 
