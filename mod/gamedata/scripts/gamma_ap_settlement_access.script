@@ -1,0 +1,88 @@
+-- Catalogue rules are permanent data; native standing is a read-only observation.
+local function rule(state, id)
+    local config = state.configuration
+    if not state.expanded or not config or config.options.settlement_reputation_logic ~= 1 then return end
+    return gamma_ap_catalog.settlement_rules[id]
+end
+
+local function gated(state, entry)
+    return entry and entry.item ~= 0 and state.configuration.options.rewards_faction_reputation == 1
+end
+
+local function copies(state, item)
+    local count = 0
+    for _,id in ipairs(state.applied_items) do if id == item then count=count+1 end end
+    return count
+end
+
+function minimum_goodwill(state, pending)
+    local result = {}
+    if not state.session_key or state.refused_save or not state.configuration
+        or state.configuration.options.checks_settlements ~= 1 then return result end
+    for id in pairs(gamma_ap_catalog.settlement_rules) do
+        local entry = rule(state,id)
+        if gated(state,entry) then
+            local count = copies(state,entry.item) + (pending == entry.item and 1 or 0)
+            if count > 0 then
+                local reward = gamma_ap_catalog.reputation_rewards[entry.item]
+                result[entry.faction] = math.min(reward.cap,count*reward.bonus)
+            end
+        end
+    end
+    return result
+end
+
+local function valid(value)
+    return type(value) == "number" and value == math.floor(value) and math.abs(value) <= 2147483647
+end
+
+local function query(entry)
+    local ok,goodwill,relation = pcall(function()
+        local actor = db.actor
+        local id,community = actor:id(),character_community(actor)
+        -- Invalid Lua values must never reach the native relation bindings.
+        if not valid(id) or id < 0 or id >= 65535 or type(community) ~= "string"
+            or community == "" or community == "none" then error("Invalid actor identity") end
+        return relation_registry.community_goodwill(entry.faction,id),
+            relation_registry.community_relation(entry.faction,community)
+    end)
+    if not ok or not valid(goodwill) or not valid(relation) then return {problem=true} end
+    return {goodwill=goodwill,minimum=entry.neutral-relation,neutral=goodwill+relation >= entry.neutral}
+end
+
+function native_allowed(state, id)
+    local entry = rule(state,id)
+    if not gated(state,entry) then return true end
+    local observed = query(entry)
+    if observed.problem then return nil,"Cannot verify "..entry.label.." neutrality; native goodwill APIs are unavailable or invalid" end
+    return observed.neutral
+end
+
+function standing(state)
+    local result = {}
+    for id in pairs(state.enabled_checks) do
+        local entry = rule(state,id)
+        if gated(state,entry) and not result[entry.faction] then result[entry.faction] = query(entry) end
+    end
+    return result
+end
+
+function reason(state, id, standing)
+    local entry = rule(state,id)
+    if not entry then return end
+    if not gated(state,entry) then
+        return nil,"Filler-only hostile settlement: no supported neutrality reward route"
+    end
+    local observed = standing and standing[entry.faction]
+    if observed then
+        if observed.problem then return entry.label.." neutrality could not be verified" end
+        if not observed.neutral then
+            return entry.label.." remains hostile: "..observed.goodwill.." / "..observed.minimum.." personal goodwill required"
+        end
+        return
+    end
+    local received = copies(state,entry.item)
+    if received < entry.copies then
+        return entry.label.." neutrality: "..received.." / "..entry.copies.." goodwill rewards (natural standing may allow earlier entry)"
+    end
+end

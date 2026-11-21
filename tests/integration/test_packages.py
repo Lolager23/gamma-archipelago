@@ -57,6 +57,7 @@ def test_packages_are_reproducible_and_load_from_apworld(tmp_path):
                 "equipment",
                 "loadout",
                 "settlements",
+                "settlement_access",
                 "combat",
                 "collection",
                 "tasks",

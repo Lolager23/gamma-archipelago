@@ -160,6 +160,7 @@ def defaults() -> dict[str, object]:
         mutant_discovery_mode=1,
         faction_discovery_mode=1,
         artefact_discovery_mode=1,
+        settlement_reputation_logic=1,
     )
     return values
 
@@ -349,6 +350,7 @@ def encode_configuration(
                 "random_starting_unlock",
                 "mutant_filler_tail",
                 "artefact_filler_tail",
+                "settlement_reputation_logic",
             }
             and value == 0
         ):

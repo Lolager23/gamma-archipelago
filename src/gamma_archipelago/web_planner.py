@@ -20,6 +20,7 @@ from .discovery import SOURCES, configured_location_ids
 from .opening import opening_permissions
 from .presets import presets
 from .settings_ui import advanced_options
+from .settlement_access import NEUTRALITY_ITEMS
 from .starting import STARTS
 from .starting_unlock import preview_budget
 from .web_estimates import ASSUMPTIONS, estimate_playtime
@@ -147,6 +148,13 @@ def preview(values: Mapping[str, object], assumptions: Mapping[str, object]) -> 
     item_ids = enabled_item_ids(configuration.rewards, configuration.gear)
     rewards = [dict(row) for row in data["items"] if row["id"] in item_ids]
     budget, budget_report = preview_budget(configuration, ids)
+    for reward in rewards:
+        if (
+            reward["name"] in NEUTRALITY_ITEMS
+            and configuration.option("settlement_reputation_logic")
+            and "checks_settlements" in configuration.checks
+        ):
+            reward["classification"] = "progression"
     required = len(budget.required)
     counts = Counter(row["category"] for row in checks)
     shop_cost = sum(row.get("price", 0) for row in checks)

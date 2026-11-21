@@ -35,6 +35,9 @@ native screen dismissal followed by a later unpaused, non-precaching world frame
 This gate never delays or acknowledges item/check state.
 
 The [PDA tracker](pda-tracker.md) reads a detached view from the game-state owner.
+Settlement diplomacy uses catalogue-backed solver requirements and a read-only
+native standing projection. The engine registry still owns goodwill; the AP save
+owns applied receipt history. No additional persistent reputation owner exists.
 The projection groups progression facts by status, unlocked/locked permissions
 and exploration without parsing presentation strings; its legacy flat list is
 retained. The UI's Checks/Progression pages and native list selection own no

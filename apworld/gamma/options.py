@@ -403,6 +403,12 @@ class ChecksFactionStanding(Toggle):
     display_name = "Checks: Faction standing"
 
 
+class SettlementReputationLogic(DefaultOnToggle):
+    """Require neutral goodwill for supported hostile bases; unsupported bases are filler-only."""
+
+    display_name = "Hostile settlement reputation logic"
+
+
 class DiscoveryMode(Choice):
     """Generic distinct discoveries by default; named per-type checks remain optional."""
 
@@ -470,6 +476,7 @@ class OptionalCheckPolicy(Choice):
 
 @dataclass
 class GammaOptions(PerGameCommonOptions):
+    settlement_reputation_logic: SettlementReputationLogic
     ap_start: ArchipelagoStart
     starting_faction: StartingFaction
     starting_location: StartingLocation

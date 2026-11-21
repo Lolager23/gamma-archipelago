@@ -9,5 +9,7 @@ function observe(state, kind, object, name, level_name)
     local distance = object.dist_to_actor
     if type(distance) ~= "number" or distance ~= distance or distance < 0
         or distance > definition.radius then return end
-    state.checks[definition.id] = true
+    local allowed,reason = gamma_ap_settlement_access.native_allowed(state,definition.id)
+    if allowed == nil then return false,reason end
+    if allowed then state.checks[definition.id] = true end
 end

@@ -7,6 +7,7 @@ from BaseClasses import LocationProgressType
 from Options import OptionError
 
 from gamma_archipelago.pool_budget import budget_pool
+from gamma_archipelago.settlement_access import required_reputation
 
 if TYPE_CHECKING:
     from . import GammaWorld
@@ -52,10 +53,15 @@ def build_pool(world: "GammaWorld", catalog: dict[str, Any]) -> None:
         world.create_item(name) for name in plan.required + plan.convenience
     )
     names = [row["name"] for row in catalog["items"] if "category" not in row]
+    neutrality = required_reputation(
+        world.configuration, frozenset(row.address for row in locations)
+    )
     optional = [
         row
         for row in catalog["items"]
-        if row.get("category") in OPTIONAL and row["category"] in world.configuration.rewards
+        if row.get("category") in OPTIONAL
+        and row["category"] in world.configuration.rewards
+        and row["name"] not in neutrality
     ]
     # Excluded locations accept filler only, including after upstream pool depletion.
     useful_capacity = plan.eligible_checks - (

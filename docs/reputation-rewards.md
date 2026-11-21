@@ -1,5 +1,14 @@
 # Step 16: faction goodwill rewards
 
+Current extension: [settlement reputation access](settlement-reputation.md)
+guarantees five progression copies each for Military, Bandits and Mercenaries
+when their hostile settlement gates are enabled. Other faction bonuses retain
+the useful pool. Legacy seeds retain the native bonus and retry contract below.
+For the three gated communities only, the new setting also preserves an AP-earned
+minimum personal standing; other bonuses and legacy seeds remain mutable. The
+permanent floor and its recovery contract are described in the linked extension.
+The original Step 16 implementation/evidence is recorded below.
+
 Stack base: #19. Eight optional useful rewards add 250 personal goodwill for
 Loners, Clear Sky, Duty, Freedom, Ecologists, Mercenaries, Military or Bandits.
 The cap is 3,000; an existing higher value is preserved. Negative goodwill is

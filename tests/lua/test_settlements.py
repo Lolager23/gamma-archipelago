@@ -9,8 +9,10 @@ from .test_game_adapter import saved_state
 from .test_loadout import CONFIG_PATH, KEY, configured_game
 
 
-def configured_settlements(lua, *, maps=0):
-    game, engine, configuration = configured_game(lua, checks_maps=maps, checks_settlements=1)
+def configured_settlements(lua, *, maps=0, **options):
+    game, engine, configuration = configured_game(
+        lua, checks_maps=maps, checks_settlements=1, **options
+    )
     engine.files[CONFIG_PATH] = encode_configuration(KEY, configuration, expanded=True)
     game.actor_on_update()
     return game, engine, configuration

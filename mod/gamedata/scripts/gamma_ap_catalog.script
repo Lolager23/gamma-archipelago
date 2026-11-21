@@ -173,6 +173,14 @@ activity_rules = {
     [28052801]={["any_regions"]={},["all_regions"]={},["reliable"]=true},
 }
 activity_regions = {["checks_kill_milestones"]={"l01_escape","k00_marsh","l02_garbage"},["checks_side_task_milestones"]={"l01_escape"},["checks_rank_milestones"]={"l01_escape"},["checks_armour_tiers"]={"l01_escape"},["checks_weapon_tiers"]={"l01_escape"},["checks_knife_tiers"]={"l01_escape"},["checks_gear_upgrades"]={"l01_escape","l05_bar","l08_yantar"},["checks_faction_standing"]={"l01_escape","l05_bar"}}
+settlement_rules = {
+    [28052103]={["faction"]="army",["label"]="Military",["item"]=28051307,["name"]="Faction Goodwill: army",["copies"]=5,["minimum"]=1001,["neutral"]=-999},
+    [28052106]={["faction"]="army",["label"]="Military",["item"]=28051307,["name"]="Faction Goodwill: army",["copies"]=5,["minimum"]=1001,["neutral"]=-999},
+    [28052108]={["faction"]="bandit",["label"]="Bandits",["item"]=28051308,["name"]="Faction Goodwill: bandit",["copies"]=5,["minimum"]=1001,["neutral"]=-999},
+    [28052112]={["faction"]="killer",["label"]="Mercenaries",["item"]=28051306,["name"]="Faction Goodwill: killer",["copies"]=5,["minimum"]=1001,["neutral"]=-999},
+    [28052113]={["faction"]="greh",["label"]="Sin",["item"]=0,["name"]="",["copies"]=0,["minimum"]=1001,["neutral"]=-999},
+    [28052114]={["faction"]="monolith",["label"]="Monolith",["item"]=0,["name"]="",["copies"]=0,["minimum"]=1001,["neutral"]=-999},
+}
 start_locations = {
     [0]={key="rookie_village",name="Rookie Village",level="l01_escape"},
     [1]={key="hidden_base",name="Clear Sky Base",level="k00_marsh"},
@@ -2085,6 +2093,7 @@ config_limits = {
     ["rewards_workshop_access"] = 1,
     ["rewards_zone_keys"] = 1,
     ["scouting_mode"] = 2,
+    ["settlement_reputation_logic"] = 1,
     ["starting_ammo"] = 100,
     ["starting_backpack"] = 2,
     ["starting_detector"] = 2,
@@ -2988,6 +2997,7 @@ config_defaults = {
     ["rewards_supply_medical"]=0,
     ["rewards_workshop_access"]=0,
     ["scouting_mode"]=0,
+    ["settlement_reputation_logic"]=0,
     ["starting_faction"]=0,
     ["starting_location"]=0,
     ["supply_ammo_calibre"]=0,

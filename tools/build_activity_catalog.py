@@ -1,7 +1,10 @@
 """Generate shared regional opportunity metadata, without installation-specific assets."""
 
 import json
+from dataclasses import asdict
 from typing import Any
+
+from gamma_archipelago.settlement_access import SETTLEMENT_RULES
 
 
 def encoded(value: Any) -> str:
@@ -9,6 +12,8 @@ def encoded(value: Any) -> str:
         return "true" if value else "false"
     if isinstance(value, str):
         return json.dumps(value)
+    if isinstance(value, int):
+        return str(value)
     if isinstance(value, list):
         return "{" + ",".join(encoded(item) for item in value) + "}"
     return (
@@ -22,4 +27,7 @@ def activity_lines(catalog: dict[str, Any]) -> list[str]:
         if "logic" in row:
             lines.append(f"    [{row['id']}]={encoded(row['logic'])},")
     lines.extend(["}", "activity_regions = " + encoded(catalog["activity_regions"])])
+    lines.append("settlement_rules = {")
+    lines.extend(f"    [{id}]={encoded(asdict(rule))}," for id, rule in SETTLEMENT_RULES.items())
+    lines.append("}")
     return lines

@@ -1,29 +1,57 @@
 -- Personal faction goodwill only; never change faction alliances or NPC flags.
 
+local function read(faction)
+    if not relation_registry or type(relation_registry.community_goodwill) ~= "function"
+        or type(relation_registry.set_community_goodwill) ~= "function" then
+        return nil,"Faction rewards require the personal goodwill API"
+    end
+    local ok,current,id = pcall(function()
+        local id = db.actor:id()
+        if type(id) ~= "number" or id ~= math.floor(id) or id < 0 or id >= 65535 then error("Invalid actor identity") end
+        return relation_registry.community_goodwill(faction,id),id
+    end)
+    if not ok or type(current) ~= "number" or current ~= math.floor(current)
+        or current < -2147483648 or current > 2147483647 then
+        return nil,"Faction goodwill query returned an invalid value"
+    end
+    return current,id
+end
+
+local function set_and_confirm(faction, id, target)
+    local changed = pcall(relation_registry.set_community_goodwill,faction,id,target)
+    if not changed then return false,"Faction goodwill update failed; the same target will retry" end
+    local queried,actual = pcall(relation_registry.community_goodwill,faction,id)
+    if not queried or actual ~= target then return false,"Faction goodwill update was not confirmed" end
+    return true
+end
+
 function receive(state, item_id)
     local reward = gamma_ap_catalog.reputation_rewards[item_id]
     if not state.session_key or not state.expanded or not state.allowed_items[item_id] or not reward then
         return false, "Faction reward is disabled in this seed"
     end
-    if not relation_registry or type(relation_registry.community_goodwill) ~= "function"
-        or type(relation_registry.set_community_goodwill) ~= "function" then
-        return false, "Faction rewards require the personal goodwill API"
-    end
-    local ok, current = pcall(relation_registry.community_goodwill, reward.faction, db.actor:id())
-    if not ok or type(current) ~= "number" or current ~= math.floor(current)
-        or current < -2147483648 or current > 2147483647 then
-        return false, "Faction goodwill query returned an invalid value"
-    end
+    local current,id = read(reward.faction)
+    if current == nil then return false,id end
     local receipt = state.received_count + 1
     local target = state.reputation_targets[receipt]
     if not target then
-        target = math.max(current, math.min(reward.cap, current + reward.bonus))
+        local floor = gamma_ap_settlement_access.minimum_goodwill(state,item_id)[reward.faction] or -2147483648
+        target = math.max(current, floor, math.min(reward.cap, current + reward.bonus))
         state.reputation_targets[receipt] = target
     end
     if current >= target then return true end
-    local changed = pcall(relation_registry.set_community_goodwill, reward.faction, db.actor:id(), target)
-    if not changed then return false, "Faction goodwill update failed; the same target will retry" end
-    local queried, actual = pcall(relation_registry.community_goodwill, reward.faction, db.actor:id())
-    if not queried or actual ~= target then return false, "Faction goodwill update was not confirmed" end
+    return set_and_confirm(reward.faction,id,target)
+end
+
+function reconcile(state)
+    local floors = gamma_ap_settlement_access.minimum_goodwill(state)
+    for faction,target in pairs(floors) do
+        local current,id = read(faction)
+        if current == nil then return false,id end
+        if current < target then
+            local ok,reason = set_and_confirm(faction,id,target)
+            if not ok then return false,reason end
+        end
+    end
     return true
 end
