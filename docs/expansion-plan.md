@@ -437,8 +437,9 @@ policy, and disabled categories impose no new locks or missing dependencies.
 - [x] Implement three quest-chain keys and deferred native task-grant replay.
 - [x] Implement nine AP equipment permissions, baseline grants and deferred
   PDA map markers.
-- [x] Implement 32 zone keys with native/scripted transition guards and a local
-  randomized exploration chain; Cordon remains the free starting region.
+- [x] Implement 32 zone keys with native/scripted transition guards. Expanded pools
+  and multiworlds use AP fill; sparse exploration retains an anti-cycle route.
+  Cordon remains free.
 - [x] Implement preview/confirmation and saved one-trip consumption for nine
   curated hubs with safe fallback and native travel restrictions.
 - [x] Model equipment, psi protection, stash/PDA and story access in AP logic;

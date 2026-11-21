@@ -411,7 +411,7 @@ def test_zone_chain_fills_previous_failure_seeds_and_keeps_yantar_before_psi_rou
             for loc in multiworld.get_locations()
             if loc.item and loc.item.name.startswith("Zone Key:")
         ]
-        assert len(locked) == 32 and all(loc.locked for loc in locked)
+        assert len(locked) == 32 and not any(loc.locked for loc in locked)
         distribute_items_restrictive(multiworld)
         assert multiworld.can_beat_game()
 

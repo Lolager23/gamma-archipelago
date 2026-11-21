@@ -25,7 +25,7 @@ from .options import GammaOptions
 from .pool import build_pool
 from .preview import write_preview
 from .rules import apply_access_rules
-from .zone_fill import place_zone_keys
+from .zone_fill import place_zone_keys, prefer_early_hub
 
 _catalog = json.loads(files(__package__).joinpath("catalog.json").read_text(encoding="utf-8"))
 
@@ -174,6 +174,7 @@ class GammaWorld(World):
     def pre_fill(self) -> None:
         place_opening(self, _catalog)
         place_zone_keys(self, _catalog)
+        prefer_early_hub(self, _catalog)
 
     def fill_slot_data(self) -> dict[str, object]:
         identity = generation_identity(self)

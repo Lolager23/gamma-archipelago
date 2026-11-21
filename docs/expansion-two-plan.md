@@ -113,3 +113,17 @@ Anomaly API evidence:
 [DS3](https://nex-3.com/ds3/info/),
 [7 Days to Die](https://github.com/OrcThrowman/7-Days-to-Die-AP),
 [Monster Hunter Rise](https://github.com/HillbillyDroid/MHRise-APWorld).
+
+## Natural progression correction and remaining modelling
+
+- Implemented in source: remove unconditional map-only/local zone-key placement
+  for expanded regional pools, including multiworlds. Use ordinary AP fill and
+  common locality/exclusions. Hub preference requests one upstream early item.
+- Retained exception: sparse exploration anti-cycle route, explicit opening
+  protection, user constraints and filler-only discovery tails.
+- Next: replace the global all-zones activity guard with evidence-backed regional
+  and capability requirements, shared by AP and the PDA. Distinct quotas must
+  follow verified rosters rather than assumed random encounters.
+- Validate: cross-player keys, generated progression spheres, usable opening
+  checks, rare/missable protections and Owen's native pacing experience. No strict
+  tiers were requested. Existing seeds are not rewritten or reset.

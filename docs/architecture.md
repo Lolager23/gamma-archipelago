@@ -102,8 +102,10 @@ progression or replace the native modifier system.
 ## State and failure boundaries
 
 [Generation pacing](generation-pacing.md) keeps a pure shared pool budget separate
-from upstream item creation and placement. Opening reservations and zone routing
-run before general fill. Optional actual-seed reports are generated after fill;
+from upstream item creation and placement. Explicit opening reservations run
+before general fill. Zone keys use upstream randomized fill in expanded regional
+pools, including multiworlds, optionally requesting one early hub key. Only sparse
+exploration pools retain an anti-cycle route. Optional actual-seed reports are generated after fill;
 settings previews contain no placements. Common AP constraints and starting items
 use a canonical generation identity in slot schema 4, while legacy schemas keep
 their original session keys.

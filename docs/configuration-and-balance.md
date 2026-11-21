@@ -26,12 +26,12 @@ reused flags before each dispatch so a rejected helmet cannot block later loot.
 An uncalibrated helmet retains its native limited protection; it does not satisfy
 the calibrated goal. AP does not turn it into calibrated protection.
 
-Zone keys are local randomized exploration-chain rewards. Other items use the
-ordinary multiworld pool. Combining that chain with exclusive psi coordinates
-requires settlement checks, providing early unreserved slots for coordinates and
-a locked PDA. Required rewards must fit the chosen pool. All map checks on the
-zone chain must remain included; explicit exclusion is rejected. Invalid settings
-raise an explanatory generation error rather than silently enabling a category.
+Zone keys use ordinary AP fill in expanded regional pools, including multiworlds.
+Only sparse exploration retains the anti-cycle route and its explicit map
+exclusion/locality conflicts. Pool capacity and opening checks remain validated;
+existing map/settlement category requirements still protect reliable regional capacity.
+Invalid logical fills fail rather than silently enabling a category. See
+[generation pacing](generation-pacing.md) for natural progression and limitations.
 
 Useful/filler balance is a first playtest baseline: native food/basic medicine
 remain available, optional loot/reputation/skills supplement ordinary scavenging,

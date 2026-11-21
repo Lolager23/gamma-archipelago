@@ -1,5 +1,24 @@
 # Verification record
 
+## 21 November 2026 — natural AP zone-key placement
+
+Read-only seed inspection confirmed all 32 keys on map arrivals under the old
+unconditional pre-fill route. Expanded regional pools, including multiworlds, now
+retain keys in upstream general fill; common locality, priorities and exclusions
+apply. Hubs-first is one upstream early-item request. Sparse map exploration
+retains its anti-cycle exception, now respecting item rules and leaving placements
+unlocked. AP's standard fill failed sparse regression seeds without that exception.
+
+Focused regression checks passed, including mixed-game/locality/map-exclusion
+cases. A 1,000-seed Full Story generator matrix passed after removing the forced
+route. The complete verifier passed 1,400 covered regressions, 71 untraced
+generation/server cases and seven Node tests (1,478 total). Per-module
+Python line/branch and Lua executable-line coverage gates passed. Exact-head
+Windows/Linux CI is required before merge; results belong to the PR evidence. Native acceptance is **not run**.
+No game, installed bundle, active session, saved progress or private panel changed.
+The conservative all-zones global-activity rule remains; its evidence-backed
+replacement is recorded as planned, not implemented.
+
 ## 21 November 2026 — upgrade equipment ownership logic
 
 The equipment observation adapter only counts installed changes on owned firearm,
