@@ -6,6 +6,7 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 from importlib.resources import files
 
+from .activity_requirements import unreliable_check_ids
 from .catalog import MAX_ITEMS, enabled_item_ids
 from .configuration import SeedConfiguration
 from .discovery import MISSABLE_IDS, configured_location_ids, protected_tail_ids
@@ -85,7 +86,11 @@ def budget_pool(
             required[name] = max(0, row.get("copies", 1) - gifts[name])
     if configuration.option("optional_check_policy") == 0:
         excluded = excluded | (MISSABLE_IDS & check_ids)
-    excluded = excluded | protected_tail_ids(configuration, check_ids)
+    excluded = (
+        excluded
+        | protected_tail_ids(configuration, check_ids)
+        | (unreliable_check_ids(configuration) & check_ids)
+    )
     slots, eligible = len(check_ids), len(check_ids - excluded)
     remaining_required = sum(max(0, count - depleted[name]) for name, count in required.items())
     if required.total() > slots or remaining_required > eligible:

@@ -73,7 +73,15 @@ def test_hub_preference_requests_upstream_early_item_without_fixed_location(gift
     for step in ("create_items", "set_rules", "pre_fill"):
         call_all(multiworld, step)
     expected = "Zone Key: Rostok" if gift else "Zone Key: Garbage"
-    assert multiworld.early_items[1] == {expected: 1}
+    assert multiworld.early_items[1][expected] == 1
+    assert (
+        sum(
+            count
+            for name, count in multiworld.early_items[1].items()
+            if name.startswith("Equipment Unlock:")
+        )
+        == 1
+    )
     assert all(item.location is None for item in zone_items(multiworld))
     distribute_items_restrictive(multiworld)
     assert multiworld.can_beat_game()
@@ -112,7 +120,7 @@ def test_hub_preference_does_not_duplicate_precollected_hubs():
         multiworld.push_precollected(world.create_item("Zone Key: " + hub))
     for step in ("create_items", "set_rules", "pre_fill"):
         call_all(multiworld, step)
-    assert not multiworld.early_items[1]
+    assert not any(name.startswith("Zone Key:") for name in multiworld.early_items[1])
 
 
 def test_early_hub_request_preserves_a_stronger_existing_upstream_request():

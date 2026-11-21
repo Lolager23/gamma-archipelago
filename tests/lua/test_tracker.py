@@ -136,9 +136,13 @@ def test_equipment_requirements_are_explained_then_clear_after_actual_unlock(lua
     assert not any("Equipment permission" in row.reason for row in rows(view(lua, state)))
 
 
-def test_global_and_combat_checks_wait_for_matching_requirements(lua):
+def test_regional_and_combat_checks_wait_for_matching_requirements(lua):
     state = state_for(lua, checks_mutant_first_kills=1, rewards_zone_keys=1)
-    assert any("Global activity" in row.reason for row in rows(view(lua, state)))
+    assert any(
+        row.status == "available" and row.category == "checks_mutant_first_kills"
+        for row in rows(view(lua, state))
+    )
+    assert any("Regional activity" in row.reason for row in rows(view(lua, state)))
     state = state_for(
         lua,
         checks_mutant_first_kills=1,

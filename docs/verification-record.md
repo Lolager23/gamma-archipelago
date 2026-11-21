@@ -1,5 +1,32 @@
 # Verification record
 
+## 21 November 2026 — regional activity access and generation analysis
+
+Replaced the all-zones activity gate with catalogue-backed source regions,
+capability permissions and cumulative story routes. AP and PDA requirements match;
+distinct quotas count supported reachable types after exclusions. Unsupported
+sources and excess quotas are filler-only before pool budgeting. Novice rank is
+an unconditional baseline check; later rank needs an earning route. The locked
+opening requests one earned upstream early permission when necessary, without
+fixing a location or granting a starting item. Sparse story/map openings retain
+an anti-cycle fallback. Living Legend uses its chain route instead of every map.
+
+Complete verifier passed 1,474 covered regressions, 72 untraced generator/server
+cases and seven Node tests (1,553 total). Owned Python line/branch coverage is
+100%; all per-module Lua executable-line gates passed, with no Lua branch claim.
+All 111 unchanged private developer-panel checks passed against the new source.
+The full preset matrix and targeted failures were rerun after corrections.
+Ten unchanged random seed numbers generated actual Full Story archives and
+passed logical beatability/reachability analysis; see [the detailed report](regional-seed-analysis.md).
+Samples retain 273 checks, with 235 progression-eligible, and 55 progression
+rewards including 32 zone keys. No seed rerolls or game progress were used.
+
+Current-head Windows/Linux CI belongs to the PR evidence. Native acceptance is
+**not run**, reserved for Owen. Existing source IDs, save/configuration formats,
+installed mod/private panel, current Full Story session and normal game remain
+unchanged. This is an unmerged source PR; no deployment or game launch occurred.
+New placement logic requires new generation and a coordinated bundle upgrade.
+
 ## 21 November 2026 — carry locked equipment; unlock equip/use
 
 Starting equipment locks now permit acquisition, ordinary trade and storage while

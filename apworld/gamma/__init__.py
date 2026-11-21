@@ -7,6 +7,7 @@ from BaseClasses import Item, ItemClassification, Location, LocationProgressType
 from Options import OptionError
 from worlds.AutoWorld import WebWorld, World
 
+from gamma_archipelago.activity_requirements import unreliable_check_ids
 from gamma_archipelago.catalog import (
     KILL_MILESTONE_BASE,
     LOCATION_NAMES,
@@ -20,7 +21,7 @@ from gamma_archipelago.starting_unlock import unlock_candidates
 
 from .goals import add_goal_events, set_goal_rule
 from .identity import generation_identity
-from .opening import place_opening
+from .opening import place_opening, request_activity_opener
 from .options import GammaOptions
 from .pool import build_pool
 from .preview import write_preview
@@ -100,7 +101,7 @@ class GammaWorld(World):
         from gamma_archipelago.starting import starting_level
 
         menu.connect(regions[starting_level(self.configuration)])
-        add_goal_events(self, regions, GammaLocation, GammaItem)
+        add_goal_events(self, regions, GammaLocation, GammaItem, _catalog)
         if "rewards_progression_stashes" in self.configuration.rewards:
             claim = GammaLocation(
                 self.player, "Claim Cordon Psi Stash", None, regions["l01_escape"]
@@ -118,7 +119,9 @@ class GammaWorld(World):
             regions[source].connect(regions[destination])
             regions[destination].connect(regions[source])
         allowed = configured_location_ids(self.configuration)
-        protected = protected_tail_ids(self.configuration, allowed)
+        protected = protected_tail_ids(self.configuration, allowed) | unreliable_check_ids(
+            self.configuration
+        )
         for location in _catalog["locations"]:
             if location["id"] not in allowed:
                 continue
@@ -173,6 +176,7 @@ class GammaWorld(World):
 
     def pre_fill(self) -> None:
         place_opening(self, _catalog)
+        request_activity_opener(self, _catalog)
         place_zone_keys(self, _catalog)
         prefer_early_hub(self, _catalog)
 

@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING, Any
 
 from BaseClasses import CollectionState
 
+from gamma_archipelago.activity_requirements import regional_requirement
 from gamma_archipelago.starting import starting_level
 
 if TYPE_CHECKING:
@@ -67,6 +68,8 @@ def apply_access_rules(world: "GammaWorld", catalog: dict[str, Any]) -> None:
             required.append("firearms")
         if category == "checks_knife_tiers":
             required.append("melee")
+        if category == "checks_gear_upgrades":
+            required.append("tools")
         names = [
             "Equipment Unlock: " + ("PDA" if group == "pda" else group.title())
             for group in required
@@ -82,14 +85,17 @@ def apply_access_rules(world: "GammaWorld", catalog: dict[str, Any]) -> None:
         ):
             names.append("Workshop Access: Upgrades")
         previous = location.access_rule
-        # Global activities deliberately wait for full zone access. This is a
-        # conservative guarantee, not a claim that every species lives in Cordon.
-        global_activity = zoned and definition["level"] == "Menu"
+        regional = regional_requirement(definition, world.configuration)
         combat = category in {
             "checks_mutant_first_kills",
             "checks_faction_first_kills",
             "checks_kill_milestones",
         }
+        combat = combat or (
+            category == "checks_quest_types"
+            and definition["key"]
+            in {"hunting", "bounty", "rescue", "defence", "assault", "territory", "vehicle"}
+        )
         readiness = world.configuration.option("combat_logic")
         if combat and readiness:
             groups = ("firearms",) if readiness == 1 else ("firearms", "outfit", "helmet")
@@ -98,29 +104,37 @@ def apply_access_rules(world: "GammaWorld", catalog: dict[str, Any]) -> None:
                 for group in groups
                 if gear["starting_" + group] == 2
             )
+        earning = (
+            category in {"checks_rank_milestones", "checks_faction_standing"}
+            and definition.get("minimum", 1) > 0
+        )
 
         def activity(
             state,
             prior=previous,
             items=names,
-            global_check=global_activity,
+            regional=regional,
             fight=combat,
             tools=tools,
+            earning=earning,
         ):
+            weapon = (
+                gear["starting_firearms"] != 2
+                or gear["starting_melee"] != 2
+                or state.has("Equipment Unlock: Firearms", player)
+                or state.has("Equipment Unlock: Melee", player)
+            )
             return (
                 prior(state)
                 and (not tools or state.has("Progressive Tools", player, 3))
                 and all(state.has(name, player) for name in items)
+                and regional.accessible(lambda level: state.can_reach_region(level, player))
+                and (not fight or weapon)
                 and (
-                    not global_check
-                    or all(state.can_reach_region(level, player) for level in zone_items)
-                )
-                and (
-                    not fight
-                    or gear["starting_firearms"] != 2
-                    or gear["starting_melee"] != 2
-                    or state.has("Equipment Unlock: Firearms", player)
-                    or state.has("Equipment Unlock: Melee", player)
+                    not earning
+                    or weapon
+                    or gear["starting_pda"] != 2
+                    or state.has("Equipment Unlock: PDA", player)
                 )
             )
 
