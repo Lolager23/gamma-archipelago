@@ -404,12 +404,12 @@ class ChecksFactionStanding(Toggle):
 
 
 class DiscoveryMode(Choice):
-    """Existing per-type checks, or one check for each of the first N distinct qualifying types."""
+    """Generic distinct discoveries by default; named per-type checks remain optional."""
 
     display_name = "Discovery mode"
     option_per_type = 0
     option_first_n_distinct = 1
-    default = 0
+    default = 1
 
 
 class MutantDiscoveryCount(Range):

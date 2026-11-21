@@ -40,6 +40,8 @@ def test_pda_explains_nearby_activity_permissions_and_optional_uncertain_sources
         rewards_zone_keys=1,
         checks_mutant_first_kills=1,
         checks_artefacts=1,
+        mutant_discovery_mode=0,
+        artefact_discovery_mode=0,
         starting_detector=2,
         rewards_starting_gear_unlocks=1,
     )

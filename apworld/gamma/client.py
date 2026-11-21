@@ -21,7 +21,7 @@ from gamma_archipelago.configuration import (
     ConfigurationError,
     SeedConfiguration,
     build_configuration,
-    defaults,
+    legacy_defaults,
 )
 from gamma_archipelago.discovery import configured_location_ids
 from gamma_archipelago.notice_text import clean_label
@@ -105,7 +105,7 @@ class GammaContext(CommonContext):
                     raise ProtocolError(f"Invalid generation configuration: {error}") from error
                 if slot_data.get("configuration_key") != configuration_key:
                     raise ProtocolError("Generation configuration digest does not match")
-                if version == 1 and self.configuration.to_values() != defaults():
+                if version == 1 and self.configuration.to_values() != legacy_defaults():
                     raise ProtocolError("Expanded configuration requires schema 2")
                 if version == 2 and (
                     self.configuration.checks != {"checks_maps"}

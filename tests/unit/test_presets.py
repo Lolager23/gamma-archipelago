@@ -24,3 +24,11 @@ def test_pilot_uses_quick_dialogue_goal_without_changing_legacy_defaults():
 
     assert build_configuration(presets()["pilot"]).goal == "talk_sidorovich"
     assert build_configuration(defaults()).goal == "pilot_tour"
+
+
+def test_all_fresh_presets_default_to_generic_mutant_faction_and_artefact_checks():
+    from gamma_archipelago.discovery import GROUPS
+    from gamma_archipelago.web_planner import metadata
+
+    for values in metadata()["presets"].values():
+        assert all(values[f"{group}_discovery_mode"] == 1 for group in GROUPS)

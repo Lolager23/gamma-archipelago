@@ -99,7 +99,7 @@ def test_category_manifests_pools_and_reachability(maps, settlements, count):
     ],
 )
 def test_combat_categories_and_custom_milestones_generate_exactly(category, count):
-    from gamma_archipelago.catalog import enabled_location_ids
+    from gamma_archipelago.discovery import configured_location_ids
 
     multiworld = setup_multiworld(
         GammaWorld,
@@ -113,8 +113,8 @@ def test_combat_categories_and_custom_milestones_generate_exactly(category, coun
     distribute_items_restrictive(multiworld)
     world = multiworld.worlds[1]
     assert len(multiworld.get_locations(1)) == count
-    assert set(world.fill_slot_data()["location_ids"]) == enabled_location_ids(
-        world.configuration.checks, world.configuration.kill_milestones
+    assert set(world.fill_slot_data()["location_ids"]) == configured_location_ids(
+        world.configuration
     )
     assert all(location.item for location in multiworld.get_locations())
     assert multiworld.can_beat_game()
@@ -346,7 +346,11 @@ def test_zone_keys_gate_all_entrances_and_conservative_global_activities():
     state.collect(key, prevent_sweep=True)
     assert state.can_reach_region("l02_garbage", 1)
     assert not state.can_reach_region("l05_bar", 1)
-    artefact = next(loc for loc in multiworld.get_locations() if loc.address == 28052401)
+    from gamma_archipelago.discovery import QUOTAS
+
+    artefact = next(
+        loc for loc in multiworld.get_locations() if loc.address == QUOTAS["artefact"][0]
+    )
     assert not artefact.can_reach(state)
     for item in list(multiworld.itempool):
         state.collect(item, prevent_sweep=True)

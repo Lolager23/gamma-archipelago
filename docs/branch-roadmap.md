@@ -103,3 +103,8 @@ all-zones activity requirement with shared source-region and equipment rules,
 protect unsupported sources/quotas, retain sparse opening safety, compare AP/PDA
 logic and analyse ten fresh Full Story seeds. No deployment, session replacement
 or native game launch is part of this PR; Owen owns native acceptance.
+
+`codex/generic-discovery-defaults` stacks on regional activity PR #67. Default new
+APWorld generations and planner presets to generic distinct mutant/faction kills
+and artefacts while retaining named-type options, legacy settings and identities.
+It changes no live configuration or installed game; native acceptance stays with Owen.

@@ -1,5 +1,22 @@
 # Verification record
 
+## 21 November 2026 — generic discovery defaults
+
+New APWorld YAML defaults, fresh planner presets and all nine checked-in preset
+files use generic distinct mutant/faction kills and artefacts. Named per-type
+checks remain explicit options; count ceilings and repeated-type handling are
+unchanged. Legacy omitted fields, digests and schema-1 client compatibility keep
+their old interpretation. Historical ten-seed report reproduction now explicitly
+selects per-type mode. This source increment stacks on regional logic PR #67.
+
+Complete verifier passed 1,486 covered regressions, 72 untraced generation/server
+cases and seven Node tests (1,565 total). Owned Python measured line/branch
+coverage is 100%; every Lua executable-line gate passed, with no branch claim.
+All 111 unchanged private developer-panel tests passed. Exact-head Windows/Linux
+CI belongs to the PR evidence. Native acceptance is **not run**, reserved for Owen.
+No IDs or save/wire schemas changed. No deployment, session reset or game launch
+occurred; installed mod, panel, session configuration and archives remain unchanged.
+
 ## 21 November 2026 — regional activity access and generation analysis
 
 Replaced the all-zones activity gate with catalogue-backed source regions,

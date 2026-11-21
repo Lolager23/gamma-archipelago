@@ -11,7 +11,15 @@ from .test_loadout import CONFIG_PATH, KEY, configured_game
 
 def combat_game(lua, **options):
     game, engine, configuration = configured_game(
-        lua, checks_maps=0, checks_kill_milestones=1, kill_milestones=[1, 2, 4], **options
+        lua,
+        **{
+            "checks_maps": 0,
+            "checks_kill_milestones": 1,
+            "kill_milestones": [1, 2, 4],
+            "mutant_discovery_mode": 0,
+            "faction_discovery_mode": 0,
+            **options,
+        },
     )
     engine.files[CONFIG_PATH] = encode_configuration(KEY, configuration, expanded=True)
     lua.execute("db.actor.id=function() return 0 end")
@@ -164,6 +172,8 @@ def test_id_reuse_is_reset_only_for_a_living_spawn_and_older_save_restores_count
 
 
 def test_kill_counter_is_disabled_independently_of_first_species_checks(lua):
+    from gamma_archipelago.discovery import QUOTAS
+
     game, engine, configuration = configured_game(lua, checks_mutant_first_kills=1)
     engine.files[CONFIG_PATH] = encode_configuration(KEY, configuration, expanded=True)
     lua.execute("db.actor.id=function() return 0 end")
@@ -172,4 +182,4 @@ def test_kill_counter_is_disabled_independently_of_first_species_checks(lua):
     engine.meta.dog["class"] = "SM_DOG_S"
     game.monster_on_death_callback(victim(lua), lua.globals().db.actor)
     assert state_of(lua, game).combat.kills == 0
-    assert state_of(lua, game).checks[lua.globals().gamma_ap_catalog.mutant_locations.dog]
+    assert state_of(lua, game).checks[QUOTAS["mutant"][0]]

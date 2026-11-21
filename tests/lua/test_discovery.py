@@ -22,6 +22,31 @@ def progress(lua, game):
 
 
 @pytest.mark.parametrize("group", GROUPS)
+def test_new_default_observations_advance_generic_checks_and_legacy_wire_stays_per_type(lua, group):
+    game, _, _ = discovery_game(lua, **{GROUPS[group]: 1})
+    state = progress(lua, game)
+    source = next(iter(SOURCES[group].values()))
+    module = lua.globals().gamma_ap_discovery
+    assert module.record(state, source)
+    assert not module.record(state, source)
+    assert state.checks[QUOTAS[group][0]] and not state.checks[source]
+
+    values = {**defaults(), GROUPS[group]: 1}
+    for name in GROUPS:
+        values.pop(f"{name}_discovery_mode")
+    legacy = build_configuration(values)
+    lines = [
+        line
+        for line in encode_configuration(KEY, legacy).splitlines()
+        if not any(line.startswith(f"option|{name}_discovery_mode|") for name in GROUPS)
+    ]
+    lines[-1] = f"end|{len(lines) - 4}"
+    packet = "\n".join(lines) + "\n"
+    parsed = lua.globals().gamma_ap_configuration.parse(packet, KEY, legacy.digest)
+    assert parsed.options[f"{group}_discovery_mode"] == 0
+
+
+@pytest.mark.parametrize("group", GROUPS)
 def test_distinct_quota_any_order_duplicates_disabled_totals_and_save_reload(lua, group):
     count = 15 if group == "mutant" else 3
     game, _, configuration = discovery_game(
