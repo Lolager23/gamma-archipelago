@@ -17,3 +17,10 @@ def test_mutating_one_presets_threshold_list_does_not_change_another():
     values = presets()
     values["full_story"]["kill_milestones"].append(500)
     assert values["full_labs"]["kill_milestones"] == [10, 25, 50, 100]
+
+
+def test_pilot_uses_quick_dialogue_goal_without_changing_legacy_defaults():
+    from gamma_archipelago.configuration import defaults
+
+    assert build_configuration(presets()["pilot"]).goal == "talk_sidorovich"
+    assert build_configuration(defaults()).goal == "pilot_tour"

@@ -1,5 +1,14 @@
 # Verification record
 
+## Quick Sidorovich pilot: 20 November 2026
+
+The named pilot preset selects the additive `talk_sidorovich` goal (6). Closing
+Sidorovich's native dialogue in Cordon completes the goal while other map checks
+remain available. Existing goal IDs, legacy defaults and current seeds are
+unchanged. See [quick pilot](pilot-sidorovich.md) for trigger/release policy and
+acceptance. Automated evidence is recorded on the PR; native acceptance is
+**not run** and reserved for Owen. The current Brain Scorcher session is preserved.
+
 ## Buyable AP shop contracts: 20 November 2026
 
 Branch `codex/shop-purchases` adds the default-off `checks_shop_purchases` option

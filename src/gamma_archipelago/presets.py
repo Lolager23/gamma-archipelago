@@ -10,7 +10,7 @@ from .configuration import (
 
 
 def presets() -> dict[str, dict[str, object]]:
-    pilot = defaults()
+    pilot = {**defaults(), "goal": 6}
     explorer = {
         **defaults(),
         "checks_settlements": 1,

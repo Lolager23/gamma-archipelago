@@ -32,7 +32,7 @@ def opening_permissions(
     fight = bool(
         configuration.checks
         & {"checks_mutant_first_kills", "checks_faction_first_kills", "checks_kill_milestones"}
-    ) or configuration.goal not in {"pilot_tour", "psi_protection"}
+    ) or configuration.goal not in {"pilot_tour", "psi_protection", "talk_sidorovich"}
     if (
         fight
         and gear["starting_firearms"] == 2

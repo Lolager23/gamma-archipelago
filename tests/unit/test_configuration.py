@@ -59,7 +59,7 @@ def test_all_requested_check_reward_and_goal_adapters_are_available():
         {"checks_maps": True},
         {"checks_maps": -1},
         {"rewards_zone_keys": 2},
-        {"goal": 6},
+        {"goal": 7},
         {"no_starting_weapons": 2},
         {"starting_pda": 3},
         {"starting_money": 101},

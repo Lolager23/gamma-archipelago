@@ -46,7 +46,7 @@ def write_snapshot(client, *, received=0):
         ("mvp", 2, 20261119),
         ("mvp", 2, 20261120),
         ("extended", 4, 20261121),
-        *[("full_story", goal, 20261200 + goal) for goal in range(6)],
+        *[("full_story", goal, 20261200 + goal) for goal in range(7)],
     ],
 )
 def test_two_gamma_slots_and_foreign_game_transfer_restart_and_each_goal(

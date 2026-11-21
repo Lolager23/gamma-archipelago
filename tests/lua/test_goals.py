@@ -151,3 +151,60 @@ def test_all_labs_counts_actual_entries_with_map_checks_off_and_survives_reload(
     engine.level = labs[-1]
     poll(game, engine)
     assert snapshot(engine).goal_complete and not snapshot(engine).checked_locations
+
+
+def test_sidorovich_goal_requires_his_closed_dialogue_and_survives_reload(lua):
+    game, engine = goal_game(lua, goal=6)
+    engine.story_ids[42] = "esc_m_trader"
+    poll(game, engine)
+    assert not snapshot(engine).goal_complete  # Entering Cordon is insufficient.
+    engine.callbacks.actor_on_leave_dialog(43)
+    assert not progress(lua, game).goal_complete
+    engine.callbacks.actor_on_leave_dialog(42)
+    poll(game, engine)
+    assert snapshot(engine).goal_complete and snapshot(engine).checked_locations == {28052001}
+    game.load_state(saved_state(lua, game))
+    engine.story_ids[42] = None
+    engine.callbacks.actor_on_leave_dialog(42)
+    poll(game, engine)
+    assert snapshot(engine).goal_complete
+
+
+@pytest.mark.parametrize("identity", [None, "42", 0, 65535, 1.5, float("nan")])
+def test_sidorovich_goal_refuses_invalid_dialogue_identities(lua, identity):
+    game, engine = goal_game(lua, goal=6)
+    poll(game, engine)
+    engine.callbacks.actor_on_leave_dialog(identity)
+    assert not progress(lua, game).goal_complete
+
+
+@pytest.mark.parametrize(
+    "mutation",
+    [
+        "state.session_key=nil",
+        "state.refused_save=true",
+        "state.expanded=false",
+        "state.configuration=nil",
+        "state.configuration.options.goal=2",
+        "db.actor=nil",
+        "engine.alive=false",
+        "engine.level='l03_agroprom'",
+    ],
+)
+def test_sidorovich_goal_ignores_wrong_or_unavailable_game_context(lua, mutation):
+    game, engine = goal_game(lua, goal=6)
+    poll(game, engine)
+    lua.globals().state = progress(lua, game)
+    engine.story_ids[42] = "esc_m_trader"
+    lua.execute(mutation)
+    lua.globals().gamma_ap_goals.left_dialog(lua.globals().state, 42, engine.level)
+    assert not lua.globals().state.goal_complete
+
+
+def test_sidorovich_dialogue_lookup_failure_is_reported_without_victory(lua):
+    game, engine = goal_game(lua, goal=6)
+    poll(game, engine)
+    lua.execute("get_object_story_id=function() error('unavailable') end")
+    engine.callbacks.actor_on_leave_dialog(42)
+    assert not progress(lua, game).goal_complete
+    assert "Cannot identify" in list(engine.logs.values())[-1]

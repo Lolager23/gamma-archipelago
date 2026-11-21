@@ -11,7 +11,7 @@ from Options import OptionError
 from test.general import setup_multiworld
 from worlds.gamma import GammaWorld
 
-from gamma_archipelago.configuration import CHECK_OPTIONS, REWARD_OPTIONS
+from gamma_archipelago.configuration import CHECK_OPTIONS, GOALS, REWARD_OPTIONS
 from gamma_archipelago.presets import presets
 
 pytestmark = pytest.mark.integration
@@ -59,7 +59,7 @@ def test_each_category_and_every_pair_generate_without_implicit_dependency_chang
             options["checks_settlements"] = 1
         # Zone keys intentionally need their map-check route; maps default on.
         assert_seed(options, seed)
-    for goal in range(6):
+    for goal in range(len(GOALS)):
         for seed in range(10):
             assert_seed({**presets()["full_story"], "goal": goal}, seed)
 

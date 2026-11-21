@@ -72,6 +72,7 @@ GOALS = (
     "meet_strelok",
     "living_legend",
     "all_x_labs",
+    "talk_sidorovich",
 )
 OPTION_NAMES = (
     CHECK_OPTIONS
@@ -137,6 +138,7 @@ SUPPORTED_GOALS = frozenset(
         "meet_strelok",
         "living_legend",
         "all_x_labs",
+        "talk_sidorovich",
     }
 )
 

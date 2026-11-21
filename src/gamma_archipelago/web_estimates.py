@@ -14,7 +14,7 @@ ASSUMPTIONS = {
     "session_hours": (2, 1, 12),
     "multiworld_wait_minutes": (0, 0, 600),
 }
-GOAL_HOURS = (3, 8, 18, 30, 50, 30)
+GOAL_HOURS = (3, 8, 18, 30, 50, 30, 0.1)
 
 
 def estimate_playtime(
@@ -48,7 +48,8 @@ def estimate_playtime(
     base = GOAL_HOURS[GOALS.index(configuration.goal)]
     pace = settings["pace_percent"] / 100
     wait = settings["multiworld_wait_minutes"] / 60
-    goal = (max(base, route * 0.5) + locks) * pace + wait
+    goal_route = 0 if configuration.goal == "talk_sidorovich" else route * 0.5
+    goal = (max(base, goal_route) + locks) * pace + wait
     completion = max(goal, (max(base, activity) + route + locks) * pace + wait)
     return {
         "goal_hours": [round(goal * 0.6, 1), round(goal * 1.6, 1)],

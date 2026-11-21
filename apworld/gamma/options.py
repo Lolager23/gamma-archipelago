@@ -265,6 +265,7 @@ class Goal(Choice):
     option_meet_strelok = 3
     option_living_legend = 4
     option_all_x_labs = 5
+    option_talk_sidorovich = 6
     default = 0
 
 
