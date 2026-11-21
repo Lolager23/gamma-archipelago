@@ -28,7 +28,7 @@ CHOICES = {
     "permission_supplies": ["Permissions only", "Permission plus supplies"],
     "supply_ammo_calibre": ["9x18", "9x19", "5.45x39", "5.56x45", "7.62x39"],
     "opening_policy": ["Legacy / challenge", "Protect local Cordon opening"],
-    "access_pacing": ["Random zone frontier", "Reachable hubs first"],
+    "access_pacing": ["Archipelago randomized access", "Prefer an early hub key"],
     "combat_logic": [
         "Any weapon permission",
         "Firearm permission",

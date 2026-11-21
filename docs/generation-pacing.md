@@ -10,7 +10,7 @@ remain **not run**.
 | Option | Values; default preserves earlier seeds |
 |---|---|
 | `opening_policy` | 0 legacy/challenge; 1 protected local Cordon opening |
-| `access_pacing` | 0 random reachable frontier; 1 reachable hubs first |
+| `access_pacing` | 0 normal Archipelago fill; 1 request one early hub key |
 | `combat_logic` | 0 any weapon permission; 1 firearms; 2 firearms, outfit and helmet |
 | `grind_profile` | 0 custom thresholds; 1 short; 2 standard; 3 extended |
 | `generation_preview` | 0 off; 1 actual-seed summary; 2 summary plus placement spoilers |
@@ -18,8 +18,8 @@ remain **not run**.
 Combat assumptions require the corresponding permissions only when that starting
 gear is AP locked. They do not measure native weapon condition, ammunition,
 armour quality or a player's fighting ability. The PDA uses the same permission
-requirements when explaining blocked combat checks. Access pacing changes the
-local zone-key route; it does not promise early high-end equipment.
+requirements when explaining blocked combat checks. Hub pacing uses upstream
+`early_items` without fixing a check or locality. It does not promise early high-end equipment.
 
 Short thresholds are 5/15/30 kills and 1/3/6 tasks; standard thresholds are
 10/25/50/100 kills and 5/10/20/40 tasks; extended thresholds are 25/75/150/250 kills
@@ -53,7 +53,7 @@ A fresh **Loner in Cordon** is the supported baseline. Protected mode reserves
 reliable Cordon map/settlement checks for an AP-locked PDA, a detector when artefact
 checks need it, and firearms when the selected combat assumptions need them.
 Already precollected permissions need no reservation. Zone-key seeds keep the
-Cordon map check for the first route key; settlement checks provide the other
+Cordon map check free for randomized access progression; settlement checks provide the other
 opening slots. If space remains, a normal Medkit or Bandage is reserved too.
 Optional supplies respect non-local selections and each location's item rule;
 the reservation tries an allowed fallback or skips supplies when neither fits.
@@ -64,13 +64,27 @@ or explicitly choose legacy/challenge mode. Random mutant encounters and rare
 artefacts never count as opening guarantees. Native weather, hostile patrols and
 survival supplies remain normal GAMMA concerns and need Owen's playtesting.
 
-The new `short`, `standard` and `extended` presets use protected openings. Existing
-six presets retain legacy settings. Hubs-first route priority is Garbage, Rostok,
-Yantar, Agroprom and Wild Territory when reachable. Precollected zone keys expand
-the reachable frontier without duplicating the removed keys.
-Remaining route keys must be local: conflicting `non_local_items` settings fail
-explicitly before placement. Already precollected keys need no placement and do
-not create that conflict.
+The `short`, `standard` and `extended` presets use protected openings. Existing
+six presets retain their settings. Hubs-first requests one remaining key from
+Garbage, Rostok, Yantar, Agroprom and Wild Territory, in that preference order.
+Upstream chooses an eligible early check and retains its normal fallback when
+that request cannot be satisfied early. Precollected keys are skipped. The old
+YAML name `random_frontier` remains an alias for value zero.
+
+Expanded regional pools, including multiworlds, leave zone keys in normal AP fill.
+Local/non-local item settings, priorities and exclusions apply normally. Only a
+pool with maps and no other regional network checks retains the exploration
+anti-cycle fallback: global activities currently require all zones and cannot
+provide intermediate route checks. Pinned AP fill failed sparse maps-only solo/multiworld
+regression seeds without this exception. Fallback placements remain unlocked
+and respect item rules; excluded route checks and conflicting sparse-route non-local
+keys fail explicitly. This does not claim uniform sampling.
+
+The existing map-check requirement and settlement requirement for exclusive psi
+stash/key combinations remain until richer activity logic supports alternatives.
+They provide reliable regional capacity, not forced key/check pairings in expanded
+pools. Pool capacity, protected-opening validation and logical fill still apply.
+A maps-only local pool necessarily awards its keys through map checks.
 
 ## Previews and compatibility
 
@@ -111,3 +125,30 @@ Owen still needs to verify the opening in a fresh save, PDA blocked reasons,
 native key/access enforcement, actual delivery effects and short/standard/extended
 playtimes. No installed game, local developer panel or running AP session was
 changed for this increment.
+
+## Natural progression follow-up (21 November 2026)
+
+Owen selected natural AP progression without imposed early/mid/late item tiers.
+The active seed had all 32 zone keys on map-arrival checks because the old route
+forced those pairings. The expanded-pool correction removes that reservation;
+it never rewrites an existing archive, bridge identity, receipt or game save.
+
+Use real access rules, progression classifications and ordinary AP fill.
+Upstream progression balancing addresses relative progress in multiworlds; it is
+not a guarantee of specific gear quality or hours played. Opening protection,
+user plando/locality/exclusions and discovery filler tails remain explicit
+exceptions. Do not remove essential requirements just to make checks look early.
+
+The all-zones guard for global activities remains a conservative modelling limit.
+Next: establish primary-source region/capability requirements for each supported
+mutant and artefact roster, generic quota, quest type, rank and upgrade route;
+share those requirements with the PDA, then test opening and later progression
+through actual generator spheres. Do not assume 15 distinct types can be found
+in Cordon or turn uncertain spawns into progression guarantees. Native encounter
+availability and measured pacing remain unverified. Revisit the sparse fallback
+when richer logic provides enough reliable non-map checks.
+
+References checked against pinned AP 0.6.8 and current official documentation:
+[World API](https://github.com/ArchipelagoMW/Archipelago/blob/0.6.8/docs/world%20api.md),
+[fill and early-item implementation](https://github.com/ArchipelagoMW/Archipelago/blob/54803be064fc7e80c4628777ed0b46a9390f255f/Fill.py),
+[common balancing/accessibility options](https://github.com/ArchipelagoMW/Archipelago/blob/main/worlds/generic/docs/advanced_settings_en.md).

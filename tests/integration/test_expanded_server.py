@@ -77,6 +77,7 @@ def test_two_gamma_slots_and_foreign_game_transfer_restart_and_each_goal(
             start_inventory={"Equipment Unlock: PDA": 1, "Zone Key: Garbage": 1},
             start_inventory_from_pool={"Progressive Tools": 2},
             generation_preview=1,
+            non_local_items=["Zone Key: Agroprom"],
         )
     if scout_case:
         values.update(
@@ -109,7 +110,15 @@ def test_two_gamma_slots_and_foreign_game_transfer_restart_and_each_goal(
         ]
     )
     generated, actual_seed = Generate.main(arguments)
-    Main.main(generated, actual_seed)
+    filled = Main.main(generated, actual_seed)
+    if expansion_case:
+        for player in (1, 2):
+            key = next(
+                item
+                for item in filled.itempool
+                if item.player == player and item.name == "Zone Key: Agroprom"
+            )
+            assert key.location.player != player
     (archive,) = output.glob("*.zip")
 
     async def exercise():

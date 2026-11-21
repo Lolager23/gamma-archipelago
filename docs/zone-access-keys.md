@@ -1,15 +1,15 @@
 # Step 20: zone access keys
 
 Stack base: #23. `rewards_zone_keys` adds one required permanent key for each of
-32 non-start maps, IDs 28051701–28051732. Cordon is always open. Map checks are
-required for an initial reachable exploration route; undersized required pools
-are rejected. Keys cannot be placed behind their own destination entrance.
+32 non-start maps, IDs 28051701–28051732. Cordon is always open. Undersized required
+pools are rejected. Keys cannot be placed behind their own destination entrance.
 
-The fill reserves a local exploration chain: each next key comes from a map
-already reached, and its destination is adjacent to the unlocked frontier.
-Yantar precedes psi-gated maps. Zone keys remain local to their GAMMA slot;
-other rewards use ordinary multiworld fill. This prevents circular placement
-in map-only seeds, including regression seeds 1, 4, 5 and 22.
+Expanded regional pools, including multiworlds, use normal AP fill for zone keys,
+including common local/non-local settings. Only sparse exploration pools
+retain an anti-cycle route: each key comes from a reached map and unlocks an
+adjacent destination, with Yantar before psi-gated routes. Regression seeds
+1/4/5/22 cover that exception. See [generation pacing](generation-pacing.md) for
+the optional early-hub request and remaining conservative global-activity logic.
 
 All entrances to a keyed region require its key, including alternate graph edges.
 Global activities conservatively require access to every zone instead of claiming

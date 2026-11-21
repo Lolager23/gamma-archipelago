@@ -189,7 +189,7 @@ def preview(values: Mapping[str, object], assumptions: Mapping[str, object]) -> 
             "Missable exclusions accept filler only. Convenience has a capped useful allocation.",
             "Protected opening reserves reliable Cordon checks for a fresh Loner/Cordon start.",
             "Settings preview only. Actual-seed JSON is optional; placement mode reveals spoilers.",
-            "Zone keys stay local; other rewards can cross players in a multiworld.",
+            "Zone keys use Archipelago fill and can cross players; local/non-local settings apply.",
             "Local goal events do not consume network checks or reward slots.",
             "Generic discovery tails accept filler only; repeated types do not advance checks.",
             *(

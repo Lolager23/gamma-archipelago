@@ -50,8 +50,9 @@ own recorded acceptance. Python 3.12 and AP 0.6.8 are the tested tooling version
 6. After open gates close, prepare a clean candidate and verify its checksums.
    Tagging/publication remain a separate approved action.
 
-White stashes use the finite Cordon roster. Zone keys are local exploration-chain
-rewards; other rewards use normal multiworld placement. ALife encounter/task
+White stashes use the finite Cordon roster. Zone keys use normal AP placement in
+expanded pools/multiworlds; sparse exploration retains an anti-cycle route.
+ALife encounter/task
 availability requires playtests. Consumables can replay after older-save rollback;
 no engine-level exactly-once claim is made. Co-op and exploratory stretch goals
 are outside this candidate's supported scope.

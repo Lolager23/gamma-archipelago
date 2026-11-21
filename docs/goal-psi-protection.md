@@ -18,14 +18,11 @@ checks; stale or mismatched configurations are rejected. Upgrade companion and
 add-on together; existing saved receipts are unchanged. See the
 [bridge protocol](bridge-protocol.md) for compatibility and snapshot ordering.
 
-Zone keys retain the guaranteed local exploration chain from step 20, which
-corrected circular placement in map-only seeds: shuffle the reachable
-frontier and place its key in the previous visited map's first-arrival check.
-Return paths allow backtracking to any already-open frontier. Yantar precedes
-psi-gated maps. Every key remains an AP receipt/check, but zone keys are local to
-their GAMMA slot; other rewards retain ordinary multiworld fill. This explicit
-constraint guarantees finite exploration rather than relying on general fill to
-break cycles. Previously failing seeds 1/4/5/22 are regression cases.
+Zone keys now use ordinary AP fill in expanded regional pools, including multiworlds,
+while psi-access prerequisites remain enforced. Only sparse exploration
+retains the anti-cycle route from step 20, including Yantar before psi-gated maps;
+previously failing seeds 1/4/5/22 remain regression cases. Keys can cross players
+under normal AP settings. See [generation pacing](generation-pacing.md).
 
 Full verifier: 504 covered tests plus two real-server cases; all owned measured
 Python lines/branches and Lua executable lines are 100%. Tests cover inventory

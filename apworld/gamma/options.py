@@ -150,10 +150,11 @@ class OpeningPolicy(Choice):
 
 
 class AccessPacing(Choice):
-    """Existing randomized zone frontier, or prioritize reachable major hubs."""
+    """Normal Archipelago fill, or request one early major-hub key without fixed locations."""
 
     display_name = "Zone access pacing"
-    option_random_frontier = 0
+    option_archipelago = 0
+    alias_random_frontier = 0
     option_hubs_first = 1
     default = 0
 

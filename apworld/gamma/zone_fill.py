@@ -1,4 +1,4 @@
-"""Guarantee a local exploration chain without asking general fill to break cycles."""
+"""Only sparse exploration pools need an explicit anti-cycle fallback."""
 
 from typing import TYPE_CHECKING, Any
 
@@ -11,7 +11,17 @@ if TYPE_CHECKING:
 
 
 def place_zone_keys(world: "GammaWorld", catalog: dict[str, Any]) -> None:
-    if "rewards_zone_keys" not in world.configuration.rewards:
+    if (
+        "rewards_zone_keys" not in world.configuration.rewards
+        or "checks_maps" not in world.configuration.checks
+    ):
+        return
+    # Global activities currently require every zone, so they cannot provide
+    # intermediate route checks. Expanded regional pools must use normal AP
+    # fill instead of reserving keys onto map checks, including in multiworlds.
+    network = [row for row in world.multiworld.get_locations(world.player) if row.address]
+    map_names = {row["name"] for row in catalog["locations"] if row["category"] == "checks_maps"}
+    if any(row.name not in map_names and row.parent_region.name != "Menu" for row in network):
         return
     previous = starting_level(world.configuration)
     visited = {previous}
@@ -34,8 +44,8 @@ def place_zone_keys(world: "GammaWorld", catalog: dict[str, Any]) -> None:
     }
     if any(item.name in world.options.non_local_items.value for item in keys.values()):
         raise OptionError(
-            "Zone-key progression must remain local; "
-            "remove remaining zone keys from non_local_items"
+            "Sparse zone-key progression must remain local; enable regional "
+            "checks or remove remaining zone keys from non_local_items"
         )
     held = {item.name for item in world.multiworld.precollected_items[world.player]}
     held_levels = {level for name, level in levels.items() if name in held} | {
@@ -90,7 +100,27 @@ def place_zone_keys(world: "GammaWorld", catalog: dict[str, Any]) -> None:
             if not free:
                 raise OptionError("Zone route has no unreserved reachable map check")
             location = free[0]
-        location.place_locked_item(item)
+        if not location.can_fill(world.multiworld.state, item, False):
+            raise OptionError("Sparse zone route conflicts with location item restrictions")
+        world.multiworld.push_item(location, item, False)
         world.multiworld.itempool.remove(item)
         visited.add(target)
         previous = target
+
+
+def prefer_early_hub(world: "GammaWorld", catalog: dict[str, Any]) -> None:
+    if not world.configuration.option("access_pacing"):
+        return
+    remaining = {item.name for item in world.multiworld.itempool if item.player == world.player}
+    keys = {
+        row["level"]: row["name"]
+        for row in catalog["items"]
+        if row.get("category") == "rewards_zone_keys" and row["name"] in remaining
+    }
+    for hub in ("l02_garbage", "l05_bar", "l08_yantar", "l03_agroprom", "l06_rostok"):
+        if hub in keys:
+            # Global early_items preserves non-local placement and the upstream
+            # fallback when the requested item cannot fit the initial sphere.
+            early = world.multiworld.early_items[world.player]
+            early[keys[hub]] = max(1, early.get(keys[hub], 0))
+            break
