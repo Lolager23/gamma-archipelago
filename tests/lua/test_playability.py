@@ -1,3 +1,5 @@
+import pytest
+
 from .test_tracker import rows, state_for, view
 
 
@@ -54,3 +56,15 @@ def test_tracker_explains_capability_and_rank_blocks(lua):
     )
     projected = {row.id: row for row in rows(view(lua, state))}
     assert "AP-granted" in projected[28052802].reason
+
+
+@pytest.mark.parametrize("policy", [0, 1, 2])
+@pytest.mark.parametrize("enabled", [0, 1])
+def test_paid_shop_manifest_is_independent_of_fragile_policy_only_in_new_logic(
+    lua, policy, enabled
+):
+    state = state_for(
+        lua, checks_shop_purchases=1, optional_check_policy=policy, playability_logic=enabled
+    )
+    actual = {id for id in state.enabled_checks if 28052921 <= id <= 28052929}
+    assert len(actual) == (9 if enabled or policy != 1 else 0)

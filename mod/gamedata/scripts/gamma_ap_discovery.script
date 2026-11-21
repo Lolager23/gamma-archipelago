@@ -33,7 +33,10 @@ function select(configuration, enabled)
         end
     end
     if configuration.options.optional_check_policy == 1 then
-        for id in pairs(gamma_ap_catalog.missable_checks) do enabled[id] = nil end
+        for id in pairs(gamma_ap_catalog.missable_checks) do
+            if configuration.options.playability_logic ~= 1
+                or gamma_ap_catalog.location_categories[id] ~= "checks_shop_purchases" then enabled[id] = nil end
+        end
     end
     for _,group in ipairs({"mutant","artefact"}) do
         local tail = configuration.options[group.."_filler_tail"] or 0
