@@ -67,6 +67,15 @@ def apply_access_rules(world: "GammaWorld", catalog: dict[str, Any]) -> None:
             required.append("firearms")
         if category == "checks_knife_tiers":
             required.append("melee")
+        upgrade = category == "checks_gear_upgrades"
+        if upgrade and definition["key"] == "firearm":
+            required.append("firearms")
+        armour = (
+            upgrade
+            and definition["key"] == "armour"
+            and gear["starting_outfit"] == 2
+            and gear["starting_helmet"] == 2
+        )
         names = [
             "Equipment Unlock: " + ("PDA" if group == "pda" else group.title())
             for group in required
@@ -106,9 +115,15 @@ def apply_access_rules(world: "GammaWorld", catalog: dict[str, Any]) -> None:
             global_check=global_activity,
             fight=combat,
             tools=tools,
+            armour=armour,
         ):
             return (
                 prior(state)
+                and (
+                    not armour
+                    or state.has("Equipment Unlock: Outfit", player)
+                    or state.has("Equipment Unlock: Helmet", player)
+                )
                 and (not tools or state.has("Progressive Tools", player, 3))
                 and all(state.has(name, player) for name in items)
                 and (
