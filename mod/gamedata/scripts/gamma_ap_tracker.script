@@ -60,6 +60,7 @@ local function blocked(state, row, regions, psi, id)
     local fighting = combat[row.category] or (row.category == "checks_quest_types"
         and (row.key == "hunting" or row.key == "bounty" or row.key == "rescue" or row.key == "defence"
             or row.key == "assault" or row.key == "territory" or row.key == "vehicle"))
+        or (gamma_ap_catalog.activity_rules[id] and gamma_ap_catalog.activity_rules[id].combat == true)
     local weapon = config.starting_firearms ~= 2 or config.starting_melee ~= 2
         or state.unlocks.gear_firearms or state.unlocks.gear_melee
     if fighting and not weapon then

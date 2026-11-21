@@ -15,7 +15,6 @@ def add_goal_events(
     regions: dict[str, Region],
     location_type: type[Location],
     item_type: type[Item],
-    catalog: dict[str, Any],
 ) -> None:
     if (
         world.configuration.goal not in {"pilot_tour", "talk_sidorovich"}
@@ -73,16 +72,11 @@ def add_goal_events(
         )
         regions["pripyat"].locations.append(encounter)
     if world.configuration.goal == "living_legend":
-        route = next(
-            row["logic"]["all_regions"] for row in catalog["locations"] if row["id"] == 28052621
-        )
         finish = location_type(
             world.player, "Return After Living Legend", None, regions["l01_escape"]
         )
-        finish.access_rule = lambda state: (
-            state.has("Met Strelok", world.player)
-            and all(state.can_reach_region(region, world.player) for region in route)
-        )
+        # The shared access pass adds this terminal story check's route/equipment.
+        finish.access_rule = lambda state: state.has("Met Strelok", world.player)
         finish.place_locked_item(
             item_type("Living Legend Complete", ItemClassification.progression, None, world.player)
         )

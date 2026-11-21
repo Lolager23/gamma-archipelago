@@ -10,9 +10,11 @@ an unconditional baseline check; later rank needs an earning route. The locked
 opening requests one earned upstream early permission when necessary, without
 fixing a location or granting a starting item. Sparse story/map openings retain
 an anti-cycle fallback. Living Legend uses its chain route instead of every map.
+Later story checks and local victory events retain mandatory earlier combat
+requirements, preventing weapon permissions behind battles that need them.
 
-Complete verifier passed 1,474 covered regressions, 72 untraced generator/server
-cases and seven Node tests (1,553 total). Owned Python line/branch coverage is
+Complete verifier passed 1,476 covered regressions, 72 untraced generator/server
+cases and seven Node tests (1,555 total). Owned Python line/branch coverage is
 100%; all per-module Lua executable-line gates passed, with no Lua branch claim.
 All 111 unchanged private developer-panel checks passed against the new source.
 The full preset matrix and targeted failures were rerun after corrections.

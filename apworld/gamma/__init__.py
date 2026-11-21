@@ -101,7 +101,7 @@ class GammaWorld(World):
         from gamma_archipelago.starting import starting_level
 
         menu.connect(regions[starting_level(self.configuration)])
-        add_goal_events(self, regions, GammaLocation, GammaItem, _catalog)
+        add_goal_events(self, regions, GammaLocation, GammaItem)
         if "rewards_progression_stashes" in self.configuration.rewards:
             claim = GammaLocation(
                 self.player, "Claim Cordon Psi Stash", None, regions["l01_escape"]

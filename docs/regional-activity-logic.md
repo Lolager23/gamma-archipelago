@@ -28,7 +28,10 @@ Regions retain their normal adjacency, zone-key and usable-psi requirements.
 - Novice rank (threshold zero) is a free baseline check in every starting region.
   Later rank/standing checks require a repeatable earning route: PDA tasks or usable weapons.
   They cannot bootstrap their own only PDA/weapon permission from a fully locked start.
-- Story checks use cumulative native chain destinations, not every map. Living
+- Story checks use cumulative native chain destinations, not every map. From
+  Breakthrough onward they retain the preceding mandatory combat capability;
+  Mortal Sin/Afterglow cannot hold the only weapon permission needed to finish
+  Living Legend. Local Strelok/victory events reuse the same story requirements. Living
   Legend's terminal goal uses its chain route rather than unrelated maps. Existing
   story quest-key requirements remain. No artificial early/middle/late item tiers
   or category placement quotas are added.

@@ -45,13 +45,17 @@ def apply_access_rules(world: "GammaWorld", catalog: dict[str, Any]) -> None:
         definition = definitions.get(location.address)
         if definition is None:
             if location.address is None:
-                continue
-            definition = {
-                "category": "checks_kill_milestones"
-                if location.address < 28120000
-                else "checks_side_task_milestones",
-                "level": "Menu",
-            }
+                story = catalog["story_goal_checks"].get(location.name)
+                if story is None:
+                    continue
+                definition = definitions[story]
+            else:
+                definition = {
+                    "category": "checks_kill_milestones"
+                    if location.address < 28120000
+                    else "checks_side_task_milestones",
+                    "level": "Menu",
+                }
         category = definition["category"]
         required = []
         if category in {"checks_artefacts"}:
@@ -96,6 +100,7 @@ def apply_access_rules(world: "GammaWorld", catalog: dict[str, Any]) -> None:
             and definition["key"]
             in {"hunting", "bounty", "rescue", "defence", "assault", "territory", "vehicle"}
         )
+        combat = combat or definition.get("logic", {}).get("combat", False)
         readiness = world.configuration.option("combat_logic")
         if combat and readiness:
             groups = ("firearms",) if readiness == 1 else ("firearms", "outfit", "helmet")

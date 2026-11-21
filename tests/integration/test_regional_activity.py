@@ -124,6 +124,29 @@ def test_rank_has_a_viable_quest_or_combat_path_and_upgrades_respect_tool_use_pe
     assert upgrade.can_reach(state)
 
 
+def test_later_story_checks_and_local_victory_retain_earlier_mandatory_combat():
+    multi = setup_multiworld(GammaWorld, options=presets()["full_story"], seed=20)
+    world = multi.worlds[1]
+    state = CollectionState(multi)
+    for item in multi.itempool:
+        if item.name not in {"Equipment Unlock: Firearms", "Equipment Unlock: Melee"}:
+            state.collect(item, True)
+    state.sweep_for_advancements()
+    checks = {loc.address: loc for loc in multi.get_locations() if loc.address}
+    assert checks[28052601].can_reach(state)
+    for id in (28052606, 28052611, 28052621, 28052622, 28052644):
+        assert not checks[id].can_reach(state)
+    assert not multi.get_location("Conclude Strelok's First Conversation", 1).can_reach(state)
+    assert not multi.get_location("Return After Living Legend", 1).can_reach(state)
+    assert not multi.can_beat_game(state)
+    collect(world, state, "Equipment Unlock: Melee")
+    state.sweep_for_advancements()
+    assert all(
+        checks[id].can_reach(state) for id in (28052606, 28052611, 28052621, 28052622, 28052644)
+    )
+    assert multi.can_beat_game(state)
+
+
 @pytest.mark.parametrize("local", [False, True])
 def test_activity_opener_uses_upstream_early_requests_and_preserves_user_requests(local):
     from worlds.gamma.opening import request_activity_opener

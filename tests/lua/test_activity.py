@@ -110,6 +110,28 @@ def test_rank_requires_an_earning_path_and_stored_upgrades_require_tool_use(lua)
     assert checks[28052802].status == "available"
 
 
+def test_story_tracker_keeps_transitive_combat_after_introductory_dialogues(lua):
+    from gamma_archipelago.presets import presets
+
+    state = state_for(lua, **presets()["full_story"])
+    for row in CATALOG["items"]:
+        if "permission" in row and row["name"] not in {
+            "Equipment Unlock: Firearms",
+            "Equipment Unlock: Melee",
+        }:
+            state.unlocks[row["permission"]] = True
+    checks = {row.id: row for row in rows(view(lua, state))}
+    assert checks[28052601].status == "available"
+    for id in (28052606, 28052611, 28052621, 28052622, 28052644):
+        assert "firearm or melee" in checks[id].reason
+    state.unlocks.gear_melee = True
+    checks = {row.id: row for row in rows(view(lua, state))}
+    assert all(
+        checks[id].status == "available"
+        for id in (28052606, 28052611, 28052621, 28052622, 28052644)
+    )
+
+
 @pytest.mark.parametrize(
     "gear,keys,psi",
     [
