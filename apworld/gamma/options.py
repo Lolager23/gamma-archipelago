@@ -269,6 +269,33 @@ class Goal(Choice):
     default = 0
 
 
+class ArchipelagoStart(Choice):
+    """New seeds require an Archipelago-controlled Free Stalker start."""
+
+    display_name = "Archipelago start"
+    option_required = 1
+    default = 1
+
+
+class StartingFaction(Choice):
+    """Supported starting faction. Other factions are unavailable for AP starts."""
+
+    display_name = "Starting faction"
+    option_free_stalkers = 0
+    default = 0
+
+
+class StartingLocation(Choice):
+    """Use a native Free Stalker starting preset. Random is fixed by the generated seed."""
+
+    display_name = "Starting location"
+    option_rookie_village = 0
+    option_hidden_base = 1
+    option_lodging_house = 2
+    option_random_location = 3
+    default = 0
+
+
 class StartingGear(Choice):
     """Normal equipment, absent initially, or unavailable until its AP unlock."""
 
@@ -411,6 +438,9 @@ class OptionalCheckPolicy(Choice):
 
 @dataclass
 class GammaOptions(PerGameCommonOptions):
+    ap_start: ArchipelagoStart
+    starting_faction: StartingFaction
+    starting_location: StartingLocation
     opening_policy: OpeningPolicy
     access_pacing: AccessPacing
     combat_logic: CombatLogic

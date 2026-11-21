@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<string_table>
+    <string id="gamma_ap_purchase_locked"><text>This item requires an Archipelago unlock. Nothing was purchased and no money was taken. Remove the restricted item from the trade basket.</text></string>
+    <string id="gamma_ap_purchase_unavailable"><text>A selected item is no longer available. Nothing was purchased and no money was taken. Reopen the trader.</text></string>
+    <string id="gamma_ap_zone_locked"><text>You don't have the Area Key: %s.</text></string>
+    <string id="gamma_ap_start_required"><text>Start the matching Archipelago companion before creating an AP character.</text></string>
+    <string id="gamma_ap_start_locked"><text>Archipelago controls this start: Free Stalkers, %s.</text></string>
+    <string id="gamma_ap_start_unsupported"><text>The configured Archipelago starting location is unavailable in this GAMMA installation.</text></string>
+</string_table>

@@ -1,5 +1,15 @@
 # Verification record
 
+## AP playthrough guards: 21 November 2026
+
+New APWorld starts are restricted to Free Stalkers and the three native presets,
+with seed-fixed Random selection and matching world/key routing. Native purchase
+validation now precedes transfers/debits. Accepted silent transition denials prefer
+inverse-route arrivals and reject full ALife/extra transition bounds, including
+unregistered/overlapping triggers. See [implementation and acceptance](ap-playthrough-guards.md).
+Regression/generation/server/current-head CI evidence is on the PR. Native
+acceptance is **not run**, reserved for Owen. Existing saves/seed bindings are retained.
+
 ## Quick Sidorovich pilot: 20 November 2026
 
 The named pilot preset selects the additive `talk_sidorovich` goal (6). Closing

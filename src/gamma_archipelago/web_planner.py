@@ -21,6 +21,7 @@ from .opening import opening_permissions
 from .pool_budget import budget_pool
 from .presets import presets
 from .settings_ui import advanced_options
+from .starting import STARTS
 from .web_estimates import ASSUMPTIONS, estimate_playtime
 
 LABELS = {
@@ -114,7 +115,7 @@ def player_document(name: object, values: Mapping[str, object]) -> dict[str, obj
         raise ValueError("Player name cannot be blank")
     if name.casefold() == "archipelago":
         raise ValueError("Player name Archipelago is reserved for the server")
-    configuration = build_configuration(values)
+    configuration = build_configuration({**values, "ap_start": 1})
     return {
         "name": name,
         "game": GAME,
@@ -124,7 +125,7 @@ def player_document(name: object, values: Mapping[str, object]) -> dict[str, obj
 
 
 def preview(values: Mapping[str, object], assumptions: Mapping[str, object]) -> dict[str, object]:
-    configuration = build_configuration(values)
+    configuration = build_configuration({**values, "ap_start": 1})
     data = catalogue()
     ids = configured_location_ids(configuration)
     checks = [dict(row) for row in data["locations"] if row["id"] in ids]
@@ -177,6 +178,12 @@ def preview(values: Mapping[str, object], assumptions: Mapping[str, object]) -> 
         "reward_slots": len(checks),
         "estimates": estimate_playtime(configuration, counts, assumptions),
         "notes": [
+            "AP start: Free Stalkers / "
+            + (
+                STARTS[configuration.option("starting_location")]["name"]
+                if configuration.option("starting_location") < len(STARTS)
+                else "Random native preset (seed-fixed; preview budgets use Cordon)"
+            ),
             "Reward types are eligible IDs, not guaranteed quantities. Each check holds one item.",
             "Required progression is budgeted first; progressive tools need three copies.",
             "Missable exclusions accept filler only. Convenience has a capped useful allocation.",

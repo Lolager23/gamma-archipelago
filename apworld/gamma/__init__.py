@@ -66,7 +66,10 @@ class GammaWorld(World):
 
     def generate_early(self) -> None:
         try:
-            self.configuration = build_configuration(self.options.as_dict(*OPTION_NAMES))
+            values = self.options.as_dict(*OPTION_NAMES)
+            if values["starting_location"] == 3:
+                values["starting_location"] = self.random.randrange(3)
+            self.configuration = build_configuration(values)
         except ValueError as error:
             raise OptionError(str(error)) from error
 
@@ -83,7 +86,9 @@ class GammaWorld(World):
             region = Region(level["id"], self.player, self.multiworld)
             regions[level["id"]] = region
             self.multiworld.regions.append(region)
-        menu.connect(regions["l01_escape"])
+        from gamma_archipelago.starting import starting_level
+
+        menu.connect(regions[starting_level(self.configuration)])
         add_goal_events(self, regions, GammaLocation, GammaItem)
         if "rewards_progression_stashes" in self.configuration.rewards:
             claim = GammaLocation(

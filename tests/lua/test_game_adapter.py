@@ -75,6 +75,7 @@ def test_callbacks_polling_save_restore_and_initial_inventory(lua):
     module, engine = load_game(lua)
     assert set(engine.callbacks.keys()) == {
         "actor_on_update",
+        "main_menu_on_init",
         "on_loading_screen_key_prompt",
         "on_loading_screen_dismissed",
         "actor_on_net_destroy",

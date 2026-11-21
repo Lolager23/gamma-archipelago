@@ -10,6 +10,7 @@ from .catalog import MAX_ITEMS, enabled_item_ids
 from .configuration import SeedConfiguration
 from .discovery import MISSABLE_IDS, configured_location_ids
 from .opening import opening_checks, opening_permissions
+from .starting import starting_level
 
 _catalog = json.loads(files("gamma_archipelago").joinpath("catalog.json").read_text("utf-8"))
 _items = {row["name"]: row for row in _catalog["items"]}
@@ -77,6 +78,10 @@ def budget_pool(
     required: Counter[str] = Counter()
     for name, row in _items.items():
         if row["id"] in enabled and row["classification"] == "progression":
+            if row.get("category") == "rewards_zone_keys" and row.get("level") == starting_level(
+                configuration
+            ):
+                continue  # The chosen starting zone is always accessible.
             required[name] = max(0, row.get("copies", 1) - gifts[name])
     if configuration.option("optional_check_policy") == 0:
         excluded = excluded | (MISSABLE_IDS & check_ids)
@@ -103,7 +108,9 @@ def budget_pool(
         for name, row in _items.items()
     )
     critical = opening_permissions(configuration, collected)
-    if len(critical) > len(opening_checks(check_ids, excluded, zone_remaining)):
+    if len(critical) > len(
+        opening_checks(check_ids, excluded, zone_remaining, starting_level(configuration))
+    ):
         raise ValueError(
             "Protected opening needs more reliable Cordon checks: enable settlements, "
             "relax locked starting gear, or select the legacy/challenge opening"

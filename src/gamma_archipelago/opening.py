@@ -47,7 +47,15 @@ def opening_permissions(
 
 
 def opening_checks(
-    check_ids: frozenset[int], excluded: frozenset[int], zone_keys_remaining: bool
+    check_ids: frozenset[int],
+    excluded: frozenset[int],
+    zone_keys_remaining: bool,
+    region: str = "l01_escape",
 ) -> frozenset[int]:
-    ids = (check_ids - excluded) & CORDON_CHECKS
-    return ids - {MAP_LOCATIONS["l01_escape"]} if zone_keys_remaining else ids
+    local = frozenset(
+        row["id"]
+        for row in _catalog["locations"]
+        if row["level"] == region and row["category"] in {"checks_maps", "checks_settlements"}
+    )
+    ids = (check_ids - excluded) & local
+    return ids - {MAP_LOCATIONS[region]} if zone_keys_remaining else ids

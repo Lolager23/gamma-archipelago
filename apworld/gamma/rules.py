@@ -4,6 +4,8 @@ from typing import TYPE_CHECKING, Any
 
 from BaseClasses import CollectionState
 
+from gamma_archipelago.starting import starting_level
+
 if TYPE_CHECKING:
     from . import GammaWorld
 
@@ -19,7 +21,11 @@ def apply_access_rules(world: "GammaWorld", catalog: dict[str, Any]) -> None:
     zoned = "rewards_zone_keys" in world.configuration.rewards
 
     def enter(state: CollectionState, level: str) -> bool:
-        if zoned and level != "l01_escape" and not state.has(zone_items[level], player):
+        if (
+            zoned
+            and level not in {"l01_escape", starting_level(world.configuration)}
+            and not state.has(zone_items[level], player)
+        ):
             return False
         if level in {"l10_radar", "l10u_bunker", "l08u_brainlab"}:
             if "rewards_progression_stashes" in world.configuration.rewards:

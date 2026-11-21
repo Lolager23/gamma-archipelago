@@ -4,8 +4,24 @@ local script_wrapper = nil
 local immediate_wrapper = nil
 local spawn_wrapper = nil
 local extra_wrapper = nil
+local nearby_wrapper = nil
 local get_state = nil
 local storage_cursor = nil
+local last_warning = -math.huge
+
+local function warning(target)
+    local now = time_global()
+    if now >= last_warning and now-last_warning < 5000 then return end
+    last_warning = now
+    local name = gamma_ap_catalog.tracker_regions[target] or "unknown destination"
+    local template = game and type(game.translate_string) == "function"
+        and game.translate_string("gamma_ap_zone_locked") or "You don't have the Area Key: %s."
+    local message = string.format(template,name)
+    printf("[GAMMA AP] %s",message)
+    if db.actor and type(db.actor.give_game_news) == "function" then
+        db.actor:give_game_news("Archipelago",message,"ui_inGame2_PDA",0,5000)
+    end
+end
 
 local function enabled(state)
     return state.configuration and state.configuration.expanded
@@ -14,7 +30,7 @@ end
 
 function allowed(state, destination)
     if not enabled(state) then return true end
-    if destination == "l01_escape" then return true end
+    if destination == "l01_escape" or destination == gamma_ap_start.level_name(state.configuration) then return true end
     local permission = gamma_ap_catalog.zone_keys[destination]
     return permission ~= nil and state.unlocks[permission] == true
 end
@@ -27,7 +43,7 @@ local function destination(gvid)
 end
 
 function validate_start(state)
-    if not enabled(state) or next(state.visited_maps) or level.name() == "l01_escape" then return true end
+    if not enabled(state) or next(state.visited_maps) or level.name() == gamma_ap_start.level_name(state.configuration) then return true end
     return false, "Zone-key seeds require a fresh Cordon start; this character began elsewhere"
 end
 
@@ -57,7 +73,10 @@ function guard_changer(state, object, id)
     end
     local ok, data = pcall(utils_stpk.get_level_changer_data, alife_object(id))
     if not ok or not data then return false, "Cannot inspect native transition destination" end
-    local permitted = allowed(state, destination(data.dest_game_vertex_id))
+    local target = destination(data.dest_game_vertex_id)
+    local permitted = allowed(state,target)
+    if not permitted and db.actor and type(object.inside) == "function"
+        and object:inside(db.actor:position(),2) then warning(target) end
     if state.zone_disabled[id] and state.zone_disabled[id] ~= object:name() then state.zone_disabled[id] = nil end
     if not permitted and object:is_level_changer_enabled() then
         object:enable_level_changer(false)
@@ -72,7 +91,7 @@ end
 local function travel_guard(delegate)
     return function(pos, lvid, gvid, ...)
         if not allowed(get_state(), destination(gvid)) then
-            printf("[GAMMA AP] Scripted travel requires a zone key")
+            warning(destination(gvid))
             return false
         end
         return delegate(pos, lvid, gvid, ...)
@@ -105,12 +124,25 @@ local function install_early_guards()
         extra_wrapper = function(actor, object, ...)
             local data = object and extra.lc_pool and extra.lc_pool[object:section()]
             if enabled(get_state()) and (not data or not allowed(get_state(), destination(tonumber(data.to_gvid)))) then
-                printf("[GAMMA AP] Extra transition requires a zone key")
+                warning(data and destination(tonumber(data.to_gvid)))
                 return false
             end
             return delegate(actor, object, ...)
         end
         extra.teleport_actor = extra_wrapper
+    end
+    if extra and type(extra.handle_nearby_actor) == "function"
+        and extra.handle_nearby_actor ~= nearby_wrapper then
+        local delegate = extra.handle_nearby_actor
+        nearby_wrapper = function(actor, object, ...)
+            local data = object and extra.lc_pool and extra.lc_pool[object:section()]
+            if enabled(get_state()) and data and not allowed(get_state(),destination(tonumber(data.to_gvid))) then
+                warning(destination(tonumber(data.to_gvid)))
+                return false
+            end
+            return delegate(actor, object, ...)
+        end
+        extra.handle_nearby_actor = nearby_wrapper
     end
 end
 
@@ -129,7 +161,8 @@ function install(state_reader)
                 local target = destination(packet:r_u16())
                 packet:r_seek(2)
                 if not allowed(state, target) then
-                    gamma_ap_zone_recovery.redirect(packet)
+                    warning(target)
+                    gamma_ap_zone_recovery.redirect(packet,target)
                 end
             end
             return delegate(packet)

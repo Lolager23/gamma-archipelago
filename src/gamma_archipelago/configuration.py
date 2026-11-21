@@ -324,8 +324,11 @@ def encode_configuration(
             lines.extend(f"exclude|{token}" for token in configuration.discovery_exclusions)
         elif isinstance(value, list):
             lines.extend(f"threshold|{name}|{number}" for number in value)
-        elif name == "checks_shop_purchases" and value == 0:
-            continue  # Preserve the previous add-on's wire format when shops are disabled.
+        elif (
+            name in {"checks_shop_purchases", "ap_start", "starting_faction", "starting_location"}
+            and value == 0
+        ):
+            continue  # Disabled additions retain the previous add-on's wire format.
         else:
             lines.append(f"option|{name}|{value}")
     lines.append(f"end|{len(lines) - 3}")

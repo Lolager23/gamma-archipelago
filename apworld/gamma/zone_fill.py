@@ -4,6 +4,8 @@ from typing import TYPE_CHECKING, Any
 
 from Options import OptionError
 
+from gamma_archipelago.starting import starting_level
+
 if TYPE_CHECKING:
     from . import GammaWorld
 
@@ -11,8 +13,8 @@ if TYPE_CHECKING:
 def place_zone_keys(world: "GammaWorld", catalog: dict[str, Any]) -> None:
     if "rewards_zone_keys" not in world.configuration.rewards:
         return
-    visited = {"l01_escape"}
-    previous = "l01_escape"
+    previous = starting_level(world.configuration)
+    visited = {previous}
     checks = {
         row["level"]: row["name"]
         for row in catalog["locations"]
@@ -36,7 +38,10 @@ def place_zone_keys(world: "GammaWorld", catalog: dict[str, Any]) -> None:
             "remove remaining zone keys from non_local_items"
         )
     held = {item.name for item in world.multiworld.precollected_items[world.player]}
-    held_levels = {level for name, level in levels.items() if name in held}
+    held_levels = {level for name, level in levels.items() if name in held} | {
+        "l01_escape",
+        previous,
+    }
     while keys:
         changed = True
         while changed:
@@ -56,7 +61,13 @@ def place_zone_keys(world: "GammaWorld", catalog: dict[str, Any]) -> None:
                 and target in keys
                 and (
                     target not in {"l10_radar", "l10u_bunker", "l08u_brainlab"}
-                    or "l08_yantar" in visited
+                    or (
+                        "l08_yantar" in visited
+                        and (
+                            "rewards_progression_stashes" not in world.configuration.rewards
+                            or "l01_escape" in visited
+                        )
+                    )
                 )
             }
         )

@@ -24,7 +24,7 @@ function install_pickup_guard(configuration)
     return true
 end
 
-local function locked(state, item)
+function locked(state, item)
     local configuration = state.configuration
     if not configuration or not configuration.expanded or not item then return false end
     if item:section() == "good_psy_helmet" and configuration.options.rewards_progression_stashes == 1

@@ -27,7 +27,7 @@ def test_three_tool_copies_precede_filler_and_solver_requires_expert_for_upgrade
         assert not any(row.can_reach(state) for row in upgrades)
         state.collect(world.create_item("Progressive Tools"))
     assert all(row.can_reach(state) for row in upgrades)
-    values = {**defaults(), "rewards_progressive_tools": 1}
+    values = {**defaults(), "ap_start": 1, "rewards_progressive_tools": 1}
     assert preview(values, {})["required_rewards"] == 3
     legacy = defaults()
     legacy.pop("rewards_progressive_tools")

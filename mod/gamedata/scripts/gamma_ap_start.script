@@ -1,0 +1,41 @@
+-- Native preset names own coordinates; never duplicate game spawn assets.
+function definition(configuration)
+    if not configuration or configuration.options.ap_start ~= 1 then return nil end
+    return gamma_ap_catalog.start_locations[configuration.options.starting_location]
+end
+
+function level_name(configuration)
+    local start = definition(configuration)
+    return start and start.level or "l01_escape"
+end
+
+function prepare(configuration)
+    local start = definition(configuration)
+    if configuration and configuration.options.ap_start == 1 and not start then
+        return false,"The AP starting location was not resolved during generation"
+    end
+    if not start then return true,false end
+    local config = axr_main and axr_main.config
+    if not config or not config:r_value("character_creation","new_game_faction",3) then return true,false end
+    config:w_value("character_creation","new_game_faction","stalker")
+    config:w_value("character_creation","new_game_map",start.key)
+    if configuration.options.goal == 3 or configuration.options.goal == 4 then
+        config:w_value("character_creation","new_game_story_mode",true)
+    end
+    config:w_value("character_creation","new_game_warfare",nil)
+    return true,true
+end
+
+function validate(state)
+    if state.configuration and state.configuration.options.ap_start == 1 and not definition(state.configuration) then
+        return false,"The AP starting location was not resolved during generation"
+    end
+    if not definition(state.configuration) or next(state.visited_maps) then return true end
+    if not state.loadout_prepared and not state.loadout_initialized then
+        return false,"Archipelago starts require a fresh character"
+    end
+    if level.name() ~= level_name(state.configuration) then
+        return false,"This character did not spawn in the configured Archipelago starting region"
+    end
+    return true
+end

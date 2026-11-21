@@ -110,4 +110,7 @@ def presets() -> dict[str, dict[str, object]]:
         },
     }
 
-    return {name: build_configuration(values).to_values() for name, values in definitions.items()}
+    return {
+        name: build_configuration({**values, "ap_start": 1}).to_values()
+        for name, values in definitions.items()
+    }

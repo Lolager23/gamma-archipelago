@@ -46,6 +46,8 @@ def write_snapshot(client, *, received=0):
         ("mvp", 2, 20261119),
         ("mvp", 2, 20261120),
         ("extended", 4, 20261121),
+        ("full_story", 4, 20261301),
+        ("full_story", 4, 20261302),
         *[("full_story", goal, 20261200 + goal) for goal in range(7)],
     ],
 )
@@ -55,6 +57,8 @@ def test_two_gamma_slots_and_foreign_game_transfer_restart_and_each_goal(
     players, output = tmp_path / "players", tmp_path / "output"
     players.mkdir()
     values = {**presets()[preset], "goal": goal}
+    if seed in (20261301, 20261302):
+        values["starting_location"] = seed - 20261300
     scout_case = seed == 20261119
     expansion_case = seed == 20261121
     if expansion_case:

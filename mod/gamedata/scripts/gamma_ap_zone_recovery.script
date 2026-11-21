@@ -39,11 +39,23 @@ local function outside(position, changers)
     return true
 end
 
-function redirect(packet)
+function redirect(packet, target)
     local graph, actor = game_graph(), db.actor
     local current, origin = level.name(), actor:position()
     local changers = transitions()
+    local areas,inverse = gamma_ap_transition_geometry.scan(target)
     local best, closest = nil, math.huge
+    -- Prefer the real destination of the inverse route (Garbage -> Cordon when
+    -- Cordon -> Garbage was denied), provided it clears every transition volume.
+    for _,candidate in ipairs(inverse) do
+        local distance = distance_squared(candidate.position, origin)
+        if candidate.lvid >= 0 and candidate.lvid < 4294967295 and distance < closest
+            and outside(candidate.position,changers)
+            and gamma_ap_transition_geometry.outside(candidate.position,areas) then
+            best,closest = candidate,distance
+        end
+    end
+    local recovered_inverse = best ~= nil
     -- Game-graph IDs are unsigned 16-bit; 65535 is the invalid sentinel.
     -- This bounded recovery search runs only after an already accepted denial.
     for id=0,65534 do
@@ -53,7 +65,8 @@ function redirect(packet)
             local position, lvid = vertex:level_point(), vertex:level_vertex_id()
             local distance = distance_squared(position, origin)
             if lvid < 4294967295 and distance >= 900 and distance < closest
-                and outside(position, changers) then
+                and not recovered_inverse and outside(position, changers)
+                and gamma_ap_transition_geometry.outside(position,areas) then
                 best, closest = {gvid=id, lvid=lvid, position=position}, distance
             end
         end

@@ -24,7 +24,7 @@ local function level_allowed(state, where, psi)
 end
 
 local function reachable(state, psi)
-    local result, changed = {l01_escape=true}, true
+    local result, changed = {[gamma_ap_start.level_name(state.configuration)]=true}, true
     while changed do
         changed = false
         for _, edge in ipairs(gamma_ap_catalog.tracker_connections) do

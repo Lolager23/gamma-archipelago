@@ -1,0 +1,63 @@
+-- Restrict native selectors and the final start action through captured delegates.
+local wrappers = {}
+
+local function warning(window,key,value)
+    local message = game.translate_string(key)
+    if value then message = string.format(message,value) end
+    window.gamma_ap_start_message = window.gamma_ap_start_message or CUIMessageBoxEx()
+    window.gamma_ap_start_message:InitMessageBox("message_box_ok")
+    window.gamma_ap_start_message:SetText(message)
+    window.gamma_ap_start_message:ShowDialog(true)
+end
+
+local function select_map(window, start)
+    window.table_map = {start.key,start.key}
+    window.selected_map = start.key
+    window.list_map:ClearList()
+    window.list_map:AddItem(start.name,1)
+    window.list_map:SetText(start.name)
+    window:UpdateMap()
+end
+
+function install(read_configuration)
+    local class = ui_mm_faction_select and ui_mm_faction_select.UINewGame
+    if not class or type(class.LoadFaction) ~= "function" or type(class.LoadMap) ~= "function"
+        or type(class.OnStartGame) ~= "function" then return false end
+    for _,name in ipairs({"LoadFaction","LoadMap","OnSelectMap","OnFactionClicked","OnStartGame"}) do
+        if type(class[name]) == "function" and class[name] ~= wrappers[name] then
+            local delegate = class[name]
+            wrappers[name] = function(window,...)
+                local configuration = read_configuration()
+                local start = gamma_ap_start.definition(configuration)
+                if name == "OnStartGame" and not configuration then
+                    warning(window,"gamma_ap_start_required"); return false
+                end
+                if configuration and configuration.options.ap_start == 1 and not start then
+                    warning(window,"gamma_ap_start_unsupported"); return false
+                end
+                if not start then return delegate(window,...) end
+                if name == "LoadFaction" then
+                    window.table_faction = {stalker=true}
+                    return delegate(window,false,"stalker")
+                elseif name == "LoadMap" or name == "OnSelectMap" then
+                    select_map(window,start); return
+                elseif name == "OnFactionClicked" then
+                    warning(window,"gamma_ap_start_locked",start.name); return false
+                end
+                local ini = ini_file("plugins\\new_game_start_locations.ltx")
+                if not ini:section_exist(start.key) then
+                    warning(window,"gamma_ap_start_unsupported"); return false
+                end
+                window:LoadFaction(false,"stalker")
+                select_map(window,start)
+                if window.ck_warfare then window.ck_warfare:SetCheck(false) end
+                if window.ck_story and (configuration.options.goal == 3 or configuration.options.goal == 4) then
+                    window.ck_story:SetCheck(true)
+                end
+                return delegate(window,...)
+            end
+            class[name] = wrappers[name]
+        end
+    end
+    return true
+end
