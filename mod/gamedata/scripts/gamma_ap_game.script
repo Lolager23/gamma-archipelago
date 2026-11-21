@@ -133,6 +133,7 @@ function actor_on_update()
     if not workshop_ready then report_error(workshop_error); return end
     local shop_ready,shop_error = gamma_ap_shop_ui.install(configuration)
     gamma_ap_purchase_guard.install(function() return state end)
+    gamma_ap_equipment_use.install(function() return state end)
     register_task_hook()
     local supported, support_error = gamma_ap_tasks.supported(configuration)
     if not supported then report_error(support_error); return end
@@ -238,6 +239,18 @@ end
 
 function actor_on_item_before_use(item, flags)
     gamma_ap_gear_locks.before(state, item, flags)
+    if gamma_ap_gear_locks.locked(state,item) then gamma_ap_equipment_use.warn() end
+end
+
+function actor_item_to_slot(item)
+    local locked = gamma_ap_gear_locks.locked(state,item)
+    local ok,reason = gamma_ap_gear_locks.equipped(state,item)
+    if not ok then report_error(reason) end
+    if locked then gamma_ap_equipment_use.warn() end
+end
+
+function on_before_key(dik,binding,disabled,flags)
+    gamma_ap_equipment_use.before_key(state,dik,binding,disabled,flags)
 end
 
 function physic_object_on_use_callback(box, who)
@@ -289,6 +302,8 @@ end
 function on_game_start()
     gamma_ap_readiness.reset()
     state = gamma_ap_state.new_state()
+    gamma_ap_equipment_use.reset()
+    gamma_ap_equipment_use.install(function() return state end)
     known_receipts = 0
     gamma_ap_scouting.reset()
     gamma_ap_presence.reset()
@@ -337,6 +352,9 @@ function on_game_start()
     RegisterScriptCallback("actor_on_item_take_from_box", actor_on_item_take_from_box)
     RegisterScriptCallback("actor_on_item_before_pickup", actor_on_item_before_pickup)
     RegisterScriptCallback("actor_on_item_before_use", actor_on_item_before_use)
+    RegisterScriptCallback("actor_item_to_slot", actor_item_to_slot)
+    RegisterScriptCallback("on_before_key_press", on_before_key)
+    RegisterScriptCallback("on_before_key_hold", on_before_key)
     RegisterScriptCallback("actor_on_trade", actor_on_trade)
     RegisterScriptCallback("physic_object_on_use_callback", physic_object_on_use_callback)
     register_task_hook()

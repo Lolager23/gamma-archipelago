@@ -1,7 +1,7 @@
 # Step 06: restricted starting loadouts
 
-Stack base: category-options PR #9. Equipment options accept normal or absent;
-AP-locked mode remains unavailable until the starting-gear unlock branch.
+Stack base: category-options PR #9. Equipment options accept normal, absent or
+AP-locked modes; see [equip/use permissions](starting-gear-unlocks.md) for mode 2.
 Detector, PDA, firearms, melee, outfit, helmet, backpack, tools and utilities are
 independent. No Starting Weapons additionally omits explosives. Ammunition,
 medicine, food and money use integer percentages from zero to one hundred.

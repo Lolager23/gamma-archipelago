@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <string_table>
+    <string id="gamma_ap_equipment_locked"><text>Archipelago unlock required to equip or use this item. You can keep it in your inventory.</text></string>
     <string id="gamma_ap_purchase_locked"><text>This item requires an Archipelago unlock. Nothing was purchased and no money was taken. Remove the restricted item from the trade basket.</text></string>
     <string id="gamma_ap_purchase_unavailable"><text>A selected item is no longer available. Nothing was purchased and no money was taken. Reopen the trader.</text></string>
     <string id="gamma_ap_zone_locked"><text>You don't have the Area Key: %s.</text></string>

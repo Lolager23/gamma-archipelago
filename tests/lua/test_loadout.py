@@ -33,6 +33,17 @@ def configured_game(lua, **values):
         db.actor.iterate_inventory=function(self,fn)
             for _,object in pairs(engine.objects) do fn(self,object) end
         end
+        engine.slots={}
+        db.actor.item_in_slot=function(self,slot) return engine.slots[slot] end
+        db.actor.active_item=function() return engine.active end
+        db.actor.move_to_ruck=function(self,item)
+            if engine.fail_stow then error('stow failed') end
+            if engine.ignore_stow then return end
+            for slot,object in pairs(engine.slots) do
+                if object:id()==item:id() then engine.slots[slot]=nil end
+            end
+            if engine.active==item then engine.active=nil end
+        end
         db.actor.money=function() return engine.money end
         db.actor.give_money=function(self,amount)
             if engine.fail_money then error('money failed') end

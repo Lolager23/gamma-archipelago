@@ -37,6 +37,7 @@ def lua():
         "skills",
         "quest_keys",
         "gear_locks",
+        "equipment_use",
         "purchase_guard",
         "zone_recovery",
         "transition_geometry",

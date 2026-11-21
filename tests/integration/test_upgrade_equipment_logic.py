@@ -5,7 +5,7 @@ from worlds.gamma import GammaWorld
 
 
 @pytest.mark.parametrize("mode", [0, 1, 2])
-def test_firearm_upgrades_need_equipment_and_preserve_tool_workshop_gates(mode):
+def test_carried_firearms_can_be_upgraded_but_need_tool_workshop_permissions(mode):
     multiworld = setup_multiworld(
         GammaWorld,
         options=dict(
@@ -23,16 +23,16 @@ def test_firearm_upgrades_need_equipment_and_preserve_tool_workshop_gates(mode):
     for _ in range(3):
         state.collect(world.create_item("Progressive Tools"))
     state.collect(world.create_item("Workshop Access: Upgrades"))
-    assert check.access_rule(state) == (mode != 2)
+    assert check.access_rule(state)
     state.collect(world.create_item("Equipment Unlock: Melee"))
-    assert check.access_rule(state) == (mode != 2)
+    assert check.access_rule(state)
     state.collect(world.create_item("Equipment Unlock: Firearms"))
     assert check.access_rule(state)
 
 
 @pytest.mark.parametrize("outfit,helmet", [(0, 2), (1, 2), (2, 0), (2, 1), (2, 2)])
 @pytest.mark.parametrize("unlock", ["Outfit", "Helmet"])
-def test_armour_upgrades_allow_either_available_outfit_or_helmet(outfit, helmet, unlock):
+def test_carried_armour_can_be_upgraded_before_equipping_is_unlocked(outfit, helmet, unlock):
     multiworld = setup_multiworld(
         GammaWorld,
         options=dict(
@@ -45,6 +45,6 @@ def test_armour_upgrades_allow_either_available_outfit_or_helmet(outfit, helmet,
     world = multiworld.worlds[1]
     state = CollectionState(multiworld)
     check = next(row for row in multiworld.get_locations() if row.address == 28052734)
-    assert check.access_rule(state) == (outfit != 2 or helmet != 2)
+    assert check.access_rule(state)
     state.collect(world.create_item("Equipment Unlock: " + unlock))
     assert check.access_rule(state)

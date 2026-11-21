@@ -1,5 +1,31 @@
 # Verification record
 
+## 21 November 2026 — carry locked equipment; unlock equip/use
+
+Starting equipment locks now permit acquisition, ordinary trade and storage while
+guarding equip/use. Native slot callbacks plus a 13-slot reconciliation move locked
+equipment into the rucksack without deleting/dropping it. Native UI, weapon input,
+PDA entry, custom tool/device actions and device events use the same saved
+permission. Battery charging and stored gun/armour upgrades remain available.
+AP rules and the tracker drop the superseded equipment-ownership upgrade guards;
+worn/active tier checks still require permission. The passive calibrated psi
+device keeps its separate orange-stash safeguard.
+
+Primary source inspection covered Anomaly 1.5.3's `_g.SCANNED_SLOTS`,
+`bind_stalker_ext.actor_item_to_slot`, `level_input.on_before_key_press/hold`,
+`item_device` PDA/power/NV paths and the active GAMMA UI's condition/action/drag
+routes. Its own callbacks already use `move_to_ruck`; no base scripts or engine
+files are patched. UI wrappers preserve delegates/returns and rebind to the
+current coordinator; warning resources use the existing loading-readiness gate.
+
+The full verifier passed 1,440 covered regressions, 71 untraced real
+generation/server cases and seven Node tests (1,518 total), with all
+per-module coverage gates. All 111 unchanged private-panel tests passed.
+Exact-head Windows/Linux CI results belong to the PR evidence.
+Native acceptance is **not run** for Owen. This source-only increment changes no
+IDs, save/configuration formats, active archive/session or installed game/private
+panel. Existing saves retain permissions; new placement logic requires generation.
+
 ## 21 November 2026 — natural AP zone-key placement
 
 Read-only seed inspection confirmed all 32 keys on map arrivals under the old

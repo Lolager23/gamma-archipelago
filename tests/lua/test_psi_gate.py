@@ -44,3 +44,26 @@ def test_ordinary_psi_acquisition_is_unchanged_when_progression_stashes_are_disa
     game.actor_on_item_before_pickup(item, flags)
     assert flags.ret_value
     assert engine.objects[50]
+
+
+def test_psi_only_poll_keeps_its_bounded_passive_protection_safeguard(lua):
+    game, engine = stash_game(lua, items=(), rewards_progression_stashes=1)
+    poll(game, engine)
+    lua.execute("""
+        engine.dropped={}
+        db.actor.drop_item=function(self,item)
+            if engine.fail_drop then error('drop failed') end
+            engine.dropped[item:id()]=true;engine.objects[item:id()]=nil
+        end
+    """)
+    for id_ in range(50, 83):
+        lua.globals().add_item(id_, "good_psy_helmet", "II_ATTCH", "i_quest", 0)
+    lua.globals().add_item(90, "pda", "D_PDA", "i_device", 0)
+    engine.fail_drop = True
+    poll(game, engine)
+    assert not list(engine.dropped.keys()) and engine.objects[90] is not None
+    engine.fail_drop = False
+    poll(game, engine)
+    assert len(list(engine.dropped.keys())) == 32, list(engine.logs.values())
+    poll(game, engine)
+    assert len(list(engine.dropped.keys())) == 33 and engine.objects[90] is not None

@@ -65,6 +65,7 @@ def test_packages_are_reproducible_and_load_from_apworld(tmp_path):
                 "skills",
                 "quest_keys",
                 "gear_locks",
+                "equipment_use",
                 "purchase_guard",
                 "start",
                 "start_menu",

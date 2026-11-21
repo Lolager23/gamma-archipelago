@@ -39,6 +39,14 @@ The projection groups progression facts by status, unlocked/locked permissions
 and exploration without parsing presentation strings; its legacy flat list is
 retained. The UI's Checks/Progression pages and native list selection own no
 progression state.
+
+Starting equipment permissions gate equip/use, not ownership. The game adapter
+keeps acquired gear in inventory, guards native UI/device/input entry points and
+reconciles the finite supported equipment slots back to the rucksack. All hooks
+read the coordinator's saved permissions through an explicit getter; their local
+state contains wrapper identities and warning timing only. Carried-gear upgrades
+remain available under the separate tool/workshop rules. The passive calibrated
+psi device retains its independent progression-stash acquisition safeguard.
 Generated catalogue metadata and a stateless requirement projection supply its
 regional/status pages. The UI owns only filters and page offsets; it cannot mark
 checks or acknowledge rewards. Its native tab wrapper delegates all other sections

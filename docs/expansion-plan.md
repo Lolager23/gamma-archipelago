@@ -437,6 +437,9 @@ policy, and disabled categories impose no new locks or missing dependencies.
 - [x] Implement three quest-chain keys and deferred native task-grant replay.
 - [x] Implement nine AP equipment permissions, baseline grants and deferred
   PDA map markers.
+- [x] Change those equipment permissions to equip/use locks: later gear may be
+  carried, bought, sold and maintained. Stow disallowed equipment in inventory;
+  preserve the distinct passive psi-stash safeguard. Native acceptance is pending.
 - [x] Implement 32 zone keys with native/scripted transition guards. Expanded pools
   and multiworlds use AP fill; sparse exploration retains an anti-cycle route.
   Cordon remains free.

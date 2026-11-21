@@ -47,6 +47,33 @@ def poll(game, engine):
     game.actor_on_update()
 
 
+def test_pending_engine_deactivation_cannot_award_locked_equipment_tiers(lua):
+    game, engine, _ = equipment_game(
+        lua,
+        checks_armour_tiers=1,
+        checks_weapon_tiers=1,
+        starting_outfit=2,
+        starting_firearms=2,
+        rewards_starting_gear_unlocks=1,
+    )
+    game.on_game_start()
+    engine.creation.new_game_faction = None
+    poll(game, engine)
+    engine.outfit = gear(lua, 2, "locked_outfit", "o_light")
+    engine.active = gear(lua)
+    state = progress(lua, game)
+    assert state.expanded and state.session_key
+    module = lua.globals().gamma_ap_equipment_checks
+    assert module.poll(state, state.configuration) is True
+    catalog = lua.globals().gamma_ap_catalog
+    armour = catalog.armour_locations["1"]
+    weapon = catalog.weapon_locations.pistol
+    assert not state.checks[armour] and not state.checks[weapon]
+    state.unlocks.gear_firearms = state.unlocks.gear_outfit = True
+    assert module.poll(state, state.configuration) is True
+    assert state.checks[armour] and state.checks[weapon]
+
+
 def test_armour_tiers_require_worn_usable_gear_and_keep_a_saved_high_water_mark(lua):
     game, engine, _ = equipment_game(lua, checks_armour_tiers=1)
     item = gear(lua, section="test_light", kind="o_light", condition=0)

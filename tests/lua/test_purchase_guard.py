@@ -4,8 +4,8 @@ from .test_gear_locks import gear_game
 from .test_stashes import poll, progress
 
 
-def shop(lua):
-    game, engine = gear_game(lua, items=())
+def shop(lua, *, psi_guard=False):
+    game, engine = gear_game(lua, items=(), psi_guard=psi_guard)
     poll(game, engine)
     lua.globals().state = progress(lua, game)
     lua.execute("""
@@ -23,9 +23,9 @@ def shop(lua):
     return lua.globals().gamma_ap_purchase_guard, engine
 
 
-def test_locked_basket_cannot_debit_money_or_transfer_any_item(lua):
-    _, engine = shop(lua)
-    lua.globals().add_item(50, "pda", "D_PDA", "i_device", 0)
+def test_passive_psi_device_still_cannot_bypass_progression_stash_permission(lua):
+    _, engine = shop(lua, psi_guard=True)
+    lua.globals().add_item(50, "good_psy_helmet", "II_ATTCH", "i_quest", 0)
     assert lua.globals().ui_inventory.UIInventory.TMode_Buy(lua.globals().window) is False
     assert engine.money == 1000 and engine.native_buys == 0
     assert list(engine.warnings.values()) == ["gamma_ap_purchase_locked"]
@@ -69,3 +69,12 @@ def test_basket_with_unrestricted_supplies_uses_normal_trade(lua):
     lua.globals().add_item(50, "bandage", "II_BANDG", "i_medical", 0)
     lua.globals().ui_inventory.UIInventory.TMode_Buy(lua.globals().window)
     assert engine.native_buys == 1 and not len(engine.warnings)
+
+
+def test_locked_equipment_uses_normal_trade_without_losing_money_or_items(lua):
+    _, engine = shop(lua)
+    item = lua.globals().add_item(50, "pda", "D_PDA", "i_device", 0)
+    lua.globals().ui_inventory.UIInventory.TMode_Buy(lua.globals().window)
+    assert engine.money == 500 and engine.native_buys == 1 and not len(engine.warnings)
+    lua.globals().engine.callbacks.actor_on_item_take(item)
+    assert engine.objects[50] and not engine.dropped[50]
