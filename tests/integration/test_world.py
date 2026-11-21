@@ -297,7 +297,7 @@ def test_quest_permissions_are_required_items_and_gate_their_story_checks():
     )
 
 
-def test_restricted_start_places_only_selected_permissions_and_keeps_pda_outside_its_stash():
+def test_restricted_start_places_selected_permissions_but_physical_stash_needs_no_pda():
     multiworld = setup_multiworld(
         GammaWorld,
         options={
@@ -317,8 +317,9 @@ def test_restricted_start_places_only_selected_permissions_and_keeps_pda_outside
 
     state = CollectionState(multiworld)
     world = multiworld.worlds[1]
-    state.collect(world.create_item("Progression Stash: Calibrated Psi Helmet"), prevent_sweep=True)
     assert not claim.can_reach(state)
+    state.collect(world.create_item("Progression Stash: Calibrated Psi Helmet"), prevent_sweep=True)
+    assert claim.can_reach(state)
     state.collect(world.create_item("Equipment Unlock: PDA"), prevent_sweep=True)
     assert claim.can_reach(state)
 

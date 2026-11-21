@@ -90,7 +90,8 @@ Stash plans also remain in the central save state. Their adapter fills a recorde
 box synchronously during its use callback, before GAMMA's loot UI refresh, with
 a bounded action budget and the existing timed retry path. Created identities
 prevent automatic replacement; uncertain creation still requires manual recovery.
-Opening is separate from claiming in the tracker. The two AP marker kinds share
+Physical opening does not require a PDA; the coordinate plan and exact container
+remain authoritative. Opening is separate from claiming in the tracker. The two AP marker kinds share
 an owned, reproducibly generated rainbow texture and retain distinct text hints.
 
 [Convenience carry rewards](convenience-rewards.md) derive their bounded effect
