@@ -33,6 +33,18 @@ def test_quick_pilot_estimates_goal_separately_from_optional_map_completion():
     assert result["estimates"]["completion_hours"][0] > 1
 
 
+def test_new_seed_exports_require_ap_start_and_random_preview_does_not_roll():
+    values = {**defaults(), "starting_location": 3}
+    result = preview(values, {})
+    document = player_document("NewStart", values)
+    configuration = build_configuration(document["S.T.A.L.K.E.R. GAMMA"])
+    assert result["configuration"]["ap_start"] == 1
+    assert result["configuration"]["starting_location"] == 3
+    assert result["digest"] == configuration.digest
+    assert any("Random native preset" in note for note in result["notes"])
+    assert values["ap_start"] == 0
+
+
 def test_custom_totals_and_insufficient_progression_slots():
     values = {**defaults(), "checks_kill_milestones": 1, "kill_milestones": [1, 500, 10000]}
     result = preview(values, {})

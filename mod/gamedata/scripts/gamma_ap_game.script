@@ -132,6 +132,7 @@ function actor_on_update()
     local workshop_ready, workshop_error = gamma_ap_workshop.install(configuration,function() return state end)
     if not workshop_ready then report_error(workshop_error); return end
     local shop_ready,shop_error = gamma_ap_shop_ui.install(configuration)
+    gamma_ap_purchase_guard.install(function() return state end)
     register_task_hook()
     local supported, support_error = gamma_ap_tasks.supported(configuration)
     if not supported then report_error(support_error); return end
@@ -147,6 +148,8 @@ function actor_on_update()
     state.enabled_checks = enabled
     state.allowed_items = gamma_ap_state.enabled_items(configuration)
     state.configuration = gamma_ap_configuration.copy(configuration)
+    local start_valid,start_error = gamma_ap_start.validate(state)
+    if not start_valid then report_error(start_error); return end
     local zone_valid, zone_reason = gamma_ap_zone_keys.validate_start(state)
     if not zone_valid then report_error(zone_reason); return end
     gamma_ap_combat.configure(state.combat, configuration)
@@ -298,6 +301,9 @@ function on_game_start()
         local configuration, reason = read_configuration(incoming)
         if configuration then
             state.configuration = gamma_ap_configuration.copy(configuration)
+            local start_ready,prepared_start = gamma_ap_start.prepare(configuration)
+            if not start_ready then report_error(prepared_start) end
+            if start_ready and prepared_start then state.loadout_prepared=true; state.configuration_key=configuration.digest end
             local pickup_ready, pickup_error = gamma_ap_gear_locks.install_pickup_guard(configuration)
             if not pickup_ready then report_error(pickup_error) end
             gamma_ap_quest_keys.install(function() return state end)
@@ -307,6 +313,14 @@ function on_game_start()
         else report_error(reason) end
     end
     RegisterScriptCallback("actor_on_update", actor_on_update)
+    local function install_start_menu()
+        gamma_ap_start_menu.install(function()
+            local snapshot = read_incoming()
+            return snapshot and read_configuration(snapshot)
+        end)
+    end
+    install_start_menu()
+    RegisterScriptCallback("main_menu_on_init",install_start_menu)
     RegisterScriptCallback("on_loading_screen_key_prompt", gamma_ap_readiness.reset)
     RegisterScriptCallback("on_loading_screen_dismissed", gamma_ap_readiness.dismissed)
     RegisterScriptCallback("actor_on_net_destroy", gamma_ap_readiness.reset)

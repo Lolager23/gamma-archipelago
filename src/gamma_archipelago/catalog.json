@@ -5268,5 +5268,22 @@
     "freedom",
     "ecolog",
     "killer"
+  ],
+  "starting_locations": [
+    {
+      "key": "rookie_village",
+      "name": "Rookie Village",
+      "level": "l01_escape"
+    },
+    {
+      "key": "hidden_base",
+      "name": "Clear Sky Base",
+      "level": "k00_marsh"
+    },
+    {
+      "key": "lodging_house",
+      "name": "Rostok lodging house",
+      "level": "l05_bar"
+    }
   ]
 }

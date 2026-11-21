@@ -40,6 +40,40 @@ def zone_game(lua, **options):
     return game, engine
 
 
+def test_denied_zone_shows_area_key_warning_with_a_bounded_repeat_rate(lua):
+    game, engine = zone_game(lua)
+    lua.execute("""
+        engine.news={}
+        db.actor.give_game_news=function(self,title,text)
+            engine.news[#engine.news+1]=text
+        end
+        game={translate_string=function() return "You don't have the Area Key: %s." end}
+    """)
+    game.on_game_start()
+    change = lua.globals().ChangeLevel
+    assert change(None, 2, 2) is False
+    assert "Area Key: Garbage" in engine.news[1]
+    assert change(None, 2, 2) is False and len(engine.news) == 1
+    engine.now += 6000
+    assert change(None, 2, 2) is False and len(engine.news) == 2
+    engine.now += 6000
+    lua.globals().state = progress(lua, game)
+    lua.execute("""
+        alife_object=function() return {} end
+        utils_stpk={get_level_changer_data=function() return {dest_game_vertex_id=2} end}
+        warning_changer={inside=function() return true end,name=function() return 'gate' end,
+            is_level_changer_enabled=function() return true end,
+            enable_level_changer=function(self,enabled) engine.gate_enabled=enabled end}
+    """)
+    assert (
+        lua.globals().gamma_ap_zone_keys.guard_changer(
+            lua.globals().state, lua.globals().warning_changer, 55
+        )
+        is True
+    )
+    assert len(engine.news) == 3 and engine.gate_enabled is False
+
+
 def test_locked_destination_is_stopped_in_scripts_and_redirected_before_native_packet_cleanup(lua):
     game, engine = zone_game(lua)
     game.on_game_start()

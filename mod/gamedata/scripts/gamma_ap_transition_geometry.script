@@ -1,0 +1,62 @@
+-- Read the complete ALife changer roster, including objects absent from db.storage.
+local function length(v)
+    return math.sqrt(v.x*v.x+v.y*v.y+v.z*v.z)
+end
+
+local function where(graph, id)
+    if type(id) ~= "number" or id ~= math.floor(id) or id < 0 or id > 65534
+        or not graph:valid_vertex_id(id) then return nil end
+    return alife():level_name(graph:vertex(id):level_id())
+end
+
+local function bound(se, data, result)
+    for _,shape in ipairs(data.shapes or {}) do
+        local radius = length(shape.offset)
+        if shape.shtype == 0 then radius = radius+shape.radius
+        else radius = radius+length(shape.v1)+length(shape.v2)+length(shape.v3) end
+        -- A horizontal enclosing circle also covers slopes/vertical overlap and
+        -- avoids relying on the native inside() epsilon as an expansion radius.
+        result[#result+1] = {position=se.position,radius=radius+15}
+    end
+end
+
+function scan(target)
+    local graph,current = game_graph(),level.name()
+    local areas,inverse = {},{}
+    local sim = alife()
+    if type(sim.object) == "function" then
+        for id=0,65534 do
+            local se = sim:object(id)
+            if se and gamma_ap_zone_recovery.is_changer(se) then
+                local data = utils_stpk.get_level_changer_data(se)
+                assert(data,"Cannot inspect ALife transition geometry for recovery")
+                local source = where(graph,se.m_game_vertex_id)
+                if source == current then bound(se,data,areas) end
+                if source == target and where(graph,data.dest_game_vertex_id) == current then
+                    inverse[#inverse+1] = {gvid=data.dest_game_vertex_id,
+                        lvid=data.dest_level_vertex_id,position=data.dest_position}
+                end
+            end
+        end
+    end
+    -- Extra transitions are scripted restrictors, not native level changers.
+    -- Include configured entries even before their client object registers.
+    for _,data in pairs(lc_extra_transitions and lc_extra_transitions.lc_pool or {}) do
+        if where(graph,tonumber(data.gvid)) == current and type(data.pos) == "string" then
+            local x,y,z = data.pos:match("^%s*([^,]+),%s*([^,]+),%s*([^,]+)%s*$")
+            x,y,z = tonumber(x),tonumber(y),tonumber(z)
+            if x and y and z then
+                areas[#areas+1] = {position={x=x,y=y,z=z},radius=(tonumber(data.trigger_radius) or 6)+15}
+            end
+        end
+    end
+    return areas,inverse
+end
+
+function outside(position, areas)
+    for _,area in ipairs(areas) do
+        local dx,dz = position.x-area.position.x,position.z-area.position.z
+        if dx*dx+dz*dz <= area.radius*area.radius then return false end
+    end
+    return true
+end

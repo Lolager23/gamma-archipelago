@@ -1,0 +1,36 @@
+-- Refuse the complete native basket before either inventory or money changes.
+local wrapper = nil
+
+local function warn(window, text)
+    local box = window.message_box
+    box:InitMessageBox("message_box_ok")
+    box:SetText(text)
+    box:ShowDialog(true)
+end
+
+function install(get_state)
+    local class = ui_inventory and ui_inventory.UIInventory
+    if not class or type(class.TMode_Buy) ~= "function" then return false end
+    if class.TMode_Buy == wrapper then return true end
+    local delegate = class.TMode_Buy
+    wrapper = function(window, ...)
+        local state = get_state()
+        local basket = window.CC and window.CC.npc_trade
+        if basket and state.configuration and state.configuration.expanded then
+            for id in pairs(basket.indx_id) do
+                local item = level.object_by_id(id)
+                if not item then
+                    warn(window,game.translate_string("gamma_ap_purchase_unavailable"))
+                    return false
+                end
+                if gamma_ap_gear_locks.locked(state,item) then
+                    warn(window,game.translate_string("gamma_ap_purchase_locked"))
+                    return false
+                end
+            end
+        end
+        return delegate(window, ...)
+    end
+    class.TMode_Buy = wrapper
+    return true
+end

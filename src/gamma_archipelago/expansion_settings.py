@@ -1,6 +1,9 @@
 """Additional bounded settings; legacy values preserve pre-expansion seed identities."""
 
 EXPANSION_LIMITS = {
+    "ap_start": 1,
+    "starting_faction": 0,
+    "starting_location": 3,
     "opening_policy": 1,
     "access_pacing": 1,
     "combat_logic": 2,

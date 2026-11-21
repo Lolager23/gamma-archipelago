@@ -3,6 +3,14 @@
 from .expansion_settings import EXPANSION_LIMITS
 
 CHOICES = {
+    "ap_start": ["Legacy seed", "Archipelago start required"],
+    "starting_faction": ["Free Stalkers"],
+    "starting_location": [
+        "Rookie Village",
+        "Clear Sky Base",
+        "Rostok lodging house",
+        "Random location",
+    ],
     "scouting_mode": ["Disabled", "Local rewards", "Shared AP location hints"],
     "reward_previews": ["Hidden", "Show next milestone reward"],
     "mutant_discovery_mode": ["Per type", "First N distinct types"],
@@ -37,4 +45,5 @@ def advanced_options() -> list[dict[str, object]]:
             "choices": CHOICES.get(key),
         }
         for key, maximum in {"pda_tracker": 1, **EXPANSION_LIMITS}.items()
+        if key != "ap_start"
     ]

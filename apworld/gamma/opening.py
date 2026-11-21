@@ -6,6 +6,7 @@ from BaseClasses import LocationProgressType
 from Options import OptionError
 
 from gamma_archipelago.opening import opening_checks, opening_permissions
+from gamma_archipelago.starting import starting_level
 
 if TYPE_CHECKING:
     from . import GammaWorld
@@ -28,7 +29,12 @@ def place_opening(world: "GammaWorld", catalog: dict[str, Any]) -> None:
         and row.progress_type != LocationProgressType.EXCLUDED
         and row.name not in world.options.exclude_locations.value
     ]
-    allowed = opening_checks(frozenset(row.address for row in locations), frozenset(), zoned)
+    allowed = opening_checks(
+        frozenset(row.address for row in locations),
+        frozenset(),
+        zoned,
+        starting_level(world.configuration),
+    )
     candidates = sorted(
         (row for row in locations if row.address in allowed), key=lambda row: row.address
     )
