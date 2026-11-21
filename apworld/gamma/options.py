@@ -296,6 +296,17 @@ class StartingLocation(Choice):
     default = 0
 
 
+class RandomStartingUnlock(Toggle):
+    """Precollect one seeded random locked PDA, firearm or detector permission.
+
+    Already precollected permissions are skipped. If all eligible permissions are
+    already granted, nothing is duplicated. Firearms uses the existing baseline
+    weapon permission; this option does not add a progressive weapon system.
+    """
+
+    display_name = "Random starting equipment unlock"
+
+
 class StartingGear(Choice):
     """Normal equipment, absent initially, or unavailable until its AP unlock."""
 
@@ -419,6 +430,22 @@ class ArtefactDiscoveryCount(MutantDiscoveryCount):
     range_end = 66
 
 
+class MutantFillerTail(Range):
+    """Final X generic mutant discoveries accept filler only, with no progression/useful rewards."""
+
+    display_name = "Filler-only final mutant discoveries"
+    range_start = 0
+    range_end = 25
+    default = 0
+
+
+class ArtefactFillerTail(MutantFillerTail):
+    """Final X generic artefact discoveries accept filler only; X cannot exceed the quota."""
+
+    display_name = "Filler-only final artefact discoveries"
+    range_end = 66
+
+
 class DiscoveryExclusions(OptionSet):
     """Canonical catalogue tokens, such as faction:stalker or artefact:af_atom."""
 
@@ -441,6 +468,9 @@ class GammaOptions(PerGameCommonOptions):
     ap_start: ArchipelagoStart
     starting_faction: StartingFaction
     starting_location: StartingLocation
+    random_starting_unlock: RandomStartingUnlock
+    mutant_filler_tail: MutantFillerTail
+    artefact_filler_tail: ArtefactFillerTail
     opening_policy: OpeningPolicy
     access_pacing: AccessPacing
     combat_logic: CombatLogic

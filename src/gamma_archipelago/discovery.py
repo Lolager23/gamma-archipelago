@@ -63,6 +63,30 @@ def configured_location_ids(configuration: "SeedConfiguration") -> frozenset[int
             ids.update(roster[token] for token in qualifying)
     if configuration.option("optional_check_policy") == 1:
         ids.difference_update(MISSABLE_IDS)
+    protected_tail_ids(configuration, frozenset(ids))
     if not ids:
         raise ValueError("The configured exclusions leave no checks")
     return frozenset(ids)
+
+
+def protected_tail_ids(
+    configuration: "SeedConfiguration", check_ids: frozenset[int]
+) -> frozenset[int]:
+    """Reserve the final X generic discoveries for filler, never a named rare type."""
+    result: set[int] = set()
+    for group in ("mutant", "artefact"):
+        tail = configuration.option(f"{group}_filler_tail")
+        if not tail:
+            continue
+        if GROUPS[group] not in configuration.checks or not configuration.option(
+            f"{group}_discovery_mode"
+        ):
+            raise ValueError(f"{group} filler tail requires enabled generic discovery checks")
+        count = configuration.option(f"{group}_discovery_count") or len(
+            set(SOURCES[group]) - set(configuration.discovery_exclusions)
+        )
+        selected = QUOTAS[group][:count]
+        if tail > len(selected):
+            raise ValueError(f"{group} filler tail exceeds its configured discovery quota")
+        result.update(selected[-tail:])
+    return frozenset(result) & check_ids

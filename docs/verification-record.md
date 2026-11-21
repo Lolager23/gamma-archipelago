@@ -1,5 +1,17 @@
 # Verification record
 
+## 21 November 2026 — generic discovery tails and seeded starting permission
+
+Added configurable filler-only final mutant/artefact quota checks, pre-fill budget
+and placement guards, an optional seeded starting PDA/Firearms/Detector permission,
+and matching PDA requirements for quest/task/story checks in AP logic and the PDA.
+Existing generic checks remain first-N distinct types; published IDs and zero-default
+wire/digest identities are unchanged. New seed options need fresh generation.
+Exact-head local/Windows/Linux verification and package evidence are retained with
+the implementation PR. Native acceptance is **not run**, reserved for Owen; the
+normal game and active playtest are excluded from source verification.
+
+
 ## AP playthrough guards: 21 November 2026
 
 New APWorld starts are restricted to Free Stalkers and the three native presets,

@@ -18,10 +18,10 @@ from .configuration import (
 )
 from .discovery import SOURCES, configured_location_ids
 from .opening import opening_permissions
-from .pool_budget import budget_pool
 from .presets import presets
 from .settings_ui import advanced_options
 from .starting import STARTS
+from .starting_unlock import preview_budget
 from .web_estimates import ASSUMPTIONS, estimate_playtime
 
 LABELS = {
@@ -146,15 +146,15 @@ def preview(values: Mapping[str, object], assumptions: Mapping[str, object]) -> 
             )
     item_ids = enabled_item_ids(configuration.rewards, configuration.gear)
     rewards = [dict(row) for row in data["items"] if row["id"] in item_ids]
-    budget = budget_pool(configuration, ids)
+    budget, budget_report = preview_budget(configuration, ids)
     required = len(budget.required)
     counts = Counter(row["category"] for row in checks)
     shop_cost = sum(row.get("price", 0) for row in checks)
     return {
         "configuration": configuration.to_values(),
         "preview_kind": "settings_only",
-        "pool_budget": budget.report(),
-        "opening_permissions": list(opening_permissions(configuration, {})),
+        "pool_budget": budget_report,
+        "opening_permissions": list(opening_permissions(configuration, dict(budget.starting))),
         "resolved_thresholds": {
             "kills": list(configuration.kill_milestones),
             "side_tasks": list(configuration.side_task_milestones),
@@ -191,6 +191,15 @@ def preview(values: Mapping[str, object], assumptions: Mapping[str, object]) -> 
             "Settings preview only. Actual-seed JSON is optional; placement mode reveals spoilers.",
             "Zone keys stay local; other rewards can cross players in a multiworld.",
             "Local goal events do not consume network checks or reward slots.",
+            "Generic discovery tails accept filler only; repeated types do not advance checks.",
+            *(
+                [
+                    "Random starting permission is unresolved here; per-choice budgets are shown "
+                    "and opening requirements use the most demanding roll."
+                ]
+                if configuration.option("random_starting_unlock")
+                else []
+            ),
             "Fresh Loner/Cordon saves are the baseline. Expanded engine testing is pending.",
             *(
                 [

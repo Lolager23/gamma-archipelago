@@ -63,3 +63,20 @@ tests and five Node tests (923 total), including 60 filled full-progression seed
 using all three quota groups and service policies. Owned Python runtime modules
 reached 100% measured line/branch coverage; Lua reached 100% measured executable
 lines. Lua branch coverage is not measured.
+
+
+## Progression-free final discoveries
+
+`mutant_filler_tail` (0–25) and `artefact_filler_tail` (0–66) protect the final X
+configured generic discoveries. For example, mutant quota 15 with tail 5 gives
+checks for the first 15 distinct species; checks 11–15 accept filler only. The
+same rule works for artefacts. It does not select specific rare types. Repeats
+and aliases still cannot advance a distinct count. Per-type mode remains available.
+
+A nonzero tail requires that category and generic mode, and cannot exceed the
+selected quota after exclusions. All protected checks remain present and completable.
+The APWorld marks them EXCLUDED before fill; useful and progression rewards are
+both forbidden there. The shared budget reserves required permissions against the
+remaining reliable checks and fails impossible configurations. Native observation
+IDs and published check meanings are unchanged. Zero defaults preserve old digests
+and configuration wire bytes. New settings require a new seed.

@@ -166,3 +166,26 @@ def test_quota_ids_are_not_side_task_previews_and_optional_policy_matches(lua):
     old = lua.globals().gamma_ap_configuration.copy(state.configuration)
     old.exclusions = None
     assert not list(lua.globals().gamma_ap_configuration.copy(old).exclusions)
+
+
+@pytest.mark.parametrize("group", ["mutant", "artefact"])
+def test_native_tail_validation_and_observations_keep_the_same_checks(lua, group):
+    game, _, config = discovery_game(
+        lua,
+        **{
+            GROUPS[group]: 1,
+            f"{group}_discovery_mode": 1,
+            f"{group}_discovery_count": 3,
+            f"{group}_filler_tail": 2,
+        },
+    )
+    state = progress(lua, game)
+    assert set(state.enabled_checks) == configured_location_ids(config)
+    for source in list(SOURCES[group].values())[:3]:
+        assert lua.globals().gamma_ap_discovery.record(state, source)
+    assert set(QUOTAS[group][:3]) <= set(state.checks)
+    for change in ({GROUPS[group]: 0}, {f"{group}_discovery_mode": 0}, {f"{group}_filler_tail": 4}):
+        options = lua.table_from(dict(state.configuration.options.items()) | change)
+        malformed = lua.table(options=options, exclusions=lua.table())
+        selected, reason = lua.globals().gamma_ap_discovery.select(malformed, lua.table())
+        assert selected is None and "tail" in reason

@@ -14,8 +14,9 @@ from gamma_archipelago.catalog import (
     enabled_item_ids,
 )
 from gamma_archipelago.configuration import OPTION_NAMES, SeedConfiguration, build_configuration
-from gamma_archipelago.discovery import configured_location_ids
+from gamma_archipelago.discovery import configured_location_ids, protected_tail_ids
 from gamma_archipelago.pool_budget import PoolBudget
+from gamma_archipelago.starting_unlock import unlock_candidates
 
 from .goals import add_goal_events, set_goal_rule
 from .identity import generation_identity
@@ -70,6 +71,16 @@ class GammaWorld(World):
             if values["starting_location"] == 3:
                 values["starting_location"] = self.random.randrange(3)
             self.configuration = build_configuration(values)
+            if self.configuration.option("random_starting_unlock"):
+                held = self.options.start_inventory.value | {
+                    name: max(count, self.options.start_inventory.value.get(name, 0))
+                    for name, count in self.options.start_inventory_from_pool.value.items()
+                }
+                candidates = unlock_candidates(self.configuration, held)
+                if candidates:
+                    self.multiworld.push_precollected(
+                        self.create_item(self.random.choice(candidates))
+                    )
         except ValueError as error:
             raise OptionError(str(error)) from error
 
@@ -112,12 +123,15 @@ class GammaWorld(World):
             regions[source].connect(regions[destination])
             regions[destination].connect(regions[source])
         allowed = configured_location_ids(self.configuration)
+        protected = protected_tail_ids(self.configuration, allowed)
         for location in _catalog["locations"]:
             if location["id"] not in allowed:
                 continue
             region = regions.get(location["level"], menu)
             check = GammaLocation(self.player, location["name"], location["id"], region)
-            if location.get("missable") and self.configuration.option("optional_check_policy") == 0:
+            if location["id"] in protected or (
+                location.get("missable") and self.configuration.option("optional_check_policy") == 0
+            ):
                 check.progress_type = LocationProgressType.EXCLUDED
             if location.get("tasks") and "rewards_quest_keys" in self.configuration.rewards:
                 permission = _catalog["quest_gates"][location["tasks"][0]]

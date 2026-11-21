@@ -35,6 +35,20 @@ function select(configuration, enabled)
     if configuration.options.optional_check_policy == 1 then
         for id in pairs(gamma_ap_catalog.missable_checks) do enabled[id] = nil end
     end
+    for _,group in ipairs({"mutant","artefact"}) do
+        local tail = configuration.options[group.."_filler_tail"] or 0
+        if tail > 0 then
+            if configuration.options[categories[group]] ~= 1
+                or configuration.options[group.."_discovery_mode"] ~= 1 then
+                return nil,"Discovery filler tail requires enabled generic checks"
+            end
+            local count = 0
+            for _,id in ipairs(gamma_ap_catalog.discovery_quotas[group]) do
+                if enabled[id] then count=count+1 end
+            end
+            if tail > count then return nil,"Discovery filler tail exceeds its quota" end
+        end
+    end
     return enabled
 end
 
