@@ -33,6 +33,29 @@ def rows(view):
     return list(view.rows.values())
 
 
+@pytest.mark.parametrize("outfit,helmet", [(0, 2), (1, 2), (2, 0), (2, 1), (2, 2)])
+@pytest.mark.parametrize("unlock", ["outfit", "helmet"])
+def test_upgrade_tracker_matches_native_equipment_alternatives(lua, outfit, helmet, unlock):
+    state = state_for(
+        lua,
+        checks_gear_upgrades=1,
+        starting_outfit=outfit,
+        starting_helmet=helmet,
+        starting_firearms=2,
+        rewards_starting_gear_unlocks=1,
+    )
+
+    def check(id):
+        return next(row for row in rows(view(lua, state)) if row.id == id)
+
+    assert check(28052731).status == "blocked"
+    assert check(28052734).status == ("blocked" if outfit == 2 and helmet == 2 else "available")
+    state.unlocks["gear_" + unlock] = True
+    assert check(28052734).status == "available"
+    state.unlocks.gear_firearms = True
+    assert check(28052731).status == "available"
+
+
 def test_tracker_is_read_only_counts_saved_checks_and_reports_pending_receipts(lua):
     state = state_for(lua)
     state.checks[28052001] = True

@@ -55,3 +55,11 @@ and melee/kill alternatives, armour/weapon/knife checks, strict combat assumptio
 and workshop/tools gates retain their matching requirements. Normal or merely
 omitted gear does not demand an AP unlock. Old generated placements are not refilled;
 regenerate a seed to use corrected placement logic. Completed checks stay monotonic.
+
+Upgrade checks also require permission to own the equipment being observed. Firearm
+upgrades need Firearms permission when AP-locked. Native armour upgrades include
+outfits and helmets, so that group accepts either available outfit or helmet access;
+it blocks only when both groups are AP-locked and neither permission is held.
+Normal or omission-only alternatives remain usable. The AP solver and PDA apply the
+same rule alongside the independent progressive-tool/workshop requirements. This
+uses the existing native observation groups and changes no published IDs or save state.

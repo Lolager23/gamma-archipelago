@@ -40,7 +40,22 @@ local function reachable(state, psi)
     return result
 end
 
-local function blocked(state, row, regions, psi)
+local function upgrade_permission(state, id)
+    local config = options(state)
+    for _,check in pairs(gamma_ap_catalog.upgrade_locations.firearm) do
+        if check == id and config.starting_firearms == 2 and not state.unlocks.gear_firearms then
+            return "Equipment permission required: firearms"
+        end
+    end
+    for _,check in pairs(gamma_ap_catalog.upgrade_locations.armour) do
+        if check == id and config.starting_outfit == 2 and config.starting_helmet == 2
+            and not state.unlocks.gear_outfit and not state.unlocks.gear_helmet then
+            return "Armour upgrade requires an outfit or helmet permission"
+        end
+    end
+end
+
+local function blocked(state, row, regions, psi, id)
     local config = options(state)
     if row.region ~= "Menu" and not regions[row.region] then
         if not gamma_ap_zone_keys.allowed(state, row.region) then return "Zone access key required" end
@@ -52,6 +67,8 @@ local function blocked(state, row, regions, psi)
             if not regions[where] then return "Global activity: unlock the remaining Zone routes" end
         end
     end
+    local ownership = row.category == "checks_gear_upgrades" and upgrade_permission(state,id)
+    if ownership then return ownership end
     if config.rewards_progressive_tools == 1 and row.category == "checks_gear_upgrades"
         and gamma_ap_workshop.tools_level(state) < 3 then return "Expert tool permission required" end
     if config.rewards_workshop_access == 1 and row.category == "checks_gear_upgrades"
@@ -101,7 +118,7 @@ function snapshot(state, total, problem, psi)
     local regions = reachable(state, psi)
     for id in pairs(state.enabled_checks) do
         local row = definition(id)
-        local reason = not state.checks[id] and blocked(state,row,regions,psi) or nil
+        local reason = not state.checks[id] and blocked(state,row,regions,psi,id) or nil
         local status = state.checks[id] and "completed" or (reason and "blocked" or "available")
         local region = gamma_ap_catalog.tracker_regions[row.region] or "Global activities"
         result.rows[#result.rows+1] = {id=id, name=row.name, region=region, status=status,

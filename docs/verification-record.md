@@ -1,5 +1,13 @@
 # Verification record
 
+## 21 November 2026 — upgrade equipment ownership logic
+
+The equipment observation adapter only counts installed changes on owned firearm,
+outfit or helmet objects. Closed the remaining solver/tracker ownership gap:
+AP-locked firearm upgrades require Firearms; armour upgrades require either an
+available outfit or helmet. Existing tools/workshop gates are preserved. Exact-head
+local/CI evidence is retained with the follow-up PR; native acceptance is **not run**.
+
 ## 21 November 2026 — physical stash access without a PDA
 
 A read-only inspection confirmed a pending unopened chimney-stash package with
