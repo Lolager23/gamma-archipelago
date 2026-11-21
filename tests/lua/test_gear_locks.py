@@ -4,8 +4,14 @@ from .test_game_adapter import saved_state
 from .test_stashes import poll, progress, stash_game
 
 
-def gear_game(lua, *, items=(28051602,)):
-    game, engine = stash_game(lua, items=items, starting_pda=2, rewards_starting_gear_unlocks=1)
+def gear_game(lua, *, items=(28051602,), psi_guard=False):
+    game, engine = stash_game(
+        lua,
+        items=items,
+        starting_pda=2,
+        rewards_starting_gear_unlocks=1,
+        rewards_progression_stashes=int(psi_guard),
+    )
     lua.execute("""
         engine.dropped={}
         level.object_by_id=function(id) return engine.objects[id] or engine.boxes[id] end
@@ -38,28 +44,27 @@ def test_locked_start_is_omitted_then_permission_grants_usable_baseline(lua):
     assert engine.spawn_calls == 1
 
 
-def test_locked_sources_are_blocked_or_returned_without_destroying_loot(lua):
+def test_locked_equipment_can_be_carried_but_use_requires_permission(lua):
     game, engine = gear_game(lua, items=())
     poll(game, engine)
     item = lua.globals().add_item(50, "pda", "D_PDA", "i_device", 0)
     flags = lua.table(ret_value=True)
     game.actor_on_item_before_pickup(item, flags)
-    assert flags.ret_value is False
+    assert flags.ret_value is True
     game.actor_on_item_before_use(item, flags)
-    engine.fail_drop = True
+    assert flags.ret_value is False
     game.actor_on_item_take(item)
     game.actor_on_item_take_from_box(None, item)
     poll(game, engine)
     assert engine.objects[50] and progress(lua, game).received_count == 0
-    engine.fail_drop = False
     game.actor_on_item_take_from_box(None, item)
-    assert engine.dropped[50]
+    assert not engine.dropped[50] and engine.objects[50]
     another = lua.globals().add_item(51, "pda", "D_PDA", "i_device", 0)
     game.actor_on_item_take(another)
-    assert engine.dropped[51]
+    assert not engine.dropped[51] and engine.objects[51]
     lua.globals().add_item(52, "pda", "D_PDA", "i_device", 0)
     poll(game, engine)
-    assert engine.dropped[52]
+    assert not engine.dropped[52] and engine.objects[52]
 
 
 @pytest.mark.parametrize("failure", ["fail_spawn", "raise_spawn", "missing_section"])
@@ -90,9 +95,9 @@ def test_unknown_or_unselected_equipment_permissions_refuse_delivery(lua):
 def test_pickup_veto_does_not_latch_into_later_allowed_items_or_override_current_mod_veto(
     lua, other_veto
 ):
-    game, engine = gear_game(lua, items=())
+    game, engine = gear_game(lua, items=(), psi_guard=True)
     poll(game, engine)
-    locked = lua.globals().add_item(50, "pda", "D_PDA", "i_device", 0)
+    locked = lua.globals().add_item(50, "good_psy_helmet", "II_ATTCH", "i_quest", 0)
     allowed = lua.globals().add_item(51, "bandage", "S_FOOD", "i_medical", 0)
     pickup = lua.globals().bind_stalker_ext.actor_on_item_before_pickup
     assert pickup(locked) is False, list(engine.logs.values())
@@ -105,8 +110,8 @@ def test_pickup_veto_does_not_latch_into_later_allowed_items_or_override_current
     assert pickup(allowed) is True
 
 
-def test_missing_native_pickup_guard_refuses_locked_seed_before_receipt(lua):
-    game, engine = gear_game(lua)
+def test_missing_native_pickup_guard_refuses_psi_locked_seed_before_receipt(lua):
+    game, engine = gear_game(lua, psi_guard=True)
     lua.globals().bind_stalker_ext = None
     poll(game, engine)
     assert progress(lua, game).received_count == 0
@@ -114,7 +119,7 @@ def test_missing_native_pickup_guard_refuses_locked_seed_before_receipt(lua):
 
 
 def test_missing_pickup_guard_at_start_can_register_when_the_native_binder_loads(lua):
-    game, engine = gear_game(lua)
+    game, engine = gear_game(lua, psi_guard=True)
     binder = lua.globals().bind_stalker_ext
     lua.globals().bind_stalker_ext = None
     engine.creation.new_game_faction = "stalker"
@@ -127,7 +132,7 @@ def test_missing_pickup_guard_at_start_can_register_when_the_native_binder_loads
 
 
 def test_pickup_guard_preserves_another_mods_delegating_wrapper(lua):
-    game, engine = gear_game(lua, items=())
+    game, engine = gear_game(lua, items=(), psi_guard=True)
     poll(game, engine)
     lua.execute("""
         local delegate=bind_stalker_ext.actor_on_item_before_pickup
@@ -138,7 +143,7 @@ def test_pickup_guard_preserves_another_mods_delegating_wrapper(lua):
         end
     """)
     poll(game, engine)
-    locked = lua.globals().add_item(50, "pda", "D_PDA", "i_device", 0)
+    locked = lua.globals().add_item(50, "good_psy_helmet", "II_ATTCH", "i_quest", 0)
     allowed = lua.globals().add_item(51, "bandage", "S_FOOD", "i_medical", 0)
     pickup = lua.globals().bind_stalker_ext.actor_on_item_before_pickup
     assert pickup(locked) is False
@@ -148,13 +153,13 @@ def test_pickup_guard_preserves_another_mods_delegating_wrapper(lua):
 
 def test_repeated_fresh_sessions_rebind_pickup_guard_without_losing_permissions(lua):
     for _ in range(32):
-        game, engine = gear_game(lua, items=())
+        game, engine = gear_game(lua, items=(), psi_guard=True)
         poll(game, engine)
         state = progress(lua, game)
         assert state.session_key and state.configuration.options.starting_pda == 2, list(
             engine.logs.values()
         )
-        locked = lua.globals().add_item(50, "pda", "D_PDA", "i_device", 0)
+        locked = lua.globals().add_item(50, "good_psy_helmet", "II_ATTCH", "i_quest", 0)
         allowed = lua.globals().add_item(51, "bandage", "S_FOOD", "i_medical", 0)
         pickup = lua.globals().bind_stalker_ext.actor_on_item_before_pickup
         assert pickup(locked) is False, list(engine.logs.values())

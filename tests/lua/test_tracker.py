@@ -35,7 +35,7 @@ def rows(view):
 
 @pytest.mark.parametrize("outfit,helmet", [(0, 2), (1, 2), (2, 0), (2, 1), (2, 2)])
 @pytest.mark.parametrize("unlock", ["outfit", "helmet"])
-def test_upgrade_tracker_matches_native_equipment_alternatives(lua, outfit, helmet, unlock):
+def test_upgrade_tracker_allows_carried_equipment_before_equip_unlock(lua, outfit, helmet, unlock):
     state = state_for(
         lua,
         checks_gear_upgrades=1,
@@ -48,8 +48,8 @@ def test_upgrade_tracker_matches_native_equipment_alternatives(lua, outfit, helm
     def check(id):
         return next(row for row in rows(view(lua, state)) if row.id == id)
 
-    assert check(28052731).status == "blocked"
-    assert check(28052734).status == ("blocked" if outfit == 2 and helmet == 2 else "available")
+    assert check(28052731).status == "available"
+    assert check(28052734).status == "available"
     state.unlocks["gear_" + unlock] = True
     assert check(28052734).status == "available"
     state.unlocks.gear_firearms = True

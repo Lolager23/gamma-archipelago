@@ -1,0 +1,138 @@
+-- Native UI/device boundaries read the coordinator's permissions, never own them.
+local get_state = nil
+local condition_wrapper, equip_wrapper, use_wrapper, custom_wrapper = nil,nil,nil,nil
+local pda_wrapper, drain_wrapper, night_wrapper = nil,nil,nil
+local last_warning = -1000
+
+function reset()
+    last_warning = -1000
+end
+
+function warn()
+    local now = time_global()
+    if gamma_ap_readiness.ready() and now >= last_warning + 1000
+        and actor_menu and type(actor_menu.set_msg) == "function" then
+        local ok = pcall(actor_menu.set_msg,1,game.translate_string("gamma_ap_equipment_locked"),3)
+        if not ok then printf("[GAMMA AP] Cannot display the equipment permission warning") end
+        last_warning = now
+    end
+end
+
+local function object(item)
+    if type(item) == "number" then return level.object_by_id(item) end
+    return item
+end
+
+local function denied(item)
+    local value = object(item)
+    if not value then return true end
+    if gamma_ap_gear_locks.locked(get_state(),value) then warn(); return true end
+    return false
+end
+
+local function install_condition(class)
+    if type(class.Cond_Equip) == "function" and class.Cond_Equip ~= condition_wrapper then
+        local delegate = class.Cond_Equip
+        condition_wrapper = function(window,item,...)
+            local value = object(item)
+            if not value or gamma_ap_gear_locks.locked(get_state(),value) then return false end
+            return delegate(window,item,...)
+        end
+        class.Cond_Equip = condition_wrapper
+    end
+end
+
+local function install_actions(class)
+    if type(class.Action_Equip) == "function" and class.Action_Equip ~= equip_wrapper then
+        local delegate = class.Action_Equip
+        equip_wrapper = function(window,item,...)
+            if denied(item) then return false end
+            return delegate(window,item,...)
+        end
+        class.Action_Equip = equip_wrapper
+    end
+    if type(class.Action_Use) == "function" and class.Action_Use ~= use_wrapper then
+        local delegate = class.Action_Use
+        use_wrapper = function(window,item,...)
+            if denied(item) then return false end
+            return delegate(window,item,...)
+        end
+        class.Action_Use = use_wrapper
+    end
+end
+
+local function install_custom(class)
+    if type(class.Action_Custom) == "function" and class.Action_Custom ~= custom_wrapper then
+        local delegate = class.Action_Custom
+        custom_wrapper = function(window,item,bag,temp,index,...)
+            local value = object(item)
+            if not value then return false end
+            local group = value and gamma_ap_equipment.group(value:section())
+            local action = index and ini_sys:r_string_ex(value:section(),"use"..index.."_action_functor")
+            if action == "item_device.func_battery" then
+                return delegate(window,item,bag,temp,index,...)
+            end
+            if (group == "tools" or group == "utilities" or group == "pda" or group == "detector")
+                and denied(value) then return false end
+            return delegate(window,item,bag,temp,index,...)
+        end
+        class.Action_Custom = custom_wrapper
+    end
+end
+
+local function install_inventory()
+    local class = ui_inventory and ui_inventory.UIInventory
+    if not class then return end
+    install_condition(class)
+    install_actions(class)
+    install_custom(class)
+end
+
+local function install_devices()
+    if pda and type(pda.pda_use) == "function" and pda.pda_use ~= pda_wrapper then
+        local delegate = pda.pda_use
+        pda_wrapper = function(...)
+            if gamma_ap_gear_locks.group_locked(get_state(),"pda") then warn(); return false end
+            return delegate(...)
+        end
+        pda.pda_use = pda_wrapper
+    end
+    if not item_device then return end
+    if type(item_device.drain_device_on_event) == "function"
+        and item_device.drain_device_on_event ~= drain_wrapper then
+        local delegate = item_device.drain_device_on_event
+        drain_wrapper = function(item,section,...)
+            local value = item or (section and db.actor and db.actor:object(section))
+            if gamma_ap_gear_locks.locked(get_state(),value) then return false end
+            return delegate(item,section,...)
+        end
+        item_device.drain_device_on_event = drain_wrapper
+    end
+    if type(item_device.set_nightvision) == "function" and item_device.set_nightvision ~= night_wrapper then
+        local delegate = item_device.set_nightvision
+        night_wrapper = function(section,active,...)
+            if active and gamma_ap_gear_locks.group_locked(get_state(),"utilities") then warn(); return false end
+            return delegate(section,active,...)
+        end
+        item_device.set_nightvision = night_wrapper
+    end
+end
+
+function install(state_getter)
+    get_state = state_getter
+    install_inventory()
+    install_devices()
+end
+
+function before_key(state,dik,binding,disabled,flags)
+    if disabled or (actor_menu and type(actor_menu.is_hud_free) == "function"
+        and not actor_menu.is_hud_free()) then return end
+    if not binding or not key_bindings then return end
+    if binding == key_bindings.kWPN_FIRE or binding == key_bindings.kWPN_RELOAD
+        or binding == key_bindings.kWPN_ZOOM then
+        local active = db.actor and db.actor:active_item()
+        if gamma_ap_gear_locks.locked(state,active) then flags.ret_value=false; warn() end
+    elseif binding == key_bindings.kTORCH and gamma_ap_gear_locks.group_locked(state,"utilities") then
+        flags.ret_value=false; warn()
+    end
+end

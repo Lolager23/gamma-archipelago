@@ -2,11 +2,11 @@
 
 local pickup_flags = nil
 local pickup_wrapper = nil
+local stowing = false
 
 function install_pickup_guard(configuration)
     if not configuration or not configuration.expanded
-        or (configuration.options.rewards_starting_gear_unlocks ~= 1
-            and configuration.options.rewards_progression_stashes ~= 1) then return true end
+        or configuration.options.rewards_progression_stashes ~= 1 then return true end
     local binder = rawget(_G, "bind_stalker_ext")
     if not binder or type(binder.actor_on_item_before_pickup) ~= "function" then
         return false, "Equipment locks require the native pickup binder"
@@ -24,14 +24,23 @@ function install_pickup_guard(configuration)
     return true
 end
 
-function locked(state, item)
+function group_locked(state, group)
+    local configuration = state.configuration
+    return configuration and configuration.expanded and group
+        and configuration.options["starting_" .. group] == 2
+        and not state.unlocks["gear_" .. group]
+end
+
+function pickup_locked(state, item)
     local configuration = state.configuration
     if not configuration or not configuration.expanded or not item then return false end
-    if item:section() == "good_psy_helmet" and configuration.options.rewards_progression_stashes == 1
-        and not state.unlocks.calibrated_psi then return true end
-    local group = gamma_ap_equipment.group(item:section())
-    return group and configuration.options["starting_" .. group] == 2
-        and not state.unlocks["gear_" .. group]
+    -- This non-equippable quest device grants protection just by being carried.
+    return item:section() == "good_psy_helmet" and configuration.options.rewards_progression_stashes == 1
+        and not state.unlocks.calibrated_psi
+end
+
+function locked(state, item)
+    return item and (pickup_locked(state,item) or group_locked(state,gamma_ap_equipment.group(item:section())))
 end
 
 function before(state, item, flags)
@@ -40,11 +49,33 @@ end
 
 function before_pickup(state, item, flags)
     pickup_flags = flags
-    before(state, item, flags)
+    if pickup_locked(state,item) then flags.ret_value = false end
+end
+
+local function in_slot(item)
+    for slot=1,13 do
+        local equipped = db.actor:item_in_slot(slot)
+        if equipped and equipped:id() == item:id() then return true end
+    end
+    return false
+end
+
+function equipped(state, item)
+    if not state.session_key or not locked(state,item) then return true end
+    if stowing then return false,"Another mod re-equipped locked gear during inventory transfer" end
+    stowing = true
+    local ok,stowed = pcall(function()
+        if not in_slot(item) then return true end
+        db.actor:move_to_ruck(item)
+        return not in_slot(item)
+    end)
+    stowing = false
+    if not ok or not stowed then return false,"Cannot move AP-locked equipment into inventory" end
+    return true
 end
 
 function taken(state, item)
-    if not locked(state, item) then return true end
+    if not pickup_locked(state, item) then return equipped(state,item) end
     local ok = pcall(function() db.actor:drop_item(item) end)
     if not ok then return false, "Cannot return AP-locked equipment to the ground" end
     return false, "This equipment group requires its Archipelago unlock"
@@ -52,9 +83,20 @@ end
 
 function poll(state)
     if not state.configuration or not state.configuration.expanded then return true end
+    if state.configuration.options.rewards_starting_gear_unlocks == 1 then
+        local ok,reason = pcall(function()
+            for slot=1,13 do
+                local item = db.actor:item_in_slot(slot)
+                local stowed,problem = equipped(state,item)
+                if not stowed then error(problem) end
+            end
+        end)
+        if not ok then return false,"Cannot enforce AP equipment permissions; slot inspection or stowing failed" end
+    end
+    if state.configuration.options.rewards_progression_stashes ~= 1 then return true end
     local blocked = {}
     db.actor:iterate_inventory(function(_,item)
-        if #blocked < 32 and locked(state, item) then blocked[#blocked+1] = item end
+        if #blocked < 32 and pickup_locked(state, item) then blocked[#blocked+1] = item end
     end, db.actor)
     if #blocked == 0 then return true end
     for _,item in ipairs(blocked) do

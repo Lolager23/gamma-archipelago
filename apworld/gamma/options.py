@@ -309,7 +309,11 @@ class RandomStartingUnlock(Toggle):
 
 
 class StartingGear(Choice):
-    """Normal equipment, absent initially, or unavailable until its AP unlock."""
+    """Normal gear, absent initially, or omitted with an AP equip/use lock.
+
+    AP-locked gear found later can be carried and traded. Its permission is
+    required to equip or use it; the reward still grants baseline equipment.
+    """
 
     display_name = "Starting equipment mode"
     option_normal = 0

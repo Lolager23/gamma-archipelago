@@ -132,6 +132,7 @@ function copy_plan(plan)
 end
 
 function pda_available(state)
+    if state.starting_pda_mode == 2 and not state.unlocks.gear_pda then return false end
     if not state.starting_pda_mode or state.starting_pda_mode == 0 then return true end
     local found = false
     db.actor:iterate_inventory(function(_, object)

@@ -39,7 +39,7 @@ export function loadoutOptions(metadata, options, change) {
       const label = element("label", title(key));
       const select = document.createElement("select");
       select.dataset.option = key;
-      ["Normal starting gear", "Absent at start", "AP locked"].forEach(
+      ["Normal starting gear", "Absent at start", "AP equip/use lock"].forEach(
         (name, index) => {
           select.add(new Option(name, index));
         },

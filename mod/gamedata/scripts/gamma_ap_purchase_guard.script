@@ -23,7 +23,7 @@ function install(get_state)
                     warn(window,game.translate_string("gamma_ap_purchase_unavailable"))
                     return false
                 end
-                if gamma_ap_gear_locks.locked(state,item) then
+                if gamma_ap_gear_locks.pickup_locked(state,item) then
                     warn(window,game.translate_string("gamma_ap_purchase_locked"))
                     return false
                 end
