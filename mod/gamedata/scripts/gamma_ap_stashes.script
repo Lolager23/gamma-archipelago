@@ -166,7 +166,6 @@ local function fill_record(state, record, box, budget)
 end
 
 function open(state, box, who)
-    if not gamma_ap_loadout.pda_available(state) then return true end
     if state.refused_save or not state.session_key or not state.expanded or #state.stashes.order == 0
         or not db.actor or not db.actor:alive() or not box or not who
         or who:id() ~= db.actor:id() then return true end

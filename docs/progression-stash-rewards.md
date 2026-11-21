@@ -27,3 +27,8 @@ selection, wrong-box refusal, failed creation, actor ownership, marker removal,
 reload, solver event access and excluding events from network manifests. Lua
 branch coverage is not measured. Engine geometry, orange rendering and native
 psi effects are not run; Owen will verify after merge. No game was launched.
+
+
+Physical interaction and the local AP claim require no PDA. A player who knows
+where the recorded cache is can claim the received coordinates directly; PDA
+information access remains separate. Existing pending plans resume without a reset.

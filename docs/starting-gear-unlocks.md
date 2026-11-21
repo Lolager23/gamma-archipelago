@@ -18,9 +18,9 @@ A delegating wrapper clears stale flags before each new dispatch, so one denied
 locked pickup cannot block later allowed items. Vetoes from other mods in the
 current dispatch remain intact. Locked seeds refuse an unavailable pickup hook.
 
-PDA notices remain queued without a device. Local stash opening also requires
-an available PDA, and the solver's protected cache claim requires the PDA unlock
-when AP-locked. A permission cannot be hidden behind that same local stash claim.
+PDA information and tracker access use device availability. Physical AP stash
+opening and the solver's local protected claim do not require a PDA; they require
+the received coordinate plan and the recorded native container instead.
 The generic pool-size guard rejects required permissions exceeding network checks.
 The later balance matrix tightens other equipment-dependent activity rules.
 

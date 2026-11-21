@@ -76,7 +76,7 @@ refreshes a box on its next UI frame, so that refresh can happen before any AP
 loot exists. Creation now runs in the same use event, matching the inspected
 native treasure manager's timing. It does not prefill unopened boxes for NPCs to
 scavenge, replace the native treasure manager or alter native loot/markers.
-Identity, PDA availability, live actor and marker readiness are checked before
+Identity, live actor and marker readiness are checked before
 creation. Saved plans, completed action identities and uncertain-result stops
 remain authoritative. Previously opened but unfinished stashes resume on use;
 objects already recorded as created are never automatically replaced or duplicated.
@@ -96,3 +96,25 @@ refuse invalid containers and capability failures, and preserve saved delivery
 identities across reload. Other tests check DDS format, six colours, alpha, XML
 resolution, byte-preserving packaging and rejection of foreign/corrupt textures.
 Native rendering and stash interaction acceptance remain **not run**, for Owen.
+
+
+## Physical stash access without a PDA
+
+The native chimney container was confirmed as a pending AP ammunition-stash plan.
+The save retained `opened=false`, `next_action=1` and no created object identities.
+The earlier adapter silently skipped every stash use when no physical PDA was
+available, even though coordinates had already been received. This artificial
+condition could present a valid marked stash as empty.
+
+Physical stash interaction now requires the saved coordinate plan and matching
+container, but no PDA. Both ordinary packages and the protected psi-helmet claim
+use the same rule. AP generation likewise removes the PDA permission from its
+local Cordon psi-stash event; coordinate receipt and regional reachability remain
+required. The PDA information/tracker and task equipment gates remain separate.
+
+Existing unopened plans fill on the next valid use, before the loot UI refresh.
+No seed reset, save edit, receipt replay, forced replacement or reroll is used.
+Created identities, uncertain-result stops, live-actor checks and marker readiness
+remain enforced. Regressions reproduce the chimney package with a locked/absent
+PDA, protected delivery, save/reload and duplicate-use prevention. Native acceptance
+is **not run**, reserved for Owen; private save evidence stays outside Git.

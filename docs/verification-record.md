@@ -1,5 +1,15 @@
 # Verification record
 
+## 21 November 2026 — physical stash access without a PDA
+
+A read-only inspection confirmed a pending unopened chimney-stash package with
+no objects recorded as created. The stash-use adapter had a silent physical-PDA
+prerequisite. Removed that artificial gate and its corresponding local AP psi-claim
+requirement. Existing plans/receipts and created identities are preserved; no save
+editing or reset is needed. Exact-head automated evidence belongs to the separate
+fix PR; native reopening/loot UI acceptance is **not run**, reserved for Owen.
+
+
 ## 21 November 2026 — generic discovery tails and seeded starting permission
 
 Added configurable filler-only final mutant/artefact quota checks, pre-fill budget
