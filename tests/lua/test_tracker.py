@@ -99,6 +99,9 @@ def test_zone_and_psi_reasons_and_undirected_route_match_world_connections(lua):
         ("checks_armour_tiers", "outfit"),
         ("checks_weapon_tiers", "firearms"),
         ("checks_knife_tiers", "melee"),
+        ("checks_quest_types", "pda"),
+        ("checks_side_task_milestones", "pda"),
+        ("checks_story_milestones", "pda"),
     ],
 )
 def test_equipment_requirements_are_explained_then_clear_after_actual_unlock(lua, category, group):

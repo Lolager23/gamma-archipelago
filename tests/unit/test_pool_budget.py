@@ -118,7 +118,7 @@ def test_settings_metadata_covers_every_bounded_option_and_roster():
         if row["choices"] is not None:
             assert len(row["choices"]) == row["maximum"] + 1
         else:
-            assert row["key"].endswith("_discovery_count")
+            assert row["key"].endswith(("_discovery_count", "_filler_tail"))
 
 
 @pytest.mark.parametrize(

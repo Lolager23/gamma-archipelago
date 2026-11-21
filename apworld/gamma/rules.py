@@ -55,6 +55,12 @@ def apply_access_rules(world: "GammaWorld", catalog: dict[str, Any]) -> None:
         required = []
         if category in {"checks_artefacts"}:
             required.append("detector")
+        if category in {
+            "checks_quest_types",
+            "checks_side_task_milestones",
+            "checks_story_milestones",
+        }:
+            required.append("pda")
         if category == "checks_armour_tiers":
             required.append("outfit")
         if category == "checks_weapon_tiers":

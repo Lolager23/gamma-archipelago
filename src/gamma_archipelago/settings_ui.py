@@ -5,6 +5,10 @@ from .expansion_settings import EXPANSION_LIMITS
 CHOICES = {
     "ap_start": ["Legacy seed", "Archipelago start required"],
     "starting_faction": ["Free Stalkers"],
+    "random_starting_unlock": [
+        "No random starting permission",
+        "One random locked PDA, firearm or detector",
+    ],
     "starting_location": [
         "Rookie Village",
         "Clear Sky Base",

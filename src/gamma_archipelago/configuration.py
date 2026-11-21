@@ -282,6 +282,12 @@ def build_configuration(values: Mapping[str, object]) -> SeedConfiguration:
         raise ConfigurationError(
             "Starting gear rewards require at least one AP-locked starting group"
         )
+    if values["random_starting_unlock"] and not any(
+        gear["starting_" + group] == 2 for group in ("pda", "firearms", "detector")
+    ):
+        raise ConfigurationError(
+            "Random starting unlock needs an AP-locked PDA, firearms or detector"
+        )
     quantities = tuple((name, _integer(values, name, 100)) for name in QUANTITY_OPTIONS)
     try:
         exclusions = normalize_exclusions(values["discovery_exclusions"])
@@ -325,7 +331,16 @@ def encode_configuration(
         elif isinstance(value, list):
             lines.extend(f"threshold|{name}|{number}" for number in value)
         elif (
-            name in {"checks_shop_purchases", "ap_start", "starting_faction", "starting_location"}
+            name
+            in {
+                "checks_shop_purchases",
+                "ap_start",
+                "starting_faction",
+                "starting_location",
+                "random_starting_unlock",
+                "mutant_filler_tail",
+                "artefact_filler_tail",
+            }
             and value == 0
         ):
             continue  # Disabled additions retain the previous add-on's wire format.

@@ -64,6 +64,11 @@ def test_two_gamma_slots_and_foreign_game_transfer_restart_and_each_goal(
     if expansion_case:
         values.update(
             rewards_convenience=1,
+            random_starting_unlock=1,
+            mutant_discovery_mode=1,
+            artefact_discovery_mode=1,
+            mutant_filler_tail=5,
+            artefact_filler_tail=5,
             rewards_supply_ammunition=1,
             supply_ammo_calibre=4,
             mutant_discovery_count=15,

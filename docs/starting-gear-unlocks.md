@@ -30,3 +30,28 @@ failed dropping, saved permissions, baseline failures/uncertainty and PDA solver
 access. Lua executable lines measure 100%; Lua branch coverage is not measured.
 Actual inventory/UI enforcement and animations are not run, reserved for Owen.
 No game launch, deployment or protected-root changes occurred.
+
+
+## Random starting permission and activity logic
+
+`random_starting_unlock` optionally grants one seed-random permission among the
+AP-locked PDA, Firearms and Detector groups. Normal/omission-only groups and
+permissions already requested through common AP starting inventory are skipped.
+If every eligible lock is already precollected, there is no duplicate grant; no
+eligible configured lock is an error. Firearms is the existing permission and
+baseline weapon, not a new progressive weapon system.
+
+The world precollects the selected item before pool construction. The shared pool
+budget removes its mandatory network copy, and schema-4 generation identity binds
+the actual starting gift. CommonClient delivers it through normal ordered starting
+receipts; the game retains its permission/baseline failure and saving rules. A fresh
+seed and character are required. The settings preview does not roll: it validates
+all possible gifts, lists their budgets separately and shows the most demanding
+remaining protected opening. Actual-seed reports contain the resolved gift.
+
+AP rules and PDA blocked reasons now also require a locked PDA permission for
+quest-type, side-task and story-milestone checks. Detector/artefact checks, firearm
+and melee/kill alternatives, armour/weapon/knife checks, strict combat assumptions,
+and workshop/tools gates retain their matching requirements. Normal or merely
+omitted gear does not demand an AP unlock. Old generated placements are not refilled;
+regenerate a seed to use corrected placement logic. Completed checks stay monotonic.
