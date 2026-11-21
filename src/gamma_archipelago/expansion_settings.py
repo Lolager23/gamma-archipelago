@@ -1,6 +1,7 @@
 """Additional bounded settings; legacy values preserve pre-expansion seed identities."""
 
 EXPANSION_LIMITS = {
+    "playability_logic": 1,
     "settlement_reputation_logic": 1,
     "ap_start": 1,
     "starting_faction": 0,

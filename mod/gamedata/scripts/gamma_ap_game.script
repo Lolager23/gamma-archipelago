@@ -405,7 +405,7 @@ end
 
 function shop_view()
     local view = gamma_ap_shop.snapshot(state)
-    if #view.rows>0 and state.configuration and (state.configuration.options.scouting_mode or 0)>0 then
+    if #view.rows>0 and state.configuration and ((state.configuration.options.scouting_mode or 0)>0 or state.configuration.options.playability_logic == 1) then
         local scouting = gamma_ap_scouting.view(state,time_global())
         for _,row in ipairs(view.rows) do row.reward = scouting.rewards[row.id] end
     end

@@ -178,7 +178,7 @@ def test_task_categories_generate_independently_with_stable_custom_thresholds(ca
 def test_equipment_categories_generate_independently(category, count):
     multiworld = setup_multiworld(GammaWorld, seed=12, options={"checks_maps": 0, category: 1})
     distribute_items_restrictive(multiworld)
-    assert len(multiworld.get_locations()) == count
+    assert len([loc for loc in multiworld.get_locations() if loc.address]) == count
     assert all(location.item for location in multiworld.get_locations())
     assert multiworld.can_beat_game()
 

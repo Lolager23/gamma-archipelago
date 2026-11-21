@@ -17,7 +17,7 @@ local function definition(id)
     local base = task and gamma_ap_catalog.side_task_milestone_base or gamma_ap_catalog.kill_milestone_base
     local category = task and "checks_side_task_milestones" or "checks_kill_milestones"
     return {name=gamma_ap_catalog.tracker_milestones[category]:gsub("{count}",tostring(id-base)),
-        region="Menu", category=category, quests={}}
+        region="Menu", category=category, minimum=id-base, quests={}}
 end
 
 local function level_allowed(state, where, psi)
@@ -49,6 +49,8 @@ local function blocked(state, row, regions, psi, id, standing)
     end
     local accessible,reliable = gamma_ap_activity.available(state,row,regions,id)
     if not accessible then return "Regional activity: reach the required source regions or more distinct source types" end
+    local practical = gamma_ap_playability.reason(state,row,regions,psi)
+    if practical then return practical end
     local diplomacy,optional = gamma_ap_settlement_access.reason(state,id,standing)
     if diplomacy then return diplomacy end
     if config.rewards_progressive_tools == 1 and row.category == "checks_gear_upgrades"

@@ -9,8 +9,10 @@ from importlib.resources import files
 from .activity_requirements import unreliable_check_ids
 from .catalog import MAX_ITEMS, enabled_item_ids
 from .configuration import SeedConfiguration
-from .discovery import MISSABLE_IDS, configured_location_ids, protected_tail_ids
+from .discovery import configured_location_ids, protected_tail_ids
 from .opening import opening_checks, opening_permissions
+from .playability import fragile_ids
+from .playability import protected as practical_protected
 from .settlement_access import protected_settlements, required_reputation
 from .starting import starting_level
 
@@ -87,13 +89,20 @@ def budget_pool(
             required[name] = max(0, row.get("copies", 1) - gifts[name])
     for name, count in required_reputation(configuration, check_ids).items():
         required[name] = max(0, count - gifts[name])
+    if (
+        configuration.option("playability_logic")
+        and "rewards_faction_reputation" in configuration.rewards
+        and configuration.checks & {"checks_rank_milestones", "checks_faction_standing"}
+    ):
+        required["Faction Goodwill: stalker"] = max(0, 12 - gifts["Faction Goodwill: stalker"])
     if configuration.option("optional_check_policy") == 0:
-        excluded = excluded | (MISSABLE_IDS & check_ids)
+        excluded = excluded | (fragile_ids(configuration) & check_ids)
     excluded = (
         excluded
         | protected_tail_ids(configuration, check_ids)
         | (unreliable_check_ids(configuration) & check_ids)
         | (protected_settlements(configuration) & check_ids)
+        | (practical_protected(configuration) & check_ids)
     )
     slots, eligible = len(check_ids), len(check_ids - excluded)
     remaining_required = sum(max(0, count - depleted[name]) for name, count in required.items())

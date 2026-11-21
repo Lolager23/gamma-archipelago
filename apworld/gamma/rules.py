@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING, Any
 from BaseClasses import CollectionState
 
 from gamma_archipelago.activity_requirements import regional_requirement
+from gamma_archipelago.playability import allowed
 from gamma_archipelago.settlement_access import requirement
 from gamma_archipelago.starting import starting_level
 
@@ -56,6 +57,8 @@ def apply_access_rules(world: "GammaWorld", catalog: dict[str, Any]) -> None:
                     if location.address < 28120000
                     else "checks_side_task_milestones",
                     "level": "Menu",
+                    "minimum": location.address
+                    - (28100000 if location.address < 28120000 else 28120000),
                 }
         category = definition["category"]
         required = []
@@ -125,6 +128,7 @@ def apply_access_rules(world: "GammaWorld", catalog: dict[str, Any]) -> None:
             tools=tools,
             earning=earning,
             settlement=settlement,
+            definition=definition,
         ):
             weapon = (
                 gear["starting_firearms"] != 2
@@ -134,6 +138,12 @@ def apply_access_rules(world: "GammaWorld", catalog: dict[str, Any]) -> None:
             )
             return (
                 prior(state)
+                and allowed(
+                    world.configuration,
+                    definition,
+                    lambda name: state.count(name, player),
+                    lambda level: state.can_reach_region(level, player),
+                )
                 and (settlement is None or state.has(settlement.name, player, settlement.copies))
                 and (not tools or state.has("Progressive Tools", player, 3))
                 and all(state.has(name, player) for name in items)

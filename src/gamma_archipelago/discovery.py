@@ -5,6 +5,7 @@ from importlib.resources import files
 from typing import TYPE_CHECKING
 
 from .catalog import enabled_location_ids
+from .playability import fragile_ids
 
 if TYPE_CHECKING:
     from .configuration import SeedConfiguration
@@ -62,7 +63,7 @@ def configured_location_ids(configuration: "SeedConfiguration") -> frozenset[int
         else:
             ids.update(roster[token] for token in qualifying)
     if configuration.option("optional_check_policy") == 1:
-        ids.difference_update(MISSABLE_IDS)
+        ids.difference_update(fragile_ids(configuration))
     protected_tail_ids(configuration, frozenset(ids))
     if not ids:
         raise ValueError("The configured exclusions leave no checks")

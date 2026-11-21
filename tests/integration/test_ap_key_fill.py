@@ -80,7 +80,7 @@ def test_hub_preference_requests_upstream_early_item_without_fixed_location(gift
             for name, count in multiworld.early_items[1].items()
             if name.startswith("Equipment Unlock:")
         )
-        == 1
+        == 0  # The enabled cheap AP shop is now an initially viable activity.
     )
     assert all(item.location is None for item in zone_items(multiworld))
     distribute_items_restrictive(multiworld)

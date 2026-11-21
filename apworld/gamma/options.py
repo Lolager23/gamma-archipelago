@@ -14,6 +14,12 @@ from Options import (
 )
 
 
+class PlayabilityLogic(DefaultOnToggle):
+    """Limit knife grind, model AP goodwill and keep equipment permissions early."""
+
+    display_name = "Playability and early equipment logic"
+
+
 class ChecksMaps(DefaultOnToggle):
     """Enable maps checks."""
 
@@ -476,6 +482,7 @@ class OptionalCheckPolicy(Choice):
 
 @dataclass
 class GammaOptions(PerGameCommonOptions):
+    playability_logic: PlayabilityLogic
     settlement_reputation_logic: SettlementReputationLogic
     ap_start: ArchipelagoStart
     starting_faction: StartingFaction

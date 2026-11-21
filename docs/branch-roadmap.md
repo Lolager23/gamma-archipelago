@@ -113,3 +113,11 @@ It changes no live configuration or installed game; native acceptance stays with
 gate supported hostile settlements through budgeted reputation, protect unsupported
 routes, mirror native/PDA eligibility and preserve legacy seed interpretation.
 Keep the current session, installed panel and normal game untouched; no deployment.
+
+## Practical progression expansion
+
+The [playability expansion](playability-expansion.md) records the next three
+stacked increments after #69: practical combat/rank/equipment and paid shops;
+weather/story/tools/artefacts and optional stamina; then reward quantities and
+step analysis in the generator. Each has its own PR and exact-head evidence.
+Current game/session files remain unchanged and native acceptance stays with Owen.

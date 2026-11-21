@@ -97,6 +97,16 @@ class GammaWorld(World):
             and self.options.rewards_faction_reputation.value
         ):
             classification = ItemClassification.progression
+        if (
+            self.options.playability_logic.value
+            and self.options.rewards_faction_reputation.value
+            and (
+                self.options.checks_rank_milestones.value
+                or self.options.checks_faction_standing.value
+            )
+            and definition.get("effect") == "reputation"
+        ):
+            classification = ItemClassification.progression
         return GammaItem(name, classification, definition["id"], self.player)
 
     def create_regions(self) -> None:
@@ -131,16 +141,22 @@ class GammaWorld(World):
         protected = protected_tail_ids(self.configuration, allowed) | unreliable_check_ids(
             self.configuration
         )
+        from gamma_archipelago.playability import fragile_ids
+        from gamma_archipelago.playability import protected as practical_protected
         from gamma_archipelago.settlement_access import protected_settlements
 
-        protected |= protected_settlements(self.configuration)
+        protected |= protected_settlements(self.configuration) | practical_protected(
+            self.configuration
+        )
+        fragile = fragile_ids(self.configuration)
         for location in _catalog["locations"]:
             if location["id"] not in allowed:
                 continue
             region = regions.get(location["level"], menu)
             check = GammaLocation(self.player, location["name"], location["id"], region)
             if location["id"] in protected or (
-                location.get("missable") and self.configuration.option("optional_check_policy") == 0
+                location["id"] in fragile
+                and self.configuration.option("optional_check_policy") == 0
             ):
                 check.progress_type = LocationProgressType.EXCLUDED
             if location.get("tasks") and "rewards_quest_keys" in self.configuration.rewards:
@@ -184,6 +200,9 @@ class GammaWorld(World):
 
     def set_rules(self) -> None:
         apply_access_rules(self, _catalog)
+        from .playability import restrict_placements
+
+        restrict_placements(self, _catalog)
         set_goal_rule(self, _catalog)
 
     def pre_fill(self) -> None:

@@ -39,7 +39,16 @@ async def poll(context: "GammaContext") -> None:
         else frozenset()
     )
     previews = preview_locations(context) if configuration.option("reward_previews") else set()
-    wanted = set(requested) | previews
+    shops = (
+        {
+            identity
+            for identity in session.allowed_locations
+            if LOCATION_CATEGORIES.get(identity) == "checks_shop_purchases"
+        }
+        if configuration.option("playability_logic")
+        else set()
+    )
+    wanted = set(requested) | previews | shops
     hinting = configuration.option("scouting_mode") == 2
     for hint in (False, True):
         batch = sorted(

@@ -285,8 +285,9 @@ def test_invalid_native_trader_identity_cannot_expose_a_purchase(lua, identity):
 
 
 @pytest.mark.parametrize("mode", [0, 1, 2])
-def test_shop_reward_details_respect_the_seed_scouting_option(lua, mode):
-    game, _ = shop_game(lua, scouting_mode=mode)
+@pytest.mark.parametrize("new_logic", [0, 1])
+def test_shop_reward_details_respect_the_seed_scouting_option(lua, mode, new_logic):
+    game, _ = shop_game(lua, scouting_mode=mode, playability_logic=new_logic)
     lua.execute("""
         scout_reads=0
         gamma_ap_scouting.view=function()
@@ -295,9 +296,9 @@ def test_shop_reward_details_respect_the_seed_scouting_option(lua, mode):
         end
     """)
     row = game.shop_view().rows[1]
-    assert lua.globals().scout_reads == (0 if mode == 0 else 1)
-    assert (row.reward is not None) == (mode > 0)
-    if mode:
+    assert lua.globals().scout_reads == (1 if mode or new_logic else 0)
+    assert (row.reward is not None) == bool(mode or new_logic)
+    if mode or new_logic:
         assert row.reward.item == "Foreign Key" and row.reward.player == "Friend"
 
 
