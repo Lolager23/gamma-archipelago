@@ -11,6 +11,7 @@ from .catalog import MAX_ITEMS, enabled_item_ids
 from .configuration import SeedConfiguration
 from .discovery import MISSABLE_IDS, configured_location_ids, protected_tail_ids
 from .opening import opening_checks, opening_permissions
+from .settlement_access import protected_settlements, required_reputation
 from .starting import starting_level
 
 _catalog = json.loads(files("gamma_archipelago").joinpath("catalog.json").read_text("utf-8"))
@@ -84,12 +85,15 @@ def budget_pool(
             ):
                 continue  # The chosen starting zone is always accessible.
             required[name] = max(0, row.get("copies", 1) - gifts[name])
+    for name, count in required_reputation(configuration, check_ids).items():
+        required[name] = max(0, count - gifts[name])
     if configuration.option("optional_check_policy") == 0:
         excluded = excluded | (MISSABLE_IDS & check_ids)
     excluded = (
         excluded
         | protected_tail_ids(configuration, check_ids)
         | (unreliable_check_ids(configuration) & check_ids)
+        | (protected_settlements(configuration) & check_ids)
     )
     slots, eligible = len(check_ids), len(check_ids - excluded)
     remaining_required = sum(max(0, count - depleted[name]) for name, count in required.items())

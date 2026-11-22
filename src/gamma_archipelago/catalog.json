@@ -1480,7 +1480,8 @@
       "smarts": [
         "esc_smart_terrain_3_16"
       ],
-      "radius_metres": 50
+      "radius_metres": 50,
+      "hostile_settlement_faction": "army"
     },
     {
       "id": 28052104,
@@ -1510,7 +1511,8 @@
       "smarts": [
         "agr_smart_terrain_1_6"
       ],
-      "radius_metres": 50
+      "radius_metres": 50,
+      "hostile_settlement_faction": "army"
     },
     {
       "id": 28052107,
@@ -1530,7 +1532,8 @@
       "smarts": [
         "val_smart_terrain_7_4"
       ],
-      "radius_metres": 50
+      "radius_metres": 50,
+      "hostile_settlement_faction": "bandit"
     },
     {
       "id": 28052109,
@@ -1572,7 +1575,8 @@
       "smarts": [
         "cit_killers"
       ],
-      "radius_metres": 50
+      "radius_metres": 50,
+      "hostile_settlement_faction": "killer"
     },
     {
       "id": 28052113,
@@ -1582,7 +1586,8 @@
       "smarts": [
         "red_smart_terrain_3_2"
       ],
-      "radius_metres": 50
+      "radius_metres": 50,
+      "hostile_settlement_faction": "greh"
     },
     {
       "id": 28052114,
@@ -1592,7 +1597,8 @@
       "smarts": [
         "pri_monolith"
       ],
-      "radius_metres": 50
+      "radius_metres": 50,
+      "hostile_settlement_faction": "monolith"
     },
     {
       "id": 28052115,
@@ -8303,5 +8309,36 @@
   "story_goal_checks": {
     "Conclude Strelok's First Conversation": 28052611,
     "Return After Living Legend": 28052621
+  },
+  "settlement_relations": {
+    "neutral_threshold": -999,
+    "starting_goodwill": 0,
+    "factions": {
+      "army": {
+        "label": "Military",
+        "relation": -2000,
+        "reward": 28051307
+      },
+      "bandit": {
+        "label": "Bandits",
+        "relation": -2000,
+        "reward": 28051308
+      },
+      "killer": {
+        "label": "Mercenaries",
+        "relation": -2000,
+        "reward": 28051306
+      },
+      "greh": {
+        "label": "Sin",
+        "relation": -2000,
+        "reward": 0
+      },
+      "monolith": {
+        "label": "Monolith",
+        "relation": -2000,
+        "reward": 0
+      }
+    }
   }
 }

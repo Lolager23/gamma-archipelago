@@ -86,8 +86,17 @@ class GammaWorld(World):
             raise OptionError(str(error)) from error
 
     def create_item(self, name: str) -> GammaItem:
+        from gamma_archipelago.settlement_access import NEUTRALITY_ITEMS
+
         definition = next(item for item in _catalog["items"] if item["name"] == name)
         classification = getattr(ItemClassification, definition["classification"])
+        if (
+            name in NEUTRALITY_ITEMS
+            and self.options.settlement_reputation_logic.value
+            and self.options.checks_settlements.value
+            and self.options.rewards_faction_reputation.value
+        ):
+            classification = ItemClassification.progression
         return GammaItem(name, classification, definition["id"], self.player)
 
     def create_regions(self) -> None:
@@ -122,6 +131,9 @@ class GammaWorld(World):
         protected = protected_tail_ids(self.configuration, allowed) | unreliable_check_ids(
             self.configuration
         )
+        from gamma_archipelago.settlement_access import protected_settlements
+
+        protected |= protected_settlements(self.configuration)
         for location in _catalog["locations"]:
             if location["id"] not in allowed:
                 continue
@@ -175,8 +187,11 @@ class GammaWorld(World):
         set_goal_rule(self, _catalog)
 
     def pre_fill(self) -> None:
+        from .settlement_fill import request_neutrality_opener
+
         place_opening(self, _catalog)
         request_activity_opener(self, _catalog)
+        request_neutrality_opener(self)
         place_zone_keys(self, _catalog)
         prefer_early_hub(self, _catalog)
 

@@ -88,6 +88,7 @@
     ],
     "zone_unlock_travel": 1,
     "pda_tracker": 1,
-    "discovery_exclusions": []
+    "discovery_exclusions": [],
+    "settlement_reputation_logic": 1
   }
 }

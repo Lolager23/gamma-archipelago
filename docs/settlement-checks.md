@@ -11,6 +11,11 @@ Rostok, Freedom Base, Sakharov Bunker, Mercenary Base, Sin Mine Barracks,
 Monolith Cultural Center, Skadovsk, Yanov Station, Hermann Bunker and Laundromat.
 Faction hostility does not silently remove a hub from the generated roster.
 
+New generations apply [settlement reputation access](settlement-reputation.md):
+supported hostile bases require neutrality, and unsupported routes are filler-only.
+All eighteen published checks remain in the roster. Legacy configurations retain
+their original entry behaviour through the default-zero compatibility setting.
+
 Entry uses Anomaly's `actor_on_interaction("smarts", object, name)` callback.
 In the inspected `smart_terrain.script`, the online smart terrain calculates its
 distance from the actor and emits this event at 50 metres or less. The add-on

@@ -35,9 +35,18 @@ class RegionalRequirement:
     reliable: bool = True
 
     def accessible(self, reachable: Callable[[str], bool]) -> bool:
+        # A single view can reference one region through many source types.
+        # Keep this cache local: AP state can change before the next query.
+        known: dict[str, bool] = {}
+
+        def available(region: str) -> bool:
+            if region not in known:
+                known[region] = reachable(region)
+            return known[region]
+
         return (
-            all(reachable(region) for region in self.all_regions)
-            and sum(any(reachable(region) for region in source) for source in self.sources)
+            all(available(region) for region in self.all_regions)
+            and sum(any(available(region) for region in source) for source in self.sources)
             >= self.minimum
         )
 

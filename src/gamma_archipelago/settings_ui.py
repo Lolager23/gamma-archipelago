@@ -3,6 +3,10 @@
 from .expansion_settings import EXPANSION_LIMITS
 
 CHOICES = {
+    "settlement_reputation_logic": [
+        "Legacy settlement access",
+        "Require neutral hostile settlements",
+    ],
     "ap_start": ["Legacy seed", "Archipelago start required"],
     "starting_faction": ["Free Stalkers"],
     "random_starting_unlock": [

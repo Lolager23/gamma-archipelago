@@ -108,3 +108,8 @@ or native game launch is part of this PR; Owen owns native acceptance.
 APWorld generations and planner presets to generic distinct mutant/faction kills
 and artefacts while retaining named-type options, legacy settings and identities.
 It changes no live configuration or installed game; native acceptance stays with Owen.
+
+`codex/settlement-reputation-logic` stacks on #68. Review Free Stalker hostility,
+gate supported hostile settlements through budgeted reputation, protect unsupported
+routes, mirror native/PDA eligibility and preserve legacy seed interpretation.
+Keep the current session, installed panel and normal game untouched; no deployment.

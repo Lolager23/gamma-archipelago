@@ -45,7 +45,9 @@ player itinerary. Actual encounter order can differ and native testing is not ru
 These historical samples use named-type discoveries. To reproduce them after the
 generic-default change, explicitly set `mutant_discovery_mode`,
 `faction_discovery_mode` and `artefact_discovery_mode` to `per_type` (`0`) on the
-`full_story` preset, without custom plando, early-item changes or spoilers, using
+`full_story` preset and disable `settlement_reputation_logic` (`0`) to retain the
+historical settlement policy. Generate
+without custom plando, early-item changes or spoilers, using
 each seed below. Run the full verifier separately; these ten
 samples supplement its deterministic matrices and server tests.
 

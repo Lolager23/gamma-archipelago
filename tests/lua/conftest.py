@@ -51,6 +51,7 @@ def lua():
         "shop_ui",
         "state",
         "settlements",
+        "settlement_access",
         "notice_text",
         "readiness",
         "notifications",

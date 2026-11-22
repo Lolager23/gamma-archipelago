@@ -1,5 +1,41 @@
 # Verification record
 
+## 21 November 2026 — hostile settlement reputation
+
+Reviewed all 18 settlement checks against effective GAMMA relations, initial
+squads and profile overrides. Four hostile checks now require supported neutral
+standing: Southern Checkpoint and Agroprom Research Institute share Military's
+five rewards; Bandit Base and Mercenary Base each require five of their own.
+Sin Mine Barracks and Monolith Cultural Center are filler-only because there is
+no supported goodwill reward route. Disabling faction rewards protects all six.
+The other twelve settlements remain ungated; Ecologist guards and neutral trader
+profiles are distinguished from misleading military/mercenary names. See the
+[review, thresholds and primary sources](settlement-reputation.md).
+
+Owen selected a permanent AP-earned personal goodwill floor. It derives from
+validated applied receipts, restores later losses offline and before entry, and
+preserves higher natural standing. It changes neither faction alliances nor NPC
+grudges. Mandatory quotas are budgeted before optional rewards; sparse pools use
+a bounded upstream early request. Repeated regional lookups are cached only for
+one evaluation. Legacy omitted settings retain value zero and their old digest;
+new generations default on and require a coordinated bundle upgrade.
+
+Complete verifier passed 1,542 covered regressions, 73 untraced generation/server
+cases and seven Node tests (1,622 total), including the 9,000-seed preset matrix
+and 30 Full Story plus 30 settlement-only neutrality fills. Owned Python measured
+line/branch coverage is 100%. Every Lua executable-line gate passed; Lua branch
+coverage is not claimed.
+All 111 private developer-panel checks passed with unchanged panel code/payload.
+Only the scratch QA fixture selects legacy defaults for installed-core cases;
+source-core cases retain new defaults. Original panel files were not edited.
+Exact-head Windows/Linux CI and package parity belong to the PR evidence.
+
+This source increment stacks on PR #68. Native acceptance is **not run**, reserved
+for Owen, including four/five rewards, combat loss, save/reload and forced-hostile
+NPC exceptions. No game launch, deployment or session reset occurred. The installed
+mod, private panel, session pointers/configuration and seed archive hashes remain
+unchanged; the current session and normal game are untouched.
+
 ## 21 November 2026 — generic discovery defaults
 
 New APWorld YAML defaults, fresh planner presets and all nine checked-in preset

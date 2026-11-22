@@ -117,6 +117,8 @@ function actor_on_update()
     local carried,carry_error = gamma_ap_convenience.poll(state)
     if not carried then report_error(carry_error); return end
     if state.refused_save then report_error("AP save is refused; restore a valid backup"); return end
+    local reputation_ready,reputation_error = gamma_ap_reputation.reconcile(state)
+    if not reputation_ready then report_error(reputation_error); return end
     local incoming, reason = read_incoming()
     if not incoming then report_error(reason); return end
     local configuration, configuration_error = read_configuration(incoming)
@@ -191,7 +193,12 @@ end
 
 function actor_on_interaction(kind, object, name)
     if not db.actor or not db.actor:alive() then return end
-    gamma_ap_settlements.observe(state, kind, object, name, level.name())
+    if kind == "smarts" then
+        local restored,problem = gamma_ap_reputation.reconcile(state)
+        if not restored then report_error(problem); return end
+    end
+    local ok,reason = gamma_ap_settlements.observe(state, kind, object, name, level.name())
+    if ok == false then last_error = reason end
 end
 
 function actor_on_leave_dialog(npc_id)
@@ -375,7 +382,8 @@ function tracker_view()
         local helmet = db.actor:object("good_psy_helmet")
         return helmet ~= nil and helmet:condition() > 0 and helmet:condition() <= 1
     end)
-    local view = gamma_ap_tracker.snapshot(state,known_receipts,last_error,ok and psi)
+    local standing = gamma_ap_settlement_access.standing(state)
+    local view = gamma_ap_tracker.snapshot(state,known_receipts,last_error,ok and psi,standing)
     local scouting = gamma_ap_scouting.view(state,time_global())
     view.scouted,view.connection_status = scouting.rewards,scouting.status
     view.previews = gamma_ap_scouting.previews(state)
