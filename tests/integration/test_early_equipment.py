@@ -24,6 +24,7 @@ def test_equipment_and_workshops_arrive_in_three_low_grind_spheres_without_zone_
         if row.item.name.startswith(("Equipment Unlock:", "Workshop Access:"))
     ]
     assert len(selected) == 12
+    assert not any(row.name.startswith("Reach Stalker Rank:") for row in selected)
     state = CollectionState(multi)
     for _ in range(3):
         accessible = [row for row in selected if row.can_reach(state)]

@@ -133,12 +133,16 @@ def allowed(
 
 
 def protected(configuration: "SeedConfiguration") -> frozenset[int]:
+    # Native rank is a grind, even when AP goodwill makes it logically available.
+    ranks = frozenset(
+        row["id"] for row in _catalog["locations"] if row["category"] == "checks_rank_milestones"
+    )
     if (
         not configuration.option("playability_logic")
         or "rewards_faction_reputation" in configuration.rewards
     ):
-        return frozenset()
-    return frozenset(row["id"] for row in _catalog["locations"] if goodwill_required(row))
+        return ranks
+    return ranks | frozenset(row["id"] for row in _catalog["locations"] if goodwill_required(row))
 
 
 def fragile_ids(configuration: "SeedConfiguration") -> frozenset[int]:

@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, Any
 from BaseClasses import CollectionState, LocationProgressType
 from Options import OptionError
 
-from gamma_archipelago.catalog import KILL_MILESTONE_BASE, MAP_LOCATIONS, SIDE_TASK_MILESTONE_BASE
+from gamma_archipelago.catalog import KILL_MILESTONE_BASE, SIDE_TASK_MILESTONE_BASE
 from gamma_archipelago.playability import EARLY_REWARD_CATEGORIES, early_check
 from gamma_archipelago.starting import starting_level
 
@@ -83,10 +83,6 @@ def _place_local(world: "GammaWorld", catalog: dict[str, Any], items: list) -> N
         if row.address is not None
         and row.progress_type != LocationProgressType.EXCLUDED
         and row.name not in world.options.exclude_locations.value
-        and not (
-            "rewards_zone_keys" in world.configuration.rewards
-            and row.address == MAP_LOCATIONS[start]
-        )
         and early_check(_definition(row.address, definitions), regions)
     ]
     initial = state.copy()

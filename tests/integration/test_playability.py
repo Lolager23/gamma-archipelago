@@ -2,9 +2,55 @@ import pytest
 from BaseClasses import CollectionState, LocationProgressType
 from Fill import distribute_items_restrictive
 from test.general import setup_multiworld
+from worlds.apquest.world import APQuestWorld
 from worlds.gamma import GammaWorld
 
 from gamma_archipelago.presets import presets
+
+
+@pytest.mark.parametrize("playability", [0, 1])
+@pytest.mark.parametrize("reputation", [0, 1])
+@pytest.mark.parametrize("optional", [0, 1, 2])
+def test_all_rank_checks_reject_progression_and_useful_items(playability, reputation, optional):
+    multi = setup_multiworld(
+        GammaWorld,
+        options=presets()["full_story"]
+        | {
+            "playability_logic": playability,
+            "rewards_faction_reputation": reputation,
+            "optional_check_policy": optional,
+        },
+    )
+    ranks = [loc for loc in multi.get_locations() if loc.name.startswith("Reach Stalker Rank:")]
+    assert len(ranks) == 8
+    state = multi.get_all_state(False)
+    world = multi.worlds[1]
+    for location in ranks:
+        assert location.progress_type == LocationProgressType.EXCLUDED
+        for name in ("Zone Key: Garbage", "Equipment Unlock: PDA", "Basic Toolkit"):
+            item = world.create_item(name)
+            assert item.advancement or item.useful
+            assert not location.can_fill(state, item, False)
+        assert location.can_fill(state, world.create_item("Bandage"), False)
+
+
+@pytest.mark.parametrize("mixed", [False, True])
+def test_rank_rewards_remain_filler_after_solo_and_mixed_world_fill(mixed):
+    types = [GammaWorld, APQuestWorld] if mixed else GammaWorld
+    multi = setup_multiworld(types, options=presets()["full_story"], seed=260)
+    distribute_items_restrictive(multi)
+    ranks = [loc for loc in multi.get_locations(1) if loc.name.startswith("Reach Stalker Rank:")]
+    assert len(ranks) == 8
+    assert all(not loc.item.advancement and not loc.item.useful for loc in ranks)
+    assert multi.can_beat_game()
+    assert sum(len(sphere) for sphere in multi.get_spheres()) == len(multi.get_locations())
+
+
+def test_disabling_rank_checks_still_omits_the_category():
+    multi = setup_multiworld(
+        GammaWorld, options=presets()["full_story"] | {"checks_rank_milestones": 0}
+    )
+    assert not any(loc.name.startswith("Reach Stalker Rank:") for loc in multi.get_locations())
 
 
 def test_paid_contracts_can_hold_progression_but_expensive_contracts_reject_gear():

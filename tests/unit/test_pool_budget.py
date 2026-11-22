@@ -35,6 +35,15 @@ def test_budget_accounts_for_progressive_copies_gifts_and_pool_depletion_before_
     assert complete.starting == ((CARRY, 3), ("Progressive Tools", 3))
 
 
+@pytest.mark.parametrize("reputation", [0, 1])
+def test_rank_checks_add_eight_filler_slots_without_increasing_reliable_capacity(reputation):
+    values = defaults() | {"rewards_faction_reputation": reputation}
+    without = preview(values | {"checks_rank_milestones": 0}, {})["pool_budget"]
+    with_ranks = preview(values | {"checks_rank_milestones": 1}, {})["pool_budget"]
+    assert with_ranks["network_checks"] == without["network_checks"] + 8
+    assert with_ranks["eligible_checks"] == without["eligible_checks"]
+
+
 @pytest.mark.parametrize(
     "values",
     [

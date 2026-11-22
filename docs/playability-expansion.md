@@ -16,8 +16,11 @@ PR #69. No current seed is refilled, deployed or reset. Owen owns native testing
   unrelated factions or native kill-earned rank. Required single-faction goodwill
   for Trainee through Legend is 250/500/750/1,000/1,500/2,000/3,000. Actual native
   rank thresholds remain required to trigger checks. Reserve twelve Free Stalker
-  rewards when those checks are enabled; unsupported no-reputation routes are
-  filler-only. Faction-standing checks use their own 500/1,000/2,000/3,000 values.
+  rewards when those checks are enabled so all checks remain reachable. All eight
+  rank checks, including Novice, are now filler-only regardless of goodwill or
+  the legacy playability toggle. Neither progression nor useful rewards can be
+  placed there. Faction-standing checks use their own 500/1,000/2,000/3,000 values
+  and retain their existing placement rules.
 - Heavy/exoskeleton checks require calibrated psi protection, Red Forest access
   and a region beyond it, or 2,000 AP-earned goodwill with one baseline-friendly faction as a trader
   access proxy. Class D receives a separate check; published pistol/rifle/etc IDs
