@@ -127,8 +127,8 @@ def test_coordinator_prepares_the_selected_ap_start_before_native_loadout_grants
     assert progress(lua, game).loadout_prepared
 
 
-def test_quick_start_does_not_require_story_controls(lua):
-    window, engine = menu(lua)
+def test_legacy_quick_start_does_not_require_story_controls(lua):
+    window, engine = menu(lua, quest_zone_logic=0)
     window.ck_story = None
     window.ck_warfare = None
     assert window.OnStartGame(window) == "started"

@@ -49,6 +49,7 @@ def test_native_settlement_waits_for_real_neutrality_and_accepts_natural_goodwil
 
 
 def test_tracker_uses_receipts_without_native_observations_and_live_standing_when_supplied(lua):
+    lua.execute("has_alife_info=function() return true end")
     _, _, state = configured(lua)
     module = lua.globals().gamma_ap_settlement_access
     assert "0 / 5" in module.reason(state, 28052103)

@@ -31,6 +31,7 @@ def lua():
         "workshop",
         "discovery",
         "activity",
+        "quest_routes",
         "playability",
         "weather",
         "stamina",

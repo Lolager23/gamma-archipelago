@@ -101,6 +101,7 @@ def test_shop_and_standing_checks_are_finite_and_exclude_progression_by_default(
     assert all(
         location.progress_type == LocationProgressType.EXCLUDED
         for location in world.multiworld.get_locations(1)
+        if location.address is not None
     )
 
 

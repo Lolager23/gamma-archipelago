@@ -55,6 +55,7 @@ S.T.A.L.K.E.R. GAMMA:
   starting_medicine: 100
   starting_food: 100
   starting_money: 100
+  quest_zone_logic: 1
   tool_use_permissions: 1
   reward_quantities: 1
   basic_toolkits: 0

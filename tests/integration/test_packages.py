@@ -48,6 +48,7 @@ def test_packages_are_reproducible_and_load_from_apworld(tmp_path):
                 "services",
                 "discovery",
                 "activity",
+                "quest_routes",
                 "playability",
                 "weather",
                 "stamina",

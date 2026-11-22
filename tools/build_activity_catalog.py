@@ -34,6 +34,7 @@ def activity_lines(catalog: dict[str, Any]) -> list[str]:
     lines.append("rank_goodwill_proxy = " + encoded({str(k): v for k, v in RANK_PROXY.items()}))
     lines.append("northern_equipment_regions = " + encoded(list(NORTH)))
     projections = {
+        "quest_zone_gates": catalog["quest_zone_gates"],
         "tool_use_items": {
             row["id"]: {
                 key: row[key] for key in ("tool_key", "tool_section", "permission", "category")

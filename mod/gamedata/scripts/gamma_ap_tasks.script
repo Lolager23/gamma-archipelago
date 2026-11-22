@@ -13,7 +13,7 @@ function supported(configuration)
         or options.checks_operation_afterglow == 1 or options.goal == 7 or options.goal == 8 then
         if not hook_available() then return false, "Task checks require the installed Monolith task hook" end
     end
-    if (options.checks_story_milestones == 1 or options.checks_mortal_sin == 1
+    if (options.quest_zone_logic == 1 or options.checks_story_milestones == 1 or options.checks_mortal_sin == 1
         or options.checks_operation_afterglow == 1 or options.goal == 7 or options.goal == 8) and db.actor:has_info("story_mode_disabled") then
         return false, "Story checks require a character with story mode enabled"
     end

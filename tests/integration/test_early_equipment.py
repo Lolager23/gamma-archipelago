@@ -161,6 +161,7 @@ def test_filler_only_rank_checks_preserve_the_sparse_exploration_fallback():
     multi = setup_multiworld(
         GammaWorld,
         options={
+            "quest_zone_logic": 0,
             "checks_rank_milestones": 1,
             "rewards_zone_keys": 1,
             "rewards_starting_gear_unlocks": 1,

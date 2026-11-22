@@ -20,19 +20,21 @@ local function definition(id)
         region="Menu", category=category, minimum=id-base, quests={}}
 end
 
-local function level_allowed(state, where, psi)
+local function level_allowed(state, where, psi, shutdowns)
     return gamma_ap_zone_keys.allowed(state, where) and (not psi_regions[where] or psi == true)
+        and gamma_ap_quest_routes.allowed(state.configuration,where,shutdowns)
 end
 
 function reachable(state, psi)
+    local shutdowns = gamma_ap_quest_routes.facts()
     local result, changed = {[gamma_ap_start.level_name(state.configuration)]=true}, true
     while changed do
         changed = false
         for _, edge in ipairs(gamma_ap_catalog.tracker_connections) do
-            if result[edge[1]] and not result[edge[2]] and level_allowed(state, edge[2], psi) then
+            if result[edge[1]] and not result[edge[2]] and level_allowed(state, edge[2], psi, shutdowns) then
                 result[edge[2]], changed = true, true
             end
-            if result[edge[2]] and not result[edge[1]] and level_allowed(state, edge[1], psi) then
+            if result[edge[2]] and not result[edge[1]] and level_allowed(state, edge[1], psi, shutdowns) then
                 result[edge[1]], changed = true, true
             end
         end
@@ -44,6 +46,8 @@ local function blocked(state, row, regions, psi, id, standing)
     local config = options(state)
     if row.region ~= "Menu" and not regions[row.region] then
         if not gamma_ap_zone_keys.allowed(state, row.region) then return "Zone access key required" end
+        local quest = gamma_ap_quest_routes.reason(state,row.region)
+        if quest then return quest end
         if psi_regions[row.region] and psi ~= true then return "Usable calibrated psi protection required" end
         return "An accessible route through connected regions is required"
     end

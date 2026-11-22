@@ -116,6 +116,7 @@ def test_rank_requires_an_earning_path_and_stored_upgrades_require_tool_use(lua)
 
 
 def test_story_tracker_keeps_transitive_combat_after_introductory_dialogues(lua):
+    lua.execute("has_alife_info=function() return true end")
     from gamma_archipelago.presets import presets
 
     state = state_for(lua, **presets()["full_story"])
