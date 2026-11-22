@@ -1033,3 +1033,32 @@ Owen: practical mutant diversity, story/equipment tracker timing, real artefact
 condition/container radiation and asynchronous pickup callbacks. This is source
 and isolated-tooling work only: no merge, deployment, game launch, private-panel
 edit, session change or protected normal-installation write occurred.
+
+
+### Enemy-total pacing in step analysis - 22 November 2026
+
+Paced analysis completes at most one configured enemy-total milestone per GAMMA
+player per step, in numeric order. Custom totals and gaps use the same rule.
+Ordinary Archipelago logical spheres, access rules, fill and native kill callbacks
+are unchanged. Other games and independent GAMMA slots retain their own behaviour.
+
+The complete verifier passed 1,862 covered tests, 83 untraced generation/server
+cases and ten Node tests (1,955 total), including all 9,000 preset seeds. Every
+owned Python runtime module measured 100% lines and branches. Lua executable-line
+gates passed; Lua branch coverage is not measured. Frozen functional, test and
+input hashes matched. Six new regression cases cover default/custom/boundary
+totals, independent slots, matching foreign-game names/IDs and a blocked lower
+milestone; ten existing seeded analysis cases also enforce one enemy total per step.
+
+The ten previously generated Full Story worlds were reanalysed with exactly their
+original placements. Original archive hashes and complete logical-sphere reports
+were preserved. All remain beatable with every check reachable. Browser verification
+passed 40 enemy-step assertions and ten completion views: the default 10/25/50/100
+totals appear in steps 1/2/3/4. World four gains one step; the other nine totals
+and goal steps stay the same. These steps are a pacing model, not measured time.
+
+Current-head Windows/Linux CI and retained package hashes are linked from the PR
+when complete. The game, companion and probe packages match deployed main; only
+the APWorld calculator package changes. No deployment, game launch, session change
+or private-panel edit occurred. Native acceptance is not run and remains with Owen.
+Protected normal installations remain untouched.

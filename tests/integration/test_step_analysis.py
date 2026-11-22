@@ -24,6 +24,7 @@ def test_paced_analysis_advances_one_tier_per_chain_and_preserves_completion(see
             CHAINS[row["location"]] for row in step["available_checks"] if row["location"] in CHAINS
         )
         assert all(count <= 1 for count in chains.values())
+        assert sum(row["location"].startswith("Defeat ") for row in step["available_checks"]) <= 1
         assert len([name for name in step["local_events"] if name.startswith("Claimed ")]) <= 1
     assert sum(step["checks"] for step in paced["steps"]) == len(
         world.fill_slot_data()["location_ids"]
