@@ -14,6 +14,7 @@ from gamma_archipelago.presets import presets
 def legacy_full():
     return presets()["full_story"] | {
         "equipment_class_progression": 0,
+        "regional_progression": 0,
         "starting_melee": 2,
         "starting_tools": 2,
     }

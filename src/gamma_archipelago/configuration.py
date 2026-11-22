@@ -40,6 +40,7 @@ CHECK_OPTIONS = (
     "checks_faction_standing",
 )
 REWARD_OPTIONS = (
+    "rewards_artefacts",
     "rewards_drug_making_tools",
     "rewards_gunsmithing_tools",
     "rewards_artefact_melter",
@@ -128,6 +129,7 @@ SUPPORTED_CHECKS = frozenset(
 )
 SUPPORTED_REWARDS: frozenset[str] = frozenset(
     {
+        "rewards_artefacts",
         "rewards_drug_making_tools",
         "rewards_gunsmithing_tools",
         "rewards_artefact_melter",
@@ -186,6 +188,7 @@ def defaults() -> dict[str, object]:
         tool_use_permissions=1,
         reward_quantities=1,
         quest_zone_logic=1,
+        regional_progression=1,
         equipment_class_progression=1,
         progressive_tool_receipts=1,
         initial_firearm_class=1,
@@ -401,6 +404,8 @@ def encode_configuration(
             in {
                 "checks_shop_purchases",
                 "quest_zone_logic",
+                "regional_progression",
+                "rewards_artefacts",
                 "equipment_class_progression",
                 "progressive_tool_receipts",
                 "initial_firearm_class",

@@ -34,6 +34,8 @@ def lua():
         "workshop",
         "discovery",
         "activity",
+        "mutant_diversity",
+        "progression_readiness",
         "quest_routes",
         "playability",
         "weather",

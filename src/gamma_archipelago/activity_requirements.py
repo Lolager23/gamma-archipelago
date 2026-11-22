@@ -7,6 +7,9 @@ from functools import lru_cache
 from importlib.resources import files
 from typing import TYPE_CHECKING, Any
 
+from .mutant_diversity import capacity
+from .starting import starting_level
+
 if TYPE_CHECKING:
     from .configuration import SeedConfiguration
 
@@ -27,12 +30,18 @@ _sources = {
 }
 
 
+@lru_cache(maxsize=128)
+def _source_regions(sources: tuple[tuple[str, ...], ...]) -> frozenset[str]:
+    return frozenset(region for source in sources for region in source)
+
+
 @dataclass(frozen=True)
 class RegionalRequirement:
     sources: tuple[tuple[str, ...], ...] = ()
     minimum: int = 0
     all_regions: tuple[str, ...] = ()
     reliable: bool = True
+    mutant_start: str = ""
 
     def accessible(self, reachable: Callable[[str], bool]) -> bool:
         # A single view can reference one region through many source types.
@@ -44,9 +53,15 @@ class RegionalRequirement:
                 known[region] = reachable(region)
             return known[region]
 
+        if not all(available(region) for region in self.all_regions):
+            return False
+        if self.mutant_start:
+            regions = frozenset(
+                region for region in _source_regions(self.sources) if available(region)
+            )
+            return capacity(self.sources, regions, self.mutant_start) >= self.minimum
         return (
-            all(available(region) for region in self.all_regions)
-            and sum(any(available(region) for region in source) for source in self.sources)
+            sum(any(available(region) for region in source) for source in self.sources)
             >= self.minimum
         )
 
@@ -66,7 +81,14 @@ def regional_requirement(
         minimum = definition["minimum"]
         # An unverified final type stays an optional filler opportunity. It may
         # not increase the count used to justify a required progression item.
-        return RegionalRequirement(sources, min(minimum, len(sources)), (), minimum <= len(sources))
+        start = (
+            starting_level(configuration)
+            if group == "mutant" and configuration.option("regional_progression")
+            else ""
+        )
+        return RegionalRequirement(
+            sources, min(minimum, len(sources)), (), minimum <= len(sources), start
+        )
     logic = definition.get("logic")
     if logic is not None:
         regions = tuple(logic["any_regions"])

@@ -6,6 +6,7 @@ from importlib.resources import files
 _data = json.loads(files("gamma_archipelago").joinpath("catalog.json").read_text(encoding="utf-8"))
 GAME: str = _data["game"]
 SCHEMA_VERSION: int = _data["schema_version"]
+POST_RED_FOREST_REGIONS = tuple(_data["post_red_forest_regions"])
 ITEM_SECTIONS: dict[int, str] = {
     item["id"]: item["section"] for item in _data["items"] if "section" in item
 }

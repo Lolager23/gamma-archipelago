@@ -52,6 +52,7 @@ def test_each_category_and_every_pair_generate_without_implicit_dependency_chang
                 setup_multiworld(GammaWorld, seed=seed, options=options)
             continue
         if "rewards_zone_keys" in selected and set(selected) & {
+            "rewards_artefacts",
             "rewards_supply_medical",
             "rewards_supply_maintenance",
             "rewards_supply_ammunition",

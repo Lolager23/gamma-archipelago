@@ -1,0 +1,26 @@
+-- Read-only logical readiness; native task/kill observers still own completed facts.
+function reason(state,row,regions,id)
+    local config=state.configuration and state.configuration.options or {}
+    if config.regional_progression ~= 1 then return end
+    local needed=gamma_ap_catalog.check_readiness[id] or {}
+    for _,group in ipairs({"firearms","outfit"}) do
+        if needed[group] and gamma_ap_equipment_classes.level(state,group) < needed[group] then
+            local label=gamma_ap_catalog.equipment_classes.groups[group].labels[needed[group]]
+            return "Story equipment required: "..label
+        end
+    end
+    if needed.tools and config.rewards_progressive_tools == 1
+        and gamma_ap_workshop.tools_level(state) < needed.tools then
+        return needed.tools == 2 and "Story readiness: Advanced tools required" or "Story readiness: Expert tools required"
+    end
+    if gamma_ap_catalog.northern_readiness_checks[id] then
+        local ok,shutdown=pcall(has_alife_info,"bar_deactivate_radar_done")
+        local north=false
+        for _,where in ipairs(gamma_ap_catalog.post_red_forest_regions) do north=north or regions[where] end
+        if not ok or shutdown ~= true or not regions.l10_red_forest or not north then
+            return "Disable Brain Scorcher and reach Red Forest plus another northern region"
+        end
+    end
+    if row.quota == "artefact" and row.minimum > 20 and config.rewards_recipe_access == 1
+        and not state.unlocks.recipe_artefact then return "Recipe Access: Artefacts required for discoveries 21 and above" end
+end

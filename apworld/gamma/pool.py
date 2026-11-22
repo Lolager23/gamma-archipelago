@@ -13,6 +13,7 @@ if TYPE_CHECKING:
     from . import GammaWorld
 
 OPTIONAL = {
+    "rewards_artefacts",
     "rewards_loot_stashes",
     "rewards_faction_reputation",
     "rewards_stat_levels",

@@ -9,6 +9,8 @@ from gamma_archipelago.content_progression import melter_check, tool_level
 from gamma_archipelago.equipment_classes import check_classes, count_with_aliases
 from gamma_archipelago.equipment_classes import level as class_level
 from gamma_archipelago.playability import allowed
+from gamma_archipelago.progression_readiness import allowed as progression_allowed
+from gamma_archipelago.progression_readiness import requirements as readiness_requirements
 from gamma_archipelago.quest_routes import allowed as quest_allowed
 from gamma_archipelago.settlement_access import requirement
 from gamma_archipelago.starting import starting_level
@@ -56,7 +58,10 @@ def apply_access_rules(world: "GammaWorld", catalog: dict[str, Any]) -> None:
         if definition is None:
             if location.address is None:
                 story = catalog["story_goal_checks"].get(location.name)
-                if story is None and world.configuration.option("quest_zone_logic"):
+                if story is None and (
+                    world.configuration.option("quest_zone_logic")
+                    or world.configuration.option("regional_progression")
+                ):
                     story = catalog["quest_zone_gates"]["event_checks"].get(location.name)
                 if story is None:
                     continue
@@ -105,6 +110,10 @@ def apply_access_rules(world: "GammaWorld", catalog: dict[str, Any]) -> None:
                     row["name"] for row in catalog["items"] if row.get("permission") in permissions
                 )
         tool_tier = required_tier(world.configuration, definition)
+        if "rewards_progressive_tools" in world.configuration.rewards:
+            tool_tier = max(
+                tool_tier, readiness_requirements(world.configuration, definition).get("tools", 0)
+            )
         if (
             "rewards_progressive_tools" in world.configuration.rewards
             and category == "checks_gear_upgrades"
@@ -162,6 +171,7 @@ def apply_access_rules(world: "GammaWorld", catalog: dict[str, Any]) -> None:
                 return state.count(name, player)
 
             permitted = count_with_aliases(world.configuration, count)
+            owned_tools = tool_level(count) if tools else 0
             weapon = (
                 gear["starting_firearms"] != 2
                 or gear["starting_melee"] != 2
@@ -177,7 +187,14 @@ def apply_access_rules(world: "GammaWorld", catalog: dict[str, Any]) -> None:
                     lambda level: state.can_reach_region(level, player),
                 )
                 and (settlement is None or state.has(settlement.name, player, settlement.copies))
-                and (not tools or tool_level(lambda name: state.count(name, player)) >= tools)
+                and (not tools or owned_tools >= tools)
+                and progression_allowed(
+                    world.configuration,
+                    definition,
+                    count,
+                    lambda level: state.can_reach_region(level, player),
+                    owned_tools,
+                )
                 and (
                     not melter_check(world.configuration, definition)
                     or "rewards_artefact_melter" not in world.configuration.rewards

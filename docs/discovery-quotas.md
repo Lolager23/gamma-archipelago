@@ -1,5 +1,12 @@
 # Step 33: configurable distinct discoveries
 
+Fresh regional progression adds a maximum of five supported mutant types in the
+starting region and two per additional supported reachable region. This bounds
+generic logical availability without choosing particular rare species or rejecting
+an actual early discovery. Later artefact quotas also require recipes. See
+[regional story balance](regional-story-balance.md) for the current contract;
+historical configuration and save compatibility below still apply.
+
 Merge-review correction: saved distinct observations must belong to an enabled,
 non-excluded type under the saved configuration. A regression reproduced accepted
 excluded/disabled observations that could inflate quota counts; those saves are

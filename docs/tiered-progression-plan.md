@@ -44,3 +44,20 @@ The installed northern psi script requires both `yan_labx16_switcher_primary_off
 and `bar_deactivate_radar_done` for Free Stalkers in story mode. Northern access
 is therefore stronger than owning a calibrated helmet. Source evidence and New
 04's archived placements are retained privately outside Git.
+
+
+## Implementation status
+
+- [x] Quest travel: draft PR #77, complete local verifier and Windows/Linux CI.
+- [x] Equipment classes: draft PR #78, complete local verifier; exact-head CI
+  results and retained packages are linked from its PR.
+- [x] Regional story and reward balance: this increment, complete local verifier;
+  exact-head CI results and retained packages are linked from its PR.
+- [x] Regenerate New 04 separately and prove Agroprom cannot depend on Generators.
+- [ ] Owen's native acceptance for all three increments, including character
+  creation, actual equipment mappings, deliveries/reload and story/tracker rules.
+- [ ] Review approval, instructed merges and a separately authorized backed-up
+  deployment/new playable session. Current archives cannot be repaired in place.
+
+See [equipment classes](equipment-classes.md), [regional story balance](regional-story-balance.md)
+and the [verification record](verification-record.md) for behaviour and evidence.

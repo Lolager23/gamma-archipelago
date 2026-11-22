@@ -12,6 +12,7 @@ end
 function story_required(configuration)
     local options = configuration.options
     return options.quest_zone_logic == 1
+        or options.regional_progression == 1
         or options.goal == 3 or options.goal == 4 or options.goal == 7 or options.goal == 8
         or options.checks_story_milestones == 1 or options.checks_mortal_sin == 1
         or options.checks_operation_afterglow == 1

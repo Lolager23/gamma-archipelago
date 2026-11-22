@@ -28,6 +28,7 @@ from .starting_unlock import preview_budget
 from .web_estimates import ASSUMPTIONS, estimate_playtime
 
 LABELS = {
+    "rewards_artefacts": "Artefacts (60 supported non-quest types)",
     "rewards_drug_making_tools": "Drug-making kit use permission and free kit",
     "rewards_gunsmithing_tools": "Gunsmithing tools use permission and free kit",
     "checks_emissions": "Experience an emission",

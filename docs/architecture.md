@@ -50,6 +50,13 @@ central loadout plan, and backpack receipts reuse ordered delivery plans. Native
 creation-list filtering constructs permitted section/price pairs before mutation.
 No additional persistent class owner or counter exists.
 
+The [regional story rules](regional-story-balance.md) declare equipment/tool
+readiness for story events and late equipment checks, plus recipe access for
+later artefact discoveries. The APWorld and PDA project the same catalogue rules.
+Generic mutant availability uses a pure, bounded region/type matching function;
+native observations remain distinct facts owned by the central save. Artefact
+rewards reuse ordered delivery plans rather than adding another receipt owner.
+
 Starting equipment permissions gate equip/use, not ownership. The game adapter
 keeps acquired gear in inventory, guards native UI/device/input entry points and
 reconciles the finite supported equipment slots back to the rucksack. All hooks

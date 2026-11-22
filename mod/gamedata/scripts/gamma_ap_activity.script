@@ -6,14 +6,18 @@ end
 
 function available(state, row, regions, id)
     if row.quota and row.quota ~= "" then
-        local known, accessible = 0,0
+        local known, accessible,sources = 0,0,{}
         for source_id,source in pairs(gamma_ap_catalog.discovery_sources) do
             local rule = gamma_ap_catalog.activity_rules[source_id]
             if source.group == row.quota and rule.reliable
                 and not gamma_ap_discovery.excluded(state.configuration,source.token) then
                 known = known+1
+                sources[#sources+1]=rule.any_regions
                 if any_region(rule.any_regions,regions) then accessible=accessible+1 end
             end
+        end
+        if row.quota == "mutant" and state.configuration and state.configuration.options.regional_progression == 1 then
+            accessible=gamma_ap_mutant_diversity.capacity(sources,regions,gamma_ap_start.level_name(state.configuration))
         end
         return accessible >= math.min(row.minimum,known), row.minimum <= known
     end

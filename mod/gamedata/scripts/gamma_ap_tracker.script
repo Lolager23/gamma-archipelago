@@ -57,6 +57,8 @@ local function blocked(state, row, regions, psi, id, standing)
     if not accessible then return "Regional activity: reach the required source regions or more distinct source types" end
     local practical = gamma_ap_playability.reason(state,row,regions,psi)
     if practical then return practical end
+    local readiness=gamma_ap_progression_readiness.reason(state,row,regions,id)
+    if readiness then return readiness end
     local diplomacy,optional = gamma_ap_settlement_access.reason(state,id,standing)
     if diplomacy then return diplomacy end
     if config.rewards_progressive_tools == 1 and row.category == "checks_gear_upgrades"

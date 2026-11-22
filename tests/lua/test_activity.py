@@ -20,7 +20,7 @@ from .test_tracker import CATALOG, rows, state_for, view
 def test_generated_lua_requirements_match_python_for_every_source_quota_and_category(
     lua, regions, excluded
 ):
-    values = {**defaults(), "discovery_exclusions": excluded}
+    values = {**defaults(), "regional_progression": 0, "discovery_exclusions": excluded}
     config = build_configuration(values)
     state = state_for(lua, discovery_exclusions=excluded)
     choices = lua.table_from({level: True for level in regions})
@@ -125,6 +125,7 @@ def test_story_tracker_keeps_transitive_combat_after_introductory_dialogues(lua)
             presets()["full_story"]
             | {
                 "equipment_class_progression": 0,
+                "regional_progression": 0,
                 "progressive_tool_receipts": 0,
                 "starting_melee": 2,
             }

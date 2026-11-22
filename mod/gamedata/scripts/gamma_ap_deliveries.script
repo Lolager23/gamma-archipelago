@@ -8,7 +8,7 @@ local function sections_for(state, id, receipt)
     end
     local tiers = gamma_ap_catalog.delivery_contents[id]
     if not tiers then return nil end
-    if gamma_ap_catalog.item_effects[id] == "supply_package" then
+    if gamma_ap_catalog.item_effects[id] == "supply_package" or gamma_ap_catalog.item_effects[id] == "artefact_reward" then
         local index = gamma_ap_catalog.item_categories[id] == "rewards_supply_ammunition"
             and (state.configuration.options.supply_ammo_calibre or 0)+1 or 1
         return tiers[index]
@@ -21,7 +21,7 @@ end
 
 local function enabled(state, id)
     return state.session_key and state.configuration and state.allowed_items and state.allowed_items[id]
-        and (gamma_ap_catalog.item_effects[id] == "supply_package" or state.configuration.options.permission_supplies == 1
+        and (gamma_ap_catalog.item_effects[id] == "supply_package" or gamma_ap_catalog.item_effects[id] == "artefact_reward" or state.configuration.options.permission_supplies == 1
             or gamma_ap_tool_permissions.supplies(state,id) or gamma_ap_equipment_classes.supplies(state,id))
 end
 
@@ -58,9 +58,10 @@ function validate(state)
     return true
 end
 
-local function spawn(state, section)
+local function spawn(state, section, id)
     state.applying_reward = true
-    local ok,object = pcall(alife_create_item,section,db.actor)
+    local properties=gamma_ap_catalog.item_effects[id] == "artefact_reward" and {cond=1} or nil
+    local ok,object = pcall(alife_create_item,section,db.actor,properties)
     state.applying_reward = false
     if not ok then return false,true end
     if not object then return false,false end
@@ -88,21 +89,23 @@ function receive(state, id, grant_permission)
     end)
     if not ok or not valid then return false,"Supply sections unavailable; receipt remains pending" end
     if plan.next_action <= #plan.sections then
-        local created,uncertain = spawn(state,plan.sections[plan.next_action])
+        local created,uncertain = spawn(state,plan.sections[plan.next_action],id)
         plan.uncertain = uncertain
         if not created then return false,uncertain and "Supply creation uncertain; automatic retry blocked" or "Supply creation failed; retry pending" end
         plan.next_action = plan.next_action+1
         -- At most one supply object per poll; the permission/receipt waits for the full plan.
         if plan.next_action <= #plan.sections then return false,"Supply delivery in progress; receipt pending" end
     end
-    if gamma_ap_catalog.item_effects[id] == "supply_package" then return true end
+    if gamma_ap_catalog.item_effects[id] == "supply_package" or gamma_ap_catalog.item_effects[id] == "artefact_reward" then return true end
     return grant_permission(id)
 end
 
 function summary(state)
     local plan = state.deliveries and state.deliveries[state.received_count+1]
     if not plan then return nil end
-    local pending = gamma_ap_catalog.item_effects[plan.item_id] == "supply_package" and "package pending" or "permission pending"
+    local effect=gamma_ap_catalog.item_effects[plan.item_id]
+    local pending = effect == "supply_package" and "package pending"
+        or effect == "artefact_reward" and "artefact pending" or "permission pending"
     return "Receipt "..(state.received_count+1)..": "..(plan.next_action-1).."/"..#plan.sections
         .." supplies delivered; "..(plan.uncertain and "uncertain, retry blocked" or pending)
 end
