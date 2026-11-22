@@ -12,8 +12,8 @@ jobs:
         os: [windows-latest, ubuntu-latest]
     # Temporary local runners can run the same jobs when hosted billing is blocked.
     runs-on: ${{ vars.GAMMA_AP_SELF_HOSTED == 'true' && fromJSON(format('["self-hosted","gamma-ap-{0}"]', matrix.os)) || matrix.os }}
-    # Generic discovery logic makes the full 9,000-seed matrix slower on Linux.
-    timeout-minutes: 40
+    # Leave room for the full matrix when temporary jobs share one host.
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5

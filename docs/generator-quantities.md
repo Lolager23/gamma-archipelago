@@ -48,9 +48,22 @@ if 10 enemies is completed in step one, 25 is considered from step two, then 50
 from step three and 100 from step four, subject to their existing access rules.
 Custom totals use the same ascending order and other players have independent
 chains. This models one milestone per step, not a fixed number of kills per step.
+Side-task totals use their own numeric chain, also completing at most one
+configured milestone per step. Quest-type checks remain independent activities.
+Generic distinct-artefact checks advance in batches 1–5, 6–10, and so on. A batch
+must finish before the next begins; existing detector, regional, melter and recipe
+requirements still apply. Named artefact checks keep their independent access
+rules rather than introducing an arbitrary order of rare types.
 Rewards arrive at the end of the step. Ordinary local goal events settle
-between steps. This does not alter access rules, fill or actual game callbacks.
+between steps. These activity limits do not alter access rules, fill or actual game callbacks.
 It models a slower playthrough, not measured minutes or a guarantee of difficulty.
+
+With regional progression and playability logic enabled, newly generated worlds
+reserve every enabled recipe permission within the first three paced steps. This
+guarantee uses actual placements and the same activity limits as the report.
+Starting recipes count as already received. See
+[generation pacing](generation-pacing.md#recipe-opening) for common-option conflicts
+and the unchanged behaviour of existing archives.
 
 Generate with a preview enabled and extract its _gamma_preview.json from the ZIP.
 The local page's actual-seed calculator opens it without changing any session.

@@ -2,12 +2,18 @@
 
 import json
 from collections import defaultdict
+from collections.abc import Mapping
 from importlib.resources import files
 from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState, Item, Location
 
-from gamma_archipelago.catalog import KILL_MILESTONE_BASE, MAX_KILL_MILESTONE
+from gamma_archipelago.catalog import (
+    KILL_MILESTONE_BASE,
+    MAX_KILL_MILESTONE,
+    MAX_SIDE_TASK_MILESTONE,
+    SIDE_TASK_MILESTONE_BASE,
+)
 from gamma_archipelago.content_progression import TOOL_CLAIMS
 from gamma_archipelago.tool_permissions import TOOL_CAPABILITIES
 
@@ -40,14 +46,23 @@ ORDER.update({name: index for index, name in enumerate(TOOL_CAPABILITIES)})
 PROGRESSIVE_REWARDS = {row["name"] for row in _data["items"] if "class_group" in row} | {
     "Progressive Tools"
 }
+ARTEFACT_BATCHES = {
+    row["id"]: (row["minimum"] - 1) // 5
+    for row in _data["locations"]
+    if row.get("quota_group") == "artefact"
+}
 
 
 def _chain(row: Location) -> tuple[str, int] | None:
-    if (
-        row.address is not None
-        and KILL_MILESTONE_BASE < row.address <= KILL_MILESTONE_BASE + MAX_KILL_MILESTONE
-    ):
-        return "enemy_kills", row.address
+    if row.address is not None:
+        for group, base, maximum in (
+            ("enemy_kills", KILL_MILESTONE_BASE, MAX_KILL_MILESTONE),
+            ("side_tasks", SIDE_TASK_MILESTONE_BASE, MAX_SIDE_TASK_MILESTONE),
+        ):
+            if base < row.address <= base + maximum:
+                return group, row.address
+        if row.address in ARTEFACT_BATCHES:
+            return "artefacts", ARTEFACT_BATCHES[row.address]
     group = CHAINS.get(row.name)
     return (group, ORDER[row.name]) if group else None
 
@@ -78,19 +93,70 @@ def _reachable(
     reachable = [row for row in remaining if row.can_reach(state)]
     if not paced:
         return reachable
-    chains: dict[Location, str] = {}
+    chains: dict[Location, tuple[str, int]] = {}
     heads: dict[tuple[int, str], tuple[int, Location]] = {}
     for row in remaining:
         chain = _chain(row) if world.multiworld.game[row.player] == world.game else None
         if chain:
             group, order = chain
-            chains[row] = group
+            chains[row] = chain
             key = (row.player, group)
             if key not in heads or order < heads[key][0]:
                 heads[key] = order, row
-    return [
-        row for row in reachable if row not in chains or heads[(row.player, chains[row])][1] is row
+    allowed = set(reachable)
+    for row, (group, order) in chains.items():
+        first_order, first_row = heads[(row.player, group)]
+        if order != first_order or (group != "artefacts" and row is not first_row):
+            allowed.discard(row)
+    return [row for row in reachable if row in allowed]
+
+
+def _settle(
+    world: "GammaWorld", state: CollectionState, remaining: set[Location], paced: bool
+) -> None:
+    # Ordinary local goal events settle without consuming a planning step.
+    events = [
+        row
+        for row in remaining
+        if row.address is None
+        and row.item is not None
+        and (
+            not paced
+            or row.name not in TOOL_EVENTS
+            or world.multiworld.game[row.player] != world.game
+        )
     ]
+    state.sweep_for_advancements(locations=events)
+    remaining.difference_update(state.advancements)
+
+
+def early_checks(
+    world: "GammaWorld", steps: int = 3, placements: Mapping[Location, Item] | None = None
+) -> dict[Location, int]:
+    """Conservative first arrival with unknown rewards left uncollected.
+
+    Completing an unfilled check advances its activity chain. Only actual placed
+    rewards advance permissions; this never assumes an unknown item will help.
+    """
+    state = CollectionState(world.multiworld)
+    remaining = set(world.multiworld.get_locations())
+    pending: list[tuple[Item, Location]] = []
+    planned = placements or {}
+    reached = {}
+    for number in range(1, steps + 1):
+        _settle(world, state, remaining, True)
+        rows = sorted(
+            _reachable(world, state, remaining, True),
+            key=lambda row: (row.player, row.address or 0, row.name),
+        )
+        reached.update((row, number) for row in rows if row.address is not None)
+        for row in rows:
+            item = planned.get(row, row.item)
+            if item is not None:
+                pending.append((item, row))
+        pending = _collect(state, pending, True)
+        remaining.difference_update(rows)
+    return reached
 
 
 def _entry(player: int, rows: list[Location], number: int, spoilers: bool) -> dict[str, object]:
@@ -116,19 +182,7 @@ def analyse(world: "GammaWorld", paced: bool, spoilers: bool) -> dict[str, objec
     waves, goal_step = [], None
     pending: list[tuple[Item, Location]] = []
     while remaining or pending:
-        # Ordinary local goal events settle without consuming a planning step.
-        events = [
-            row
-            for row in remaining
-            if row.address is None
-            and (
-                not paced
-                or row.name not in TOOL_EVENTS
-                or multiworld.game[row.player] != world.game
-            )
-        ]
-        state.sweep_for_advancements(locations=events)
-        remaining.difference_update(state.advancements)
+        _settle(world, state, remaining, paced)
         if goal_step is None and multiworld.completion_condition[world.player](state):
             goal_step = len(waves)
         reachable = _reachable(world, state, remaining, paced)

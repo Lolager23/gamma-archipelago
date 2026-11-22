@@ -21,7 +21,9 @@ def maximum(world, missing=(), counts=None):
     for name, count in (counts or {}).items():
         for _ in range(count):
             state.collect(world.create_item(name), True)
-    state.sweep_for_advancements()
+    state.sweep_for_advancements(
+        locations=[row for row in world.multiworld.get_locations() if row.address is None]
+    )
     return state
 
 
@@ -78,6 +80,7 @@ def test_northern_checks_cannot_use_goodwill_to_bypass_shutdown_or_red_forest():
 def test_recipe_permission_cannot_be_placed_behind_artefact_twenty_one():
     multi = setup_multiworld(GammaWorld, options=presets()["full_story"])
     state = maximum(multi.worlds[1], {"Recipe Access: Artefacts"})
+    assert not state.has("Recipe Access: Artefacts", 1)
     check = multi.get_location("Discovery: 21 Distinct Artefact Types", 1)
     assert not check.can_reach(state)
     state.collect(multi.worlds[1].create_item("Recipe Access: Artefacts"), True)

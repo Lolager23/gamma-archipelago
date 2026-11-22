@@ -242,6 +242,9 @@ class GammaWorld(World):
         request_activity_opener(self, _catalog)
         request_neutrality_opener(self)
         place_zone_keys(self, _catalog)
+        from .early_recipes import place_recipes
+
+        place_recipes(self, _catalog)
         prefer_early_hub(self, _catalog)
 
     def fill_hook(
