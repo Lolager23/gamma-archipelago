@@ -14,6 +14,14 @@ requirements. In particular, a recipe book does not bypass an AP recipe-group
 permission. Progressive Tools remains independent: when both systems are on,
 both the action/group permission and its relevant tool tier are required.
 
+For fresh content/playability activity pools, all three workshop permissions now
+use the [early equipment allocation](early-equipment.md). Local rewards arrive
+through nearby, currently reachable low-grind checks before unrelated zone-key
+or rank chains. Non-local workshops use upstream early-item requests. Existing
+gifts/plando and sparse exploration fallback remain authoritative. This is an
+early capability guarantee in the tested local configurations, not measured hours.
+Recipe-group access and progressive tool tiers remain separate reward systems.
+
 All seven permissions are progression rewards and are budgeted before filler.
 The solver and PDA require `Workshop Access: Upgrades` for upgrade checks. Repair
 and crafting permissions remain useful gameplay restrictions even when no enabled

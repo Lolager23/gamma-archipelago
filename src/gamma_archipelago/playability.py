@@ -9,6 +9,7 @@ if TYPE_CHECKING:
     from .configuration import SeedConfiguration
 
 _catalog = json.loads(files("gamma_archipelago").joinpath("catalog.json").read_text("utf-8"))
+EARLY_REWARD_CATEGORIES = frozenset({"rewards_starting_gear_unlocks", "rewards_workshop_access"})
 GOODWILL = tuple(row["name"] for row in _catalog["items"] if row.get("effect") == "reputation")
 FRIENDLY_FACTIONS = (
     frozenset(_catalog["faction_standing_factions"])

@@ -124,7 +124,9 @@ remain optional filler checks and are excluded before progression budgeting.
 
 [Generation pacing](generation-pacing.md) keeps a pure shared pool budget separate
 from upstream item creation and placement. Explicit opening reservations run
-before general fill. Zone keys use upstream randomized fill in expanded regional
+before general fill. Equipment and workshop access share the early reward
+categories and reachable-opening allocation; their native permissions and
+delivery state remain separate. Zone keys use upstream randomized fill in expanded regional
 pools, including multiworlds, optionally requesting one early hub key. Only sparse
 exploration pools retain an anti-cycle route. Optional actual-seed reports are generated after fill;
 settings previews contain no placements. Common AP constraints and starting items

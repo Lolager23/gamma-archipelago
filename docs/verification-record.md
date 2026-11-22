@@ -1,5 +1,24 @@
 # Verification record
 
+## 22 November 2026 — early workshop permissions
+
+Workshop Repair, Crafting and Upgrades share the early equipment placement rules
+and reachable-opening allocator. Fresh local activity pools put all twelve gear
+and workshop permissions within three tested capability waves without collecting
+zone keys. Expensive shop contracts and late-rank checks reject workshops too.
+Explicit non-local requests, disabled/legacy settings, gifts and plando retain
+their existing contracts. Tool tiers and recipe-group permissions are unchanged.
+
+The complete verifier passed 1,720 covered regressions, 83 untraced generator/server
+cases and nine Node tests (1,812 total), including all 9,000 preset seeds. Every
+owned Python runtime module measured 100% line and branch coverage; all Lua
+executable-line gates passed, without a Lua branch-coverage claim. Frozen-source
+parity and source self-review passed. Exact-head Windows/Linux package evidence
+is recorded on this increment's PR. Native acceptance is **not run**, reserved for Owen;
+waves are not calibrated hours. This branch stacks on tool-use PR #74. No IDs,
+options, protocol or save formats changed. No deployment, game launch, current
+session reset, developer-panel change or normal-game write is included.
+
 ## 22 November 2026 — tool-use permissions and Class C prerequisite
 
 Fresh tool contracts now use six catalogue permissions with one free physical

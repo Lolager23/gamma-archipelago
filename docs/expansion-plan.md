@@ -33,6 +33,10 @@ seeds. It adds Drug-making/Gunsmithing options and requires Advanced Tools for
 the Class C check. Ordinary looting/crafting remains available; legacy seeds
 retain their published stash behaviour. Native acceptance remains with Owen.
 
+Workshop Repair/Crafting/Upgrades now join the [early gear allocation](early-equipment.md)
+for new generations. They retain separate native permissions, tools and recipes;
+this source work never changes the current session's placements.
+
 ## Current status at a glance
 
 | Stage | Implemented / automated evidence | Still to validate or finish |

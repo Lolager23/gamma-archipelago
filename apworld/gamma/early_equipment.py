@@ -1,4 +1,4 @@
-"""Place local equipment permissions before unrelated zone-key or rank chains."""
+"""Place equipment and workshop permissions before unrelated progression chains."""
 
 from typing import TYPE_CHECKING, Any
 
@@ -6,7 +6,7 @@ from BaseClasses import CollectionState, LocationProgressType
 from Options import OptionError
 
 from gamma_archipelago.catalog import KILL_MILESTONE_BASE, MAP_LOCATIONS, SIDE_TASK_MILESTONE_BASE
-from gamma_archipelago.playability import early_check
+from gamma_archipelago.playability import EARLY_REWARD_CATEGORIES, early_check
 from gamma_archipelago.starting import starting_level
 
 if TYPE_CHECKING:
@@ -33,9 +33,7 @@ def place_equipment(world: "GammaWorld", catalog: dict[str, Any]) -> None:
     if configuration.checks <= {"checks_maps", "checks_settlements"}:
         return  # Preserve the explicitly supported sparse exploration fallback.
     names = {
-        row["name"]
-        for row in catalog["items"]
-        if row.get("category") == "rewards_starting_gear_unlocks"
+        row["name"] for row in catalog["items"] if row.get("category") in EARLY_REWARD_CATEGORIES
     }
     items = [
         item
