@@ -59,7 +59,8 @@ Use deterministic inputs and explicit clocks; avoid sleeps and live internet in
 unit tests. Mock the external boundary, not the function under test.
 
 The required gate is **at least 95% line coverage and 95% branch coverage** for
-owned Python production modules. Protocol validation, session identity and receipt
+changed owned Python production modules on normal PRs, and every owned module on
+full releases. Protocol validation, session identity and receipt
 ordering must reach 100% of both. Owned Lua must meet the same 95% line/branch
 target when the runtime coverage collector can measure it; never claim a branch
 metric the collector cannot measure. Until Lua branch instrumentation is available,
@@ -81,9 +82,11 @@ Tests must cover:
 - A generated single-player seed and a mixed-game multiworld with actual server
   traffic, then the same checks inside GAMMA.
 
-The verification command runs formatting, lint, type checking, unit/regression
-tests, coverage gates, Lua tests, catalogue parity and packaging checks. CI runs
-the same gates. Live-server and in-game smoke tests produce separate evidence.
+Normal verification selects the affected component's unit/regression tests and
+coverage gates; keep adding the same meaningful tests and regressions. The complete
+suite, exhaustive seed sweeps and all-module coverage run for full releases.
+See [Testing policy](testing-policy.md) for commands, component boundaries and CI.
+Live-server and in-game smoke tests produce separate evidence.
 A green unit suite is not a declaration that a game build works.
 
 ## Review and maintenance

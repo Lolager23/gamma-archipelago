@@ -56,6 +56,7 @@ def test_world_generation_rejects_invalid_options_instead_of_ignoring_them():
         world.generate_early()
 
 
+@pytest.mark.generation
 def test_one_thousand_pilot_seeds_are_fully_filled_and_beatable():
     for seed in range(1000):
         multiworld = generate(seed)

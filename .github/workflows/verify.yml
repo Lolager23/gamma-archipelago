@@ -1,7 +1,17 @@
 name: Verify GAMMA Archipelago
 on:
   push:
+    branches: [main]
   pull_request:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      verification:
+        description: Verification scope (full is for release preparation)
+        type: choice
+        options: [affected, full]
+        default: affected
 permissions:
   contents: read
 jobs:
@@ -16,6 +26,8 @@ jobs:
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: '3.12'
@@ -24,7 +36,17 @@ jobs:
       - name: Check out pinned upstream Archipelago
         run: git clone --depth 1 --branch 0.6.8 https://github.com/ArchipelagoMW/Archipelago.git "${{ runner.temp }}/Archipelago"
       - name: Verify
-        run: python tools/verify.py --ap-source "${{ runner.temp }}/Archipelago" --ap-root "${{ runner.temp }}/ap-runtime"
+        env:
+          VERIFICATION_FULL: ${{ github.event_name == 'release' || inputs.verification == 'full' }}
+          VERIFICATION_BASE: ${{ github.event.pull_request.base.sha || github.event.before || 'origin/main' }}
+          AP_TOOL_SOURCE: ${{ runner.temp }}/Archipelago
+          AP_TOOL_RUNTIME: ${{ runner.temp }}/ap-runtime
+        shell: python
+        run: |
+          import os, subprocess, sys
+          arguments = [sys.executable, 'tools/verify.py', '--ap-source', os.environ['AP_TOOL_SOURCE'], '--ap-root', os.environ['AP_TOOL_RUNTIME']]
+          arguments += ['--full'] if os.environ['VERIFICATION_FULL'] == 'true' else ['--base', os.environ['VERIFICATION_BASE']]
+          subprocess.run(arguments, check=True)
       - name: Retain verification evidence and experimental packages
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
@@ -34,4 +56,5 @@ jobs:
             coverage.json
             artifacts/lua-coverage.json
             artifacts/generation-matrix.json
+            artifacts/verification-scope.json
             dist/

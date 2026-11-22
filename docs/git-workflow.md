@@ -36,7 +36,8 @@ publication and release are separate decisions.
 2. Create one `codex/<short-purpose>` branch from the intended base.
 3. Implement one roadmap increment with tests and documentation.
 4. Inspect the full diff and staged changes; never stage game installations.
-5. Run verification, commit coherent changes and push with an upstream branch.
+5. Run affected verification against the actual PR base, commit coherent changes
+   and push with an upstream branch. See [Testing policy](testing-policy.md).
 6. Open a PR against `main`, or explicitly identify an unmerged dependency.
 7. Keep it draft until its acceptance checks are complete and evidence is attached.
 8. Address review in follow-up commits. Merge only after approval and passing CI.
@@ -75,6 +76,12 @@ Keep checkpoint commits before a risky refactor; backups protect game state, not
 Git history. A source checkout is not a save-game backup.
 
 ## PR and release gates
+
+Normal PRs run affected component regressions and changed-module coverage on
+Windows/Linux. Feature pushes do not duplicate PR jobs. Keep adding tests and
+regressions. Reserve `tools/verify.py --full` and the complete seed matrix for full
+release preparation; publishing a GitHub release also runs the full verifier.
+The manual workflow's `full` selection allows that check before publishing.
 
 The PR template records purpose, test evidence, save compatibility, isolation and
 remaining work. Automated checks must pass, and behaviour that needs GAMMA must

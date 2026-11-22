@@ -1,4 +1,4 @@
-"""Run the same fail-fast checks locally and in CI."""
+"""Run affected regressions by default, or the complete release verifier."""
 
 import argparse
 import json
@@ -14,11 +14,18 @@ def run(*arguments: str) -> None:
     subprocess.run([sys.executable, *arguments], cwd=ROOT, check=True)
 
 
-def check_coverage(path: Path) -> None:
+def check_coverage(path: Path, modules: tuple[str, ...] = ()) -> None:
     report = json.loads(path.read_text(encoding="utf-8"))
+    expected = {module.replace(".", "/") + ".py" for module in modules}
+    matched = set()
     for name, data in report["files"].items():
+        normal = name.replace("\\", "/")
+        selected = {module for module in expected if normal.endswith(module)}
+        if expected and not selected:
+            continue
+        matched.update(selected)
         summary = data["summary"]
-        required = 100 if Path(name).stem in {"protocol", "session"} else 95
+        required = 100 if Path(normal).stem in {"protocol", "session"} else 95
         for covered, total in (
             ("covered_lines", "num_statements"),
             ("covered_branches", "num_branches"),
@@ -26,6 +33,8 @@ def check_coverage(path: Path) -> None:
             percentage = 100 * summary[covered] / max(1, summary[total]) if summary[total] else 100
             if percentage < required:
                 raise SystemExit(f"{name}: {covered} {percentage:.2f}% < required {required}%")
+    if expected - matched:
+        raise SystemExit(f"Changed modules missing from coverage: {sorted(expected - matched)}")
     print("Independent per-module Python line and branch coverage gates passed.")
 
 
@@ -33,7 +42,19 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--ap-source", default="D:/GAMMAAPTools/Archipelago")
     parser.add_argument("--ap-root", default="D:/GAMMAAPTools/ap-runtime")
+    parser.add_argument("--base", default="origin/main", help="Compare changes with this Git ref")
+    parser.add_argument("--full", action="store_true", help="Complete release verification")
+    parser.add_argument(
+        "--plan", action="store_true", help="Print affected selection without running"
+    )
     arguments = parser.parse_args()
+    if not arguments.full:
+        from verify_changed import verify
+
+        verify(arguments)
+        return
+    if arguments.plan:
+        parser.error("--plan describes affected verification; omit --full")
     os.environ["AP_RUNTIME_ROOT"] = str(Path(arguments.ap_root).resolve())
     run("-m", "ruff", "check", "src", "apworld", "tools", "tests")
     run("-m", "ruff", "format", "--check", "src", "apworld", "tools", "tests")

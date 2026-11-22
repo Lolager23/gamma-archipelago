@@ -1105,3 +1105,17 @@ seed matrix are unchanged. The game, companion and probe packages match deployed
 main byte for byte; only the APWorld package changes. No deployment, game launch,
 private-panel edit, session change or protected normal-installation write occurred.
 Native acceptance is not run and remains with Owen.
+
+## 22 November 2026 — affected development verification
+
+Owen requested affected-area testing for normal PRs and the full suite only for
+GitHub releases. Local affected verification passed 153 tests (11 exhaustive cases
+deselected) in 25.59 seconds of test execution. The three verification tools each
+reached 100% executable-line and branch coverage. The new 51 selection/routing
+regressions cover component boundaries,
+shared dependencies, all Git change states, missing mappings, release events,
+changed-module coverage thresholds and separate untraced network tests. No tests
+or seed counts were removed. The 1,000-pilot and category-pair sweeps are now marked
+as exhaustive generation tests. Full-release verification of this policy change
+is intentionally not run; see the PR for actual targeted and current-head CI
+results. No deployment, session change or native game run is involved.

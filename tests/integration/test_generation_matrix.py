@@ -39,6 +39,7 @@ def test_one_thousand_seeds_for_each_documented_preset(name, options):
         assert_seed(options, seed)
 
 
+@pytest.mark.generation
 def test_each_category_and_every_pair_generate_without_implicit_dependency_changes():
     names = CHECK_OPTIONS + REWARD_OPTIONS
     for seed, selected in enumerate([(name,) for name in names] + list(combinations(names, 2))):

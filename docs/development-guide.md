@@ -13,9 +13,10 @@ For baseline script failures, use the dated
 `tools/inspect_probe_sources.py`. Candidate presence and source compilation do not
 establish the engine's loaded winner or in-game compatibility.
 
-The complete verifier includes a covered regression pass plus untraced runs for
-6,000 preset seeds and ten actual server cases. Game snapshots in server tests
-are synthetic. Local events do not consume network check slots.
+Normal development uses [affected-area verification](testing-policy.md). The full
+suite, including the 9,000-seed preset matrix and real server passes, runs only
+for full releases or explicit release preparation. Test cases and regression
+coverage continue to grow; game snapshots in server tests remain synthetic.
 
 ## Original pilot scope (historical)
 
@@ -53,42 +54,33 @@ reference world. It never edits the upstream checkout. Its minimal runtime avoid
 installing dependencies for every unrelated AP game. `requirements-ap.txt` pins
 the required subset; automatic upstream dependency updates are disabled here.
 
-Verification runs formatting, lint, strict typing of the framework-independent
-core, generation, packaging, regression tests and independent per-module line and
-branch coverage thresholds. World and CommonClient public interfaces are typed;
-their runtime integration is tested against the actual pinned framework.
-It also generates 1,000 deterministic pilot seeds, tests a mixed-game world,
-loads the packaged `.apworld` through the upstream loader and runs two real
-loopback websocket sessions: solo and mixed with APQuest.
+Normal verification selects the affected components and gates coverage for changed
+owned runtime modules. Review the emitted `artifacts/verification-scope.json`.
+For a stacked PR, pass `--base` with its actual parent branch/commit; use `--plan`
+to inspect the selection. Static checks stay cheap and repository-wide.
 
-The real generator/server tests run in a second, untraced pass. On the installed
-Python 3.12.3 build, tracing upstream's C-backed YAML loader produces invalid
-`None` tags. Both passes are required and fail the command on errors. Owned
-world/client coverage comes from the preceding regression tests; no production
-module is excluded. Lua uses executable-line tracing with JIT disabled and
-decision-outcome tests; this is not a Lua branch-coverage measurement.
+Use `python tools/verify.py --full` for full release verification. It retains the
+entire suite, all-module coverage, packaging/archive checks and complete seed
+counts. Real generator/server tests run untraced in a second pass because this
+Python/YAML tracing combination can produce invalid tags. Full releases require
+both passes. Lua still measures executable lines and decision outcomes, not branch
+coverage. Neither mode launches the game.
 
 ## Packages and deployment
 
-The same verification job runs on Windows and Linux through
-`.github/workflows/verify.yml`, on pushes and pull requests. It retains coverage
-reports and experimental packages as run artifacts. The repository uses read-only
-workflow permissions. Check both job results on the PR before declaring CI passed.
+GitHub runs affected verification on Windows/Linux for PRs and pushes to main.
+Feature pushes do not duplicate PR jobs. Published GitHub releases run the full
+suite; select `full` in the manual workflow for release preparation. Reports and
+experimental packages are retained when produced; affected documentation/tooling
+runs need not build unrelated deployment archives. Workflow permissions stay
+read-only. Check the current PR head and its recorded scope before reporting CI.
 
-If GitHub refuses hosted jobs before any steps run because of account billing or
-spending limits, the repository variable `GAMMA_AP_SELF_HOSTED=true` selects local
-runners labelled `self-hosted,gamma-ap-windows-latest` and
-`self-hosted,gamma-ap-ubuntu-latest`. This changes only job placement: the Windows
-and Linux matrix, pinned actions/dependencies, complete verifier and retained
-artifacts remain identical. The matrix names identify their targets; record the
-actual local operating systems/Python versions rather than calling them hosted
-images. With the variable absent or false, the standard hosted runners are used.
-
-Use temporary repo-scoped runners under `D:/GAMMAAPTools`, only for reviewed code
-in the private repository. Do not install a permanent service or change billing.
-Remove registrations/credentials after the jobs finish and restore the variable
-to its previous state. Account billing remains a separate owner action; failed
-hosted runs must retain their original annotations rather than being marked passed.
+If hosted billing blocks all job steps, the existing temporary repo-scoped runner
+fallback remains available through `GAMMA_AP_SELF_HOSTED=true`. It changes job
+placement only; the selected affected/full command and matrix are unchanged.
+Use reviewed private code, remove registrations/credentials afterward and restore
+the variable. Do not install permanent services or change billing. Billing failures
+remain a separate owner action and must not be marked passed.
 
 `python tools/build.py` writes deterministic `dist/gamma.apworld`,
 `dist/gamma-archipelago-mo2.zip` and `dist/SHA256SUMS`. Only owned code and data are
