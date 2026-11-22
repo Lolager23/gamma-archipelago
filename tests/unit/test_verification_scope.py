@@ -24,6 +24,7 @@ scope = importlib.import_module("verification_scope")
         ("requirements-ap.txt", "shared"),
         ("tests/conftest.py", "shared"),
         ("src/gamma_archipelago/session.py", "python"),
+        ("src/gamma_archipelago/presets.py", "world"),
         ("src/gamma_archipelago/web_server.py", "web"),
         ("apworld/gamma/client.py", "client"),
         ("apworld/gamma/analysis.py", "world"),
@@ -92,6 +93,16 @@ def test_world_scope_excludes_native_and_network_components(tree):
     assert "tests/integration/test_client.py" not in result.tests
     assert result.coverage == ("worlds.gamma.analysis",)
     assert result.bootstrap and result.build and not result.web
+
+
+def test_preset_change_selects_world_and_planner_consumers_without_network(tree):
+    for name in ("test_presets.py", "test_web_planner.py"):
+        (tree / "tests/unit" / name).touch()
+    result = scope.plan(tree, ["src/gamma_archipelago/presets.py"])
+    assert result.areas == ("world",)
+    assert {"tests/unit/test_presets.py", "tests/unit/test_web_planner.py"} <= set(result.tests)
+    assert "tests/unit/test_session.py" not in result.tests
+    assert "tests/integration/test_client.py" not in result.tests
 
 
 def test_python_change_includes_world_and_network_dependents(tree):

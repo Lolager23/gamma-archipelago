@@ -14,7 +14,7 @@ For baseline script failures, use the dated
 establish the engine's loaded winner or in-game compatibility.
 
 Normal development uses [affected-area verification](testing-policy.md). The full
-suite, including the 9,000-seed preset matrix and real server passes, runs only
+suite, including the 10,000-seed preset matrix and real server passes, runs only
 for full releases or explicit release preparation. Test cases and regression
 coverage continue to grow; game snapshots in server tests remain synthetic.
 

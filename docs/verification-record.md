@@ -1119,3 +1119,14 @@ or seed counts were removed. The 1,000-pilot and category-pair sweeps are now ma
 as exhaustive generation tests. Full-release verification of this policy change
 is intentionally not run; see the PR for actual targeted and current-head CI
 results. No deployment, session change or native game run is involved.
+
+## 22 November 2026 — story preset tiers
+
+Living Legend is a new expanded preset with Mortal Sin and Operation Afterglow
+checks disabled and goal 4. Full Story now selects the existing goal 8, whose
+local solver events chain Living Legend, Mortal Sin and Afterglow in order.
+Existing exports/drafts/sessions keep their explicit goal values. No goal IDs,
+save schema, native callbacks or installed game files change. Matching YAML and
+planner metadata are included. Focused preset, tier-fill/goal and scope tests
+passed 54 cases; the PR records the affected component and current-head CI results.
+The full release suite and in-game acceptance are not run.

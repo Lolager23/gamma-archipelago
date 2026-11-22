@@ -52,6 +52,8 @@ def area(path: str) -> str | None:
     if path.startswith("src/gamma_archipelago/"):
         if Path(path).name == "catalog.json":
             return "shared"
+        if Path(path).name == "presets.py":
+            return "world"
         return "web" if Path(path).name.startswith("web_") else "python"
     if path.startswith("apworld/gamma/"):
         return (
@@ -104,6 +106,8 @@ def plan(root: Path, changed: list[str]) -> Scope:
         if "python" in areas and path.startswith("tests/unit/"):
             tests.add(path)
         if "world" in areas and path.startswith("tests/integration/") and name not in NETWORK_TESTS:
+            tests.add(path)
+        if "world" in areas and name in {"test_presets.py", "test_web_planner.py"}:
             tests.add(path)
         if "client" in areas and (path.startswith("tests/unit/") or name in NETWORK_TESTS):
             tests.add(path)

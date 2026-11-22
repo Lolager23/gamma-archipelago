@@ -22,7 +22,10 @@ required. Node 20 or later is used only for development syntax checks; Python
 serves the app and executes generation. The runtime is deliberately separate
 from live sessions and the verification runtime.
 
-Choose one of nine presets, edit categories/loadout/goal, and review validation.
+Choose one of ten presets, edit categories/loadout/goal, and review validation.
+Living Legend disables the two later chains' checks and ends at Living Legend.
+Full Story enables all three chains and ends at the Operation Afterglow finale.
+Existing drafts and exports retain their selected goal until a preset is reapplied.
 Short, standard (initial selection) and extended presets add protected openings.
 The tracker/discovery/pacing controls expose hints, next-reward previews, distinct
 quotas, exclusions and independent access/combat/grind assumptions. See
