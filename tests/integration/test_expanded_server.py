@@ -63,7 +63,12 @@ def test_two_gamma_slots_and_foreign_game_transfer_restart_and_each_goal(
     scout_case = seed == 20261119
     expansion_case = seed in (20261121, 20261122)
     legacy_tools = seed == 20261122
-    tool_ids = (28051202, 28051203, 28051204) if legacy_tools else tuple(range(28051831, 28051837))
+    tool_counts = (
+        {28051202: 1, 28051203: 1, 28051204: 1}
+        if legacy_tools
+        else {28051801: 3, 28051834: 1, 28051835: 1, 28051836: 1}
+    )
+    initial_tools = {28051202: 1, 28051203: 1} if legacy_tools else {28051801: 2}
     if expansion_case:
         values.update(
             rewards_convenience=1,
@@ -79,13 +84,11 @@ def test_two_gamma_slots_and_foreign_game_transfer_restart_and_each_goal(
             discovery_exclusions=["mutant:bibliotekar", "artefact:af_compass"],
             start_inventory={"Equipment Unlock: PDA": 1, "Zone Key: Garbage": 1},
             start_inventory_from_pool={
-                ("Progression Stash: Basic Tools" if legacy_tools else "Tool Use: Basic Tools"): 1,
-                (
-                    "Progression Stash: Advanced Tools"
-                    if legacy_tools
-                    else "Tool Use: Advanced Tools"
-                ): 1,
-            },
+                "Progression Stash: Basic Tools": 1,
+                "Progression Stash: Advanced Tools": 1,
+            }
+            if legacy_tools
+            else {"Progressive Tools": 2},
             tool_use_permissions=0 if legacy_tools else 1,
             generation_preview=1,
             non_local_items=["Zone Key: Agroprom"],
@@ -157,8 +160,10 @@ def test_two_gamma_slots_and_foreign_game_transfer_restart_and_each_goal(
                     await until(lambda client=client: client.session is not None)
                     if expansion_case:
                         await until(lambda client=client: len(client.session.item_ids) >= 4)
-                        assert client.session.item_ids.count(tool_ids[0]) == 1
-                        assert client.session.item_ids.count(tool_ids[1]) == 1
+                        assert all(
+                            client.session.item_ids.count(id_) == count
+                            for id_, count in initial_tools.items()
+                        )
                         assert client.expanded and client.require_configuration
                 await quest.connect(address)
                 await until(lambda: quest.slot is not None)
@@ -228,7 +233,10 @@ def test_two_gamma_slots_and_foreign_game_transfer_restart_and_each_goal(
                     await client.poll_game_once()
                     assert len(client.session.notices) >= expected
                     if expansion_case:
-                        assert all(client.session.item_ids.count(id_) == 1 for id_ in tool_ids)
+                        assert all(
+                            client.session.item_ids.count(id_) == count
+                            for id_, count in tool_counts.items()
+                        )
                         assert client.session.item_ids.count(28051911) == 3
                 assert any(item.player != clients[0].slot for item in clients[0].items_received)
                 await until(lambda: any(key.startswith("s:") for key in clients[0].session.notices))
