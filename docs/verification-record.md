@@ -849,3 +849,32 @@ regressions pass under fresh quantity mode. Native playtime calibration is not r
 This stacks on #71. Exact-head Windows/Linux CI and retained package parity are
 pending publication. No merge, deployment, session reset or game launch occurred;
 installed Dev, private panel, current session and protected normal game are untouched.
+
+### Reachable opening equipment — 22 November 2026
+
+The complete verifier passed 1,670 covered regressions, 82 untraced generation/server
+cases and nine Node tests (1,761 total), including all 9,000 preset seeds. Every
+owned Python module measured 100% line and branch coverage. Lua executable-line
+gates passed; Lua branch coverage is not measured. All 292 frozen functional,
+test and input fingerprints matched. This generation-only increment produces a
+byte-identical native MO2 package to the predecessor whose 111 private-panel
+compatibility tests passed; the private panel itself remains unchanged.
+
+The planner regression exercises thirty seed/start combinations across Cordon,
+Clear Sky and Rostok. All nine local permissions arrive within three capability
+waves without any zone-key receipts. Ten actual Cordon archives place PDA,
+firearms and detector permissions in wave one and all nine permissions by wave
+two. Extracted archive placements and configuration identities match their reports.
+The separate paced analysis takes 13–21 waves to clear 253 checks, with the Living
+Legend goal at waves 5–11. Waves are not measured hours or proof of native balance.
+
+Review covered planning before mutation, local/non-local constraints, plando/gifts,
+exclusions, small custom pools, already-unlocked nearby routes, sparse exploration
+fallback and actionable refusal without partial placement. A custom two-armour-lock
+pool with zone keys off exposed the need to consider already reachable nearby maps;
+its regression now passes while starting-region placement remains preferred.
+
+Stacks on #72. Exact-head Windows/Linux CI and retained package parity are attached
+to the PR when complete. Native acceptance remains not run for Owen. No deployment,
+merge, game launch or session reset occurred; existing Dev progress and normal game
+remain untouched. The opening target of one to two hours still needs timed playtests.

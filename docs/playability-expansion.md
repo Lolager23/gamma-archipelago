@@ -61,6 +61,14 @@ PR #69. No current seed is refilled, deployed or reset. Owen owns native testing
 - Update the local calculator, source explanation and ten-seed analysis. The
   historical visualizations retain their original archived placements.
 
+## Increment 4: opening refinement from actual seed evidence
+
+Spatially nearby gear could still be behind late zone-key chains. The
+[reachable opening planner](early-equipment.md) now uses actual starting access,
+prioritises PDA/firearms/detector, and stages further local permissions through
+low-grind capabilities. Other rewards retain ordinary AP fill. Non-local equipment
+uses upstream early requests; sparse exploration retains its fallback.
+
 Each increment needs source review, regression/coverage, real generation/server
 verification, exact-head Windows/Linux CI and retained package hashes. Native
 acceptance stays **not run** until Owen reports results. None of these increments
@@ -81,11 +89,16 @@ see [generator quantities](generator-quantities.md).
   snapshots, story-mode controls required before starting, new tool rewards tested
   through actual AP server traffic.
 - [x] Increment 2 complete local verifier: 1,703 tests including the 9,000-seed matrix.
-- [ ] Increment 2 exact-head Windows/Linux CI and retained package parity.
+- Current-head CI/package evidence: [content PR #71](https://github.com/Lolager23/gamma-archipelago/pull/71/checks).
 - [x] Increment 3 source: quantities, conditional non-filler overflow and paced reports.
 - [x] Increment 3 complete local verifier: 1,726 tests including the 9,000-seed matrix.
-- [ ] Increment 3 exact-head Windows/Linux CI and retained package parity.
-- [ ] Follow-up: replace spatial-only opening placement with actual reachable capabilities.
+- Current-head CI/package evidence: [generator PR #72](https://github.com/Lolager23/gamma-archipelago/pull/72/checks).
+- Increment 4 current-head CI/package evidence is retained on its stacked PR.
+  Every current head must pass Windows/Linux before merge; native gates stay open.
+- [x] Increment 4 source: actual reachable opening equipment, separate from ordinary key fill.
+- [x] Increment 4 complete local verifier: 1,761 tests including all 9,000 preset seeds.
+- [x] Ten actual Cordon archives: core three permissions in wave one, all nine by wave two.
+- [ ] Owen: confirm those opening assumptions and timings in native gameplay.
 - [ ] Owen: calibrate early equipment timing and repeatable-reward economy in play.
 - [ ] Owen: fresh story-mode creation for both new goals and independent checkboxes.
 - [ ] Owen: emission/Psi Storm observations after loading, plus reload persistence.
