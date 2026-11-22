@@ -4,6 +4,7 @@ import hashlib
 import json
 from collections.abc import Mapping
 from dataclasses import dataclass
+from functools import cached_property
 
 from .discovery import configured_location_ids, normalize_exclusions
 from .expansion_settings import (
@@ -237,8 +238,13 @@ class SeedConfiguration:
     expansion: tuple[tuple[str, int], ...] = ()
     discovery_exclusions: tuple[str, ...] = ()
 
+    @cached_property
+    def _option_values(self) -> Mapping[str, int]:
+        # Access rules query this immutable configuration many times per fill.
+        return dict(self.expansion)
+
     def option(self, name: str) -> int:
-        return dict(self.expansion).get(name, EXPANSION_DEFAULTS[name])
+        return self._option_values.get(name, EXPANSION_DEFAULTS[name])
 
     def to_values(self) -> dict[str, object]:
         return {
