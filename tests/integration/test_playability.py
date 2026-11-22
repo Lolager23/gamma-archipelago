@@ -25,7 +25,11 @@ def test_paid_contracts_can_hold_progression_but_expensive_contracts_reject_gear
 
 
 def test_rank_and_high_gear_logic_require_ap_goodwill_or_a_northern_route():
-    multi = setup_multiworld(GammaWorld, options=presets()["full_story"])
+    multi = setup_multiworld(
+        GammaWorld,
+        options=presets()["full_story"],
+        steps=("generate_early", "create_regions", "create_items", "set_rules"),
+    )
     state = CollectionState(multi)
     for item in multi.itempool:
         if not item.name.startswith("Faction Goodwill:"):

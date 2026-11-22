@@ -32,7 +32,7 @@ def test_artefact_twenty_one_requires_the_melter_and_its_use_permission():
     multi = setup_multiworld(GammaWorld, options=options)
     world = multi.worlds[1]
     state = CollectionState(multi)
-    for item in multi.itempool:
+    for item in multi.itempool + [row.item for row in multi.get_filled_locations()]:
         if item.name not in {"Artefact Melter", "Equipment Unlock: Tools"}:
             state.collect(item, True)
     check = multi.get_location("Discovery: 21 Distinct Artefact Types", 1)
