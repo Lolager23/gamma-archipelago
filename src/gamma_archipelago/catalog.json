@@ -1296,6 +1296,87 @@
       "category": "rewards_artefact_melter",
       "effect": "artefact_melter",
       "melter_section": "itm_artefactskit"
+    },
+    {
+      "id": 28051831,
+      "name": "Tool Use: Basic Tools",
+      "classification": "progression",
+      "effect": "unlock",
+      "category": "rewards_progressive_tools",
+      "permission": "tool_basic",
+      "tool_key": "basic",
+      "tool_section": "itm_basickit",
+      "supplies": [
+        "itm_basickit"
+      ],
+      "kit_tier": 1
+    },
+    {
+      "id": 28051832,
+      "name": "Tool Use: Advanced Tools",
+      "classification": "progression",
+      "effect": "unlock",
+      "category": "rewards_progressive_tools",
+      "permission": "tool_advanced",
+      "tool_key": "advanced",
+      "tool_section": "itm_advancedkit",
+      "supplies": [
+        "itm_advancedkit"
+      ],
+      "kit_tier": 2
+    },
+    {
+      "id": 28051833,
+      "name": "Tool Use: Expert Tools",
+      "classification": "progression",
+      "effect": "unlock",
+      "category": "rewards_progressive_tools",
+      "permission": "tool_expert",
+      "tool_key": "expert",
+      "tool_section": "itm_expertkit",
+      "supplies": [
+        "itm_expertkit"
+      ],
+      "kit_tier": 3
+    },
+    {
+      "id": 28051834,
+      "name": "Tool Use: Drug-making Kit",
+      "classification": "progression",
+      "effect": "unlock",
+      "category": "rewards_drug_making_tools",
+      "permission": "tool_medical",
+      "tool_key": "medical",
+      "tool_section": "itm_drugkit",
+      "supplies": [
+        "itm_drugkit"
+      ]
+    },
+    {
+      "id": 28051835,
+      "name": "Tool Use: Gunsmithing Tools",
+      "classification": "progression",
+      "effect": "unlock",
+      "category": "rewards_gunsmithing_tools",
+      "permission": "tool_ammo",
+      "tool_key": "ammo",
+      "tool_section": "itm_ammokit",
+      "supplies": [
+        "itm_ammokit"
+      ]
+    },
+    {
+      "id": 28051836,
+      "name": "Tool Use: Artefact Melter",
+      "classification": "progression",
+      "effect": "unlock",
+      "category": "rewards_artefact_melter",
+      "permission": "tool_artefact",
+      "tool_key": "artefact",
+      "tool_section": "itm_artefactskit",
+      "supplies": [
+        "itm_artefactskit"
+      ]
     }
   ],
   "locations": [

@@ -15,12 +15,14 @@ end
 function reason(state, row, regions, psi)
     local config = state.configuration and state.configuration.options or {}
     local category = row.category
+    local kit_problem = gamma_ap_tool_permissions.grade_reason(state,row)
+    if kit_problem then return kit_problem end
     if config.content_progression == 1 and row.quota == "artefact" and row.minimum > 20
         and config.rewards_artefact_melter == 1 then
-        local received = false
-        for _,id in ipairs(state.applied_items) do if id == 28051802 then received=true end end
+        local received = gamma_ap_tool_permissions.melter_received(state)
         if not received then return "Artefact Melter required for distinct artefacts 21 and above" end
-        if config.starting_tools == 2 and not state.unlocks.gear_tools then return "Equipment permission required: tools (artefact melter)" end
+        if not gamma_ap_tool_permissions.enabled(state.configuration)
+            and config.starting_tools == 2 and not state.unlocks.gear_tools then return "Equipment permission required: tools (artefact melter)" end
     end
     if config.playability_logic ~= 1 then return end
     local economy = gamma_ap_catalog.opening_economy

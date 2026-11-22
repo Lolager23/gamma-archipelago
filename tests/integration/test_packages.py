@@ -52,6 +52,8 @@ def test_packages_are_reproducible_and_load_from_apworld(tmp_path):
                 "weather",
                 "stamina",
                 "workshop",
+                "tool_permissions",
+                "tool_use",
                 "deliveries",
                 "convenience",
                 "notifications",

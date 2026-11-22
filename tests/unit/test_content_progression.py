@@ -15,7 +15,7 @@ from gamma_archipelago.presets import presets
 
 
 def config(**values):
-    return build_configuration(defaults() | values)
+    return build_configuration(defaults() | {"tool_use_permissions": 0} | values)
 
 
 def test_tool_tiers_require_contiguous_permissions_and_preserve_legacy_copies():

@@ -27,6 +27,12 @@ combat/shop/rank rules, weather and story content, physical tool stashes, quanti
 controls and paced analysis. These are stacked source PRs after #69, with native
 acceptance and deployment separate from the historical merged status below.
 
+The follow-up [tool-use contract](tool-use-permissions.md) replaces AP orange
+tool-stash rewards with permanent use permissions and one free kit in fresh
+seeds. It adds Drug-making/Gunsmithing options and requires Advanced Tools for
+the Class C check. Ordinary looting/crafting remains available; legacy seeds
+retain their published stash behaviour. Native acceptance remains with Owen.
+
 ## Current status at a glance
 
 | Stage | Implemented / automated evidence | Still to validate or finish |

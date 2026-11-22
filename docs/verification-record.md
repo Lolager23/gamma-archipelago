@@ -1,5 +1,31 @@
 # Verification record
 
+## 22 November 2026 — tool-use permissions and Class C prerequisite
+
+Fresh tool contracts now use six catalogue permissions with one free physical
+kit each. Basic/Advanced/Expert retain progressive use; Drug-making, Gunsmithing
+and Artefact Melter permissions are independent. Ordinary looting, carrying,
+buying and crafting remain available. Actual recipe input kits determine use
+requirements, never the crafted output. Class C's solver/PDA/native check
+prerequisite is Advanced capability; A/B use Basic and D uses Expert.
+The [contract and inspected native sources](tool-use-permissions.md) document
+new IDs, compatibility mode, delivery failure boundaries and native acceptance.
+
+The complete documented verifier passed against the pinned AP 0.6.8 source and
+the separate tool-use runtime: 1,716 covered regressions, 83 untraced
+generator/server cases and nine Node tests (1,808 total), including all 9,000
+preset seeds. Every owned Python runtime module measured 100% line and branch
+coverage. All Lua executable-line gates passed, with 100% in both new modules;
+Lua branch coverage is not measured. All 111 private developer-panel tests passed
+in a scratch harness against candidate and installed code; original payload
+hashes are unchanged. Source self-review and frozen-source parity passed.
+Exact-head Windows/Linux CI and package hashes are retained with the PR evidence.
+
+Native acceptance is **not run**, reserved for Owen: all six native shortcuts,
+inventory use, actual crafting/repair routes, Class C credit and save/load.
+No game launch, deployment, session reset or developer-panel change is included.
+Normal multiplayer installations and the current development session are untouched.
+
 ## 22 November 2026 — practical combat and early permissions
 
 The first [playability expansion](playability-expansion.md) increment adds the

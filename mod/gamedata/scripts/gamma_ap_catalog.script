@@ -185,6 +185,7 @@ settlement_rules = {
 }
 rank_goodwill_proxy = {["0"]=0,["3999"]=250,["5999"]=500,["9999"]=750,["15999"]=1000,["23999"]=1500,["34999"]=2000,["49999"]=3000}
 northern_equipment_regions = {"jupiter","zaton","l11_pripyat","pripyat","l11_hospital","l12_stancia","l12_stancia_2","l13_generators"}
+tool_use_items = {[28051831]={["tool_key"]="basic",["tool_section"]="itm_basickit",["permission"]="tool_basic",["category"]="rewards_progressive_tools",["tier"]=1,["name"]="Tool Use: Basic Tools"},[28051832]={["tool_key"]="advanced",["tool_section"]="itm_advancedkit",["permission"]="tool_advanced",["category"]="rewards_progressive_tools",["tier"]=2,["name"]="Tool Use: Advanced Tools"},[28051833]={["tool_key"]="expert",["tool_section"]="itm_expertkit",["permission"]="tool_expert",["category"]="rewards_progressive_tools",["tier"]=3,["name"]="Tool Use: Expert Tools"},[28051834]={["tool_key"]="medical",["tool_section"]="itm_drugkit",["permission"]="tool_medical",["category"]="rewards_drug_making_tools",["tier"]=0,["name"]="Tool Use: Drug-making Kit"},[28051835]={["tool_key"]="ammo",["tool_section"]="itm_ammokit",["permission"]="tool_ammo",["category"]="rewards_gunsmithing_tools",["tier"]=0,["name"]="Tool Use: Gunsmithing Tools"},[28051836]={["tool_key"]="artefact",["tool_section"]="itm_artefactskit",["permission"]="tool_artefact",["category"]="rewards_artefact_melter",["tier"]=0,["name"]="Tool Use: Artefact Melter"}}
 opening_economy = {["starting_money_rubles"]=5000,["contract_key"]="esc_m_trader_1"}
 friendly_goodwill_factions = {["csky"]=true,["dolg"]=true,["ecolog"]=true,["freedom"]=true,["stalker"]=true}
 melter_sections = {[28051802]="itm_artefactskit"}
@@ -309,6 +310,12 @@ item_effects = {
     [28051203] = "progression_stash",
     [28051204] = "progression_stash",
     [28051802] = "artefact_melter",
+    [28051831] = "unlock",
+    [28051832] = "unlock",
+    [28051833] = "unlock",
+    [28051834] = "unlock",
+    [28051835] = "unlock",
+    [28051836] = "unlock",
 }
 item_categories = {
     [28051001] = "",
@@ -415,6 +422,12 @@ item_categories = {
     [28051203] = "rewards_progressive_tools",
     [28051204] = "rewards_progressive_tools",
     [28051802] = "rewards_artefact_melter",
+    [28051831] = "rewards_progressive_tools",
+    [28051832] = "rewards_progressive_tools",
+    [28051833] = "rewards_progressive_tools",
+    [28051834] = "rewards_drug_making_tools",
+    [28051835] = "rewards_gunsmithing_tools",
+    [28051836] = "rewards_artefact_melter",
 }
 lab_levels = {
     ["l04u_labx18"] = true,
@@ -520,6 +533,12 @@ permissions = {
     [28051822] = "recipe_medical",
     [28051823] = "recipe_ammo",
     [28051824] = "recipe_artefact",
+    [28051831] = "tool_basic",
+    [28051832] = "tool_advanced",
+    [28051833] = "tool_expert",
+    [28051834] = "tool_medical",
+    [28051835] = "tool_ammo",
+    [28051836] = "tool_artefact",
 }
 quest_gates = {
     ["lttz_ll_find_doctor"] = "living_legend",
@@ -2141,7 +2160,9 @@ config_limits = {
     ["reward_quantities"] = 1,
     ["rewards_artefact_melter"] = 1,
     ["rewards_convenience"] = 1,
+    ["rewards_drug_making_tools"] = 1,
     ["rewards_faction_reputation"] = 1,
+    ["rewards_gunsmithing_tools"] = 1,
     ["rewards_loot_stashes"] = 1,
     ["rewards_progression_stashes"] = 1,
     ["rewards_progressive_tools"] = 1,
@@ -2174,6 +2195,7 @@ config_limits = {
     ["starting_utilities"] = 2,
     ["stat_level_rewards"] = 4000,
     ["supply_ammo_calibre"] = 4,
+    ["tool_use_permissions"] = 1,
     ["zone_unlock_travel"] = 1,
 }
 tracker_checks = {
@@ -2689,6 +2711,12 @@ tracker_permissions = {
     ["recipe_medical"]="Recipe Access: Medical",
     ["recipe_ammo"]="Recipe Access: Ammunition",
     ["recipe_artefact"]="Recipe Access: Artefacts",
+    ["tool_basic"]="Tool Use: Basic Tools",
+    ["tool_advanced"]="Tool Use: Advanced Tools",
+    ["tool_expert"]="Tool Use: Expert Tools",
+    ["tool_medical"]="Tool Use: Drug-making Kit",
+    ["tool_ammo"]="Tool Use: Gunsmithing Tools",
+    ["tool_artefact"]="Tool Use: Artefact Melter",
 }
 tracker_item_names = {
     [28051001]="Basic Toolkit",
@@ -2795,6 +2823,12 @@ tracker_item_names = {
     [28051203]="Progression Stash: Advanced Tools",
     [28051204]="Progression Stash: Expert Tools",
     [28051802]="Artefact Melter",
+    [28051831]="Tool Use: Basic Tools",
+    [28051832]="Tool Use: Advanced Tools",
+    [28051833]="Tool Use: Expert Tools",
+    [28051834]="Tool Use: Drug-making Kit",
+    [28051835]="Tool Use: Gunsmithing Tools",
+    [28051836]="Tool Use: Artefact Melter",
 }
 tracker_milestones = {
     checks_kill_milestones="Defeat {count} Enemies",
@@ -3007,6 +3041,12 @@ delivery_contents = {
     [28051902]={{"gun_oil","glue_a","duct_tape"}},
     [28051903]={{"ammo_9x18_fmj","ammo_9x18_fmj","ammo_9x18_fmj"},{"ammo_9x19_fmj","ammo_9x19_fmj","ammo_9x19_fmj"},{"ammo_5.45x39_fmj","ammo_5.45x39_fmj","ammo_5.45x39_fmj"},{"ammo_5.56x45_ss190","ammo_5.56x45_ss190","ammo_5.56x45_ss190"},{"ammo_7.62x39_fmj","ammo_7.62x39_fmj","ammo_7.62x39_fmj"}},
     [28051904]={{"bread","water_drink","bandage"}},
+    [28051831]={{"itm_basickit"}},
+    [28051832]={{"itm_advancedkit"}},
+    [28051833]={{"itm_expertkit"}},
+    [28051834]={{"itm_drugkit"}},
+    [28051835]={{"itm_ammokit"}},
+    [28051836]={{"itm_artefactskit"}},
 }
 notice_cause_templates = {
     ["enter"]="by entering {value}",
@@ -3083,6 +3123,8 @@ config_defaults = {
     ["reward_quantities"]=0,
     ["rewards_artefact_melter"]=0,
     ["rewards_convenience"]=0,
+    ["rewards_drug_making_tools"]=0,
+    ["rewards_gunsmithing_tools"]=0,
     ["rewards_progressive_tools"]=0,
     ["rewards_recipe_access"]=0,
     ["rewards_supply_ammunition"]=0,
@@ -3096,5 +3138,6 @@ config_defaults = {
     ["starting_location"]=0,
     ["stat_level_rewards"]=0,
     ["supply_ammo_calibre"]=0,
+    ["tool_use_permissions"]=0,
     ["zone_unlock_travel"]=0,
 }

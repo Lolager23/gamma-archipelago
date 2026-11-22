@@ -9,6 +9,8 @@ from gamma_archipelago.content_progression import melter_check, tool_level
 from gamma_archipelago.playability import allowed
 from gamma_archipelago.settlement_access import requirement
 from gamma_archipelago.starting import starting_level
+from gamma_archipelago.tool_permissions import enabled as tool_permissions_enabled
+from gamma_archipelago.tool_permissions import melter_item, required_tier
 
 if TYPE_CHECKING:
     from . import GammaWorld
@@ -65,7 +67,9 @@ def apply_access_rules(world: "GammaWorld", catalog: dict[str, Any]) -> None:
         required = []
         if category in {"checks_artefacts"}:
             required.append("detector")
-            if melter_check(world.configuration, definition):
+            if melter_check(world.configuration, definition) and not tool_permissions_enabled(
+                world.configuration
+            ):
                 required.append("tools")
         if category in {
             "checks_quest_types",
@@ -86,10 +90,12 @@ def apply_access_rules(world: "GammaWorld", catalog: dict[str, Any]) -> None:
             for group in required
             if gear["starting_" + group] == 2
         ]
-        tools = (
+        tool_tier = required_tier(world.configuration, definition)
+        if (
             "rewards_progressive_tools" in world.configuration.rewards
             and category == "checks_gear_upgrades"
-        )
+        ):
+            tool_tier = 3
         if (
             category == "checks_gear_upgrades"
             and "rewards_workshop_access" in world.configuration.rewards
@@ -133,7 +139,7 @@ def apply_access_rules(world: "GammaWorld", catalog: dict[str, Any]) -> None:
             items=names,
             regional=regional,
             fight=combat,
-            tools=tools,
+            tools=tool_tier,
             earning=earning,
             settlement=settlement,
             definition=definition,
@@ -153,11 +159,11 @@ def apply_access_rules(world: "GammaWorld", catalog: dict[str, Any]) -> None:
                     lambda level: state.can_reach_region(level, player),
                 )
                 and (settlement is None or state.has(settlement.name, player, settlement.copies))
-                and (not tools or tool_level(lambda name: state.count(name, player)) >= 3)
+                and (not tools or tool_level(lambda name: state.count(name, player)) >= tools)
                 and (
                     not melter_check(world.configuration, definition)
                     or "rewards_artefact_melter" not in world.configuration.rewards
-                    or state.has("Artefact Melter", player)
+                    or state.has(melter_item(world.configuration), player)
                 )
                 and all(state.has(name, player) for name in items)
                 and regional.accessible(lambda level: state.can_reach_region(level, player))

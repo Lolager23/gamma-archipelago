@@ -1,7 +1,7 @@
 import pytest
 
-from gamma_archipelago.catalog import enabled_item_ids
 from gamma_archipelago.configuration import build_configuration, defaults
+from gamma_archipelago.content_progression import configured_item_ids
 from gamma_archipelago.discovery import configured_location_ids
 from gamma_archipelago.presets import presets
 from gamma_archipelago.web_estimates import ASSUMPTIONS, estimate_playtime
@@ -10,20 +10,18 @@ from gamma_archipelago.web_planner import metadata, player_document, preview
 
 def test_metadata_and_all_presets_match_authoritative_catalogues():
     data = metadata()
-    assert len(data["checks"]) == 21 and len(data["rewards"]) == 16
+    assert len(data["checks"]) == 21 and len(data["rewards"]) == 18
     assert len(data["gear"]) == 9 and len(data["quantities"]) == 4
     assert len(data["goals"]) == 9 and len(data["levels"]) == 33
     for values in presets().values():
         configuration = build_configuration(values)
         result = preview(values, {})
         assert {row["id"] for row in result["checks"]} == configured_location_ids(configuration)
-        assert {row["id"] for row in result["rewards"]} == enabled_item_ids(
-            configuration.rewards, configuration.gear
-        )
+        assert {row["id"] for row in result["rewards"]} == configured_item_ids(configuration)
         assert result["reward_slots"] == result["network_checks"]
         assert result["digest"] == configuration.digest
     full = preview(presets()["full_story"], {})
-    assert (full["network_checks"], full["reward_types"]) == (253, 104)
+    assert (full["network_checks"], full["reward_types"]) == (253, 105)
 
 
 def test_quick_pilot_estimates_goal_separately_from_optional_map_completion():

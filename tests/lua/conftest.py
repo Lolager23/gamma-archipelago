@@ -23,6 +23,8 @@ def lua():
         "start",
         "start_menu",
         "equipment",
+        "tool_permissions",
+        "tool_use",
         "loadout",
         "convenience",
         "deliveries",

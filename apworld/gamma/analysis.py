@@ -8,6 +8,9 @@ from typing import TYPE_CHECKING
 from BaseClasses import CollectionState, Location
 
 from gamma_archipelago.content_progression import TOOL_CLAIMS
+from gamma_archipelago.tool_permissions import TOOL_CAPABILITIES
+
+TOOL_EVENTS = TOOL_CLAIMS + TOOL_CAPABILITIES
 
 if TYPE_CHECKING:
     from . import GammaWorld
@@ -25,13 +28,14 @@ def _chains() -> dict[str, str]:
             result[row["name"]] = category + row["key"]
         elif row.get("weapon_grade"):
             result[row["name"]] = "weapon_grade"
-    result.update(dict.fromkeys(TOOL_CLAIMS, "tool_claim"))
+    result.update(dict.fromkeys(TOOL_EVENTS, "tool_claim"))
     return result
 
 
 CHAINS = _chains()
 ORDER = {row["name"]: index for index, row in enumerate(_data["locations"])}
 ORDER.update({name: index for index, name in enumerate(TOOL_CLAIMS)})
+ORDER.update({name: index for index, name in enumerate(TOOL_CAPABILITIES)})
 
 
 def _reachable(
@@ -85,7 +89,7 @@ def analyse(world: "GammaWorld", paced: bool, spoilers: bool) -> dict[str, objec
             if row.address is None
             and (
                 not paced
-                or row.name not in TOOL_CLAIMS
+                or row.name not in TOOL_EVENTS
                 or multiworld.game[row.player] != world.game
             )
         ]

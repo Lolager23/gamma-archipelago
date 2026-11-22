@@ -58,7 +58,11 @@ def restrict_tool_stashes(world: "GammaWorld", catalog: dict) -> None:
     if not world.configuration.option("content_progression"):
         return
     definitions = {row["id"]: row for row in catalog["locations"]}
-    tiers = {row["id"]: row["tool_level"] for row in catalog["items"] if "tool_level" in row}
+    tiers = {
+        row["id"]: row.get("kit_tier", row.get("tool_level"))
+        for row in catalog["items"]
+        if "tool_level" in row or "kit_tier" in row
+    }
     middle = {"l03_agroprom", "l05_bar", "l06_rostok", "l08_yantar", "l07_military"}
     for location in world.multiworld.get_locations(world.player):
         row = definitions.get(location.address)

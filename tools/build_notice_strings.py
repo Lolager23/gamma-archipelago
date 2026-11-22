@@ -21,6 +21,8 @@ def generate_notice_strings(root: Path, catalogue: dict[str, Any]) -> None:
         if cause.kind not in {"check", "source"}:
             entries[value_key(cause)] = cause.value
     entries["gamma_ap_notice_joined"] = JOIN_TEMPLATE
+    entries["gamma_ap_tool_permission_required"] = "AP permission required to use: "
+    entries["gamma_ap_tool_session_required"] = "Restore a valid AP session before using this kit"
     entries.update({f"gamma_ap_reward_{row['id']}": row["name"] for row in catalogue["items"]})
     for key, value in sorted(entries.items()):
         SubElement(SubElement(strings, "string", id=key), "text").text = value

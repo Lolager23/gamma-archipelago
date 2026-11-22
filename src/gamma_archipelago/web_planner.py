@@ -28,6 +28,8 @@ from .starting_unlock import preview_budget
 from .web_estimates import ASSUMPTIONS, estimate_playtime
 
 LABELS = {
+    "rewards_drug_making_tools": "Drug-making kit use permission and free kit",
+    "rewards_gunsmithing_tools": "Gunsmithing tools use permission and free kit",
     "checks_emissions": "Experience an emission",
     "checks_psi_storms": "Experience a Psi Storm",
     "checks_mortal_sin": "Mortal Sin story checks",
@@ -225,8 +227,8 @@ def preview(values: Mapping[str, object], assumptions: Mapping[str, object]) -> 
             "Each check holds one item. Explicit quantity mode guarantees "
             "the requested repeatable copies.",
             "Extra artefacts 41–60 appear only for non-filler capacity, up to the chosen ceiling.",
-            "Required progression is budgeted first; fresh progressive tools "
-            "use three tiered stashes.",
+            "Required progression is budgeted first; fresh tool permissions include a free kit "
+            "and keep ordinary looting/crafting available.",
             "Missable exclusions accept filler only. Convenience has a capped useful allocation.",
             "Protected opening reserves reliable Cordon checks for a fresh Loner/Cordon start.",
             "Settings preview only. Actual-seed JSON is optional; placement mode reveals spoilers.",

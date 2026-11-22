@@ -24,6 +24,8 @@ S.T.A.L.K.E.R. GAMMA:
   checks_shops: 0
   checks_shop_purchases: 0
   checks_faction_standing: 0
+  rewards_drug_making_tools: 1
+  rewards_gunsmithing_tools: 1
   rewards_artefact_melter: 1
   rewards_supply_medical: 1
   rewards_supply_maintenance: 1
@@ -53,6 +55,7 @@ S.T.A.L.K.E.R. GAMMA:
   starting_medicine: 100
   starting_food: 100
   starting_money: 100
+  tool_use_permissions: 1
   reward_quantities: 1
   basic_toolkits: 0
   artefact_extra_ceiling: 60

@@ -102,7 +102,10 @@ def test_tool_stash_contents_are_physical_and_do_not_grant_psi_permission(lua):
     from .test_stashes import poll, progress, stash_game
 
     game, engine = stash_game(
-        lua, items=(28051202, 28051203, 28051204), rewards_progressive_tools=1
+        lua,
+        items=(28051202, 28051203, 28051204),
+        rewards_progressive_tools=1,
+        tool_use_permissions=0,
     )
     lua.execute("""local native=function() return true end
         ui_workshop={UIWorkshopRepair={Repair=native},UIWorkshopUpgrade={Upgrade=native},UIWorkshopCraft={Craft=native}}
@@ -149,6 +152,7 @@ def test_melter_projection_is_independent_of_the_combat_pacing_toggle(lua):
         checks_artefacts=1,
         rewards_artefact_melter=1,
         playability_logic=0,
+        tool_use_permissions=0,
         starting_tools=2,
         rewards_starting_gear_unlocks=1,
     )
@@ -165,7 +169,9 @@ def test_melter_projection_is_independent_of_the_combat_pacing_toggle(lua):
 def test_melter_delivery_spawns_the_approved_item_without_expanding_legacy_section_ids(lua):
     from .test_stashes import poll, progress, stash_game
 
-    game, engine = stash_game(lua, items=(28051802,), rewards_artefact_melter=1)
+    game, engine = stash_game(
+        lua, items=(28051802,), rewards_artefact_melter=1, tool_use_permissions=0
+    )
     poll(game, engine)
     assert progress(lua, game).received_count == 1
     assert engine.spawn_calls == 1

@@ -8,11 +8,11 @@ function reset()
     last_warning = -1000
 end
 
-function warn()
+function warn(message)
     local now = time_global()
     if gamma_ap_readiness.ready() and now >= last_warning + 1000
         and actor_menu and type(actor_menu.set_msg) == "function" then
-        local ok = pcall(actor_menu.set_msg,1,game.translate_string("gamma_ap_equipment_locked"),3)
+        local ok = pcall(actor_menu.set_msg,1,message or game.translate_string("gamma_ap_equipment_locked"),3)
         if not ok then printf("[GAMMA AP] Cannot display the equipment permission warning") end
         last_warning = now
     end
@@ -26,6 +26,8 @@ end
 local function denied(item)
     local value = object(item)
     if not value then return true end
+    local kit_problem = gamma_ap_tool_permissions.section_reason(get_state(),value:section())
+    if kit_problem then warn(kit_problem); return true end
     if gamma_ap_gear_locks.locked(get_state(),value) then warn(); return true end
     return false
 end
@@ -72,6 +74,8 @@ local function install_custom(class)
             if action == "item_device.func_battery" then
                 return delegate(window,item,bag,temp,index,...)
             end
+            local kit_problem = gamma_ap_tool_permissions.section_reason(get_state(),value:section())
+            if kit_problem then warn(kit_problem); return false end
             if (group == "tools" or group == "utilities" or group == "pda" or group == "detector")
                 and denied(value) then return false end
             return delegate(window,item,bag,temp,index,...)
@@ -122,6 +126,7 @@ function install(state_getter)
     get_state = state_getter
     install_inventory()
     install_devices()
+    gamma_ap_tool_use.install(state_getter)
 end
 
 function before_key(state,dik,binding,disabled,flags)

@@ -63,6 +63,7 @@ end
 
 local function eligible(state, id)
     local row = gamma_ap_catalog.tracker_checks[id]
+    if gamma_ap_tool_permissions.grade_reason(state,row) then return false end
     if state.configuration.options.playability_logic ~= 1
         or not (row.category == "checks_armour_tiers" and tonumber(row.key) >= 3 or row.weapon_grade == "D") then return true end
     local ok,psi = pcall(function()
