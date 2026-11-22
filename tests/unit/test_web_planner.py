@@ -21,7 +21,7 @@ def test_metadata_and_all_presets_match_authoritative_catalogues():
         assert result["reward_slots"] == result["network_checks"]
         assert result["digest"] == configuration.digest
     full = preview(presets()["full_story"], {})
-    assert (full["network_checks"], full["reward_types"]) == (253, 105)
+    assert (full["network_checks"], full["reward_types"]) == (253, 101)
 
 
 def test_quick_pilot_estimates_goal_separately_from_optional_map_completion():

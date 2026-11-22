@@ -5,7 +5,7 @@ from collections import defaultdict
 from importlib.resources import files
 from typing import TYPE_CHECKING
 
-from BaseClasses import CollectionState, Location
+from BaseClasses import CollectionState, Item, Location
 
 from gamma_archipelago.content_progression import TOOL_CLAIMS
 from gamma_archipelago.tool_permissions import TOOL_CAPABILITIES
@@ -36,6 +36,29 @@ CHAINS = _chains()
 ORDER = {row["name"]: index for index, row in enumerate(_data["locations"])}
 ORDER.update({name: index for index, name in enumerate(TOOL_CLAIMS)})
 ORDER.update({name: index for index, name in enumerate(TOOL_CAPABILITIES)})
+PROGRESSIVE_REWARDS = {row["name"] for row in _data["items"] if "class_group" in row} | {
+    "Progressive Tools"
+}
+
+
+def _collect(
+    state: CollectionState, pending: list[tuple[Item, Location]], paced: bool
+) -> list[tuple[Item, Location]]:
+    deferred, applied = [], set()
+    for item, location in pending:
+        key = (item.player, item.name)
+        chain = (
+            paced
+            and state.multiworld.game[item.player] == _data["game"]
+            and item.name in PROGRESSIVE_REWARDS
+        )
+        if chain and key in applied:
+            deferred.append((item, location))
+        else:
+            state.collect(item, True, location)
+            if chain:
+                applied.add(key)
+    return deferred
 
 
 def _reachable(
@@ -81,7 +104,8 @@ def analyse(world: "GammaWorld", paced: bool, spoilers: bool) -> dict[str, objec
     state = CollectionState(multiworld)
     remaining = set(multiworld.get_filled_locations())
     waves, goal_step = [], None
-    while remaining:
+    pending: list[tuple[Item, Location]] = []
+    while remaining or pending:
         # Ordinary local goal events settle without consuming a planning step.
         events = [
             row
@@ -98,13 +122,16 @@ def analyse(world: "GammaWorld", paced: bool, spoilers: bool) -> dict[str, objec
         if goal_step is None and multiworld.completion_condition[world.player](state):
             goal_step = len(waves)
         reachable = _reachable(world, state, remaining, paced)
-        if not reachable:
+        if not reachable and not pending:
             break
         rows = sorted(reachable, key=lambda row: (row.player, row.address or 0, row.name))
         entry = _entry(world.player, rows, len(waves) + 1, spoilers)
         waves.append(entry)
-        for row in rows:
-            state.collect(row.item, True, row)
+        pending = _collect(state, pending + [(row.item, row) for row in rows], paced)
+        if pending:
+            entry["deferred_reward_count"] = len(pending)
+            if spoilers:
+                entry["deferred_rewards"] = [item.name for item, _ in pending]
         remaining.difference_update(rows)
     goal = bool(multiworld.completion_condition[world.player](state))
     return {

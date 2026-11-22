@@ -34,8 +34,11 @@ export function categoryOptions(container, definitions, options, change) {
 }
 
 export function loadoutOptions(metadata, options, change) {
+  const classes = options.equipment_class_progression === 1;
+  const classGroups = new Set(["starting_firearms", "starting_outfit", "starting_helmet", "starting_backpack"]);
   $("gear-options").replaceChildren(
-    ...metadata.gear.map((key) => {
+    ...metadata.gear.filter((key) => !classes ||
+      (!classGroups.has(key) && key !== "starting_melee" && key !== "starting_tools")).map((key) => {
       const label = element("label", title(key));
       const select = document.createElement("select");
       select.dataset.option = key;
@@ -51,6 +54,18 @@ export function loadoutOptions(metadata, options, change) {
       label.append(select);
       return label;
     }),
+    ...(classes ? metadata.advanced.filter(({key}) => /^initial_.*_class$/.test(key)).map(({key,label,choices}) => {
+      const row = element("label", label);
+      const select = document.createElement("select");
+      select.dataset.option = key;
+      choices.forEach((text,index) => select.add(new Option(text,index)));
+      select.value = options[key];
+      select.disabled = options.rewards_starting_gear_unlocks !== 1;
+      select.addEventListener("change", () => change(key,Number(select.value)));
+      row.append(select);
+      return row;
+    }) : []),
+    ...(classes ? [element("p", "Knife use is always allowed. A missing starter knife and each permitted backpack tier are supplied free.")] : []),
   );
   $("quantity-options").replaceChildren(
     ...metadata.quantities.map((key) => {
@@ -76,7 +91,7 @@ export function loadoutOptions(metadata, options, change) {
 
 export function advancedOptions(metadata, options, change) {
   $("advanced-options").replaceChildren(
-    ...metadata.advanced.map(({ key, label, maximum, choices }) => {
+    ...metadata.advanced.filter(({key}) => !options.equipment_class_progression || !/^initial_.*_class$/.test(key)).map(({ key, label, maximum, choices }) => {
       const row = element("label", label);
       const input = document.createElement(choices ? "select" : "input");
       input.setAttribute("aria-label", label);
@@ -307,6 +322,8 @@ export function showStepReport(report) {
       if (!step.available_checks)
         list.append(element("li", "Names and rewards require a seed report with placement spoilers."));
       for (const event of step.local_events) list.append(element("li", `Local event: ${event}`));
+      if (step.deferred_reward_count)
+        list.append(element("li", `${step.deferred_reward_count} progressive rewards wait for later steps (one tier per chain per step).${step.deferred_rewards ? " " + step.deferred_rewards.join(", ") : ""}`));
       details.append(list); container.append(details);
     }
   }

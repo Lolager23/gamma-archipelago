@@ -9,7 +9,11 @@ from gamma_archipelago.tool_permissions import TOOL_CAPABILITIES, TOOL_ITEMS, TO
 
 
 def settings(**options):
-    return presets()["full_story"] | options
+    return (
+        presets()["full_story"]
+        | {"equipment_class_progression": 0, "progressive_tool_receipts": 0}
+        | options
+    )
 
 
 def test_class_c_cannot_hold_its_advanced_tool_permission_behind_itself():

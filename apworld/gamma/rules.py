@@ -6,6 +6,8 @@ from BaseClasses import CollectionState
 
 from gamma_archipelago.activity_requirements import regional_requirement
 from gamma_archipelago.content_progression import melter_check, tool_level
+from gamma_archipelago.equipment_classes import check_classes, count_with_aliases
+from gamma_archipelago.equipment_classes import level as class_level
 from gamma_archipelago.playability import allowed
 from gamma_archipelago.quest_routes import allowed as quest_allowed
 from gamma_archipelago.settlement_access import requirement
@@ -156,18 +158,22 @@ def apply_access_rules(world: "GammaWorld", catalog: dict[str, Any]) -> None:
             settlement=settlement,
             definition=definition,
         ):
+            def count(name):
+                return state.count(name, player)
+
+            permitted = count_with_aliases(world.configuration, count)
             weapon = (
                 gear["starting_firearms"] != 2
                 or gear["starting_melee"] != 2
-                or state.has("Equipment Unlock: Firearms", player)
-                or state.has("Equipment Unlock: Melee", player)
+                or permitted("Equipment Unlock: Firearms")
+                or permitted("Equipment Unlock: Melee")
             )
             return (
                 prior(state)
                 and allowed(
                     world.configuration,
                     definition,
-                    lambda name: state.count(name, player),
+                    permitted,
                     lambda level: state.can_reach_region(level, player),
                 )
                 and (settlement is None or state.has(settlement.name, player, settlement.copies))
@@ -177,7 +183,11 @@ def apply_access_rules(world: "GammaWorld", catalog: dict[str, Any]) -> None:
                     or "rewards_artefact_melter" not in world.configuration.rewards
                     or state.has(melter_item(world.configuration), player)
                 )
-                and all(state.has(name, player) for name in items)
+                and all(permitted(name) for name in items)
+                and all(
+                    class_level(world.configuration, group, count) >= tier
+                    for group, tier in check_classes(world.configuration, definition).items()
+                )
                 and regional.accessible(lambda level: state.can_reach_region(level, player))
                 and (not fight or weapon)
                 and (

@@ -102,6 +102,7 @@ def test_protected_opening_reports_local_permissions_and_refuses_overloaded_cord
         **defaults(),
         "opening_policy": 1,
         "reward_quantities": 0,
+        "equipment_class_progression": 0,
         "starting_pda": 2,
         "rewards_starting_gear_unlocks": 1,
         "rewards_zone_keys": 1,
@@ -130,7 +131,9 @@ def test_settings_metadata_covers_every_bounded_option_and_roster():
         if row["choices"] is not None:
             assert len(row["choices"]) == row["maximum"] + 1
         else:
-            assert row["key"].endswith(("_discovery_count", "_filler_tail", "_ceiling"))
+            assert row["key"].endswith(
+                ("_discovery_count", "_filler_tail", "_ceiling", "_condition")
+            )
 
 
 @pytest.mark.parametrize(

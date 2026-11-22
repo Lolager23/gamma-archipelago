@@ -6,6 +6,8 @@ from importlib.resources import files
 from typing import TYPE_CHECKING
 
 from .catalog import MAP_LOCATIONS
+from .equipment_classes import GROUPS, count_with_aliases
+from .equipment_classes import enabled as class_enabled
 
 if TYPE_CHECKING:
     from .configuration import SeedConfiguration
@@ -24,6 +26,7 @@ def opening_permissions(
     if not configuration.option("opening_policy"):
         return ()
     gear = dict(configuration.gear)
+    permitted = count_with_aliases(configuration, lambda name: starting.get(name, 0))
     groups = []
     if gear["starting_pda"] == 2:
         groups.append("PDA")
@@ -40,9 +43,11 @@ def opening_permissions(
     ):
         groups.append("Firearms")
     return tuple(
-        "Equipment Unlock: " + group
+        GROUPS["firearms"]["item_name"]
+        if group == "Firearms" and class_enabled(configuration)
+        else "Equipment Unlock: " + group
         for group in groups
-        if not starting.get("Equipment Unlock: " + group, 0)
+        if not permitted("Equipment Unlock: " + group)
     )
 
 

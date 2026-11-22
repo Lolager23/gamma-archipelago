@@ -6,6 +6,7 @@ def test_protection_targets_only_locked_needed_permissions_and_respects_starting
     values = {
         **defaults(),
         "opening_policy": 1,
+        "equipment_class_progression": 0,
         "rewards_starting_gear_unlocks": 1,
         "starting_pda": 2,
         "starting_detector": 2,

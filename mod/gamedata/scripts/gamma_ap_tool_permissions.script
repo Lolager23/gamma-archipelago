@@ -30,15 +30,28 @@ end
 
 function item_enabled(configuration,id)
     local direct = enabled(configuration)
+    if direct and configuration.options.progressive_tool_receipts == 1 then
+        if id == 28051801 then return true end
+        local row=gamma_ap_catalog.tool_use_items[id]
+        if row and row.tier > 0 then return false end
+        return not (gamma_ap_catalog.tool_stash_levels[id] or id == 28051802)
+    end
     if gamma_ap_catalog.tool_use_items[id] then return direct == true end
     return not (direct and (gamma_ap_catalog.tool_stash_levels[id] or id == 28051801 or id == 28051802))
 end
 
 function supplies(state,id)
+    if id == 28051801 and enabled(state.configuration)
+        and state.configuration.options.progressive_tool_receipts == 1 then return true end
     return enabled(state.configuration) and gamma_ap_catalog.tool_use_items[id] ~= nil
 end
 
 function level(state)
+    if enabled(state.configuration) and state.configuration.options.progressive_tool_receipts == 1 then
+        local count=0
+        for _,id in ipairs(state.applied_items) do if id == 28051801 then count=count+1 end end
+        return math.min(3,count)
+    end
     local value = 0
     for tier,key in ipairs(tier_keys) do
         if not state.unlocks["tool_"..key] then break end
@@ -54,7 +67,8 @@ function reason(state,key)
     if not state.session_key or state.refused_save then
         return translated("gamma_ap_tool_session_required","Restore a valid AP session before using this kit")
     end
-    if not state.unlocks[row.permission] or (row.tier > 0 and level(state) < row.tier) then
+    local generic = config.options.progressive_tool_receipts == 1 and row.tier > 0
+    if (not generic and not state.unlocks[row.permission]) or (row.tier > 0 and level(state) < row.tier) then
         return translated("gamma_ap_tool_permission_required","AP permission required to use: ")
             ..translated("gamma_ap_reward_"..id,row.name)
     end
@@ -78,6 +92,16 @@ end
 
 function grade_reason(state,row)
     local tier = grades[row.weapon_grade]
+    local config=state.configuration
+    if gamma_ap_equipment_classes.contract(config) then
+        local mapping = row.category == "checks_armour_tiers" and gamma_ap_catalog.equipment_classes.armour_tools
+            or row.category == "checks_knife_tiers" and gamma_ap_catalog.equipment_classes.knife_tools
+        tier = tier or (mapping and mapping[row.key])
+        if row.category == "checks_weapon_tiers" and not tier then
+            local role=gamma_ap_catalog.equipment_classes.weapon_role_minimum[row.key]
+            tier=({1,1,2,3})[role]
+        end
+    end
     if enabled(state.configuration) and tier then return reason(state,tier_keys[tier]) end
 end
 

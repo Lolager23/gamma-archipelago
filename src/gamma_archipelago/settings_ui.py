@@ -4,6 +4,22 @@ from .expansion_settings import EXPANSION_LIMITS
 from .reward_quantities import DEFAULT_COUNTS
 
 CHOICES = {
+    "equipment_class_progression": [
+        "Legacy equipment permissions",
+        "Progressive equipment classes",
+    ],
+    "progressive_tool_receipts": ["Named tool-tier rewards", "Generic Basic-to-Expert receipts"],
+    "initial_firearm_class": ["None", "Class A", "Class B", "Class C", "Class D"],
+    "initial_outfit_class": [
+        "None",
+        "Novice",
+        "Light",
+        "Medium / Scientific",
+        "Heavy",
+        "Exoskeleton",
+    ],
+    "initial_helmet_class": ["None", "Light", "Medium", "Heavy", "Exoskeleton"],
+    "initial_backpack_class": ["None", "Basic", "Small", "Small Military", "Military", "Tourist"],
     "quest_zone_logic": ["Legacy travel assumptions", "Native quest and northern psi restrictions"],
     "tool_use_permissions": ["Legacy physical tool rewards", "Tool-use permissions and free kits"],
     "reward_quantities": ["Legacy weighted rewards", "Explicit repeatable reward quantities"],
@@ -58,7 +74,13 @@ def advanced_options() -> list[dict[str, object]]:
     return [
         {
             "key": key,
-            "label": "PDA tracker" if key == "pda_tracker" else key.replace("_", " ").capitalize(),
+            "label": (
+                "PDA tracker"
+                if key == "pda_tracker"
+                else "Equipment check condition (%)"
+                if key == "equipment_check_condition"
+                else key.replace("_", " ").capitalize()
+            ),
             "maximum": maximum,
             "choices": CHOICES.get(key),
         }

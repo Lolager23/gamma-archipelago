@@ -1,0 +1,83 @@
+-- Class permissions are a projection of initial settings and ordered receipts.
+function contract(configuration)
+    return configuration and configuration.options.equipment_class_progression == 1
+end
+
+function enabled(configuration)
+    return contract(configuration) and configuration.options.rewards_starting_gear_unlocks == 1
+end
+
+function level(state, group)
+    local row = gamma_ap_catalog.equipment_classes.groups[group]
+    if not row then return 0 end
+    if enabled(state.configuration) then
+        local value = state.configuration.options[row.option] or 0
+        for _,id in ipairs(state.applied_items) do
+            if id == row.item_id then value=value+1 end
+        end
+        return math.min(#row.labels,value)
+    end
+    local options = state.configuration and state.configuration.options or {}
+    return options["starting_"..group] == 2 and not state.unlocks["gear_"..group] and 0 or #row.labels
+end
+
+function permitted(state,group)
+    if contract(state.configuration) and (group == "melee" or group == "tools") then return true end
+    if enabled(state.configuration) and gamma_ap_catalog.equipment_classes.groups[group] then
+        return level(state,group) >= 1
+    end
+    local options = state.configuration and state.configuration.options or {}
+    return options["starting_"..tostring(group)] ~= 2 or state.unlocks["gear_"..tostring(group)] == true
+end
+
+function section_tier(section,group)
+    local row = gamma_ap_catalog.equipment_classes.groups[group]
+    if not row then return 0 end
+    if row.sections then return row.sections[section] or #row.labels end
+    if group == "outfit" and gamma_ap_catalog.powered_outfits[section] then return 5 end
+    local repair = ini_sys:r_string_ex(section,"repair_type")
+    return row.repair_types[repair] or #row.labels -- Unknown classified gear fails conservatively.
+end
+
+function section_allowed(state,section)
+    local group = gamma_ap_equipment.group(section)
+    if enabled(state.configuration) and gamma_ap_catalog.equipment_classes.groups[group] then
+        return level(state,group) >= section_tier(section,group)
+    end
+    return permitted(state,group)
+end
+
+function item_enabled(configuration,id)
+    if gamma_ap_catalog.equipment_class_items[id] then return enabled(configuration) == true end
+    local reward = gamma_ap_catalog.gear_rewards[id]
+    if contract(configuration) and reward then
+        return not (gamma_ap_catalog.equipment_classes.groups[reward.group]
+            or reward.group == "melee" or reward.group == "tools")
+    end
+    return true
+end
+
+function supplies(state,id)
+    return enabled(state.configuration) and gamma_ap_catalog.equipment_class_items[id] == "backpack"
+end
+
+function check_reason(state,row)
+    if not contract(state.configuration) then return end
+    local group,tier
+    if row.category == "checks_armour_tiers" then group,tier="outfit",tonumber(row.key)+1 end
+    if row.category == "checks_weapon_tiers" then
+        group="firearms"
+        tier=row.weapon_grade ~= "" and string.byte(row.weapon_grade)-string.byte("A")+1
+            or gamma_ap_catalog.equipment_classes.weapon_role_minimum[row.key]
+    end
+    if group and level(state,group) < tier then
+        return "Equipment class required: "..gamma_ap_catalog.equipment_classes.groups[group].labels[tier]
+    end
+end
+
+function usable_condition(state,object)
+    local condition=object:condition()
+    local minimum=contract(state.configuration) and state.configuration.options.equipment_check_condition or 0
+    -- Native condition values can round just below an exact percentage.
+    return condition > 0 and condition <= 1 and condition*100+0.00001 >= minimum
+end

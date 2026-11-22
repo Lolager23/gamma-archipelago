@@ -14,6 +14,55 @@ from Options import (
 )
 
 
+class EquipmentClassProgression(DefaultOnToggle):
+    """Use cumulative firearm, outfit, helmet and backpack class permissions; knives stay usable."""
+
+    display_name = "Equipment class progression"
+
+
+class ProgressiveToolReceipts(DefaultOnToggle):
+    """Receipts unlock and supply Basic, then Advanced, then Expert tools."""
+
+    display_name = "Generic progressive tool rewards"
+
+
+class InitialFirearmClass(Range):
+    """Starting firearm permission: 0 none, 1 A, 2 B, 3 C, 4 D."""
+
+    display_name = "Initial firearm class"
+    range_start = 0
+    range_end = 4
+    default = 1
+
+
+class InitialOutfitClass(InitialFirearmClass):
+    """0 none, 1 Novice, 2 Light, 3 Medium/Scientific, 4 Heavy, 5 Exoskeleton."""
+
+    display_name = "Initial outfit class"
+    range_end = 5
+
+
+class InitialHelmetClass(InitialFirearmClass):
+    """0 none, 1 Light, 2 Medium, 3 Heavy, 4 Exoskeleton."""
+
+    display_name = "Initial helmet class"
+
+
+class InitialBackpackClass(InitialOutfitClass):
+    """0 none, then Basic, Small, Small Military, Military and Tourist. Includes a free bag."""
+
+    display_name = "Initial backpack class"
+
+
+class EquipmentCheckCondition(Range):
+    """Minimum repaired item condition for equipment/knife checks, in percent."""
+
+    display_name = "Equipment check minimum condition"
+    range_start = 0
+    range_end = 100
+    default = 65
+
+
 class QuestZoneLogic(DefaultOnToggle):
     """Require native Miracle Machine/Brain Scorcher shutdowns for northern travel."""
 
@@ -614,6 +663,13 @@ class OptionalCheckPolicy(Choice):
 
 @dataclass
 class GammaOptions(PerGameCommonOptions):
+    equipment_class_progression: EquipmentClassProgression
+    progressive_tool_receipts: ProgressiveToolReceipts
+    initial_firearm_class: InitialFirearmClass
+    initial_outfit_class: InitialOutfitClass
+    initial_helmet_class: InitialHelmetClass
+    initial_backpack_class: InitialBackpackClass
+    equipment_check_condition: EquipmentCheckCondition
     quest_zone_logic: QuestZoneLogic
     basic_toolkits: BasicToolkits
     reward_quantities: RewardQuantities

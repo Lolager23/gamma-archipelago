@@ -43,6 +43,26 @@ def test_default_configuration_is_immutable_and_deterministically_serialized():
     assert len(configuration.digest) == 64
 
 
+def test_option_lookup_cache_preserves_copy_and_seed_identity():
+    import pickle
+    from dataclasses import replace
+
+    configuration = build_configuration(defaults())
+    digest = configuration.digest
+    assert configuration.option("equipment_class_progression") == 1
+    options = dict(configuration.expansion)
+    options["equipment_class_progression"] = 0
+    changed = replace(configuration, expansion=tuple(options.items()))
+    assert changed.option("equipment_class_progression") == 0
+    assert (
+        configuration.option("equipment_class_progression") == 1 and configuration.digest == digest
+    )
+    assert changed.digest != digest
+    restored = pickle.loads(pickle.dumps(configuration))
+    assert restored == configuration and restored.digest == digest
+    assert restored.option("equipment_class_progression") == 1
+
+
 def test_all_requested_check_reward_and_goal_adapters_are_available():
     from gamma_archipelago.configuration import SUPPORTED_CHECKS, SUPPORTED_GOALS, SUPPORTED_REWARDS
 
@@ -76,7 +96,7 @@ def test_configuration_names_values_and_empty_pools_are_validated(change):
 
 @pytest.mark.parametrize("name", GEAR_OPTIONS + QUANTITY_OPTIONS + ("no_starting_weapons",))
 def test_initial_omission_and_quantity_options_are_supported(name):
-    configuration = build_configuration({**defaults(), name: 1})
+    configuration = build_configuration({**defaults(), "equipment_class_progression": 0, name: 1})
     assert configuration.to_values()[name] == 1
 
 
@@ -95,7 +115,9 @@ def test_ap_locked_equipment_requires_its_unlock_reward_pool():
 
 def test_unlock_rewards_require_a_selected_locked_start():
     with pytest.raises(ConfigurationError, match="at least one AP-locked"):
-        build_configuration({**defaults(), "rewards_starting_gear_unlocks": 1})
+        build_configuration(
+            {**defaults(), "equipment_class_progression": 0, "rewards_starting_gear_unlocks": 1}
+        )
 
 
 @pytest.mark.parametrize("thresholds", [None, [], [1] * 21, [True], [0], [10001], [2, 1], [1, 1]])
@@ -120,7 +142,9 @@ def test_wire_configuration_is_deterministic_and_item_v2_references_its_identity
     from gamma_archipelago.bridge import FileBridge
     from gamma_archipelago.protocol import encode_incoming
 
-    configuration = build_configuration({**defaults(), "no_starting_weapons": 1})
+    configuration = build_configuration(
+        {**defaults(), "equipment_class_progression": 0, "no_starting_weapons": 1}
+    )
     assert dict(configuration.gear)["starting_firearms"] == 1
     assert dict(configuration.gear)["starting_melee"] == 1
     expected = encode_configuration("a" * 64, configuration)

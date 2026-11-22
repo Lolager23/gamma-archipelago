@@ -1,5 +1,9 @@
 # Step 34: progressive tool permissions
 
+Historical increment: fresh contracts now use generic receipts with guaranteed free
+kits under [equipment classes](equipment-classes.md). The permission-only behaviour
+below remains supported for configurations omitting those new contract flags.
+
 Stacks on discovery PR #42. APWorld `rewards_progressive_tools` is off by default.
 When enabled, the pool includes three copies of the new `Progressive Tools` item.
 Their applied receipt order unlocks Basic, Advanced and Expert permission. Copies

@@ -64,6 +64,7 @@ def test_impossible_locked_pda_map_only_opening_reports_the_missing_slack():
         setup_multiworld(
             GammaWorld,
             options={
+                "equipment_class_progression": 0,
                 "starting_pda": 2,
                 "rewards_starting_gear_unlocks": 1,
                 "rewards_zone_keys": 1,
@@ -76,7 +77,12 @@ def test_a_starting_permission_or_reachable_key_provides_the_required_slack(gift
     from test_pacing import started_world
 
     multi, world = started_world(
-        {"starting_pda": 2, "rewards_starting_gear_unlocks": 1, "rewards_zone_keys": 1},
+        {
+            "equipment_class_progression": 0,
+            "starting_pda": 2,
+            "rewards_starting_gear_unlocks": 1,
+            "rewards_zone_keys": 1,
+        },
         (gift,),
     )
     world.pre_fill()

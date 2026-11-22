@@ -77,6 +77,7 @@ local function grant_reward(section)
     if type(section) == "number" then
         if gamma_ap_catalog.item_effects[section] == "convenience" then return gamma_ap_convenience.receive(state,section) end
         if gamma_ap_catalog.item_effects[section] == "progressive_tools" then return true end
+        if gamma_ap_catalog.item_effects[section] == "equipment_class" then return true end
         if gamma_ap_catalog.item_effects[section] == "artefact_melter" then return grant_reward(gamma_ap_catalog.melter_sections[section]) end
         if gamma_ap_catalog.gear_rewards[section] then return gamma_ap_gear_locks.receive(state, section) end
         if gamma_ap_catalog.item_effects[section] == "unlock" then
@@ -100,6 +101,9 @@ local function grant_reward(section)
 end
 
 local function apply_reward(section)
+    if type(section) == "number" and gamma_ap_equipment_classes.supplies(state,section) then
+        return gamma_ap_deliveries.receive(state,section,grant_reward)
+    end
     if type(section) == "number" and gamma_ap_tool_permissions.supplies(state,section) then
         return gamma_ap_deliveries.receive(state,section,grant_reward)
     end

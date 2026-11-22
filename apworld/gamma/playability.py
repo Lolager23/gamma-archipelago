@@ -30,8 +30,11 @@ def restrict_placements(world: "GammaWorld", catalog: dict) -> None:
         }
     regions -= {"l10_radar", "l10u_bunker", "l08u_brainlab", "l10_red_forest"}
     early_rewards = {
-        row["id"] for row in catalog["items"] if row.get("category") in EARLY_REWARD_CATEGORIES
+        row["id"]
+        for row in catalog["items"]
+        if row.get("category") in EARLY_REWARD_CATEGORIES and "class_group" not in row
     }
+    class_rewards = {row["id"] for row in catalog["items"] if "class_group" in row}
     definitions = {row["id"]: row for row in catalog["locations"]}
     for location in world.multiworld.get_locations(world.player):
         if not location.address:
@@ -51,9 +54,12 @@ def restrict_placements(world: "GammaWorld", catalog: dict) -> None:
                 "minimum": location.address - base,
             }
         early = early_check(row, frozenset(regions))
+        expensive = row.get("price", 0) >= 15000
         previous = location.item_rule
-        location.item_rule = lambda item, prior=previous, early=early: (
-            prior(item) and (item.code not in early_rewards or early)
+        location.item_rule = lambda item, prior=previous, early=early, expensive=expensive: (
+            prior(item)
+            and (item.code not in early_rewards or early)
+            and (not expensive or item.code not in class_rewards)
         )
 
 

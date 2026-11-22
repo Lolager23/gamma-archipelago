@@ -30,7 +30,11 @@ def test_tiered_tool_pool_and_placement_requirements_are_explicit():
 
 
 def test_artefact_twenty_one_requires_the_melter_and_its_use_permission():
-    options = presets()["full_story"] | {"tool_use_permissions": 0}
+    options = presets()["full_story"] | {
+        "tool_use_permissions": 0,
+        "equipment_class_progression": 0,
+        "starting_tools": 2,
+    }
     multi = setup_multiworld(GammaWorld, options=options)
     world = multi.worlds[1]
     state = CollectionState(multi)

@@ -23,6 +23,7 @@ function install(read_configuration)
     local class = ui_mm_faction_select and ui_mm_faction_select.UINewGame
     if not class or type(class.LoadFaction) ~= "function" or type(class.LoadMap) ~= "function"
         or type(class.OnStartGame) ~= "function" then return false end
+    gamma_ap_loadout_menu.install(class,read_configuration)
     for _,name in ipairs({"LoadFaction","LoadMap","OnSelectMap","OnFactionClicked","OnStartGame"}) do
         if type(class[name]) == "function" and class[name] ~= wrappers[name] then
             local delegate = class[name]
@@ -34,6 +35,10 @@ function install(read_configuration)
                 end
                 if configuration and configuration.options.ap_start == 1 and not start then
                     warning(window,"gamma_ap_start_unsupported"); return false
+                end
+                if name == "OnStartGame" and not gamma_ap_loadout_menu.selected_allowed(window,configuration) then
+                    window:LoadLoadout(false)
+                    warning(window,"gamma_ap_start_loadout_locked"); return false
                 end
                 if not start then return delegate(window,...) end
                 if name == "LoadFaction" then

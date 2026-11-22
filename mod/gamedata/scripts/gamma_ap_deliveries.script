@@ -1,5 +1,11 @@
 -- Central-save action plans. A successful spawn and a game save are not one transaction.
 local function sections_for(state, id, receipt)
+    if gamma_ap_equipment_classes.supplies(state,id) then
+        local row=gamma_ap_catalog.equipment_classes.groups.backpack
+        local previous=state.configuration.options[row.option] or 0
+        for index=1,receipt-1 do if state.applied_items[index] == id then previous=previous+1 end end
+        return row.free_sections[previous+1] and {row.free_sections[previous+1]} or {}
+    end
     local tiers = gamma_ap_catalog.delivery_contents[id]
     if not tiers then return nil end
     if gamma_ap_catalog.item_effects[id] == "supply_package" then
@@ -16,7 +22,7 @@ end
 local function enabled(state, id)
     return state.session_key and state.configuration and state.allowed_items and state.allowed_items[id]
         and (gamma_ap_catalog.item_effects[id] == "supply_package" or state.configuration.options.permission_supplies == 1
-            or gamma_ap_tool_permissions.supplies(state,id))
+            or gamma_ap_tool_permissions.supplies(state,id) or gamma_ap_equipment_classes.supplies(state,id))
 end
 
 function copy(plans)

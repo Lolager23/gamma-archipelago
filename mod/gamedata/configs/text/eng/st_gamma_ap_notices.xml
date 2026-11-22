@@ -1560,6 +1560,18 @@
     <string id="gamma_ap_reward_28051911">
         <text>Carry Capacity +5 kg</text>
     </string>
+    <string id="gamma_ap_reward_28053001">
+        <text>Progressive Firearm Class</text>
+    </string>
+    <string id="gamma_ap_reward_28053002">
+        <text>Progressive Outfit Class</text>
+    </string>
+    <string id="gamma_ap_reward_28053003">
+        <text>Progressive Helmet Class</text>
+    </string>
+    <string id="gamma_ap_reward_28053004">
+        <text>Progressive Backpack</text>
+    </string>
     <string id="gamma_ap_tool_permission_required">
         <text>AP permission required to use: </text>
     </string>

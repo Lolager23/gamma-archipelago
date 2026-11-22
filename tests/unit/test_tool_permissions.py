@@ -15,7 +15,9 @@ from gamma_archipelago.tool_permissions import (
 
 
 def configuration(**options):
-    return build_configuration(defaults() | options)
+    return build_configuration(
+        defaults() | {"equipment_class_progression": 0, "progressive_tool_receipts": 0} | options
+    )
 
 
 def test_new_contract_selects_new_ids_and_keeps_old_seed_manifests_and_wire_unchanged():

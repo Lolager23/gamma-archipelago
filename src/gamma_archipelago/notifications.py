@@ -36,6 +36,7 @@ def is_unlock(item_id: int, game: str) -> bool:
         "unlock",
         "skill",
         "progressive_tools",
+        "equipment_class",
         "convenience",
     }
 

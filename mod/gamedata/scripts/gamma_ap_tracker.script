@@ -44,6 +44,8 @@ end
 
 local function blocked(state, row, regions, psi, id, standing)
     local config = options(state)
+    local class_problem=gamma_ap_equipment_classes.check_reason(state,row)
+    if class_problem then return class_problem end
     if row.region ~= "Menu" and not regions[row.region] then
         if not gamma_ap_zone_keys.allowed(state, row.region) then return "Zone access key required" end
         local quest = gamma_ap_quest_routes.reason(state,row.region)
@@ -66,7 +68,7 @@ local function blocked(state, row, regions, psi, id, standing)
     if config.rewards_workshop_access == 1 and row.category == "checks_gear_upgrades"
         and not state.unlocks.workshop_upgrade then return "Workshop upgrade permission required" end
     local group = equipment[row.category]
-    if group and config["starting_"..group] == 2 and not state.unlocks["gear_"..group] then
+    if group and not gamma_ap_equipment_classes.permitted(state,group) then
         return "Equipment permission required: " .. group
     end
     local fighting = combat[row.category] or (row.category == "checks_quest_types"
@@ -85,7 +87,7 @@ local function blocked(state, row, regions, psi, id, standing)
     if fighting and (config.combat_logic or 0) > 0 then
         local groups = config.combat_logic == 1 and {"firearms"} or {"firearms","outfit","helmet"}
         for _,name in ipairs(groups) do
-            if config["starting_"..name] == 2 and not state.unlocks["gear_"..name] then
+            if not gamma_ap_equipment_classes.permitted(state,name) then
                 return "Combat equipment permission required: "..name
             end
         end
@@ -143,6 +145,12 @@ function snapshot(state, total, problem, psi, standing)
     for where in pairs(gamma_ap_catalog.lab_levels) do
         local visited = state.visited_maps[gamma_ap_catalog.location_by_level[where]]
         progression_entry(result,"exploration",(visited and "Visited: " or "Unvisited: ")..gamma_ap_catalog.tracker_regions[where])
+    end
+    if gamma_ap_equipment_classes.enabled(state.configuration) then
+        for group,row in pairs(gamma_ap_catalog.equipment_classes.groups) do
+            local tier=gamma_ap_equipment_classes.level(state,group)
+            progression_entry(result,"status",row.name..": "..(row.labels[tier] or "None").." ("..tier.."/"..#row.labels..")")
+        end
     end
     if options(state).rewards_progressive_tools == 1 then
         progression_entry(result,"status","Progressive tools: "..gamma_ap_workshop.tools_level(state).."/3")

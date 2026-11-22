@@ -67,6 +67,15 @@ def test_paid_contracts_can_hold_progression_but_expensive_contracts_reject_gear
     assert shops[28052921].item_rule(gear)
     assert not shops[28052923].item_rule(gear)
     assert shops[28052923].item_rule(key)
+    for name in (
+        "Progressive Firearm Class",
+        "Progressive Outfit Class",
+        "Progressive Helmet Class",
+        "Progressive Backpack",
+    ):
+        reward = world.create_item(name)
+        assert shops[28052921].item_rule(reward)
+        assert not shops[28052923].item_rule(reward)
     assert not next(loc for loc in multi.get_locations() if loc.address == 28052808).item_rule(gear)
     for name in ("Repair", "Upgrades", "Crafting"):
         workshop = world.create_item("Workshop Access: " + name)

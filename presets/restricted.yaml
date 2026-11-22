@@ -44,17 +44,24 @@ S.T.A.L.K.E.R. GAMMA:
   rewards_starting_gear_unlocks: 1
   starting_detector: 2
   starting_pda: 2
-  starting_firearms: 1
-  starting_melee: 1
-  starting_outfit: 0
-  starting_helmet: 0
-  starting_backpack: 0
+  starting_firearms: 2
+  starting_melee: 0
+  starting_outfit: 2
+  starting_helmet: 2
+  starting_backpack: 2
   starting_tools: 0
   starting_utilities: 0
   starting_ammo: 0
   starting_medicine: 50
   starting_food: 100
   starting_money: 25
+  equipment_class_progression: 1
+  progressive_tool_receipts: 1
+  initial_firearm_class: 1
+  initial_outfit_class: 1
+  initial_helmet_class: 1
+  initial_backpack_class: 1
+  equipment_check_condition: 65
   quest_zone_logic: 1
   tool_use_permissions: 1
   reward_quantities: 1

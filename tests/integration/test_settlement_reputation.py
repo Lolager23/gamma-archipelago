@@ -120,6 +120,7 @@ def test_a_constrained_sparse_opening_refuses_an_early_quota_it_cannot_hold():
             "checks_maps": 0,
             "checks_settlements": 1,
             "rewards_faction_reputation": 1,
+            "equipment_class_progression": 0,
             "starting_pda": 2,
             "rewards_starting_gear_unlocks": 1,
         },

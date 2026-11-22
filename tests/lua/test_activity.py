@@ -119,7 +119,17 @@ def test_story_tracker_keeps_transitive_combat_after_introductory_dialogues(lua)
     lua.execute("has_alife_info=function() return true end")
     from gamma_archipelago.presets import presets
 
-    state = state_for(lua, **presets()["full_story"])
+    state = state_for(
+        lua,
+        **(
+            presets()["full_story"]
+            | {
+                "equipment_class_progression": 0,
+                "progressive_tool_receipts": 0,
+                "starting_melee": 2,
+            }
+        ),
+    )
     for row in CATALOG["items"]:
         if "permission" in row and row["name"] not in {
             "Equipment Unlock: Firearms",

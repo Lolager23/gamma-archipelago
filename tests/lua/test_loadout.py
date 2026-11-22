@@ -80,7 +80,9 @@ def configured_game(lua, **values):
     add(8, "food", "S_FOOD", "i_food", 0)
     add(9, "food", "S_FOOD", "i_food", 0)
     add(10, "quest_token", "II_ATTCH", "i_quest", 0)
-    configuration = build_configuration({**defaults(), **values})
+    configuration = build_configuration(
+        {**defaults(), "equipment_class_progression": 0, "progressive_tool_receipts": 0, **values}
+    )
     engine.configuration_key = configuration.digest
     engine.files[CONFIG_PATH] = encode_configuration(KEY, configuration)
     engine.files["D:/AnomalyAP/appdata/archipelago\\incoming.txt"] = encode_incoming(

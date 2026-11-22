@@ -145,6 +145,7 @@ async def test_configured_stash_item_manifests_and_history_are_validated():
                 *range(28051501, 28051504),
                 *range(28051601, 28051610),
                 *range(28051701, 28051733),
+                *range(28053001, 28053005),
             }
         ),
     }
@@ -161,6 +162,7 @@ async def test_configured_stash_item_manifests_and_history_are_validated():
                 *range(28051501, 28051504),
                 *range(28051601, 28051610),
                 *range(28051701, 28051733),
+                *range(28053001, 28053005),
             }
         )
     )
@@ -438,7 +440,12 @@ async def test_legacy_equipment_manifest_keeps_only_selected_permissions_enabled
     from gamma_archipelago.configuration import build_configuration, defaults
 
     configuration = build_configuration(
-        {**defaults(), "starting_pda": 2, "rewards_starting_gear_unlocks": 1}
+        {
+            **defaults(),
+            "equipment_class_progression": 0,
+            "starting_pda": 2,
+            "rewards_starting_gear_unlocks": 1,
+        }
     )
     selected = enabled_item_ids(configuration.rewards, configuration.gear)
     slot = {
