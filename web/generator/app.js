@@ -7,6 +7,8 @@ import {
   showSummary,
   advancedOptions,
   syncAdvanced,
+  rewardQuantityOptions,
+  showStepReport,
 } from "./ui.js";
 import {
   DraftConfiguration,
@@ -119,6 +121,7 @@ function loadPreset() {
   categoryOptions("check-options", metadata.checks, options, changeOption);
   categoryOptions("reward-options", metadata.rewards, options, changeOption);
   loadoutOptions(metadata, options, changeOption);
+  rewardQuantityOptions(metadata, options, changeOption);
   advancedOptions(metadata, options, changeOption);
   renderGear();
   $("goal").value = options.goal;
@@ -207,6 +210,15 @@ function bindControls() {
     showRoster(form.result, metadata),
   );
   $("export").addEventListener("click", () => download("/api/yaml"));
+  $("step-file").addEventListener("change", async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+    try {
+      if (file.size > 16 * 1024 * 1024) throw new Error("Report is too large (16 MiB limit).");
+      showStepReport(JSON.parse(await file.text()));
+      $("step-status").textContent = "Actual seed analysis loaded locally. This does not start a session.";
+    } catch (error) { $("step-status").textContent = error.message; }
+  });
   $("generate").addEventListener("click", () => download("/api/generate"));
   const tabs = [...document.querySelectorAll("[data-tab]")];
   tabs.forEach((button, index) => {

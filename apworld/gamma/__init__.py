@@ -87,6 +87,21 @@ class GammaWorld(World):
                     self.multiworld.push_precollected(
                         self.create_item(self.random.choice(candidates))
                     )
+            from collections import Counter
+
+            from gamma_archipelago.artefact_capacity import resolve_capacity
+
+            held = Counter(self.options.start_inventory.value)
+            held.update(self.options.start_inventory_from_pool.value)
+            held.update(item.name for item in self.multiworld.precollected_items[self.player])
+            self.configuration = resolve_capacity(
+                self.configuration,
+                frozenset(
+                    self.location_name_to_id[name] for name in self.options.exclude_locations.value
+                ),
+                held,
+                self.options.start_inventory_from_pool.value,
+            )
         except ValueError as error:
             raise OptionError(str(error)) from error
 

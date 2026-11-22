@@ -260,3 +260,54 @@ export function showSummary(result, metadata, options) {
       definition.count;
   });
 }
+
+
+export function rewardQuantityOptions(metadata, options, change) {
+  $("reward-quantities").replaceChildren(...metadata.reward_quantities.map(
+    ({key, label, suggested_max}) => {
+      const row = element("label", "", "assumption-field");
+      row.append(element("span", `${label} - suggested 0-${suggested_max}`));
+      const slider = document.createElement("input");
+      const number = document.createElement("input");
+      slider.type = "range"; number.type = "number";
+      slider.min = number.min = 0;
+      slider.step = number.step = 1;
+      slider.max = Math.max(suggested_max, options[key]);
+      slider.value = number.value = options[key];
+      slider.setAttribute("aria-label", label + " slider");
+      number.setAttribute("aria-label", label + " exact count");
+      const update = (value) => {
+        slider.max = Math.max(suggested_max, value ?? 0);
+        if (value !== null && Number.isFinite(value)) slider.value = value;
+        number.value = value ?? "";
+        change(key, value);
+      };
+      slider.addEventListener("input", () => update(Number(slider.value)));
+      number.addEventListener("input", () => update(number.value === "" ? null : Number(number.value)));
+      row.append(slider, number);
+      return row;
+    }));
+}
+
+export function showStepReport(report) {
+  if (report?.kind !== "actual_generated_seed" || !report.paced_steps || !report.logical_spheres)
+    throw new Error("Choose an actual GAMMA seed preview JSON with step analysis.");
+  const container = $("step-report");
+  container.replaceChildren();
+  for (const [label, analysis] of [["Paced steps: one tier per chain", report.paced_steps],
+                                  ["Archipelago logical spheres", report.logical_spheres]]) {
+    container.append(element("h3", label));
+    container.append(element("p", `${analysis.steps.length} steps - goal at step ${analysis.goal_step ?? "unreachable"} - ${analysis.unreachable_checks} unreachable checks. ${analysis.time_estimate}`));
+    for (const step of analysis.steps) {
+      const details = element("details");
+      details.append(element("summary", `Step ${step.step}: ${step.checks} newly available checks`));
+      const list = element("ul");
+      for (const check of step.available_checks ?? [])
+        list.append(element("li", `${check.location} -> ${check.item} (player ${check.recipient})`));
+      if (!step.available_checks)
+        list.append(element("li", "Names and rewards require a seed report with placement spoilers."));
+      for (const event of step.local_events) list.append(element("li", `Local event: ${event}`));
+      details.append(list); container.append(details);
+    }
+  }
+}

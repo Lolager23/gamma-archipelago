@@ -27,6 +27,8 @@ def write_preview(world: "GammaWorld", output_directory: str) -> None:
     initial.sweep_for_advancements(
         locations=[row for row in world.multiworld.get_locations() if row.address is None]
     )
+    from .analysis import analyse
+
     report = {
         "schema_version": 1,
         "kind": "actual_generated_seed",
@@ -39,6 +41,8 @@ def write_preview(world: "GammaWorld", output_directory: str) -> None:
         "initial_reachable_checks": [row.name for row in locations if row.can_reach(initial)],
         "placed_classifications": dict(Counter(row.item.classification.name for row in locations)),
         "native_verification": "not run",
+        "logical_spheres": analyse(world, False, mode == 2),
+        "paced_steps": analyse(world, True, mode == 2),
         "playtime": "Uncalibrated; reachability is not measured travel or ALife waiting.",
     }
     if mode == 2:

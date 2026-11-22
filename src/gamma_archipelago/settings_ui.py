@@ -1,8 +1,10 @@
 """Explicit labels for bounded APWorld settings in the local workbench."""
 
 from .expansion_settings import EXPANSION_LIMITS
+from .reward_quantities import DEFAULT_COUNTS
 
 CHOICES = {
+    "reward_quantities": ["Legacy weighted rewards", "Explicit repeatable reward quantities"],
     "content_progression": [
         "Legacy content contracts",
         "Tiered artefacts, tools and split story arcs",
@@ -59,5 +61,5 @@ def advanced_options() -> list[dict[str, object]]:
             "choices": CHOICES.get(key),
         }
         for key, maximum in {"pda_tracker": 1, **EXPANSION_LIMITS}.items()
-        if key != "ap_start"
+        if key not in {"ap_start", "artefact_overflow_count", *DEFAULT_COUNTS}
     ]

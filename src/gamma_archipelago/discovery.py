@@ -43,6 +43,16 @@ def normalize_exclusions(value: object) -> tuple[str, ...]:
 
 
 def configured_location_ids(configuration: "SeedConfiguration") -> frozenset[int]:
+    overflow = configuration.option("artefact_overflow_count")
+    if overflow and not (
+        configuration.option("content_progression")
+        and configuration.option("artefact_discovery_mode")
+        and "checks_artefacts" in configuration.checks
+        and configuration.option("artefact_discovery_count") in (0, 40)
+        and 40 + overflow <= configuration.option("artefact_extra_ceiling")
+        and "rewards_artefact_melter" in configuration.rewards
+    ):
+        raise ValueError("Extra artefacts require a 40-type base, melter and sufficient ceiling")
     ids = set(
         enabled_location_ids(
             configuration.checks, configuration.kill_milestones, configuration.side_task_milestones
@@ -58,7 +68,7 @@ def configured_location_ids(configuration: "SeedConfiguration") -> frozenset[int
         if configuration.option(f"{group}_discovery_mode"):
             count = configuration.option(f"{group}_discovery_count") or len(qualifying)
             if group == "artefact" and configuration.option("content_progression"):
-                count = min(count, 40)
+                count = min(count, 40) + configuration.option("artefact_overflow_count")
             if not 1 <= count <= len(qualifying):
                 raise ValueError(f"{group} discovery quota exceeds its qualifying roster")
             ids.update(QUOTAS[group][:count])
@@ -76,7 +86,9 @@ def configured_location_ids(configuration: "SeedConfiguration") -> frozenset[int
     if configuration.option("content_progression") and configuration.option(
         "artefact_discovery_mode"
     ):
-        ids.difference_update(QUOTAS["artefact"][40:])
+        ids.difference_update(
+            QUOTAS["artefact"][40 + configuration.option("artefact_overflow_count") :]
+        )
     if configuration.option("optional_check_policy") == 1:
         ids.difference_update(fragile_ids(configuration))
     protected_tail_ids(configuration, frozenset(ids))
@@ -102,7 +114,7 @@ def protected_tail_ids(
             set(SOURCES[group]) - set(configuration.discovery_exclusions)
         )
         if group == "artefact" and configuration.option("content_progression"):
-            count = min(count, 40)
+            count = min(count, 40) + configuration.option("artefact_overflow_count")
         selected = QUOTAS[group][:count]
         if tail > len(selected):
             raise ValueError(f"{group} filler tail exceeds its configured discovery quota")
