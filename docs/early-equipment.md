@@ -30,7 +30,8 @@ No zone key, faction goodwill, melter or tool-tier stash is assumed by this plan
 Excluded locations and item rules remain enforced. Explicit non-local permissions
 use upstream early_items requests instead of being forced into the local slot;
 other players' timing remains outside a local guarantee. Gifts and prior plando
-placements are respected. Sparse map/settlement-only pools retain the existing
+placements are respected. Sparse map/settlement pools, including filler-only
+rank milestones, retain the existing
 exploration fallback. Incompatible activity pools fail clearly, offering more
 low-grind checks, fewer restrictions or legacy playability assumptions.
 

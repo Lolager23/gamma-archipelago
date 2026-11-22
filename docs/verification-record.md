@@ -932,14 +932,17 @@ optional-check policies. Full Story retains 253 checks with 220 reliable placeme
 slots. Native rank detection, its goodwill access proxy and existing archives
 are unchanged. Starting-map arrival is available to the activity-pool equipment
 planner so Clear Sky and Rostok keep early gear access without relying on Novice.
+Sparse exploration detection ignores filler-only rank checks in both allocation
+and item rules; maps plus ranks with a locked PDA retain their route fallback.
 
-The complete verifier passed 1,741 covered regressions, 83 untraced generation/server
-cases and nine Node tests (1,833 total), including all 9,000 preset seeds. Every
+The complete verifier passed 1,742 covered regressions, 83 untraced generation/server
+cases and nine Node tests (1,834 total), including all 9,000 preset seeds. Every
 owned Python module measured 100% line and branch coverage. Lua executable-line
 gates passed; Lua branch coverage is not measured. Frozen functional/test/input
 hashes matched. The MO2 and probe packages are byte-identical to the parent.
 Regressions cover all rank-placement policy combinations, disabling the category,
-solo/mixed fills, capacity and thirty early-equipment seed/start combinations.
+solo/mixed fills, capacity, sparse maps/ranks/PDA fill and thirty early-equipment
+seed/start combinations.
 
 Stacks on #75. Exact-head Windows/Linux CI and retained package parity are attached
 to the PR when complete. Native acceptance remains not run for Owen. No deployment,

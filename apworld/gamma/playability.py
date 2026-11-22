@@ -16,9 +16,9 @@ if TYPE_CHECKING:
 
 
 def restrict_placements(world: "GammaWorld", catalog: dict) -> None:
-    if not world.configuration.option("playability_logic") or world.configuration.checks <= {
-        "checks_maps"
-    }:
+    if not world.configuration.option("playability_logic") or (
+        world.configuration.checks - {"checks_rank_milestones"} <= {"checks_maps"}
+    ):
         return
     regions = {starting_level(world.configuration)}
     for _ in range(2):

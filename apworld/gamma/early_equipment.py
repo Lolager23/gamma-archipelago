@@ -30,7 +30,7 @@ def place_equipment(world: "GammaWorld", catalog: dict[str, Any]) -> None:
         configuration.option("content_progression") and configuration.option("playability_logic")
     ):
         return
-    if configuration.checks <= {"checks_maps", "checks_settlements"}:
+    if configuration.checks <= {"checks_maps", "checks_settlements", "checks_rank_milestones"}:
         return  # Preserve the explicitly supported sparse exploration fallback.
     names = {
         row["name"] for row in catalog["items"] if row.get("category") in EARLY_REWARD_CATEGORIES

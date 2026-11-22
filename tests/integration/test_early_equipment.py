@@ -64,6 +64,7 @@ def test_insufficient_early_checks_refuse_instead_of_hiding_gear_behind_late_rou
         "rewards_starting_gear_unlocks": 1,
         "ap_start": 1,
         "checks_rank_milestones": 1,
+        "checks_gear_upgrades": 1,
         "exclude_locations": [
             region + ": First Arrival"
             for region in (
@@ -153,4 +154,23 @@ def test_unlocked_nearby_maps_keep_small_custom_equipment_pools_supported():
     assert len(world.opening_placements) == 2
     assert any(row["location"] == "Cordon: First Arrival" for row in world.opening_placements)
     distribute_items_restrictive(multi)
+    assert multi.can_beat_game()
+
+
+def test_filler_only_rank_checks_preserve_the_sparse_exploration_fallback():
+    multi = setup_multiworld(
+        GammaWorld,
+        options={
+            "checks_rank_milestones": 1,
+            "rewards_zone_keys": 1,
+            "rewards_starting_gear_unlocks": 1,
+            "starting_pda": 2,
+        },
+        seed=42,
+    )
+    assert not multi.worlds[1].opening_placements
+    distribute_items_restrictive(multi)
+    ranks = [loc for loc in multi.get_locations(1) if loc.name.startswith("Reach Stalker Rank:")]
+    assert len(ranks) == 8
+    assert all(not loc.item.advancement and not loc.item.useful for loc in ranks)
     assert multi.can_beat_game()
