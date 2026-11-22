@@ -374,6 +374,11 @@ def encode_configuration(
                 "playability_logic",
                 "content_progression",
                 "infinite_stamina",
+                "checks_emissions",
+                "checks_psi_storms",
+                "checks_mortal_sin",
+                "checks_operation_afterglow",
+                "rewards_artefact_melter",
             }
             and value == 0
         ):

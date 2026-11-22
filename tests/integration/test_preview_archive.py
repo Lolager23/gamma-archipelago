@@ -23,7 +23,7 @@ GAME = "S.T.A.L.K.E.R. GAMMA"
 def test_actual_archives_bind_starting_items_deplete_once_and_control_preview_spoilers(
     tmp_path, mode
 ):
-    options = {**presets()["standard"], "generation_preview": mode}
+    options = {**presets()["standard"], "generation_preview": mode, "content_progression": 0}
     document = player_document("StartingItems", options)
     document[GAME].update(
         start_inventory={"Equipment Unlock: PDA": 1, "Zone Key: Garbage": 1},
