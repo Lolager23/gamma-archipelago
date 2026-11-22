@@ -145,7 +145,10 @@ planning queries the same access graph rather than maintaining a second route mo
 from upstream item creation and placement. Explicit opening reservations run
 before general fill. Equipment and workshop access share the early reward
 categories and reachable-opening allocation; their native permissions and
-delivery state remain separate. Zone keys use upstream randomized fill in expanded regional
+delivery state remain separate. Fresh regional recipe permissions use the same paced-analysis
+primitives to plan a conservative three-step opening against known rewards.
+The plan is validated before placements are committed; no additional saved state
+or runtime owner is introduced. Zone keys use upstream randomized fill in expanded regional
 pools, including multiworlds, optionally requesting one early hub key. Only sparse
 exploration pools retain an anti-cycle route. Optional actual-seed reports are generated after fill;
 settings previews contain no placements. Common AP constraints and starting items

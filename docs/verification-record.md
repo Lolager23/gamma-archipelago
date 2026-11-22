@@ -1062,3 +1062,46 @@ when complete. The game, companion and probe packages match deployed main; only
 the APWorld calculator package changes. No deployment, game launch, session change
 or private-panel edit occurred. Native acceptance is not run and remains with Owen.
 Protected normal installations remain untouched.
+
+
+### Early recipes and paced activity totals - 22 November 2026
+
+Fresh regional worlds with playability logic reserve General, Medical, Ammunition
+and Artefacts recipe permissions within the first three paced reward waves. The
+planner samples throughout that window, respects starting gifts, pool depletion,
+exclusions, locality, item rules and existing planned placements, and validates
+its complete plan before committing reservations. The older all-zones contract
+retains ordinary placement. Impossible opening capacity or a conflicting late
+planned recipe produces an actionable error.
+
+Cumulative side-task totals advance one configured milestone per paced step.
+Generic distinct-artefact checks advance in batches 1-5, 6-10 and so on, finishing
+one batch before the next. Detector, region, melter and recipe requirements remain
+authoritative. Named artefacts retain independent access. Ordinary logical spheres
+and native activity triggers are unchanged; only the recipe reservation changes
+new-seed placement. Existing archives and sessions are not rewritten.
+
+The complete verifier passed 1,920 covered cases, 83 untraced generation/server
+cases and ten Node tests (2,013 total), including all 9,000 preset seeds. Owned
+Python runtime modules measured 100% lines and branches. Lua executable-line gates
+passed; Lua branch coverage is not measured. Frozen functional/test/input hashes
+matched. Regressions cover numeric custom/boundary milestones, incomplete batches,
+independent players, foreign games, partial-world plans, deferred progressive
+receipts, the exact third-step boundary, gifts/depletion, plando conflicts and
+failed plans without partial placements. The maximum-inventory test helper now
+sweeps only local events so a deliberately withheld preplaced recipe stays absent.
+
+Ten actual fresh Full Story archives are beatable with all 253 checks reachable.
+Every enabled recipe arrives in steps 1-3. Browser verification passed 40 recipe
+deadline assertions, 30 activity waves and ten complete-world views; unpaced
+initial enemy totals remain simultaneous. Replaying the ten inputs with the final
+legacy-compatibility correction reproduced every displayed placement, logical
+sphere and paced step. Original reports and archives remain preserved.
+
+Stacks on enemy pacing PR #80. Current-head Windows/Linux CI and retained package
+hashes are linked from the PR when complete. The CI job budget is 60 minutes after
+observed 40-minute Linux timeouts; test cases, coverage requirements and the full
+seed matrix are unchanged. The game, companion and probe packages match deployed
+main byte for byte; only the APWorld package changes. No deployment, game launch,
+private-panel edit, session change or protected normal-installation write occurred.
+Native acceptance is not run and remains with Owen.

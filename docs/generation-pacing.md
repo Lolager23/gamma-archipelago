@@ -94,6 +94,36 @@ They provide reliable regional capacity, not forced key/check pairings in expand
 pools. Pool capacity, protected-opening validation and logical fill still apply.
 A maps-only local pool necessarily awards its keys through map checks.
 
+## Recipe opening
+
+With `regional_progression` and `playability_logic` enabled, new seeds place every
+enabled recipe permission within the first three **paced** steps. This includes
+General, Medical, Ammunition and Artefacts. Starting gifts and upstream from-pool depletion are
+respected; they do not create duplicate recipe rewards. Explicitly disabling either
+setting retains ordinary challenge/legacy fill. The older all-zones activity
+contract can lack enough opening capacity under fully locked starting gear.
+
+After existing opening equipment and sparse key reservations, the world plans
+recipes against a bounded partial-world calculation. That calculation uses the
+same kill/task chains, five-artefact batches and one-tier progressive receipts as
+the final report. It completes reachable unknown checks without assuming their
+rewards, and collects only actual placed or planned items. Additional normal fill
+can improve this conservative opening. All recipe reservations are validated
+before committing any of them.
+
+Candidates respect item rules, excluded checks and local/non-local item settings.
+Non-local recipes may use another player's early checks; the opening record's
+`finder` identifies that player's slot. Existing planned recipe placements are
+preserved when they meet the deadline. Insufficient capacity or a late planned
+recipe fails with an actionable error: add early checks, precollect permissions,
+relax the conflicting constraint or disable playability logic. The generator does
+not silently move a planned item or weaken its access requirements.
+
+The deadline assumes all available checks are completed in each modelled step;
+it does not guarantee real-time delivery from another player. No current archive,
+running server, bridge or save is rewritten. Applying the placement change needs
+a newly generated seed; previous analysis remains historical evidence.
+
 ## Previews and compatibility
 
 The local workbench exposes tracker, hints, quotas/exclusions, supply choices and
