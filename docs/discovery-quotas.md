@@ -7,12 +7,19 @@ now refused before observations are copied or new checks advance. Empty older
 discovery state still migrates normally. No published ID or save schema changed.
 
 Stacks on scouting PR #41. Each existing discovery category remains independently
-toggleable. Its mode is `per_type` (default, existing checks) or `first_n_distinct`.
+toggleable. Newly generated worlds and planner presets default to `first_n_distinct`
+for mutant kills, faction kills and artefacts. Named checks remain available through
+`per_type`. Repeated kills or pickups of the same type do not advance generic checks.
 `mutant_discovery_count`, `faction_discovery_count` and `artefact_discovery_count`
 select N; zero means every qualifying type. The respective catalogue rosters have
 25, 13 and 66 types. A quota of 15 gives fixed checks for discoveries 1 through 15
 in any encounter order. It never requires one particular hidden selection of 15.
 Repeated types and aliases cannot advance it. Quota mode replaces per-type checks.
+
+This changes generation defaults only. Legacy configuration snapshots that omit the
+mode keep their original per-type interpretation and digest; explicitly saved
+options remain authoritative. Do not replace those legacy parser defaults with the
+new-generation defaults. Existing archives, saves and active sessions are unchanged.
 
 `discovery_exclusions` is a set/list of canonical tokens from the catalogue, for
 example `faction:stalker`, `mutant:dog`, `artefact:af_atom`. Excluded types cannot

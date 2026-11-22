@@ -20,7 +20,9 @@ def collect(world, state, *names):
 
 
 def test_cordon_kills_artefacts_and_tasks_require_their_equipment_not_every_key():
-    multi = setup_multiworld(GammaWorld, options=presets()["full_story"], seed=1)
+    # Named-source access is still selectable after generic discoveries become default.
+    options = presets()["full_story"] | {"mutant_discovery_mode": 0, "artefact_discovery_mode": 0}
+    multi = setup_multiworld(GammaWorld, options=options, seed=1)
     world = multi.worlds[1]
     state = CollectionState(multi)
     ids = {row.address: row for row in multi.get_locations() if row.address}

@@ -7,8 +7,26 @@ from test_client import connected_context
 from test_generation_matrix import assert_seed
 from worlds.gamma import GammaWorld
 
-from gamma_archipelago.discovery import MISSABLE_IDS, QUOTAS, configured_location_ids
+from gamma_archipelago.discovery import (
+    GROUPS,
+    MISSABLE_IDS,
+    QUOTAS,
+    SOURCES,
+    configured_location_ids,
+)
 from gamma_archipelago.presets import presets
+
+
+@pytest.mark.parametrize("group", GROUPS)
+def test_omitted_yaml_mode_defaults_to_generic_but_explicit_per_type_still_works(group):
+    options = {"checks_maps": 0, GROUPS[group]: 1}
+    world = setup_multiworld(GammaWorld, options=options).worlds[1]
+    assert world.configuration.option(f"{group}_discovery_mode") == 1
+    assert set(world.fill_slot_data()["location_ids"]) == set(QUOTAS[group])
+    named = setup_multiworld(GammaWorld, options={**options, f"{group}_discovery_mode": 0}).worlds[
+        1
+    ]
+    assert set(named.fill_slot_data()["location_ids"]) == set(SOURCES[group].values())
 
 
 @pytest.mark.parametrize("policy", [0, 1, 2])

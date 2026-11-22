@@ -176,9 +176,9 @@ async def test_configured_stash_item_manifests_and_history_are_validated():
 
 @run_async
 async def test_seed_configuration_is_validated_and_bound_before_bridge_publication():
-    from gamma_archipelago.configuration import build_configuration, defaults
+    from gamma_archipelago.configuration import build_configuration, defaults, legacy_defaults
 
-    configuration = build_configuration(defaults())
+    configuration = build_configuration(legacy_defaults())
     slot = {
         "schema_version": 1,
         "pilot": True,
@@ -188,6 +188,11 @@ async def test_seed_configuration_is_validated_and_bound_before_bridge_publicati
     context = connected_context(slot)
     assert context.session.configuration_key == configuration.digest
     context.on_package("Connected", {"slot_data": slot})
+    generic = build_configuration(defaults())
+    with pytest.raises(ProtocolError, match="schema 2"):
+        connected_context(
+            {**slot, "configuration": generic.to_values(), "configuration_key": generic.digest}
+        )
     for values in [[], {"unknown": 1}]:
         with pytest.raises(ProtocolError, match="[Cc]onfiguration"):
             context.on_package("Connected", {"slot_data": {**slot, "configuration": values}})

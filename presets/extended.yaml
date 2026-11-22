@@ -67,7 +67,7 @@
     "reward_previews": 0,
     "mutant_discovery_mode": 1,
     "mutant_discovery_count": 20,
-    "faction_discovery_mode": 0,
+    "faction_discovery_mode": 1,
     "faction_discovery_count": 0,
     "artefact_discovery_mode": 1,
     "artefact_discovery_count": 30,

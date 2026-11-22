@@ -148,6 +148,7 @@ class ConfigurationError(ValueError):
 
 
 def defaults() -> dict[str, object]:
+    """Defaults for new generation and planner forms; saved settings override them."""
     values: dict[str, object] = dict.fromkeys(OPTION_NAMES, 0)
     values.update(dict.fromkeys(QUANTITY_OPTIONS, 100))
     values.update(
@@ -156,8 +157,16 @@ def defaults() -> dict[str, object]:
         kill_milestones=[10, 25, 50, 100],
         side_task_milestones=[5, 10, 20, 40],
         discovery_exclusions=[],
+        mutant_discovery_mode=1,
+        faction_discovery_mode=1,
+        artefact_discovery_mode=1,
     )
     return values
+
+
+def legacy_defaults() -> dict[str, object]:
+    """Compatibility baseline; generation defaults must not redefine older sessions."""
+    return {**defaults(), **EXPANSION_DEFAULTS}
 
 
 def _integer(values: Mapping[str, object], name: str, maximum: int) -> int:

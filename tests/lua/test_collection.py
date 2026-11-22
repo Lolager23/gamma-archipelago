@@ -6,7 +6,10 @@ from .test_loadout import CONFIG_PATH, KEY, configured_game
 
 
 def collection_game(lua):
-    game, engine, configuration = configured_game(lua, checks_maps=0, checks_artefacts=1)
+    # Keep coverage of all named source IDs and aliases alongside generic-mode tests.
+    game, engine, configuration = configured_game(
+        lua, checks_maps=0, checks_artefacts=1, artefact_discovery_mode=0
+    )
     engine.files[CONFIG_PATH] = encode_configuration(KEY, configuration, expanded=True)
     game.actor_on_update()
     return game, engine, configuration

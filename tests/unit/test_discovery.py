@@ -14,6 +14,17 @@ from gamma_archipelago.web_planner import preview
 
 
 @pytest.mark.parametrize("group", GROUPS)
+def test_new_defaults_use_generic_checks_and_named_types_remain_opt_in(group):
+    values = {**defaults(), "checks_maps": 0, GROUPS[group]: 1}
+    assert values[f"{group}_discovery_mode"] == 1
+    generic = build_configuration(values)
+    assert configured_location_ids(generic) == frozenset(QUOTAS[group])
+    named = build_configuration({**values, f"{group}_discovery_mode": 0})
+    assert configured_location_ids(named) == frozenset(SOURCES[group].values())
+    assert generic.digest != named.digest
+
+
+@pytest.mark.parametrize("group", GROUPS)
 def test_quota_selects_fixed_milestones_and_exclusions_reduce_roster(group):
     token, source = next(iter(SOURCES[group].items()))
     values = {
@@ -68,7 +79,9 @@ def test_optional_policy_exclusion_normalization_and_legacy_identity():
         if not key.endswith(("_discovery_mode", "_discovery_count"))
         and key not in {"discovery_exclusions", "optional_check_policy"}
     }
-    assert build_configuration(values).digest == build_configuration(legacy).digest
+    explicit_legacy = {**values, **{f"{group}_discovery_mode": 0 for group in GROUPS}}
+    assert build_configuration(explicit_legacy).digest == build_configuration(legacy).digest
+    assert build_configuration(values).digest != build_configuration(legacy).digest
     assert normalize_exclusions(frozenset(TOKENS)) == tuple(sorted(TOKENS))
     assert normalize_exclusions(set()) == ()
     included = build_configuration(
