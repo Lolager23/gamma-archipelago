@@ -110,6 +110,9 @@ local function apply_reward(section)
     if type(section) == "number" and gamma_ap_catalog.item_effects[section] == "supply_package" then
         return gamma_ap_deliveries.receive(state,section,grant_reward)
     end
+    if type(section) == "number" and gamma_ap_catalog.item_effects[section] == "artefact_reward" then
+        return gamma_ap_deliveries.receive(state,section,grant_reward)
+    end
     if type(section) == "number" and state.configuration and state.configuration.options.permission_supplies == 1
         and gamma_ap_catalog.delivery_contents[section] then
         return gamma_ap_deliveries.receive(state,section,grant_reward)

@@ -65,14 +65,17 @@ local function eligible(state, id)
     local row = gamma_ap_catalog.tracker_checks[id]
     if gamma_ap_equipment_classes.check_reason(state,row) then return false end
     if gamma_ap_tool_permissions.grade_reason(state,row) then return false end
-    if state.configuration.options.playability_logic ~= 1
-        or not (row.category == "checks_armour_tiers" and tonumber(row.key) >= 3 or row.weapon_grade == "D") then return true end
+    local practical=state.configuration.options.playability_logic == 1
+        and (row.category == "checks_armour_tiers" and tonumber(row.key) >= 3 or row.weapon_grade == "D")
+    local readiness=state.configuration.options.regional_progression == 1 and gamma_ap_catalog.northern_readiness_checks[id]
+    if not practical and not readiness then return true end
     local ok,psi = pcall(function()
         local helmet = db.actor:object("good_psy_helmet")
         return helmet ~= nil and helmet:condition() > 0 and helmet:condition() <= 1
     end)
     local regions = gamma_ap_tracker.reachable(state,ok and psi)
-    return gamma_ap_playability.reason(state,row,regions,ok and psi) == nil
+    return gamma_ap_progression_readiness.reason(state,row,regions,id) == nil
+        and (not practical or gamma_ap_playability.reason(state,row,regions,ok and psi) == nil)
 end
 
 local function award_tiers(state, locations, tier)

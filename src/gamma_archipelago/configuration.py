@@ -4,6 +4,7 @@ import hashlib
 import json
 from collections.abc import Mapping
 from dataclasses import dataclass
+from functools import cached_property
 
 from .discovery import configured_location_ids, normalize_exclusions
 from .expansion_settings import (
@@ -39,6 +40,7 @@ CHECK_OPTIONS = (
     "checks_faction_standing",
 )
 REWARD_OPTIONS = (
+    "rewards_artefacts",
     "rewards_drug_making_tools",
     "rewards_gunsmithing_tools",
     "rewards_artefact_melter",
@@ -127,6 +129,7 @@ SUPPORTED_CHECKS = frozenset(
 )
 SUPPORTED_REWARDS: frozenset[str] = frozenset(
     {
+        "rewards_artefacts",
         "rewards_drug_making_tools",
         "rewards_gunsmithing_tools",
         "rewards_artefact_melter",
@@ -185,6 +188,7 @@ def defaults() -> dict[str, object]:
         tool_use_permissions=1,
         reward_quantities=1,
         quest_zone_logic=1,
+        regional_progression=1,
         equipment_class_progression=1,
         progressive_tool_receipts=1,
         initial_firearm_class=1,
@@ -237,8 +241,13 @@ class SeedConfiguration:
     expansion: tuple[tuple[str, int], ...] = ()
     discovery_exclusions: tuple[str, ...] = ()
 
+    @cached_property
+    def _option_values(self) -> Mapping[str, int]:
+        # Access rules query this immutable configuration many times per fill.
+        return dict(self.expansion)
+
     def option(self, name: str) -> int:
-        return dict(self.expansion).get(name, EXPANSION_DEFAULTS[name])
+        return self._option_values.get(name, EXPANSION_DEFAULTS[name])
 
     def to_values(self) -> dict[str, object]:
         return {
@@ -395,6 +404,8 @@ def encode_configuration(
             in {
                 "checks_shop_purchases",
                 "quest_zone_logic",
+                "regional_progression",
+                "rewards_artefacts",
                 "equipment_class_progression",
                 "progressive_tool_receipts",
                 "initial_firearm_class",

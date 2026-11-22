@@ -4,6 +4,10 @@ from .expansion_settings import EXPANSION_LIMITS
 from .reward_quantities import DEFAULT_COUNTS
 
 CHOICES = {
+    "regional_progression": [
+        "Legacy activity assumptions",
+        "Regional diversity and story readiness",
+    ],
     "equipment_class_progression": [
         "Legacy equipment permissions",
         "Progressive equipment classes",

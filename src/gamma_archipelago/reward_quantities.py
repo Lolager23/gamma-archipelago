@@ -10,6 +10,7 @@ if TYPE_CHECKING:
 
 _data = json.loads(files("gamma_archipelago").joinpath("catalog.json").read_text("utf-8"))
 GROUPS = {
+    "artefact_rewards": ("rewards_artefacts", None),
     "basic_toolkits": ("base", None),
     "medical_packages": ("rewards_supply_medical", None),
     "maintenance_packages": ("rewards_supply_maintenance", None),

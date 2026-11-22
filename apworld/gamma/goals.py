@@ -19,6 +19,7 @@ def add_goal_events(
     if (
         world.configuration.goal not in {"pilot_tour", "talk_sidorovich"}
         or world.configuration.option("quest_zone_logic")
+        or world.configuration.option("regional_progression")
         or (
             world.configuration.option("playability_logic")
             and bool(world.configuration.checks & {"checks_armour_tiers", "checks_weapon_tiers"})
@@ -55,13 +56,18 @@ def add_goal_events(
             )
         )
         regions["l08u_brainlab"].locations.append(machine)
-    if world.configuration.option("quest_zone_logic") or world.configuration.goal in {
-        "brain_scorcher",
-        "meet_strelok",
-        "living_legend",
-        "mortal_sin",
-        "operation_afterglow",
-    }:
+    if (
+        world.configuration.option("quest_zone_logic")
+        or world.configuration.option("regional_progression")
+        or world.configuration.goal
+        in {
+            "brain_scorcher",
+            "meet_strelok",
+            "living_legend",
+            "mortal_sin",
+            "operation_afterglow",
+        }
+    ):
         shutdown = location_type(
             world.player, "Shut Down Brain Scorcher", None, regions["l10u_bunker"]
         )

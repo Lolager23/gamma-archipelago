@@ -1572,6 +1572,186 @@
     <string id="gamma_ap_reward_28053004">
         <text>Progressive Backpack</text>
     </string>
+    <string id="gamma_ap_reward_28053101">
+        <text>Artefact: Ball</text>
+    </string>
+    <string id="gamma_ap_reward_28053102">
+        <text>Artefact: Bubble</text>
+    </string>
+    <string id="gamma_ap_reward_28053103">
+        <text>Artefact: Bat</text>
+    </string>
+    <string id="gamma_ap_reward_28053104">
+        <text>Artefact: Black Angel</text>
+    </string>
+    <string id="gamma_ap_reward_28053105">
+        <text>Artefact: Black Spray</text>
+    </string>
+    <string id="gamma_ap_reward_28053106">
+        <text>Artefact: Stone Blood</text>
+    </string>
+    <string id="gamma_ap_reward_28053107">
+        <text>Artefact: Bracelet</text>
+    </string>
+    <string id="gamma_ap_reward_28053108">
+        <text>Artefact: Cell</text>
+    </string>
+    <string id="gamma_ap_reward_28053109">
+        <text>Artefact: Chain</text>
+    </string>
+    <string id="gamma_ap_reward_28053110">
+        <text>Artefact: Cocoon</text>
+    </string>
+    <string id="gamma_ap_reward_28053111">
+        <text>Artefact: Crystal</text>
+    </string>
+    <string id="gamma_ap_reward_28053112">
+        <text>Artefact: Stone Flower</text>
+    </string>
+    <string id="gamma_ap_reward_28053113">
+        <text>Artefact: Dragon's Eye</text>
+    </string>
+    <string id="gamma_ap_reward_28053114">
+        <text>Artefact: Battery</text>
+    </string>
+    <string id="gamma_ap_reward_28053115">
+        <text>Artefact: Shell</text>
+    </string>
+    <string id="gamma_ap_reward_28053116">
+        <text>Artefact: Mama's Beads</text>
+    </string>
+    <string id="gamma_ap_reward_28053117">
+        <text>Artefact: Heart</text>
+    </string>
+    <string id="gamma_ap_reward_28053118">
+        <text>Artefact: Flash</text>
+    </string>
+    <string id="gamma_ap_reward_28053119">
+        <text>Artefact: Moonlight</text>
+    </string>
+    <string id="gamma_ap_reward_28053120">
+        <text>Artefact: Sparkler</text>
+    </string>
+    <string id="gamma_ap_reward_28053121">
+        <text>Artefact: Electron</text>
+    </string>
+    <string id="gamma_ap_reward_28053122">
+        <text>Artefact: Empty</text>
+    </string>
+    <string id="gamma_ap_reward_28053123">
+        <text>Artefact: Eye</text>
+    </string>
+    <string id="gamma_ap_reward_28053124">
+        <text>Artefact: Flame</text>
+    </string>
+    <string id="gamma_ap_reward_28053125">
+        <text>Artefact: Fireball</text>
+    </string>
+    <string id="gamma_ap_reward_28053126">
+        <text>Artefact: Lamp</text>
+    </string>
+    <string id="gamma_ap_reward_28053127">
+        <text>Artefact: Full Empty</text>
+    </string>
+    <string id="gamma_ap_reward_28053128">
+        <text>Artefact: Kolobok</text>
+    </string>
+    <string id="gamma_ap_reward_28053129">
+        <text>Artefact: Generator</text>
+    </string>
+    <string id="gamma_ap_reward_28053130">
+        <text>Artefact: Firefly</text>
+    </string>
+    <string id="gamma_ap_reward_28053131">
+        <text>Artefact: Goldfish</text>
+    </string>
+    <string id="gamma_ap_reward_28053132">
+        <text>Artefact: Grapes</text>
+    </string>
+    <string id="gamma_ap_reward_28053133">
+        <text>Artefact: Gravi</text>
+    </string>
+    <string id="gamma_ap_reward_28053134">
+        <text>Artefact: Snowflake</text>
+    </string>
+    <string id="gamma_ap_reward_28053135">
+        <text>Artefact: Itcher</text>
+    </string>
+    <string id="gamma_ap_reward_28053136">
+        <text>Artefact: Sourpuss</text>
+    </string>
+    <string id="gamma_ap_reward_28053137">
+        <text>Artefact: Claw</text>
+    </string>
+    <string id="gamma_ap_reward_28053138">
+        <text>Artefact: Beacon</text>
+    </string>
+    <string id="gamma_ap_reward_28053139">
+        <text>Artefact: Lobster Eyes</text>
+    </string>
+    <string id="gamma_ap_reward_28053140">
+        <text>Artefact: Medal</text>
+    </string>
+    <string id="gamma_ap_reward_28053141">
+        <text>Artefact: Jellyfish</text>
+    </string>
+    <string id="gamma_ap_reward_28053142">
+        <text>Artefact: Meat Chunk</text>
+    </string>
+    <string id="gamma_ap_reward_28053143">
+        <text>Artefact: Moss</text>
+    </string>
+    <string id="gamma_ap_reward_28053144">
+        <text>Artefact: Nightstar</text>
+    </string>
+    <string id="gamma_ap_reward_28053145">
+        <text>Artefact: Moon</text>
+    </string>
+    <string id="gamma_ap_reward_28053146">
+        <text>Artefact: Pin</text>
+    </string>
+    <string id="gamma_ap_reward_28053147">
+        <text>Artefact: Thistle</text>
+    </string>
+    <string id="gamma_ap_reward_28053148">
+        <text>Artefact: Ring</text>
+    </string>
+    <string id="gamma_ap_reward_28053149">
+        <text>Artefact: Sandstone</text>
+    </string>
+    <string id="gamma_ap_reward_28053150">
+        <text>Artefact: Seraphim</text>
+    </string>
+    <string id="gamma_ap_reward_28053151">
+        <text>Artefact: Signet</text>
+    </string>
+    <string id="gamma_ap_reward_28053152">
+        <text>Artefact: Miser's Skull</text>
+    </string>
+    <string id="gamma_ap_reward_28053153">
+        <text>Artefact: Soul</text>
+    </string>
+    <string id="gamma_ap_reward_28053154">
+        <text>Artefact: Spike</text>
+    </string>
+    <string id="gamma_ap_reward_28053155">
+        <text>Artefact: Sponge</text>
+    </string>
+    <string id="gamma_ap_reward_28053156">
+        <text>Artefact: Phantom Star</text>
+    </string>
+    <string id="gamma_ap_reward_28053157">
+        <text>Artefact: Sun</text>
+    </string>
+    <string id="gamma_ap_reward_28053158">
+        <text>Artefact: Tapeworm</text>
+    </string>
+    <string id="gamma_ap_reward_28053159">
+        <text>Artefact: Wrenched</text>
+    </string>
+    <string id="gamma_ap_reward_28053160">
+        <text>Artefact: Scar</text>
+    </string>
     <string id="gamma_ap_tool_permission_required">
         <text>AP permission required to use: </text>
     </string>

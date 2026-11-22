@@ -1430,6 +1430,606 @@
           "equ_tourist_pack"
         ]
       ]
+    },
+    {
+      "id": 28053101,
+      "name": "Artefact: Ball",
+      "classification": "useful",
+      "category": "rewards_artefacts",
+      "effect": "artefact_reward",
+      "supplies": [
+        "af_ball"
+      ]
+    },
+    {
+      "id": 28053102,
+      "name": "Artefact: Bubble",
+      "classification": "useful",
+      "category": "rewards_artefacts",
+      "effect": "artefact_reward",
+      "supplies": [
+        "af_baloon_lead_box"
+      ]
+    },
+    {
+      "id": 28053103,
+      "name": "Artefact: Bat",
+      "classification": "useful",
+      "category": "rewards_artefacts",
+      "effect": "artefact_reward",
+      "supplies": [
+        "af_bat"
+      ]
+    },
+    {
+      "id": 28053104,
+      "name": "Artefact: Black Angel",
+      "classification": "useful",
+      "category": "rewards_artefacts",
+      "effect": "artefact_reward",
+      "supplies": [
+        "af_black_angel"
+      ]
+    },
+    {
+      "id": 28053105,
+      "name": "Artefact: Black Spray",
+      "classification": "useful",
+      "category": "rewards_artefacts",
+      "effect": "artefact_reward",
+      "supplies": [
+        "af_black_spray_lead_box"
+      ]
+    },
+    {
+      "id": 28053106,
+      "name": "Artefact: Stone Blood",
+      "classification": "useful",
+      "category": "rewards_artefacts",
+      "effect": "artefact_reward",
+      "supplies": [
+        "af_blood_lead_box"
+      ]
+    },
+    {
+      "id": 28053107,
+      "name": "Artefact: Bracelet",
+      "classification": "useful",
+      "category": "rewards_artefacts",
+      "effect": "artefact_reward",
+      "supplies": [
+        "af_bracelet_lead_box"
+      ]
+    },
+    {
+      "id": 28053108,
+      "name": "Artefact: Cell",
+      "classification": "useful",
+      "category": "rewards_artefacts",
+      "effect": "artefact_reward",
+      "supplies": [
+        "af_cell"
+      ]
+    },
+    {
+      "id": 28053109,
+      "name": "Artefact: Chain",
+      "classification": "useful",
+      "category": "rewards_artefacts",
+      "effect": "artefact_reward",
+      "supplies": [
+        "af_chelust"
+      ]
+    },
+    {
+      "id": 28053110,
+      "name": "Artefact: Cocoon",
+      "classification": "useful",
+      "category": "rewards_artefacts",
+      "effect": "artefact_reward",
+      "supplies": [
+        "af_cocoon"
+      ]
+    },
+    {
+      "id": 28053111,
+      "name": "Artefact: Crystal",
+      "classification": "useful",
+      "category": "rewards_artefacts",
+      "effect": "artefact_reward",
+      "supplies": [
+        "af_cristall_lead_box"
+      ]
+    },
+    {
+      "id": 28053112,
+      "name": "Artefact: Stone Flower",
+      "classification": "useful",
+      "category": "rewards_artefacts",
+      "effect": "artefact_reward",
+      "supplies": [
+        "af_cristall_flower_lead_box"
+      ]
+    },
+    {
+      "id": 28053113,
+      "name": "Artefact: Dragon's Eye",
+      "classification": "useful",
+      "category": "rewards_artefacts",
+      "effect": "artefact_reward",
+      "supplies": [
+        "af_dragon_eye"
+      ]
+    },
+    {
+      "id": 28053114,
+      "name": "Artefact: Battery",
+      "classification": "useful",
+      "category": "rewards_artefacts",
+      "effect": "artefact_reward",
+      "supplies": [
+        "af_dummy_battery_lead_box"
+      ]
+    },
+    {
+      "id": 28053115,
+      "name": "Artefact: Shell",
+      "classification": "useful",
+      "category": "rewards_artefacts",
+      "effect": "artefact_reward",
+      "supplies": [
+        "af_dummy_dummy_lead_box"
+      ]
+    },
+    {
+      "id": 28053116,
+      "name": "Artefact: Mama's Beads",
+      "classification": "useful",
+      "category": "rewards_artefacts",
+      "effect": "artefact_reward",
+      "supplies": [
+        "af_dummy_glassbeads_lead_box"
+      ]
+    },
+    {
+      "id": 28053117,
+      "name": "Artefact: Heart",
+      "classification": "useful",
+      "category": "rewards_artefacts",
+      "effect": "artefact_reward",
+      "supplies": [
+        "af_ear"
+      ]
+    },
+    {
+      "id": 28053118,
+      "name": "Artefact: Flash",
+      "classification": "useful",
+      "category": "rewards_artefacts",
+      "effect": "artefact_reward",
+      "supplies": [
+        "af_electra_flash_lead_box"
+      ]
+    },
+    {
+      "id": 28053119,
+      "name": "Artefact: Moonlight",
+      "classification": "useful",
+      "category": "rewards_artefacts",
+      "effect": "artefact_reward",
+      "supplies": [
+        "af_electra_moonlight_lead_box"
+      ]
+    },
+    {
+      "id": 28053120,
+      "name": "Artefact: Sparkler",
+      "classification": "useful",
+      "category": "rewards_artefacts",
+      "effect": "artefact_reward",
+      "supplies": [
+        "af_electra_sparkler_lead_box"
+      ]
+    },
+    {
+      "id": 28053121,
+      "name": "Artefact: Electron",
+      "classification": "useful",
+      "category": "rewards_artefacts",
+      "effect": "artefact_reward",
+      "supplies": [
+        "af_elektron"
+      ]
+    },
+    {
+      "id": 28053122,
+      "name": "Artefact: Empty",
+      "classification": "useful",
+      "category": "rewards_artefacts",
+      "effect": "artefact_reward",
+      "supplies": [
+        "af_empty_lead_box"
+      ]
+    },
+    {
+      "id": 28053123,
+      "name": "Artefact: Eye",
+      "classification": "useful",
+      "category": "rewards_artefacts",
+      "effect": "artefact_reward",
+      "supplies": [
+        "af_eye_lead_box"
+      ]
+    },
+    {
+      "id": 28053124,
+      "name": "Artefact: Flame",
+      "classification": "useful",
+      "category": "rewards_artefacts",
+      "effect": "artefact_reward",
+      "supplies": [
+        "af_fire_lead_box"
+      ]
+    },
+    {
+      "id": 28053125,
+      "name": "Artefact: Fireball",
+      "classification": "useful",
+      "category": "rewards_artefacts",
+      "effect": "artefact_reward",
+      "supplies": [
+        "af_fireball_lead_box"
+      ]
+    },
+    {
+      "id": 28053126,
+      "name": "Artefact: Lamp",
+      "classification": "useful",
+      "category": "rewards_artefacts",
+      "effect": "artefact_reward",
+      "supplies": [
+        "af_fonar"
+      ]
+    },
+    {
+      "id": 28053127,
+      "name": "Artefact: Full Empty",
+      "classification": "useful",
+      "category": "rewards_artefacts",
+      "effect": "artefact_reward",
+      "supplies": [
+        "af_full_empty_lead_box"
+      ]
+    },
+    {
+      "id": 28053128,
+      "name": "Artefact: Kolobok",
+      "classification": "useful",
+      "category": "rewards_artefacts",
+      "effect": "artefact_reward",
+      "supplies": [
+        "af_fuzz_kolobok_lead_box"
+      ]
+    },
+    {
+      "id": 28053129,
+      "name": "Artefact: Generator",
+      "classification": "useful",
+      "category": "rewards_artefacts",
+      "effect": "artefact_reward",
+      "supplies": [
+        "af_generator"
+      ]
+    },
+    {
+      "id": 28053130,
+      "name": "Artefact: Firefly",
+      "classification": "useful",
+      "category": "rewards_artefacts",
+      "effect": "artefact_reward",
+      "supplies": [
+        "af_glass_lead_box"
+      ]
+    },
+    {
+      "id": 28053131,
+      "name": "Artefact: Goldfish",
+      "classification": "useful",
+      "category": "rewards_artefacts",
+      "effect": "artefact_reward",
+      "supplies": [
+        "af_gold_fish_lead_box"
+      ]
+    },
+    {
+      "id": 28053132,
+      "name": "Artefact: Grapes",
+      "classification": "useful",
+      "category": "rewards_artefacts",
+      "effect": "artefact_reward",
+      "supplies": [
+        "af_grapes"
+      ]
+    },
+    {
+      "id": 28053133,
+      "name": "Artefact: Gravi",
+      "classification": "useful",
+      "category": "rewards_artefacts",
+      "effect": "artefact_reward",
+      "supplies": [
+        "af_gravi_lead_box"
+      ]
+    },
+    {
+      "id": 28053134,
+      "name": "Artefact: Snowflake",
+      "classification": "useful",
+      "category": "rewards_artefacts",
+      "effect": "artefact_reward",
+      "supplies": [
+        "af_ice_lead_box"
+      ]
+    },
+    {
+      "id": 28053135,
+      "name": "Artefact: Itcher",
+      "classification": "useful",
+      "category": "rewards_artefacts",
+      "effect": "artefact_reward",
+      "supplies": [
+        "af_itcher_lead_box"
+      ]
+    },
+    {
+      "id": 28053136,
+      "name": "Artefact: Sourpuss",
+      "classification": "useful",
+      "category": "rewards_artefacts",
+      "effect": "artefact_reward",
+      "supplies": [
+        "af_kislushka"
+      ]
+    },
+    {
+      "id": 28053137,
+      "name": "Artefact: Claw",
+      "classification": "useful",
+      "category": "rewards_artefacts",
+      "effect": "artefact_reward",
+      "supplies": [
+        "af_kogot"
+      ]
+    },
+    {
+      "id": 28053138,
+      "name": "Artefact: Beacon",
+      "classification": "useful",
+      "category": "rewards_artefacts",
+      "effect": "artefact_reward",
+      "supplies": [
+        "af_lighthouse"
+      ]
+    },
+    {
+      "id": 28053139,
+      "name": "Artefact: Lobster Eyes",
+      "classification": "useful",
+      "category": "rewards_artefacts",
+      "effect": "artefact_reward",
+      "supplies": [
+        "af_lobster_eyes_lead_box"
+      ]
+    },
+    {
+      "id": 28053140,
+      "name": "Artefact: Medal",
+      "classification": "useful",
+      "category": "rewards_artefacts",
+      "effect": "artefact_reward",
+      "supplies": [
+        "af_medallion"
+      ]
+    },
+    {
+      "id": 28053141,
+      "name": "Artefact: Jellyfish",
+      "classification": "useful",
+      "category": "rewards_artefacts",
+      "effect": "artefact_reward",
+      "supplies": [
+        "af_medusa_lead_box"
+      ]
+    },
+    {
+      "id": 28053142,
+      "name": "Artefact: Meat Chunk",
+      "classification": "useful",
+      "category": "rewards_artefacts",
+      "effect": "artefact_reward",
+      "supplies": [
+        "af_mincer_meat_lead_box"
+      ]
+    },
+    {
+      "id": 28053143,
+      "name": "Artefact: Moss",
+      "classification": "useful",
+      "category": "rewards_artefacts",
+      "effect": "artefact_reward",
+      "supplies": [
+        "af_moh"
+      ]
+    },
+    {
+      "id": 28053144,
+      "name": "Artefact: Nightstar",
+      "classification": "useful",
+      "category": "rewards_artefacts",
+      "effect": "artefact_reward",
+      "supplies": [
+        "af_night_star_lead_box"
+      ]
+    },
+    {
+      "id": 28053145,
+      "name": "Artefact: Moon",
+      "classification": "useful",
+      "category": "rewards_artefacts",
+      "effect": "artefact_reward",
+      "supplies": [
+        "af_peas"
+      ]
+    },
+    {
+      "id": 28053146,
+      "name": "Artefact: Pin",
+      "classification": "useful",
+      "category": "rewards_artefacts",
+      "effect": "artefact_reward",
+      "supplies": [
+        "af_pin_lead_box"
+      ]
+    },
+    {
+      "id": 28053147,
+      "name": "Artefact: Thistle",
+      "classification": "useful",
+      "category": "rewards_artefacts",
+      "effect": "artefact_reward",
+      "supplies": [
+        "af_repei"
+      ]
+    },
+    {
+      "id": 28053148,
+      "name": "Artefact: Ring",
+      "classification": "useful",
+      "category": "rewards_artefacts",
+      "effect": "artefact_reward",
+      "supplies": [
+        "af_ring_lead_box"
+      ]
+    },
+    {
+      "id": 28053149,
+      "name": "Artefact: Sandstone",
+      "classification": "useful",
+      "category": "rewards_artefacts",
+      "effect": "artefact_reward",
+      "supplies": [
+        "af_sandstone"
+      ]
+    },
+    {
+      "id": 28053150,
+      "name": "Artefact: Seraphim",
+      "classification": "useful",
+      "category": "rewards_artefacts",
+      "effect": "artefact_reward",
+      "supplies": [
+        "af_serofim"
+      ]
+    },
+    {
+      "id": 28053151,
+      "name": "Artefact: Signet",
+      "classification": "useful",
+      "category": "rewards_artefacts",
+      "effect": "artefact_reward",
+      "supplies": [
+        "af_signet"
+      ]
+    },
+    {
+      "id": 28053152,
+      "name": "Artefact: Miser's Skull",
+      "classification": "useful",
+      "category": "rewards_artefacts",
+      "effect": "artefact_reward",
+      "supplies": [
+        "af_skull_miser"
+      ]
+    },
+    {
+      "id": 28053153,
+      "name": "Artefact: Soul",
+      "classification": "useful",
+      "category": "rewards_artefacts",
+      "effect": "artefact_reward",
+      "supplies": [
+        "af_soul_lead_box"
+      ]
+    },
+    {
+      "id": 28053154,
+      "name": "Artefact: Spike",
+      "classification": "useful",
+      "category": "rewards_artefacts",
+      "effect": "artefact_reward",
+      "supplies": [
+        "af_spaika"
+      ]
+    },
+    {
+      "id": 28053155,
+      "name": "Artefact: Sponge",
+      "classification": "useful",
+      "category": "rewards_artefacts",
+      "effect": "artefact_reward",
+      "supplies": [
+        "af_sponge_lead_box"
+      ]
+    },
+    {
+      "id": 28053156,
+      "name": "Artefact: Phantom Star",
+      "classification": "useful",
+      "category": "rewards_artefacts",
+      "effect": "artefact_reward",
+      "supplies": [
+        "af_star_phantom"
+      ]
+    },
+    {
+      "id": 28053157,
+      "name": "Artefact: Sun",
+      "classification": "useful",
+      "category": "rewards_artefacts",
+      "effect": "artefact_reward",
+      "supplies": [
+        "af_sun"
+      ]
+    },
+    {
+      "id": 28053158,
+      "name": "Artefact: Tapeworm",
+      "classification": "useful",
+      "category": "rewards_artefacts",
+      "effect": "artefact_reward",
+      "supplies": [
+        "af_tapeworm"
+      ]
+    },
+    {
+      "id": 28053159,
+      "name": "Artefact: Wrenched",
+      "classification": "useful",
+      "category": "rewards_artefacts",
+      "effect": "artefact_reward",
+      "supplies": [
+        "af_vyvert_lead_box"
+      ]
+    },
+    {
+      "id": 28053160,
+      "name": "Artefact: Scar",
+      "classification": "useful",
+      "category": "rewards_artefacts",
+      "effect": "artefact_reward",
+      "supplies": [
+        "af_zhelch"
+      ]
     }
   ],
   "locations": [
@@ -4802,7 +5402,12 @@
         "reliable": true,
         "combat": true
       },
-      "story_arc": "living_legend"
+      "story_arc": "living_legend",
+      "readiness": {
+        "firearms": 3,
+        "outfit": 3,
+        "tools": 2
+      }
     },
     {
       "id": 28052608,
@@ -4831,7 +5436,12 @@
         "reliable": true,
         "combat": true
       },
-      "story_arc": "living_legend"
+      "story_arc": "living_legend",
+      "readiness": {
+        "firearms": 3,
+        "outfit": 3,
+        "tools": 2
+      }
     },
     {
       "id": 28052609,
@@ -4861,7 +5471,12 @@
         "reliable": true,
         "combat": true
       },
-      "story_arc": "living_legend"
+      "story_arc": "living_legend",
+      "readiness": {
+        "firearms": 3,
+        "outfit": 3,
+        "tools": 2
+      }
     },
     {
       "id": 28052610,
@@ -4891,7 +5506,12 @@
         "reliable": true,
         "combat": true
       },
-      "story_arc": "living_legend"
+      "story_arc": "living_legend",
+      "readiness": {
+        "firearms": 3,
+        "outfit": 3,
+        "tools": 2
+      }
     },
     {
       "id": 28052611,
@@ -4923,7 +5543,12 @@
         "reliable": true,
         "combat": true
       },
-      "story_arc": "living_legend"
+      "story_arc": "living_legend",
+      "readiness": {
+        "firearms": 4,
+        "outfit": 4,
+        "tools": 3
+      }
     },
     {
       "id": 28052612,
@@ -4955,7 +5580,12 @@
         "reliable": true,
         "combat": true
       },
-      "story_arc": "living_legend"
+      "story_arc": "living_legend",
+      "readiness": {
+        "firearms": 4,
+        "outfit": 4,
+        "tools": 3
+      }
     },
     {
       "id": 28052613,
@@ -4987,7 +5617,12 @@
         "reliable": true,
         "combat": true
       },
-      "story_arc": "living_legend"
+      "story_arc": "living_legend",
+      "readiness": {
+        "firearms": 4,
+        "outfit": 4,
+        "tools": 3
+      }
     },
     {
       "id": 28052614,
@@ -5020,7 +5655,12 @@
         "reliable": true,
         "combat": true
       },
-      "story_arc": "living_legend"
+      "story_arc": "living_legend",
+      "readiness": {
+        "firearms": 4,
+        "outfit": 4,
+        "tools": 3
+      }
     },
     {
       "id": 28052615,
@@ -5053,7 +5693,12 @@
         "reliable": true,
         "combat": true
       },
-      "story_arc": "living_legend"
+      "story_arc": "living_legend",
+      "readiness": {
+        "firearms": 4,
+        "outfit": 4,
+        "tools": 3
+      }
     },
     {
       "id": 28052616,
@@ -5086,7 +5731,12 @@
         "reliable": true,
         "combat": true
       },
-      "story_arc": "living_legend"
+      "story_arc": "living_legend",
+      "readiness": {
+        "firearms": 4,
+        "outfit": 4,
+        "tools": 3
+      }
     },
     {
       "id": 28052617,
@@ -5119,7 +5769,12 @@
         "reliable": true,
         "combat": true
       },
-      "story_arc": "living_legend"
+      "story_arc": "living_legend",
+      "readiness": {
+        "firearms": 4,
+        "outfit": 4,
+        "tools": 3
+      }
     },
     {
       "id": 28052618,
@@ -5153,7 +5808,12 @@
         "reliable": true,
         "combat": true
       },
-      "story_arc": "living_legend"
+      "story_arc": "living_legend",
+      "readiness": {
+        "firearms": 4,
+        "outfit": 4,
+        "tools": 3
+      }
     },
     {
       "id": 28052619,
@@ -5189,7 +5849,12 @@
         "reliable": true,
         "combat": true
       },
-      "story_arc": "living_legend"
+      "story_arc": "living_legend",
+      "readiness": {
+        "firearms": 4,
+        "outfit": 4,
+        "tools": 3
+      }
     },
     {
       "id": 28052620,
@@ -5225,7 +5890,12 @@
         "reliable": true,
         "combat": true
       },
-      "story_arc": "living_legend"
+      "story_arc": "living_legend",
+      "readiness": {
+        "firearms": 4,
+        "outfit": 4,
+        "tools": 3
+      }
     },
     {
       "id": 28052621,
@@ -5266,7 +5936,12 @@
         "reliable": true,
         "combat": true
       },
-      "story_arc": "living_legend"
+      "story_arc": "living_legend",
+      "readiness": {
+        "firearms": 4,
+        "outfit": 4,
+        "tools": 3
+      }
     },
     {
       "id": 28052622,
@@ -5307,7 +5982,12 @@
         "reliable": true,
         "combat": true
       },
-      "story_arc": "mortal_sin"
+      "story_arc": "mortal_sin",
+      "readiness": {
+        "firearms": 4,
+        "outfit": 4,
+        "tools": 3
+      }
     },
     {
       "id": 28052623,
@@ -5344,7 +6024,12 @@
         "reliable": true,
         "combat": true
       },
-      "story_arc": "mortal_sin"
+      "story_arc": "mortal_sin",
+      "readiness": {
+        "firearms": 4,
+        "outfit": 4,
+        "tools": 3
+      }
     },
     {
       "id": 28052624,
@@ -5381,7 +6066,12 @@
         "reliable": true,
         "combat": true
       },
-      "story_arc": "mortal_sin"
+      "story_arc": "mortal_sin",
+      "readiness": {
+        "firearms": 4,
+        "outfit": 4,
+        "tools": 3
+      }
     },
     {
       "id": 28052625,
@@ -5418,7 +6108,12 @@
         "reliable": true,
         "combat": true
       },
-      "story_arc": "mortal_sin"
+      "story_arc": "mortal_sin",
+      "readiness": {
+        "firearms": 4,
+        "outfit": 4,
+        "tools": 3
+      }
     },
     {
       "id": 28052626,
@@ -5455,7 +6150,12 @@
         "reliable": true,
         "combat": true
       },
-      "story_arc": "mortal_sin"
+      "story_arc": "mortal_sin",
+      "readiness": {
+        "firearms": 4,
+        "outfit": 4,
+        "tools": 3
+      }
     },
     {
       "id": 28052627,
@@ -5497,7 +6197,12 @@
         "reliable": true,
         "combat": true
       },
-      "story_arc": "mortal_sin"
+      "story_arc": "mortal_sin",
+      "readiness": {
+        "firearms": 4,
+        "outfit": 4,
+        "tools": 3
+      }
     },
     {
       "id": 28052628,
@@ -5539,7 +6244,12 @@
         "reliable": true,
         "combat": true
       },
-      "story_arc": "mortal_sin"
+      "story_arc": "mortal_sin",
+      "readiness": {
+        "firearms": 4,
+        "outfit": 4,
+        "tools": 3
+      }
     },
     {
       "id": 28052629,
@@ -5576,7 +6286,12 @@
         "reliable": true,
         "combat": true
       },
-      "story_arc": "mortal_sin"
+      "story_arc": "mortal_sin",
+      "readiness": {
+        "firearms": 4,
+        "outfit": 4,
+        "tools": 3
+      }
     },
     {
       "id": 28052630,
@@ -5614,7 +6329,12 @@
         "reliable": true,
         "combat": true
       },
-      "story_arc": "mortal_sin"
+      "story_arc": "mortal_sin",
+      "readiness": {
+        "firearms": 4,
+        "outfit": 4,
+        "tools": 3
+      }
     },
     {
       "id": 28052631,
@@ -5652,7 +6372,12 @@
         "reliable": true,
         "combat": true
       },
-      "story_arc": "mortal_sin"
+      "story_arc": "mortal_sin",
+      "readiness": {
+        "firearms": 4,
+        "outfit": 4,
+        "tools": 3
+      }
     },
     {
       "id": 28052632,
@@ -5690,7 +6415,12 @@
         "reliable": true,
         "combat": true
       },
-      "story_arc": "mortal_sin"
+      "story_arc": "mortal_sin",
+      "readiness": {
+        "firearms": 4,
+        "outfit": 4,
+        "tools": 3
+      }
     },
     {
       "id": 28052633,
@@ -5733,7 +6463,12 @@
         "reliable": true,
         "combat": true
       },
-      "story_arc": "mortal_sin"
+      "story_arc": "mortal_sin",
+      "readiness": {
+        "firearms": 4,
+        "outfit": 4,
+        "tools": 3
+      }
     },
     {
       "id": 28052634,
@@ -5771,7 +6506,12 @@
         "reliable": true,
         "combat": true
       },
-      "story_arc": "mortal_sin"
+      "story_arc": "mortal_sin",
+      "readiness": {
+        "firearms": 4,
+        "outfit": 4,
+        "tools": 3
+      }
     },
     {
       "id": 28052635,
@@ -5810,7 +6550,12 @@
         "reliable": true,
         "combat": true
       },
-      "story_arc": "mortal_sin"
+      "story_arc": "mortal_sin",
+      "readiness": {
+        "firearms": 4,
+        "outfit": 4,
+        "tools": 3
+      }
     },
     {
       "id": 28052636,
@@ -5849,7 +6594,12 @@
         "reliable": true,
         "combat": true
       },
-      "story_arc": "mortal_sin"
+      "story_arc": "mortal_sin",
+      "readiness": {
+        "firearms": 4,
+        "outfit": 4,
+        "tools": 3
+      }
     },
     {
       "id": 28052637,
@@ -5889,7 +6639,12 @@
         "reliable": true,
         "combat": true
       },
-      "story_arc": "mortal_sin"
+      "story_arc": "mortal_sin",
+      "readiness": {
+        "firearms": 4,
+        "outfit": 4,
+        "tools": 3
+      }
     },
     {
       "id": 28052638,
@@ -5931,7 +6686,12 @@
         "reliable": true,
         "combat": true
       },
-      "story_arc": "mortal_sin"
+      "story_arc": "mortal_sin",
+      "readiness": {
+        "firearms": 4,
+        "outfit": 4,
+        "tools": 3
+      }
     },
     {
       "id": 28052639,
@@ -5973,7 +6733,12 @@
         "reliable": true,
         "combat": true
       },
-      "story_arc": "mortal_sin"
+      "story_arc": "mortal_sin",
+      "readiness": {
+        "firearms": 4,
+        "outfit": 4,
+        "tools": 3
+      }
     },
     {
       "id": 28052640,
@@ -6015,7 +6780,12 @@
         "reliable": true,
         "combat": true
       },
-      "story_arc": "mortal_sin"
+      "story_arc": "mortal_sin",
+      "readiness": {
+        "firearms": 4,
+        "outfit": 4,
+        "tools": 3
+      }
     },
     {
       "id": 28052641,
@@ -6057,7 +6827,12 @@
         "reliable": true,
         "combat": true
       },
-      "story_arc": "mortal_sin"
+      "story_arc": "mortal_sin",
+      "readiness": {
+        "firearms": 4,
+        "outfit": 4,
+        "tools": 3
+      }
     },
     {
       "id": 28052642,
@@ -6099,7 +6874,12 @@
         "reliable": true,
         "combat": true
       },
-      "story_arc": "mortal_sin"
+      "story_arc": "mortal_sin",
+      "readiness": {
+        "firearms": 4,
+        "outfit": 4,
+        "tools": 3
+      }
     },
     {
       "id": 28052643,
@@ -6146,7 +6926,12 @@
         "reliable": true,
         "combat": true
       },
-      "story_arc": "mortal_sin"
+      "story_arc": "mortal_sin",
+      "readiness": {
+        "firearms": 4,
+        "outfit": 4,
+        "tools": 3
+      }
     },
     {
       "id": 28052644,
@@ -6188,7 +6973,12 @@
         "reliable": true,
         "combat": true
       },
-      "story_arc": "operation_afterglow"
+      "story_arc": "operation_afterglow",
+      "readiness": {
+        "firearms": 4,
+        "outfit": 4,
+        "tools": 3
+      }
     },
     {
       "id": 28052645,
@@ -6230,7 +7020,12 @@
         "reliable": true,
         "combat": true
       },
-      "story_arc": "operation_afterglow"
+      "story_arc": "operation_afterglow",
+      "readiness": {
+        "firearms": 4,
+        "outfit": 4,
+        "tools": 3
+      }
     },
     {
       "id": 28052646,
@@ -6272,7 +7067,12 @@
         "reliable": true,
         "combat": true
       },
-      "story_arc": "operation_afterglow"
+      "story_arc": "operation_afterglow",
+      "readiness": {
+        "firearms": 4,
+        "outfit": 4,
+        "tools": 3
+      }
     },
     {
       "id": 28052647,
@@ -6314,7 +7114,12 @@
         "reliable": true,
         "combat": true
       },
-      "story_arc": "operation_afterglow"
+      "story_arc": "operation_afterglow",
+      "readiness": {
+        "firearms": 4,
+        "outfit": 4,
+        "tools": 3
+      }
     },
     {
       "id": 28052648,
@@ -6356,7 +7161,12 @@
         "reliable": true,
         "combat": true
       },
-      "story_arc": "operation_afterglow"
+      "story_arc": "operation_afterglow",
+      "readiness": {
+        "firearms": 4,
+        "outfit": 4,
+        "tools": 3
+      }
     },
     {
       "id": 28052649,
@@ -6398,7 +7208,12 @@
         "reliable": true,
         "combat": true
       },
-      "story_arc": "operation_afterglow"
+      "story_arc": "operation_afterglow",
+      "readiness": {
+        "firearms": 4,
+        "outfit": 4,
+        "tools": 3
+      }
     },
     {
       "id": 28052650,
@@ -6440,7 +7255,12 @@
         "reliable": true,
         "combat": true
       },
-      "story_arc": "operation_afterglow"
+      "story_arc": "operation_afterglow",
+      "readiness": {
+        "firearms": 4,
+        "outfit": 4,
+        "tools": 3
+      }
     },
     {
       "id": 28052651,
@@ -6482,7 +7302,12 @@
         "reliable": true,
         "combat": true
       },
-      "story_arc": "operation_afterglow"
+      "story_arc": "operation_afterglow",
+      "readiness": {
+        "firearms": 4,
+        "outfit": 4,
+        "tools": 3
+      }
     },
     {
       "id": 28052652,
@@ -6524,7 +7349,12 @@
         "reliable": true,
         "combat": true
       },
-      "story_arc": "operation_afterglow"
+      "story_arc": "operation_afterglow",
+      "readiness": {
+        "firearms": 4,
+        "outfit": 4,
+        "tools": 3
+      }
     },
     {
       "id": 28052653,
@@ -6566,7 +7396,12 @@
         "reliable": true,
         "combat": true
       },
-      "story_arc": "operation_afterglow"
+      "story_arc": "operation_afterglow",
+      "readiness": {
+        "firearms": 4,
+        "outfit": 4,
+        "tools": 3
+      }
     },
     {
       "id": 28052701,
@@ -6594,7 +7429,8 @@
       "name": "Reach Armour Tier: Exoskeleton / Nosorog",
       "level": "Menu",
       "category": "checks_armour_tiers",
-      "key": "4"
+      "key": "4",
+      "northern_readiness": true
     },
     {
       "id": 28052711,
@@ -6636,7 +7472,8 @@
       "name": "Use Firearm Class: Machinegun",
       "level": "Menu",
       "category": "checks_weapon_tiers",
-      "key": "machinegun"
+      "key": "machinegun",
+      "northern_readiness": true
     },
     {
       "id": 28052721,
@@ -8857,5 +9694,20 @@
       "3": 3,
       "4": 3
     }
-  }
+  },
+  "post_red_forest_regions": [
+    "jupiter",
+    "jupiter_underground",
+    "l10_limansk",
+    "l11_hospital",
+    "l11_pripyat",
+    "l12_stancia",
+    "l12_stancia_2",
+    "l12u_control_monolith",
+    "l12u_sarcofag",
+    "l13_generators",
+    "l13u_warlab",
+    "pripyat",
+    "zaton"
+  ]
 }

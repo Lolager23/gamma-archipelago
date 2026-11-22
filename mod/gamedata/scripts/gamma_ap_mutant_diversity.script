@@ -1,0 +1,23 @@
+-- Maximum matching avoids double-counting source types or spending rare-source slots greedily.
+function capacity(sources,regions,starting)
+    local held={}
+    local function assign(source,seen)
+        for _,where in ipairs(sources[source]) do
+            if regions[where] then
+                for position=1,(where == starting and 5 or 2) do
+                    local slot=where..":"..position
+                    if not seen[slot] then
+                        seen[slot]=true
+                        if not held[slot] or assign(held[slot],seen) then
+                            held[slot]=source;return true
+                        end
+                    end
+                end
+            end
+        end
+        return false
+    end
+    local result=0
+    for index=1,#sources do if assign(index,{}) then result=result+1 end end
+    return result
+end

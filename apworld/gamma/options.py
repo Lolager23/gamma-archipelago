@@ -14,6 +14,27 @@ from Options import (
 )
 
 
+class RegionalProgression(DefaultOnToggle):
+    """Five initial mutant types, two per supported new region and tiered story readiness."""
+
+    display_name = "Regional progression requirements"
+
+
+class RewardsArtefacts(Toggle):
+    """Useful physical artefacts from the supported non-quest roster."""
+
+    display_name = "Artefact rewards"
+
+
+class ArtefactRewards(Range):
+    """Number of useful artefact rewards when explicit quantities are enabled."""
+
+    display_name = "Artefact reward count"
+    range_start = 0
+    range_end = 4000
+    default = 4
+
+
 class EquipmentClassProgression(DefaultOnToggle):
     """Use cumulative firearm, outfit, helmet and backpack class permissions; knives stay usable."""
 
@@ -663,6 +684,9 @@ class OptionalCheckPolicy(Choice):
 
 @dataclass
 class GammaOptions(PerGameCommonOptions):
+    regional_progression: RegionalProgression
+    rewards_artefacts: RewardsArtefacts
+    artefact_rewards: ArtefactRewards
     equipment_class_progression: EquipmentClassProgression
     progressive_tool_receipts: ProgressiveToolReceipts
     initial_firearm_class: InitialFirearmClass
