@@ -32,3 +32,12 @@ def add_tool_claims(
             item_type(event, ItemClassification.progression, None, world.player)
         )
         regions["l01_escape"].locations.append(claim)
+
+
+def order_tool_items(player: int, items: list[Item]) -> None:
+    """Reverse fill places the few constrained tool tiers before flexible rewards."""
+    tiers = {name: tier for tier, name in enumerate(TOOL_STASHES, 1)}
+    positions = [index for index, item in enumerate(items) if item.player == player]
+    owned = sorted((items[index] for index in positions), key=lambda item: tiers.get(item.name, 0))
+    for index, item in zip(positions, owned, strict=True):
+        items[index] = item

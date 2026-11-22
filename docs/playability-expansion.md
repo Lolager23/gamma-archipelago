@@ -19,7 +19,7 @@ PR #69. No current seed is refilled, deployed or reset. Owen owns native testing
   rewards when those checks are enabled; unsupported no-reputation routes are
   filler-only. Faction-standing checks use their own 500/1,000/2,000/3,000 values.
 - Heavy/exoskeleton checks require calibrated psi protection, Red Forest access
-  and a region beyond it, or 2,000 AP-earned goodwill with one faction as a trader
+  and a region beyond it, or 2,000 AP-earned goodwill with one baseline-friendly faction as a trader
   access proxy. Class D receives a separate check; published pistol/rifle/etc IDs
   keep their meanings.
 - Equipment permissions use low-grind checks within two map transitions of the
@@ -70,3 +70,23 @@ Stage 2 implements weather checks, split story goals, tiered physical tool stash
 melter access, late equipment check gates and opt-in stamina. See
 [content progression](content-progression.md) for exact contracts and native limits.
 Conditional artefact overflow and quantity controls remain the next increment.
+
+## Implementation and acceptance status
+
+- [x] Increment 1 source and complete local verification; PR #70 stacks on #69.
+- [x] Increment 2 source: weather, independent story goals, tiered tool stashes,
+  melter, repair-grade checks, late-check rules and optional stamina.
+- [x] Increment 2 compatibility regressions: disabled additions omitted from old
+  snapshots, story-mode controls required before starting, new tool rewards tested
+  through actual AP server traffic.
+- [ ] Increment 2 complete verifier and exact-head Windows/Linux CI.
+- [ ] Increment 3 quantities, conditional overflow and paced report publication.
+- [ ] Owen: fresh story-mode creation for both new goals and independent checkboxes.
+- [ ] Owen: emission/Psi Storm observations after loading, plus reload persistence.
+- [ ] Owen: all three orange tool caches contain the right kits and unlock in order.
+- [ ] Owen: melter collection/use, grade A–D recognition and late-check deferral.
+- [ ] Owen: optional stamina affects power only and stays off in ordinary seeds.
+- [ ] Owen: AP goodwill floors, paid shop reward visibility and equipment delivery.
+
+Native items remain owned by ordinary inventory and equipment permissions; the
+new northern/trader condition restricts AP check eligibility, not equipping gear.
