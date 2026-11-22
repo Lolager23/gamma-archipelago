@@ -1,5 +1,35 @@
 # Verification record
 
+## 22 November 2026 — practical combat and early permissions
+
+The first [playability expansion](playability-expansion.md) increment adds the
+fresh default `playability_logic`, with omitted legacy fields retaining zero.
+Knife-only assumptions stop at five generic mutant types or 25 total kills;
+named mutants outside five weak species and faction kills require firearms.
+Rank checks use the agreed single-faction AP-goodwill proxy; twelve Free Stalker
+goodwill rewards are guaranteed when needed. Heavy/exoskeleton checks need a
+calibrated psi route through Red Forest and beyond, or AP-earned trader goodwill.
+Equipment permissions use nearby low-grind checks rather than deep artefacts,
+rank, upgrades or story walls. Sparse maps-only custom worlds keep route safety.
+Paid shops automatically scout rewards without creating public hints, remain
+enabled under fragile-check filtering and can hold progression. The 15,000-RU
+contracts reject equipment permissions. Clock-based opening calibration is not
+claimed; source and native population assumptions remain separate.
+
+Complete verifier passed 1,574 covered regressions, 74 untraced generation/server
+cases and seven Node tests (1,655 total), including the unchanged 9,000-seed preset
+matrix. Aggregate measured Python coverage is 99.94%; every owned module's line
+and branch gate passed, including the critical 100% gates. All Lua executable-line
+gates passed; Lua branch coverage is not claimed. All 111 private panel tests
+passed with unchanged panel payload/source and version-correct defaults only in
+the scratch installed-core QA fixture. Source self-review is complete; exact-head
+Windows/Linux CI and package parity are retained with the PR evidence.
+
+Stacks on #69. No deployment, game launch, merge or session reset occurred.
+Installed mod, panel, session configuration and archive hashes are unchanged.
+Native acceptance is **not run**, reserved for Owen. The remaining content and
+generator increments are tracked separately; existing archives are never refilled.
+
 ## 21 November 2026 — hostile settlement reputation
 
 Reviewed all 18 settlement checks against effective GAMMA relations, initial
