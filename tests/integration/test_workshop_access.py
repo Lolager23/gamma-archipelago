@@ -14,7 +14,9 @@ def test_workshop_pool_and_native_upgrade_requirements_are_independent_of_tool_t
         GammaWorld,
         options=dict(rewards_workshop_access=1, rewards_recipe_access=1, checks_gear_upgrades=1),
     )
-    names = [item.name for item in multiworld.itempool]
+    names = [item.name for item in multiworld.itempool] + [
+        loc.item.name for loc in multiworld.get_filled_locations(1)
+    ]
     assert len([name for name in names if name.startswith("Workshop Access:")]) == 3
     assert len([name for name in names if name.startswith("Recipe Access:")]) == 4
     state = CollectionState(multiworld)

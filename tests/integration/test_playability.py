@@ -22,6 +22,11 @@ def test_paid_contracts_can_hold_progression_but_expensive_contracts_reject_gear
     assert not shops[28052923].item_rule(gear)
     assert shops[28052923].item_rule(key)
     assert not next(loc for loc in multi.get_locations() if loc.address == 28052808).item_rule(gear)
+    for name in ("Repair", "Upgrades", "Crafting"):
+        workshop = world.create_item("Workshop Access: " + name)
+        assert shops[28052921].item_rule(workshop)
+        assert not shops[28052923].item_rule(workshop)
+        assert not multi.get_location("Reach Stalker Rank: Legend", 1).item_rule(workshop)
 
 
 def test_rank_and_high_gear_logic_require_ap_goodwill_or_a_northern_route():

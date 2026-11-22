@@ -12,16 +12,18 @@ from gamma_archipelago.web_planner import catalogue
 
 @pytest.mark.parametrize("seed", range(10))
 @pytest.mark.parametrize("starting", [0, 1, 2])
-def test_all_local_equipment_arrives_in_three_low_grind_spheres_without_zone_keys(seed, starting):
+def test_equipment_and_workshops_arrive_in_three_low_grind_spheres_without_zone_keys(
+    seed, starting
+):
     multi = setup_multiworld(
         GammaWorld, options=presets()["full_story"] | {"starting_location": starting}, seed=seed
     )
     selected = [
         row
         for row in multi.get_filled_locations(1)
-        if row.item.name.startswith("Equipment Unlock:")
+        if row.item.name.startswith(("Equipment Unlock:", "Workshop Access:"))
     ]
-    assert len(selected) == 9
+    assert len(selected) == 12
     state = CollectionState(multi)
     for _ in range(3):
         accessible = [row for row in selected if row.can_reach(state)]
@@ -37,7 +39,14 @@ def test_all_local_equipment_arrives_in_three_low_grind_spheres_without_zone_key
 
 
 def test_explicit_nonlocal_equipment_uses_upstream_early_requests():
-    names = {"Equipment Unlock: PDA", "Equipment Unlock: Firearms", "Equipment Unlock: Detector"}
+    names = {
+        "Equipment Unlock: PDA",
+        "Equipment Unlock: Firearms",
+        "Equipment Unlock: Detector",
+        "Workshop Access: Repair",
+        "Workshop Access: Upgrades",
+        "Workshop Access: Crafting",
+    }
     multi = setup_multiworld(
         GammaWorld, options=presets()["full_story"] | {"non_local_items": names}
     )
@@ -86,19 +95,47 @@ def test_insufficient_early_checks_refuse_instead_of_hiding_gear_behind_late_rou
 def test_gifts_and_existing_plando_equipment_are_not_duplicated_or_moved():
     from test_pacing import started_world
 
-    multi, world = started_world(presets()["full_story"], ("Equipment Unlock: PDA",))
-    item = next(row for row in multi.itempool if row.name == "Equipment Unlock: Helmet")
-    multi.itempool.remove(item)
-    planned = multi.get_location("Darkscape: First Arrival", 1)
-    planned.place_locked_item(item)
+    gifts = ("Equipment Unlock: PDA", "Workshop Access: Repair")
+    multi, world = started_world(presets()["full_story"], gifts)
+    plans = []
+    for name, location in (
+        ("Equipment Unlock: Helmet", "Darkscape: First Arrival"),
+        ("Workshop Access: Upgrades", "Meadow: First Arrival"),
+    ):
+        item = next(row for row in multi.itempool if row.name == name)
+        multi.itempool.remove(item)
+        planned = multi.get_location(location, 1)
+        planned.place_locked_item(item)
+        plans.append((planned, item))
     world.pre_fill()
-    assert planned.item is item
+    assert all(planned.item is item for planned, item in plans)
     assert not any(
-        row["item"] in {"Equipment Unlock: PDA", "Equipment Unlock: Helmet"}
+        row["item"] in {*gifts, "Equipment Unlock: Helmet", "Workshop Access: Upgrades"}
         for row in world.opening_placements
     )
     distribute_items_restrictive(multi)
     assert multi.can_beat_game()
+
+
+@pytest.mark.parametrize(
+    "change", [{"rewards_workshop_access": 0}, {"playability_logic": 0}, {"content_progression": 0}]
+)
+def test_disabled_workshops_and_legacy_placement_do_not_gain_reservations(change):
+    multi = setup_multiworld(GammaWorld, options=presets()["full_story"] | change)
+    assert not any(
+        row.item.name.startswith("Workshop Access:") for row in multi.get_filled_locations(1)
+    )
+
+
+def test_workshop_only_activity_pool_uses_starting_access_without_gear_locks():
+    multi = setup_multiworld(
+        GammaWorld, options={"rewards_workshop_access": 1, "checks_gear_upgrades": 1}
+    )
+    workshops = [
+        row for row in multi.get_filled_locations(1) if row.item.name.startswith("Workshop Access:")
+    ]
+    assert len(workshops) == 3
+    assert all(row.can_reach(CollectionState(multi)) for row in workshops)
 
 
 def test_unlocked_nearby_maps_keep_small_custom_equipment_pools_supported():

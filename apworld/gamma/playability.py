@@ -3,7 +3,12 @@
 from typing import TYPE_CHECKING
 
 from gamma_archipelago.catalog import KILL_MILESTONE_BASE, SIDE_TASK_MILESTONE_BASE
-from gamma_archipelago.playability import NORTH, early_check, late_equipment
+from gamma_archipelago.playability import (
+    EARLY_REWARD_CATEGORIES,
+    NORTH,
+    early_check,
+    late_equipment,
+)
 from gamma_archipelago.starting import starting_level
 
 if TYPE_CHECKING:
@@ -24,10 +29,8 @@ def restrict_placements(world: "GammaWorld", catalog: dict) -> None:
             if start in regions
         }
     regions -= {"l10_radar", "l10u_bunker", "l08u_brainlab", "l10_red_forest"}
-    equipment = {
-        row["id"]
-        for row in catalog["items"]
-        if row.get("category") == "rewards_starting_gear_unlocks"
+    early_rewards = {
+        row["id"] for row in catalog["items"] if row.get("category") in EARLY_REWARD_CATEGORIES
     }
     definitions = {row["id"]: row for row in catalog["locations"]}
     for location in world.multiworld.get_locations(world.player):
@@ -50,7 +53,7 @@ def restrict_placements(world: "GammaWorld", catalog: dict) -> None:
         early = early_check(row, frozenset(regions))
         previous = location.item_rule
         location.item_rule = lambda item, prior=previous, early=early: (
-            prior(item) and (item.code not in equipment or early)
+            prior(item) and (item.code not in early_rewards or early)
         )
 
 
