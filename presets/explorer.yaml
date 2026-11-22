@@ -1,102 +1,109 @@
-{
-  "name": "GammaPlayer",
-  "game": "S.T.A.L.K.E.R. GAMMA",
-  "requires": {
-    "version": "0.6.8"
-  },
-  "S.T.A.L.K.E.R. GAMMA": {
-    "checks_emissions": 0,
-    "checks_psi_storms": 0,
-    "checks_mortal_sin": 0,
-    "checks_operation_afterglow": 0,
-    "checks_maps": 1,
-    "checks_settlements": 1,
-    "checks_mutant_first_kills": 0,
-    "checks_faction_first_kills": 0,
-    "checks_artefacts": 0,
-    "checks_quest_types": 0,
-    "checks_gear_upgrades": 0,
-    "checks_armour_tiers": 0,
-    "checks_weapon_tiers": 0,
-    "checks_knife_tiers": 0,
-    "checks_kill_milestones": 0,
-    "checks_side_task_milestones": 0,
-    "checks_story_milestones": 0,
-    "checks_rank_milestones": 0,
-    "checks_shops": 0,
-    "checks_shop_purchases": 0,
-    "checks_faction_standing": 0,
-    "rewards_artefact_melter": 0,
-    "rewards_supply_medical": 0,
-    "rewards_supply_maintenance": 0,
-    "rewards_supply_ammunition": 0,
-    "rewards_supply_expedition": 0,
-    "rewards_convenience": 0,
-    "rewards_workshop_access": 0,
-    "rewards_recipe_access": 0,
-    "rewards_progressive_tools": 0,
-    "rewards_loot_stashes": 1,
-    "rewards_progression_stashes": 0,
-    "rewards_quest_keys": 0,
-    "rewards_faction_reputation": 1,
-    "rewards_stat_levels": 0,
-    "rewards_zone_keys": 0,
-    "rewards_starting_gear_unlocks": 0,
-    "starting_detector": 0,
-    "starting_pda": 0,
-    "starting_firearms": 0,
-    "starting_melee": 0,
-    "starting_outfit": 0,
-    "starting_helmet": 0,
-    "starting_backpack": 0,
-    "starting_tools": 0,
-    "starting_utilities": 0,
-    "starting_ammo": 100,
-    "starting_medicine": 100,
-    "starting_food": 100,
-    "starting_money": 100,
-    "content_progression": 1,
-    "infinite_stamina": 0,
-    "playability_logic": 1,
-    "settlement_reputation_logic": 1,
-    "ap_start": 1,
-    "starting_faction": 0,
-    "starting_location": 0,
-    "random_starting_unlock": 0,
-    "mutant_filler_tail": 0,
-    "artefact_filler_tail": 0,
-    "opening_policy": 0,
-    "access_pacing": 0,
-    "combat_logic": 0,
-    "grind_profile": 0,
-    "generation_preview": 0,
-    "supply_ammo_calibre": 0,
-    "permission_supplies": 0,
-    "scouting_mode": 0,
-    "reward_previews": 0,
-    "mutant_discovery_mode": 1,
-    "mutant_discovery_count": 0,
-    "faction_discovery_mode": 1,
-    "faction_discovery_count": 0,
-    "artefact_discovery_mode": 1,
-    "artefact_discovery_count": 40,
-    "optional_check_policy": 0,
-    "goal": 0,
-    "no_starting_weapons": 0,
-    "kill_milestones": [
-      10,
-      25,
-      50,
-      100
-    ],
-    "side_task_milestones": [
-      5,
-      10,
-      20,
-      40
-    ],
-    "zone_unlock_travel": 0,
-    "pda_tracker": 1,
-    "discovery_exclusions": []
-  }
-}
+name: GammaPlayer
+game: S.T.A.L.K.E.R. GAMMA
+requires:
+  version: 0.6.8
+S.T.A.L.K.E.R. GAMMA:
+  checks_emissions: 0
+  checks_psi_storms: 0
+  checks_mortal_sin: 0
+  checks_operation_afterglow: 0
+  checks_maps: 1
+  checks_settlements: 1
+  checks_mutant_first_kills: 0
+  checks_faction_first_kills: 0
+  checks_artefacts: 0
+  checks_quest_types: 0
+  checks_gear_upgrades: 0
+  checks_armour_tiers: 0
+  checks_weapon_tiers: 0
+  checks_knife_tiers: 0
+  checks_kill_milestones: 0
+  checks_side_task_milestones: 0
+  checks_story_milestones: 0
+  checks_rank_milestones: 0
+  checks_shops: 0
+  checks_shop_purchases: 0
+  checks_faction_standing: 0
+  rewards_artefact_melter: 0
+  rewards_supply_medical: 0
+  rewards_supply_maintenance: 0
+  rewards_supply_ammunition: 0
+  rewards_supply_expedition: 0
+  rewards_convenience: 0
+  rewards_workshop_access: 0
+  rewards_recipe_access: 0
+  rewards_progressive_tools: 0
+  rewards_loot_stashes: 1
+  rewards_progression_stashes: 0
+  rewards_quest_keys: 0
+  rewards_faction_reputation: 1
+  rewards_stat_levels: 0
+  rewards_zone_keys: 0
+  rewards_starting_gear_unlocks: 0
+  starting_detector: 0
+  starting_pda: 0
+  starting_firearms: 0
+  starting_melee: 0
+  starting_outfit: 0
+  starting_helmet: 0
+  starting_backpack: 0
+  starting_tools: 0
+  starting_utilities: 0
+  starting_ammo: 100
+  starting_medicine: 100
+  starting_food: 100
+  starting_money: 100
+  reward_quantities: 1
+  basic_toolkits: 0
+  artefact_extra_ceiling: 60
+  artefact_overflow_count: 0
+  medical_packages: 4
+  maintenance_packages: 4
+  ammunition_packages: 4
+  expedition_packages: 4
+  basic_loot_stashes: 4
+  field_loot_stashes: 4
+  advanced_loot_stashes: 4
+  extra_faction_goodwill: 0
+  stat_level_rewards: 9
+  content_progression: 1
+  infinite_stamina: 0
+  playability_logic: 1
+  settlement_reputation_logic: 1
+  ap_start: 1
+  starting_faction: 0
+  starting_location: 0
+  random_starting_unlock: 0
+  mutant_filler_tail: 0
+  artefact_filler_tail: 0
+  opening_policy: 0
+  access_pacing: 0
+  combat_logic: 0
+  grind_profile: 0
+  generation_preview: 0
+  supply_ammo_calibre: 0
+  permission_supplies: 0
+  scouting_mode: 0
+  reward_previews: 0
+  mutant_discovery_mode: 1
+  mutant_discovery_count: 0
+  faction_discovery_mode: 1
+  faction_discovery_count: 0
+  artefact_discovery_mode: 1
+  artefact_discovery_count: 40
+  optional_check_policy: 0
+  goal: 0
+  no_starting_weapons: 0
+  kill_milestones:
+  - 10
+  - 25
+  - 50
+  - 100
+  side_task_milestones:
+  - 5
+  - 10
+  - 20
+  - 40
+  zone_unlock_travel: 0
+  pda_tracker: 1
+  discovery_exclusions: []

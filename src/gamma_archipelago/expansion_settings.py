@@ -2,6 +2,7 @@
 
 EXPANSION_LIMITS = {
     "reward_quantities": 1,
+    "basic_toolkits": 4000,
     "artefact_extra_ceiling": 60,
     "artefact_overflow_count": 20,
     "medical_packages": 4000,

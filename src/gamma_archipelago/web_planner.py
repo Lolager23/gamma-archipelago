@@ -222,9 +222,11 @@ def preview(values: Mapping[str, object], assumptions: Mapping[str, object]) -> 
                 if configuration.option("starting_location") < len(STARTS)
                 else "Random native preset (seed-fixed; preview budgets use Cordon)"
             ),
-            "Each check holds one item. Explicit quantity mode guarantees the requested repeatable copies.",
+            "Each check holds one item. Explicit quantity mode guarantees "
+            "the requested repeatable copies.",
             "Extra artefacts 41–60 appear only for non-filler capacity, up to the chosen ceiling.",
-            "Required progression is budgeted first; fresh progressive tools use three tiered stashes.",
+            "Required progression is budgeted first; fresh progressive tools "
+            "use three tiered stashes.",
             "Missable exclusions accept filler only. Convenience has a capped useful allocation.",
             "Protected opening reserves reliable Cordon checks for a fresh Loner/Cordon start.",
             "Settings preview only. Actual-seed JSON is optional; placement mode reveals spoilers.",

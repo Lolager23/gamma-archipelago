@@ -17,7 +17,7 @@ ROOT = Path(__file__).resolve().parents[2]
 
 def generate(seed, *, mixed=False):
     worlds = [GammaWorld, APQuestWorld] if mixed else [GammaWorld]
-    multiworld = setup_multiworld(worlds, seed=seed)
+    multiworld = setup_multiworld(worlds, seed=seed, options={"reward_quantities": 0})
     distribute_items_restrictive(multiworld)
     return multiworld
 
@@ -196,7 +196,9 @@ def test_loot_stash_pool_is_optional_seeded_and_fits_even_one_check():
 
     placements = []
     for seed in (1, 1, 2):
-        multiworld = setup_multiworld(GammaWorld, seed=seed, options={"rewards_loot_stashes": 1})
+        multiworld = setup_multiworld(
+            GammaWorld, seed=seed, options={"rewards_loot_stashes": 1, "reward_quantities": 0}
+        )
         distribute_items_restrictive(multiworld)
         world = multiworld.worlds[1]
         names = [location.item.name for location in multiworld.get_locations()]
@@ -230,6 +232,7 @@ def test_loot_stash_pool_is_optional_seeded_and_fits_even_one_check():
             "checks_kill_milestones": 1,
             "kill_milestones": [1],
             "rewards_loot_stashes": 1,
+            "reward_quantities": 0,
         },
     )
     distribute_items_restrictive(single)

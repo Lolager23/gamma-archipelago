@@ -10,6 +10,7 @@ if TYPE_CHECKING:
 
 _data = json.loads(files("gamma_archipelago").joinpath("catalog.json").read_text("utf-8"))
 GROUPS = {
+    "basic_toolkits": ("base", None),
     "medical_packages": ("rewards_supply_medical", None),
     "maintenance_packages": ("rewards_supply_maintenance", None),
     "ammunition_packages": ("rewards_supply_ammunition", None),
@@ -22,6 +23,7 @@ GROUPS = {
 }
 DEFAULT_COUNTS = {name: (0 if name == "extra_faction_goodwill" else 4) for name in GROUPS}
 DEFAULT_COUNTS["stat_level_rewards"] = 9
+DEFAULT_COUNTS["basic_toolkits"] = 0
 
 
 def requested(configuration: "SeedConfiguration") -> Counter[str]:
@@ -29,12 +31,16 @@ def requested(configuration: "SeedConfiguration") -> Counter[str]:
     if not configuration.option("reward_quantities"):
         return result
     for key, (category, tier) in GROUPS.items():
-        if category not in configuration.rewards:
+        if category != "base" and category not in configuration.rewards:
             continue
         candidates = [
             row["name"]
             for row in _data["items"]
-            if row.get("category") == category
+            if (
+                row["name"] == "Basic Toolkit"
+                if category == "base"
+                else row.get("category") == category
+            )
             and (tier is None or row["name"].startswith(tier + " Loot Stash:"))
         ]
         for index in range(configuration.option(key)):

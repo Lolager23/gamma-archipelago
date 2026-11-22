@@ -17,6 +17,7 @@ def config(**values):
 
 def test_explicit_counts_are_deterministic_and_disabled_categories_add_nothing():
     assert not requested(config())
+    assert requested(config(basic_toolkits=2)) == Counter({"Basic Toolkit": 2})
     c = config(rewards_supply_medical=1, medical_packages=72, rewards_loot_stashes=1)
     counts = requested(c)
     assert counts["Medical Supply Package"] == 72

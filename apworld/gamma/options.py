@@ -47,6 +47,11 @@ class RepeatableCount(Range):
     default = 4
 
 
+class BasicToolkits(RepeatableCount):
+    display_name = "Basic toolkits"
+    default = 0
+
+
 class MedicalPackages(RepeatableCount):
     display_name = "Medical packages"
 
@@ -589,6 +594,7 @@ class OptionalCheckPolicy(Choice):
 
 @dataclass
 class GammaOptions(PerGameCommonOptions):
+    basic_toolkits: BasicToolkits
     reward_quantities: RewardQuantities
     artefact_extra_ceiling: ArtefactExtraCeiling
     artefact_overflow_count: ArtefactOverflowCount
