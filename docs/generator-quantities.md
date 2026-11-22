@@ -43,7 +43,12 @@ steps. Paced steps complete all newly reachable checks, but take at most one tie
 per knife, armour, repair-grade, rank, firearm-upgrade, armour-upgrade and tool-claim
 chain (or fresh tool-use capability). Fresh equipment-class and generic-tool
 receipts also advance at most one tier per chain per step; deferred copies are
-listed in spoiler reports. Rewards arrive at the end of the step. Ordinary local goal events settle
+listed in spoiler reports. Enemy-kill totals form a numeric chain per GAMMA slot:
+if 10 enemies is completed in step one, 25 is considered from step two, then 50
+from step three and 100 from step four, subject to their existing access rules.
+Custom totals use the same ascending order and other players have independent
+chains. This models one milestone per step, not a fixed number of kills per step.
+Rewards arrive at the end of the step. Ordinary local goal events settle
 between steps. This does not alter access rules, fill or actual game callbacks.
 It models a slower playthrough, not measured minutes or a guarantee of difficulty.
 

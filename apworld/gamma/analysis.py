@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState, Item, Location
 
+from gamma_archipelago.catalog import KILL_MILESTONE_BASE, MAX_KILL_MILESTONE
 from gamma_archipelago.content_progression import TOOL_CLAIMS
 from gamma_archipelago.tool_permissions import TOOL_CAPABILITIES
 
@@ -41,6 +42,16 @@ PROGRESSIVE_REWARDS = {row["name"] for row in _data["items"] if "class_group" in
 }
 
 
+def _chain(row: Location) -> tuple[str, int] | None:
+    if (
+        row.address is not None
+        and KILL_MILESTONE_BASE < row.address <= KILL_MILESTONE_BASE + MAX_KILL_MILESTONE
+    ):
+        return "enemy_kills", row.address
+    group = CHAINS.get(row.name)
+    return (group, ORDER[row.name]) if group else None
+
+
 def _collect(
     state: CollectionState, pending: list[tuple[Item, Location]], paced: bool
 ) -> list[tuple[Item, Location]]:
@@ -67,19 +78,18 @@ def _reachable(
     reachable = [row for row in remaining if row.can_reach(state)]
     if not paced:
         return reachable
-    heads: dict[tuple[int, str], Location] = {}
+    chains: dict[Location, str] = {}
+    heads: dict[tuple[int, str], tuple[int, Location]] = {}
     for row in remaining:
-        group = CHAINS.get(row.name) if world.multiworld.game[row.player] == world.game else None
-        if group:
+        chain = _chain(row) if world.multiworld.game[row.player] == world.game else None
+        if chain:
+            group, order = chain
+            chains[row] = group
             key = (row.player, group)
-            if key not in heads or ORDER[row.name] < ORDER[heads[key].name]:
-                heads[key] = row
+            if key not in heads or order < heads[key][0]:
+                heads[key] = order, row
     return [
-        row
-        for row in reachable
-        if world.multiworld.game[row.player] != world.game
-        or row.name not in CHAINS
-        or heads[(row.player, CHAINS[row.name])] is row
+        row for row in reachable if row not in chains or heads[(row.player, chains[row])][1] is row
     ]
 
 
