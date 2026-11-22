@@ -1168,3 +1168,12 @@ The final affected verifier passed 2,016 covered cases and 19 untraced real-serv
 cases. Changed owned Python modules reached 100% line and branch coverage; native
 Lua executable-line gates and package/archive checks passed. Full release sweeps
 and native GAMMA acceptance remain not run.
+
+The merge review found that the shared-item owner lookup used a synthetic test's
+`items` key instead of upstream Archipelago's `item_pool`. A real two-GAMMA-slot
+item-link regression reproduced `KeyError: 'items'` during finalisation. The
+lookup and synthetic fixture now match the pinned upstream structure. Two real
+shared-pool cases (backpacks and tools), including upstream linking, fill and
+balancing, passed after the correction. Current-head affected verification and
+Windows/Linux CI are recorded in PR #85 before merge. No installed files or
+active sessions are changed by this correction.

@@ -180,12 +180,47 @@ def test_item_link_owners_and_synthetic_group_worlds_use_real_player_scope():
     from types import SimpleNamespace
 
     multi = filled()
-    multi.groups[99] = dict(game=GammaWorld.game, players={1}, items={"Progressive Tools"})
-    multi.groups[98] = dict(game=APQuestWorld.game, players={1}, items={"Progressive Tools"})
-    multi.groups[97] = dict(game=GammaWorld.game, players={1}, items={"Bandage"})
+    multi.groups[99] = dict(game=GammaWorld.game, players={1}, item_pool={"Progressive Tools"})
+    multi.groups[98] = dict(game=APQuestWorld.game, players={1}, item_pool={"Progressive Tools"})
+    multi.groups[97] = dict(game=GammaWorld.game, players={1}, item_pool={"Bandage"})
     multi.worlds[99] = SimpleNamespace(game=GammaWorld.game)
     worlds = pacing._worlds(multi)
     assert len(worlds) == 1 and pacing._owners(multi, worlds) == {1, 99}
+
+
+@pytest.mark.parametrize("item", ["Progressive Backpack", "Progressive Tools"])
+def test_real_upstream_item_links_keep_shared_progressive_copies_in_separate_spheres(item):
+    from BaseClasses import CollectionState
+    from Fill import balance_multiworld_progression
+    from test.general import gen_steps
+
+    links = [
+        dict(
+            name="Shared progressive rewards",
+            item_pool=[item],
+            replacement_item="Bandage",
+            link_replacement=False,
+        )
+    ]
+    multi = setup_multiworld(
+        [GammaWorld, GammaWorld],
+        steps=gen_steps[:-1],
+        options=presets()["living_legend"] | {"item_links": links},
+        seed=83,
+    )
+    multi.set_item_links()
+    multi.state = CollectionState(multi)
+    multi.link_items()
+    for player in multi.player_ids:
+        multi.worlds[player].pre_fill()
+    distribute_items_restrictive(multi)
+    balance_multiworld_progression(multi)
+    GammaWorld.stage_finalize_multiworld(multi)
+    GammaWorld.stage_pre_output(multi)
+    (group,) = multi.groups
+    assert group in pacing._owners(multi, pacing._worlds(multi))
+    trace = pacing._trace(multi, {1, 2, group})
+    assert trace.valid and trace.score == 0 and multi.can_beat_game()
 
 
 @pytest.mark.parametrize("start", [1, 2, 3])

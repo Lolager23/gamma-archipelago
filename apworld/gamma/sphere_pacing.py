@@ -44,7 +44,7 @@ def _owners(multiworld: MultiWorld, worlds: list["GammaWorld"]) -> set[int]:
         for identity, group in multiworld.groups.items()
         if group["game"] == GAME
         and group["players"] & players
-        and group["items"] & PROGRESSIVE_REWARDS
+        and group["item_pool"] & PROGRESSIVE_REWARDS
     }
 
 
