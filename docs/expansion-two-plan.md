@@ -121,9 +121,10 @@ Anomaly API evidence:
   common locality/exclusions. Hub preference requests one upstream early item.
 - Retained exception: sparse exploration anti-cycle route, explicit opening
   protection, user constraints and filler-only discovery tails.
-- Next: replace the global all-zones activity guard with evidence-backed regional
-  and capability requirements, shared by AP and the PDA. Distinct quotas must
-  follow verified rosters rather than assumed random encounters.
+- Implemented in source: replace the global all-zones activity guard with
+  catalogue-backed regional/capability requirements, shared by AP and the PDA.
+  Distinct quotas count supported sources; unresolved sources stay filler-only.
+  See [regional activity logic](regional-activity-logic.md). Native acceptance pending.
 - Validate: cross-player keys, generated progression spheres, usable opening
   checks, rare/missable protections and Owen's native pacing experience. No strict
   tiers were requested. Existing seeds are not rewritten or reset.

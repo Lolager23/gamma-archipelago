@@ -95,3 +95,11 @@ merges or public releases.
 Transition shuffling, equipment licences beyond these rewards, traps/DeathLink
 and xrRazom co-op remain separate exploratory branches after the supported scope.
 They must not delay or silently replace the requested checks, rewards and goals.
+
+## Regional progression correction
+
+`codex/regional-activity-logic` starts from merged PR #66. Replace the blanket
+all-zones activity requirement with shared source-region and equipment rules,
+protect unsupported sources/quotas, retain sparse opening safety, compare AP/PDA
+logic and analyse ten fresh Full Story seeds. No deployment, session replacement
+or native game launch is part of this PR; Owen owns native acceptance.

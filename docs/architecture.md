@@ -107,6 +107,11 @@ from applied receipts and reconcile one namespaced entry through the active GAMM
 weight API. Their local cache tracks engine application only; it does not own
 progression or replace the native modifier system.
 
+[Regional activity logic](regional-activity-logic.md) supplies catalogue-backed source
+regions and cumulative story routes to both the AP world and PDA. Distinct quotas
+count supported non-excluded source types; uncertain sources and excess quotas
+remain optional filler checks and are excluded before progression budgeting.
+
 ## State and failure boundaries
 
 [Generation pacing](generation-pacing.md) keeps a pure shared pool budget separate

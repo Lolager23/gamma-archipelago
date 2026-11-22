@@ -2,7 +2,7 @@
 local psi_regions = {l10_radar=true, l10u_bunker=true, l08u_brainlab=true}
 local equipment = {checks_artefacts="detector", checks_armour_tiers="outfit",
     checks_weapon_tiers="firearms", checks_knife_tiers="melee",
-    checks_quest_types="pda", checks_side_task_milestones="pda", checks_story_milestones="pda"}
+    checks_quest_types="pda", checks_side_task_milestones="pda", checks_story_milestones="pda",checks_gear_upgrades="tools"}
 local combat = {checks_mutant_first_kills=true, checks_faction_first_kills=true,
     checks_kill_milestones=true}
 PAGE_SIZE = 4
@@ -40,18 +40,15 @@ local function reachable(state, psi)
     return result
 end
 
-local function blocked(state, row, regions, psi)
+local function blocked(state, row, regions, psi, id)
     local config = options(state)
     if row.region ~= "Menu" and not regions[row.region] then
         if not gamma_ap_zone_keys.allowed(state, row.region) then return "Zone access key required" end
         if psi_regions[row.region] and psi ~= true then return "Usable calibrated psi protection required" end
         return "An accessible route through connected regions is required"
     end
-    if row.region == "Menu" and config.rewards_zone_keys == 1 then
-        for where in pairs(gamma_ap_catalog.zone_keys) do
-            if not regions[where] then return "Global activity: unlock the remaining Zone routes" end
-        end
-    end
+    local accessible,reliable = gamma_ap_activity.available(state,row,regions,id)
+    if not accessible then return "Regional activity: reach the required source regions or more distinct source types" end
     if config.rewards_progressive_tools == 1 and row.category == "checks_gear_upgrades"
         and gamma_ap_workshop.tools_level(state) < 3 then return "Expert tool permission required" end
     if config.rewards_workshop_access == 1 and row.category == "checks_gear_upgrades"
@@ -60,11 +57,20 @@ local function blocked(state, row, regions, psi)
     if group and config["starting_"..group] == 2 and not state.unlocks["gear_"..group] then
         return "Equipment permission required: " .. group
     end
-    if combat[row.category] and config.starting_firearms == 2 and config.starting_melee == 2
-        and not state.unlocks.gear_firearms and not state.unlocks.gear_melee then
+    local fighting = combat[row.category] or (row.category == "checks_quest_types"
+        and (row.key == "hunting" or row.key == "bounty" or row.key == "rescue" or row.key == "defence"
+            or row.key == "assault" or row.key == "territory" or row.key == "vehicle"))
+        or (gamma_ap_catalog.activity_rules[id] and gamma_ap_catalog.activity_rules[id].combat == true)
+    local weapon = config.starting_firearms ~= 2 or config.starting_melee ~= 2
+        or state.unlocks.gear_firearms or state.unlocks.gear_melee
+    if fighting and not weapon then
         return "A firearm or melee permission is required"
     end
-    if combat[row.category] and (config.combat_logic or 0) > 0 then
+    if ((row.category == "checks_rank_milestones" and row.minimum > 0) or row.category == "checks_faction_standing")
+        and not weapon and config.starting_pda == 2 and not state.unlocks.gear_pda then
+        return "A PDA, firearm or melee permission is required to earn rank or standing"
+    end
+    if fighting and (config.combat_logic or 0) > 0 then
         local groups = config.combat_logic == 1 and {"firearms"} or {"firearms","outfit","helmet"}
         for _,name in ipairs(groups) do
             if config["starting_"..name] == 2 and not state.unlocks["gear_"..name] then
@@ -77,6 +83,7 @@ local function blocked(state, row, regions, psi)
             if not state.unlocks[key] then return gamma_ap_catalog.tracker_permissions[key] .. " required" end
         end
     end
+    return nil,not reliable
 end
 
 local function progression_entry(result, group, text)
@@ -101,11 +108,13 @@ function snapshot(state, total, problem, psi)
     local regions = reachable(state, psi)
     for id in pairs(state.enabled_checks) do
         local row = definition(id)
-        local reason = not state.checks[id] and blocked(state,row,regions,psi) or nil
+        local reason,optional
+        if not state.checks[id] then reason,optional = blocked(state,row,regions,psi,id) end
         local status = state.checks[id] and "completed" or (reason and "blocked" or "available")
         local region = gamma_ap_catalog.tracker_regions[row.region] or "Global activities"
         result.rows[#result.rows+1] = {id=id, name=row.name, region=region, status=status,
-            category=row.category, reason=reason or "Requirements met; encounter/task availability is not guaranteed"}
+            category=row.category, reason=reason or (optional and "Optional check: source availability unverified; progression excluded"
+                or "Requirements met; encounter/task availability is not guaranteed")}
         result[status] = result[status]+1
         result.regions[region] = true
     end

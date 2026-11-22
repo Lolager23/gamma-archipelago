@@ -1640,266 +1640,732 @@
       "name": "First Mutant Kill: Bloodsucker",
       "level": "Menu",
       "category": "checks_mutant_first_kills",
-      "key": "bloodsucker"
+      "key": "bloodsucker",
+      "logic": {
+        "any_regions": [
+          "jupiter",
+          "k00_marsh",
+          "k01_darkscape",
+          "k02_trucks_cemetery",
+          "l01_escape",
+          "l02_garbage",
+          "l03_agroprom",
+          "l04_darkvalley",
+          "l06_rostok",
+          "l07_military",
+          "l08_yantar",
+          "l09_deadcity",
+          "l10_radar",
+          "l12_stancia",
+          "y04_pole"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052202,
       "name": "First Mutant Kill: Boar",
       "level": "Menu",
       "category": "checks_mutant_first_kills",
-      "key": "boar"
+      "key": "boar",
+      "logic": {
+        "any_regions": [
+          "k00_marsh",
+          "k01_darkscape",
+          "k02_trucks_cemetery",
+          "l01_escape",
+          "l02_garbage",
+          "l03_agroprom",
+          "l04_darkvalley",
+          "l06_rostok",
+          "l07_military",
+          "l09_deadcity",
+          "l10_radar",
+          "zaton"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052203,
       "name": "First Mutant Kill: Burer",
       "level": "Menu",
       "category": "checks_mutant_first_kills",
-      "key": "burer"
+      "key": "burer",
+      "logic": {
+        "any_regions": [
+          "k02_trucks_cemetery",
+          "l02_garbage",
+          "l03_agroprom",
+          "l04_darkvalley",
+          "l06_rostok",
+          "l07_military",
+          "l08_yantar",
+          "l09_deadcity",
+          "l10_radar",
+          "y04_pole"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052204,
       "name": "First Mutant Kill: Cat",
       "level": "Menu",
       "category": "checks_mutant_first_kills",
-      "key": "cat"
+      "key": "cat",
+      "logic": {
+        "any_regions": [
+          "k00_marsh",
+          "k01_darkscape",
+          "k02_trucks_cemetery",
+          "l01_escape",
+          "l02_garbage",
+          "l03_agroprom",
+          "l04_darkvalley",
+          "l06_rostok",
+          "l07_military",
+          "l09_deadcity",
+          "l10_radar",
+          "y04_pole"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052205,
       "name": "First Mutant Kill: Chimera",
       "level": "Menu",
       "category": "checks_mutant_first_kills",
-      "key": "chimera"
+      "key": "chimera",
+      "logic": {
+        "any_regions": [
+          "k02_trucks_cemetery",
+          "l07_military",
+          "l09_deadcity",
+          "l10_radar",
+          "l10_red_forest",
+          "l12_stancia",
+          "l12_stancia_2"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052206,
       "name": "First Mutant Kill: Controller",
       "level": "Menu",
       "category": "checks_mutant_first_kills",
-      "key": "controller"
+      "key": "controller",
+      "logic": {
+        "any_regions": [
+          "k02_trucks_cemetery",
+          "l02_garbage",
+          "l03_agroprom",
+          "l04_darkvalley",
+          "l06_rostok",
+          "l07_military",
+          "l08_yantar",
+          "l09_deadcity",
+          "l10_radar",
+          "l12_stancia",
+          "l13_generators"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052207,
       "name": "First Mutant Kill: Blind Dog",
       "level": "Menu",
       "category": "checks_mutant_first_kills",
-      "key": "dog"
+      "key": "dog",
+      "logic": {
+        "any_regions": [
+          "k00_marsh",
+          "k01_darkscape",
+          "k02_trucks_cemetery",
+          "l01_escape",
+          "l02_garbage",
+          "l03_agroprom",
+          "l04_darkvalley",
+          "l05_bar",
+          "l06_rostok",
+          "l07_military",
+          "l08_yantar",
+          "l09_deadcity",
+          "l10_radar",
+          "y04_pole"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052208,
       "name": "First Mutant Kill: Flesh",
       "level": "Menu",
       "category": "checks_mutant_first_kills",
-      "key": "flesh"
+      "key": "flesh",
+      "logic": {
+        "any_regions": [
+          "k00_marsh",
+          "k01_darkscape",
+          "k02_trucks_cemetery",
+          "l01_escape",
+          "l02_garbage",
+          "l03_agroprom",
+          "l04_darkvalley",
+          "l06_rostok",
+          "l07_military",
+          "l09_deadcity",
+          "l10_radar",
+          "zaton"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052209,
       "name": "First Mutant Kill: Fracture",
       "level": "Menu",
       "category": "checks_mutant_first_kills",
-      "key": "fracture"
+      "key": "fracture",
+      "logic": {
+        "any_regions": [
+          "k00_marsh",
+          "k01_darkscape",
+          "k02_trucks_cemetery",
+          "l01_escape",
+          "l02_garbage",
+          "l03_agroprom",
+          "l04_darkvalley",
+          "l04u_labx18",
+          "l06_rostok",
+          "l07_military",
+          "l08_yantar",
+          "l09_deadcity",
+          "l10_radar",
+          "y04_pole"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052210,
       "name": "First Mutant Kill: Pseudogiant",
       "level": "Menu",
       "category": "checks_mutant_first_kills",
-      "key": "gigant"
+      "key": "gigant",
+      "logic": {
+        "any_regions": [
+          "k02_trucks_cemetery",
+          "l04_darkvalley",
+          "l09_deadcity",
+          "l10_radar",
+          "l12_stancia",
+          "l12_stancia_2"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052211,
       "name": "First Mutant Kill: Pseudodog",
       "level": "Menu",
       "category": "checks_mutant_first_kills",
-      "key": "pseudodog"
+      "key": "pseudodog",
+      "logic": {
+        "any_regions": [
+          "k00_marsh",
+          "k01_darkscape",
+          "k02_trucks_cemetery",
+          "l01_escape",
+          "l02_garbage",
+          "l03_agroprom",
+          "l04_darkvalley",
+          "l05_bar",
+          "l06_rostok",
+          "l07_military",
+          "l08_yantar",
+          "l09_deadcity",
+          "l10_radar",
+          "pripyat",
+          "y04_pole",
+          "zaton"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052212,
       "name": "First Mutant Kill: Psy Dog",
       "level": "Menu",
       "category": "checks_mutant_first_kills",
-      "key": "psy_dog"
+      "key": "psy_dog",
+      "logic": {
+        "any_regions": [
+          "k00_marsh",
+          "k02_trucks_cemetery",
+          "l02_garbage",
+          "l03_agroprom",
+          "l04_darkvalley",
+          "l06_rostok",
+          "l07_military",
+          "l08_yantar",
+          "l09_deadcity",
+          "l10_radar",
+          "l12_stancia",
+          "l12_stancia_2"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052213,
       "name": "First Mutant Kill: Rat",
       "level": "Menu",
       "category": "checks_mutant_first_kills",
-      "key": "rat"
+      "key": "rat",
+      "logic": {
+        "any_regions": [],
+        "all_regions": [],
+        "reliable": false
+      }
     },
     {
       "id": 28052214,
       "name": "First Mutant Kill: Snork",
       "level": "Menu",
       "category": "checks_mutant_first_kills",
-      "key": "snork"
+      "key": "snork",
+      "logic": {
+        "any_regions": [
+          "k00_marsh",
+          "k01_darkscape",
+          "k02_trucks_cemetery",
+          "l01_escape",
+          "l02_garbage",
+          "l03_agroprom",
+          "l04_darkvalley",
+          "l06_rostok",
+          "l07_military",
+          "l08_yantar",
+          "l09_deadcity",
+          "l10_radar",
+          "l12_stancia",
+          "y04_pole"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052215,
       "name": "First Mutant Kill: Tushkano",
       "level": "Menu",
       "category": "checks_mutant_first_kills",
-      "key": "tushkano"
+      "key": "tushkano",
+      "logic": {
+        "any_regions": [
+          "k00_marsh",
+          "k01_darkscape",
+          "k02_trucks_cemetery",
+          "l01_escape",
+          "l02_garbage",
+          "l03_agroprom",
+          "l04_darkvalley",
+          "l06_rostok",
+          "l07_military",
+          "l08_yantar",
+          "l09_deadcity",
+          "l10_radar"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052216,
       "name": "First Mutant Kill: Zombie",
       "level": "Menu",
       "category": "checks_mutant_first_kills",
-      "key": "zombie"
+      "key": "zombie",
+      "logic": {
+        "any_regions": [],
+        "all_regions": [],
+        "reliable": false
+      }
     },
     {
       "id": 28052217,
       "name": "First Mutant Kill: Karlik",
       "level": "Menu",
       "category": "checks_mutant_first_kills",
-      "key": "karlik"
+      "key": "karlik",
+      "logic": {
+        "any_regions": [
+          "k02_trucks_cemetery",
+          "l02_garbage",
+          "l03_agroprom",
+          "l04_darkvalley",
+          "l06_rostok",
+          "l07_military",
+          "l08_yantar",
+          "l09_deadcity",
+          "l10_radar",
+          "y04_pole"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052218,
       "name": "First Mutant Kill: Psysucker",
       "level": "Menu",
       "category": "checks_mutant_first_kills",
-      "key": "psysucker"
+      "key": "psysucker",
+      "logic": {
+        "any_regions": [
+          "k00_marsh",
+          "k01_darkscape",
+          "k02_trucks_cemetery",
+          "l01_escape",
+          "l02_garbage",
+          "l03_agroprom",
+          "l04_darkvalley",
+          "l06_rostok",
+          "l07_military",
+          "l08_yantar",
+          "l09_deadcity",
+          "l10_radar",
+          "l12_stancia",
+          "y04_pole"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052219,
       "name": "First Mutant Kill: Lurker",
       "level": "Menu",
       "category": "checks_mutant_first_kills",
-      "key": "lurker"
+      "key": "lurker",
+      "logic": {
+        "any_regions": [
+          "k00_marsh",
+          "k01_darkscape",
+          "k02_trucks_cemetery",
+          "l01_escape",
+          "l02_garbage",
+          "l03_agroprom",
+          "l04_darkvalley",
+          "l06_rostok",
+          "l07_military",
+          "l08_yantar",
+          "l09_deadcity",
+          "l10_radar"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052220,
       "name": "First Mutant Kill: Poltergeist",
       "level": "Menu",
       "category": "checks_mutant_first_kills",
-      "key": "poltergeist"
+      "key": "poltergeist",
+      "logic": {
+        "any_regions": [
+          "k02_trucks_cemetery",
+          "l02_garbage",
+          "l03_agroprom",
+          "l04_darkvalley",
+          "l06_rostok",
+          "l07_military",
+          "l08_yantar",
+          "l09_deadcity",
+          "l10_radar",
+          "l12_stancia_2",
+          "y04_pole"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052221,
       "name": "First Mutant Kill: Pyrogeist",
       "level": "Menu",
       "category": "checks_mutant_first_kills",
-      "key": "pyrogeist"
+      "key": "pyrogeist",
+      "logic": {
+        "any_regions": [
+          "k02_trucks_cemetery",
+          "l02_garbage",
+          "l03_agroprom",
+          "l04_darkvalley",
+          "l06_rostok",
+          "l07_military",
+          "l08_yantar",
+          "l09_deadcity",
+          "l10_radar",
+          "l12_stancia_2",
+          "y04_pole"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052222,
       "name": "First Mutant Kill: Pseudogeist",
       "level": "Menu",
       "category": "checks_mutant_first_kills",
-      "key": "pseudogeist"
+      "key": "pseudogeist",
+      "logic": {
+        "any_regions": [
+          "k02_trucks_cemetery",
+          "l06_rostok",
+          "l09_deadcity"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052223,
       "name": "First Mutant Kill: Borya",
       "level": "Menu",
       "category": "checks_mutant_first_kills",
-      "key": "borya"
+      "key": "borya",
+      "logic": {
+        "any_regions": [],
+        "all_regions": [],
+        "reliable": false
+      }
     },
     {
       "id": 28052224,
       "name": "First Mutant Kill: Bibliotekar",
       "level": "Menu",
       "category": "checks_mutant_first_kills",
-      "key": "bibliotekar"
+      "key": "bibliotekar",
+      "logic": {
+        "any_regions": [],
+        "all_regions": [],
+        "reliable": false
+      }
     },
     {
       "id": 28052225,
       "name": "First Mutant Kill: Jumping Pseudogiant",
       "level": "Menu",
       "category": "checks_mutant_first_kills",
-      "key": "gigant_jumper"
+      "key": "gigant_jumper",
+      "logic": {
+        "any_regions": [],
+        "all_regions": [],
+        "reliable": false
+      }
     },
     {
       "id": 28052301,
       "name": "First Faction Kill: Loners",
       "level": "Menu",
       "category": "checks_faction_first_kills",
-      "key": "stalker"
+      "key": "stalker",
+      "logic": {
+        "any_regions": [
+          "l01_escape"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052302,
       "name": "First Faction Kill: Bandits",
       "level": "Menu",
       "category": "checks_faction_first_kills",
-      "key": "bandit"
+      "key": "bandit",
+      "logic": {
+        "any_regions": [
+          "l01_escape"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052303,
       "name": "First Faction Kill: Duty",
       "level": "Menu",
       "category": "checks_faction_first_kills",
-      "key": "dolg"
+      "key": "dolg",
+      "logic": {
+        "any_regions": [
+          "l05_bar"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052304,
       "name": "First Faction Kill: Freedom",
       "level": "Menu",
       "category": "checks_faction_first_kills",
-      "key": "freedom"
+      "key": "freedom",
+      "logic": {
+        "any_regions": [
+          "l07_military"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052305,
       "name": "First Faction Kill: Clear Sky",
       "level": "Menu",
       "category": "checks_faction_first_kills",
-      "key": "csky"
+      "key": "csky",
+      "logic": {
+        "any_regions": [
+          "k00_marsh"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052306,
       "name": "First Faction Kill: Ecologists",
       "level": "Menu",
       "category": "checks_faction_first_kills",
-      "key": "ecolog"
+      "key": "ecolog",
+      "logic": {
+        "any_regions": [
+          "l08_yantar"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052307,
       "name": "First Faction Kill: Mercenaries",
       "level": "Menu",
       "category": "checks_faction_first_kills",
-      "key": "killer"
+      "key": "killer",
+      "logic": {
+        "any_regions": [
+          "l09_deadcity"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052308,
       "name": "First Faction Kill: Military",
       "level": "Menu",
       "category": "checks_faction_first_kills",
-      "key": "army"
+      "key": "army",
+      "logic": {
+        "any_regions": [
+          "l01_escape"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052309,
       "name": "First Faction Kill: Monolith",
       "level": "Menu",
       "category": "checks_faction_first_kills",
-      "key": "monolith"
+      "key": "monolith",
+      "logic": {
+        "any_regions": [
+          "l10_radar",
+          "l11_pripyat",
+          "l12_stancia"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052310,
       "name": "First Faction Kill: Renegades",
       "level": "Menu",
       "category": "checks_faction_first_kills",
-      "key": "renegade"
+      "key": "renegade",
+      "logic": {
+        "any_regions": [
+          "k00_marsh"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052311,
       "name": "First Faction Kill: Sin",
       "level": "Menu",
       "category": "checks_faction_first_kills",
-      "key": "greh"
+      "key": "greh",
+      "logic": {
+        "any_regions": [
+          "l10_red_forest"
+        ],
+        "all_regions": [],
+        "reliable": false
+      }
     },
     {
       "id": 28052312,
       "name": "First Faction Kill: UNISG",
       "level": "Menu",
       "category": "checks_faction_first_kills",
-      "key": "isg"
+      "key": "isg",
+      "logic": {
+        "any_regions": [
+          "jupiter"
+        ],
+        "all_regions": [],
+        "reliable": false
+      }
     },
     {
       "id": 28052313,
       "name": "First Faction Kill: Zombified",
       "level": "Menu",
       "category": "checks_faction_first_kills",
-      "key": "zombied"
+      "key": "zombied",
+      "logic": {
+        "any_regions": [
+          "l08_yantar"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052401,
@@ -1909,7 +2375,12 @@
       "key": "af_atom",
       "aliases": [
         "af_atom"
-      ]
+      ],
+      "logic": {
+        "any_regions": [],
+        "all_regions": [],
+        "reliable": false
+      }
     },
     {
       "id": 28052402,
@@ -1919,7 +2390,27 @@
       "key": "af_ball",
       "aliases": [
         "af_ball"
-      ]
+      ],
+      "logic": {
+        "any_regions": [
+          "jupiter",
+          "k00_marsh",
+          "k01_darkscape",
+          "k02_trucks_cemetery",
+          "l01_escape",
+          "l02_garbage",
+          "l03_agroprom",
+          "l04_darkvalley",
+          "l05_bar",
+          "l06_rostok",
+          "l07_military",
+          "l08_yantar",
+          "l09_deadcity",
+          "y04_pole"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052403,
@@ -1933,7 +2424,17 @@
         "af_baloon_af_aam",
         "af_baloon_af_iam",
         "af_baloon_lead_box"
-      ]
+      ],
+      "logic": {
+        "any_regions": [
+          "l11_pripyat",
+          "l12_stancia_2",
+          "l13_generators",
+          "pripyat"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052404,
@@ -1943,7 +2444,20 @@
       "key": "af_bat",
       "aliases": [
         "af_bat"
-      ]
+      ],
+      "logic": {
+        "any_regions": [
+          "jupiter",
+          "k01_darkscape",
+          "l02_garbage",
+          "l03_agroprom",
+          "l05_bar",
+          "l07_military",
+          "l08_yantar"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052405,
@@ -1953,7 +2467,27 @@
       "key": "af_black_angel",
       "aliases": [
         "af_black_angel"
-      ]
+      ],
+      "logic": {
+        "any_regions": [
+          "jupiter",
+          "k00_marsh",
+          "k01_darkscape",
+          "k02_trucks_cemetery",
+          "l01_escape",
+          "l02_garbage",
+          "l03_agroprom",
+          "l04_darkvalley",
+          "l05_bar",
+          "l06_rostok",
+          "l07_military",
+          "l08_yantar",
+          "l09_deadcity",
+          "y04_pole"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052406,
@@ -1967,7 +2501,17 @@
         "af_black_spray_af_iam",
         "af_black_spray_lead_box",
         "af_black_spray"
-      ]
+      ],
+      "logic": {
+        "any_regions": [
+          "l11_pripyat",
+          "l12_stancia",
+          "l13_generators",
+          "pripyat"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052407,
@@ -1981,7 +2525,28 @@
         "af_blood_af_aam",
         "af_blood_af_iam",
         "af_blood_lead_box"
-      ]
+      ],
+      "logic": {
+        "any_regions": [
+          "jupiter",
+          "k00_marsh",
+          "k02_trucks_cemetery",
+          "l02_garbage",
+          "l03_agroprom",
+          "l04_darkvalley",
+          "l04u_labx18",
+          "l07_military",
+          "l08_yantar",
+          "l08u_brainlab",
+          "l10_red_forest",
+          "l11_pripyat",
+          "l12_stancia_2",
+          "pripyat",
+          "zaton"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052408,
@@ -1995,7 +2560,25 @@
         "af_bracelet_af_aam",
         "af_bracelet_af_iam",
         "af_bracelet_lead_box"
-      ]
+      ],
+      "logic": {
+        "any_regions": [
+          "jupiter",
+          "k02_trucks_cemetery",
+          "l04u_labx18",
+          "l07_military",
+          "l10_limansk",
+          "l10_red_forest",
+          "l11_pripyat",
+          "l12_stancia",
+          "l12_stancia_2",
+          "l13_generators",
+          "pripyat",
+          "zaton"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052409,
@@ -2005,7 +2588,19 @@
       "key": "af_cell",
       "aliases": [
         "af_cell"
-      ]
+      ],
+      "logic": {
+        "any_regions": [
+          "jupiter",
+          "l10_limansk",
+          "l10_red_forest",
+          "l11_pripyat",
+          "pripyat",
+          "zaton"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052410,
@@ -2015,7 +2610,27 @@
       "key": "af_chelust",
       "aliases": [
         "af_chelust"
-      ]
+      ],
+      "logic": {
+        "any_regions": [
+          "jupiter",
+          "k00_marsh",
+          "k01_darkscape",
+          "k02_trucks_cemetery",
+          "l01_escape",
+          "l02_garbage",
+          "l03_agroprom",
+          "l04_darkvalley",
+          "l05_bar",
+          "l06_rostok",
+          "l07_military",
+          "l08_yantar",
+          "l09_deadcity",
+          "y04_pole"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052411,
@@ -2025,7 +2640,27 @@
       "key": "af_cocoon",
       "aliases": [
         "af_cocoon"
-      ]
+      ],
+      "logic": {
+        "any_regions": [
+          "jupiter",
+          "k00_marsh",
+          "k01_darkscape",
+          "k02_trucks_cemetery",
+          "l01_escape",
+          "l02_garbage",
+          "l03_agroprom",
+          "l04_darkvalley",
+          "l05_bar",
+          "l06_rostok",
+          "l07_military",
+          "l08_yantar",
+          "l09_deadcity",
+          "y04_pole"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052412,
@@ -2039,7 +2674,12 @@
         "af_compass_af_aam",
         "af_compass_af_iam",
         "af_compass_lead_box"
-      ]
+      ],
+      "logic": {
+        "any_regions": [],
+        "all_regions": [],
+        "reliable": false
+      }
     },
     {
       "id": 28052413,
@@ -2053,7 +2693,26 @@
         "af_cristall_af_aam",
         "af_cristall_af_iam",
         "af_cristall_lead_box"
-      ]
+      ],
+      "logic": {
+        "any_regions": [
+          "jupiter",
+          "k02_trucks_cemetery",
+          "l04u_labx18",
+          "l06_rostok",
+          "l07_military",
+          "l10_limansk",
+          "l10_radar",
+          "l10_red_forest",
+          "l11_pripyat",
+          "l12_stancia",
+          "l13_generators",
+          "pripyat",
+          "zaton"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052414,
@@ -2067,7 +2726,34 @@
         "af_cristall_flower_af_iam",
         "af_cristall_flower_lead_box",
         "af_cristall_flower"
-      ]
+      ],
+      "logic": {
+        "any_regions": [
+          "jupiter",
+          "k00_marsh",
+          "k01_darkscape",
+          "k02_trucks_cemetery",
+          "l01_escape",
+          "l02_garbage",
+          "l03_agroprom",
+          "l04_darkvalley",
+          "l04u_labx18",
+          "l07_military",
+          "l08_yantar",
+          "l08u_brainlab",
+          "l09_deadcity",
+          "l10_limansk",
+          "l10_red_forest",
+          "l11_pripyat",
+          "l12_stancia",
+          "l12_stancia_2",
+          "pripyat",
+          "y04_pole",
+          "zaton"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052415,
@@ -2081,7 +2767,12 @@
         "af_death_lamp_af_aam",
         "af_death_lamp_af_iam",
         "af_death_lamp_lead_box"
-      ]
+      ],
+      "logic": {
+        "any_regions": [],
+        "all_regions": [],
+        "reliable": false
+      }
     },
     {
       "id": 28052416,
@@ -2091,7 +2782,19 @@
       "key": "af_dragon_eye",
       "aliases": [
         "af_dragon_eye"
-      ]
+      ],
+      "logic": {
+        "any_regions": [
+          "jupiter",
+          "l10_limansk",
+          "l10_red_forest",
+          "l11_pripyat",
+          "pripyat",
+          "zaton"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052417,
@@ -2105,7 +2808,32 @@
         "af_dummy_battery_af_aam",
         "af_dummy_battery_af_iam",
         "af_dummy_battery_lead_box"
-      ]
+      ],
+      "logic": {
+        "any_regions": [
+          "jupiter",
+          "k00_marsh",
+          "k01_darkscape",
+          "l01_escape",
+          "l02_garbage",
+          "l03_agroprom",
+          "l04_darkvalley",
+          "l06_rostok",
+          "l07_military",
+          "l08_yantar",
+          "l09_deadcity",
+          "l10_limansk",
+          "l10_radar",
+          "l10_red_forest",
+          "l11_pripyat",
+          "l12_stancia",
+          "pripyat",
+          "y04_pole",
+          "zaton"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052418,
@@ -2119,7 +2847,23 @@
         "af_dummy_dummy_af_aam",
         "af_dummy_dummy_af_iam",
         "af_dummy_dummy_lead_box"
-      ]
+      ],
+      "logic": {
+        "any_regions": [
+          "jupiter",
+          "k02_trucks_cemetery",
+          "l07_military",
+          "l10_limansk",
+          "l10_red_forest",
+          "l11_pripyat",
+          "l12_stancia",
+          "l13_generators",
+          "pripyat",
+          "zaton"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052419,
@@ -2133,7 +2877,27 @@
         "af_dummy_glassbeads_af_aam",
         "af_dummy_glassbeads_af_iam",
         "af_dummy_glassbeads_lead_box"
-      ]
+      ],
+      "logic": {
+        "any_regions": [
+          "jupiter",
+          "k00_marsh",
+          "k02_trucks_cemetery",
+          "l02_garbage",
+          "l03_agroprom",
+          "l04_darkvalley",
+          "l04u_labx18",
+          "l06_rostok",
+          "l07_military",
+          "l08_yantar",
+          "l08u_brainlab",
+          "l10_red_forest",
+          "pripyat",
+          "zaton"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052420,
@@ -2143,7 +2907,27 @@
       "key": "af_ear",
       "aliases": [
         "af_ear"
-      ]
+      ],
+      "logic": {
+        "any_regions": [
+          "jupiter",
+          "k00_marsh",
+          "k01_darkscape",
+          "k02_trucks_cemetery",
+          "l01_escape",
+          "l02_garbage",
+          "l03_agroprom",
+          "l04_darkvalley",
+          "l05_bar",
+          "l06_rostok",
+          "l07_military",
+          "l08_yantar",
+          "l09_deadcity",
+          "y04_pole"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052421,
@@ -2157,7 +2941,17 @@
         "af_electra_flash_af_aam",
         "af_electra_flash_af_iam",
         "af_electra_flash_lead_box"
-      ]
+      ],
+      "logic": {
+        "any_regions": [
+          "l11_pripyat",
+          "l12_stancia",
+          "l13_generators",
+          "pripyat"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052422,
@@ -2171,7 +2965,25 @@
         "af_electra_moonlight_af_aam",
         "af_electra_moonlight_af_iam",
         "af_electra_moonlight_lead_box"
-      ]
+      ],
+      "logic": {
+        "any_regions": [
+          "jupiter",
+          "k02_trucks_cemetery",
+          "l06_rostok",
+          "l07_military",
+          "l10_limansk",
+          "l10_radar",
+          "l10_red_forest",
+          "l11_pripyat",
+          "l12_stancia",
+          "l13_generators",
+          "pripyat",
+          "zaton"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052423,
@@ -2185,7 +2997,32 @@
         "af_electra_sparkler_af_aam",
         "af_electra_sparkler_af_iam",
         "af_electra_sparkler_lead_box"
-      ]
+      ],
+      "logic": {
+        "any_regions": [
+          "jupiter",
+          "k00_marsh",
+          "k01_darkscape",
+          "l01_escape",
+          "l02_garbage",
+          "l03_agroprom",
+          "l04_darkvalley",
+          "l06_rostok",
+          "l07_military",
+          "l08_yantar",
+          "l09_deadcity",
+          "l10_limansk",
+          "l10_radar",
+          "l10_red_forest",
+          "l11_pripyat",
+          "l12_stancia",
+          "pripyat",
+          "y04_pole",
+          "zaton"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052424,
@@ -2195,7 +3032,19 @@
       "key": "af_elektron",
       "aliases": [
         "af_elektron"
-      ]
+      ],
+      "logic": {
+        "any_regions": [
+          "jupiter",
+          "l10_limansk",
+          "l10_red_forest",
+          "l11_pripyat",
+          "pripyat",
+          "zaton"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052425,
@@ -2209,7 +3058,25 @@
         "af_empty_af_aam",
         "af_empty_af_iam",
         "af_empty_lead_box"
-      ]
+      ],
+      "logic": {
+        "any_regions": [
+          "jupiter",
+          "k02_trucks_cemetery",
+          "l07_military",
+          "l10_limansk",
+          "l10_radar",
+          "l10_red_forest",
+          "l11_pripyat",
+          "l12_stancia",
+          "l12u_sarcofag",
+          "l13_generators",
+          "pripyat",
+          "zaton"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052426,
@@ -2223,7 +3090,25 @@
         "af_eye_af_aam",
         "af_eye_af_iam",
         "af_eye_lead_box"
-      ]
+      ],
+      "logic": {
+        "any_regions": [
+          "jupiter",
+          "k02_trucks_cemetery",
+          "l04u_labx18",
+          "l07_military",
+          "l10_limansk",
+          "l10_red_forest",
+          "l11_pripyat",
+          "l12_stancia",
+          "l12_stancia_2",
+          "l13_generators",
+          "pripyat",
+          "zaton"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052427,
@@ -2237,7 +3122,15 @@
         "af_fire_af_aam",
         "af_fire_af_iam",
         "af_fire_lead_box"
-      ]
+      ],
+      "logic": {
+        "any_regions": [
+          "l13_generators",
+          "pripyat"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052428,
@@ -2251,7 +3144,15 @@
         "af_fireball_af_aam",
         "af_fireball_af_iam",
         "af_fireball_lead_box"
-      ]
+      ],
+      "logic": {
+        "any_regions": [
+          "l13_generators",
+          "pripyat"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052429,
@@ -2261,7 +3162,27 @@
       "key": "af_fonar",
       "aliases": [
         "af_fonar"
-      ]
+      ],
+      "logic": {
+        "any_regions": [
+          "jupiter",
+          "k00_marsh",
+          "k01_darkscape",
+          "k02_trucks_cemetery",
+          "l01_escape",
+          "l02_garbage",
+          "l03_agroprom",
+          "l04_darkvalley",
+          "l05_bar",
+          "l06_rostok",
+          "l07_military",
+          "l08_yantar",
+          "l09_deadcity",
+          "y04_pole"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052430,
@@ -2271,7 +3192,12 @@
       "key": "af_fountain",
       "aliases": [
         "af_fountain"
-      ]
+      ],
+      "logic": {
+        "any_regions": [],
+        "all_regions": [],
+        "reliable": false
+      }
     },
     {
       "id": 28052431,
@@ -2285,7 +3211,18 @@
         "af_full_empty_af_aam",
         "af_full_empty_af_iam",
         "af_full_empty_lead_box"
-      ]
+      ],
+      "logic": {
+        "any_regions": [
+          "l11_pripyat",
+          "l12_stancia",
+          "l12u_sarcofag",
+          "l13_generators",
+          "pripyat"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052432,
@@ -2299,7 +3236,27 @@
         "af_fuzz_kolobok_af_aam",
         "af_fuzz_kolobok_af_iam",
         "af_fuzz_kolobok_lead_box"
-      ]
+      ],
+      "logic": {
+        "any_regions": [
+          "jupiter",
+          "k02_trucks_cemetery",
+          "l04u_labx18",
+          "l07_military",
+          "l10_limansk",
+          "l10_radar",
+          "l10_red_forest",
+          "l11_pripyat",
+          "l12_stancia",
+          "l12_stancia_2",
+          "l12u_sarcofag",
+          "l13_generators",
+          "pripyat",
+          "zaton"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052433,
@@ -2309,7 +3266,32 @@
       "key": "af_generator",
       "aliases": [
         "af_generator"
-      ]
+      ],
+      "logic": {
+        "any_regions": [
+          "jupiter",
+          "k00_marsh",
+          "k01_darkscape",
+          "k02_trucks_cemetery",
+          "l01_escape",
+          "l02_garbage",
+          "l03_agroprom",
+          "l04_darkvalley",
+          "l05_bar",
+          "l06_rostok",
+          "l07_military",
+          "l08_yantar",
+          "l09_deadcity",
+          "l10_limansk",
+          "l10_red_forest",
+          "l11_pripyat",
+          "pripyat",
+          "y04_pole",
+          "zaton"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052434,
@@ -2323,7 +3305,19 @@
         "af_glass_af_aam",
         "af_glass_af_iam",
         "af_glass_lead_box"
-      ]
+      ],
+      "logic": {
+        "any_regions": [
+          "l11_pripyat",
+          "l12_stancia",
+          "l12_stancia_2",
+          "l12u_sarcofag",
+          "l13_generators",
+          "pripyat"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052435,
@@ -2337,7 +3331,18 @@
         "af_gold_fish_af_aam",
         "af_gold_fish_af_iam",
         "af_gold_fish_lead_box"
-      ]
+      ],
+      "logic": {
+        "any_regions": [
+          "l11_pripyat",
+          "l12_stancia",
+          "l12u_sarcofag",
+          "l13_generators",
+          "pripyat"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052436,
@@ -2347,7 +3352,25 @@
       "key": "af_grapes",
       "aliases": [
         "af_grapes"
-      ]
+      ],
+      "logic": {
+        "any_regions": [
+          "jupiter",
+          "k01_darkscape",
+          "l02_garbage",
+          "l03_agroprom",
+          "l05_bar",
+          "l07_military",
+          "l08_yantar",
+          "l10_limansk",
+          "l10_red_forest",
+          "l11_pripyat",
+          "pripyat",
+          "zaton"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052437,
@@ -2361,7 +3384,25 @@
         "af_gravi_af_aam",
         "af_gravi_af_iam",
         "af_gravi_lead_box"
-      ]
+      ],
+      "logic": {
+        "any_regions": [
+          "jupiter",
+          "k02_trucks_cemetery",
+          "l07_military",
+          "l10_limansk",
+          "l10_radar",
+          "l10_red_forest",
+          "l11_pripyat",
+          "l12_stancia",
+          "l12u_sarcofag",
+          "l13_generators",
+          "pripyat",
+          "zaton"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052438,
@@ -2375,7 +3416,17 @@
         "af_ice_af_aam",
         "af_ice_af_iam",
         "af_ice_lead_box"
-      ]
+      ],
+      "logic": {
+        "any_regions": [
+          "l11_pripyat",
+          "l12_stancia",
+          "l13_generators",
+          "pripyat"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052439,
@@ -2389,7 +3440,26 @@
         "af_itcher_af_aam",
         "af_itcher_af_iam",
         "af_itcher_lead_box"
-      ]
+      ],
+      "logic": {
+        "any_regions": [
+          "jupiter",
+          "k00_marsh",
+          "k02_trucks_cemetery",
+          "l02_garbage",
+          "l04_darkvalley",
+          "l04u_labx18",
+          "l06_rostok",
+          "l07_military",
+          "l08_yantar",
+          "l08u_brainlab",
+          "l10_red_forest",
+          "pripyat",
+          "zaton"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052440,
@@ -2399,7 +3469,27 @@
       "key": "af_kislushka",
       "aliases": [
         "af_kislushka"
-      ]
+      ],
+      "logic": {
+        "any_regions": [
+          "jupiter",
+          "k00_marsh",
+          "k01_darkscape",
+          "k02_trucks_cemetery",
+          "l01_escape",
+          "l02_garbage",
+          "l03_agroprom",
+          "l04_darkvalley",
+          "l05_bar",
+          "l06_rostok",
+          "l07_military",
+          "l08_yantar",
+          "l09_deadcity",
+          "y04_pole"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052441,
@@ -2409,7 +3499,19 @@
       "key": "af_kogot",
       "aliases": [
         "af_kogot"
-      ]
+      ],
+      "logic": {
+        "any_regions": [
+          "jupiter",
+          "l10_limansk",
+          "l10_red_forest",
+          "l11_pripyat",
+          "pripyat",
+          "zaton"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052442,
@@ -2419,7 +3521,25 @@
       "key": "af_lighthouse",
       "aliases": [
         "af_lighthouse"
-      ]
+      ],
+      "logic": {
+        "any_regions": [
+          "jupiter",
+          "k01_darkscape",
+          "l02_garbage",
+          "l03_agroprom",
+          "l05_bar",
+          "l07_military",
+          "l08_yantar",
+          "l10_limansk",
+          "l10_red_forest",
+          "l11_pripyat",
+          "pripyat",
+          "zaton"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052443,
@@ -2433,7 +3553,26 @@
         "af_lobster_eyes_af_aam",
         "af_lobster_eyes_af_iam",
         "af_lobster_eyes_lead_box"
-      ]
+      ],
+      "logic": {
+        "any_regions": [
+          "jupiter",
+          "k02_trucks_cemetery",
+          "l03_agroprom",
+          "l04u_labx18",
+          "l06_rostok",
+          "l07_military",
+          "l10_limansk",
+          "l10_red_forest",
+          "l11_pripyat",
+          "l12_stancia",
+          "l13_generators",
+          "pripyat",
+          "zaton"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052444,
@@ -2443,7 +3582,19 @@
       "key": "af_medallion",
       "aliases": [
         "af_medallion"
-      ]
+      ],
+      "logic": {
+        "any_regions": [
+          "jupiter",
+          "l10_limansk",
+          "l10_red_forest",
+          "l11_pripyat",
+          "pripyat",
+          "zaton"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052445,
@@ -2457,7 +3608,34 @@
         "af_medusa_af_aam",
         "af_medusa_af_iam",
         "af_medusa_lead_box"
-      ]
+      ],
+      "logic": {
+        "any_regions": [
+          "jupiter",
+          "k00_marsh",
+          "k01_darkscape",
+          "k02_trucks_cemetery",
+          "l01_escape",
+          "l02_garbage",
+          "l03_agroprom",
+          "l04_darkvalley",
+          "l04u_labx18",
+          "l07_military",
+          "l08_yantar",
+          "l08u_brainlab",
+          "l09_deadcity",
+          "l10_limansk",
+          "l10_radar",
+          "l10_red_forest",
+          "l11_pripyat",
+          "l12_stancia",
+          "pripyat",
+          "y04_pole",
+          "zaton"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052446,
@@ -2471,7 +3649,35 @@
         "af_mincer_meat_af_aam",
         "af_mincer_meat_af_iam",
         "af_mincer_meat_lead_box"
-      ]
+      ],
+      "logic": {
+        "any_regions": [
+          "jupiter",
+          "k00_marsh",
+          "k01_darkscape",
+          "k02_trucks_cemetery",
+          "l01_escape",
+          "l02_garbage",
+          "l03_agroprom",
+          "l04_darkvalley",
+          "l04u_labx18",
+          "l07_military",
+          "l08_yantar",
+          "l08u_brainlab",
+          "l09_deadcity",
+          "l10_limansk",
+          "l10_radar",
+          "l10_red_forest",
+          "l11_pripyat",
+          "l12_stancia",
+          "l12_stancia_2",
+          "pripyat",
+          "y04_pole",
+          "zaton"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052447,
@@ -2481,7 +3687,27 @@
       "key": "af_moh",
       "aliases": [
         "af_moh"
-      ]
+      ],
+      "logic": {
+        "any_regions": [
+          "jupiter",
+          "k00_marsh",
+          "k01_darkscape",
+          "k02_trucks_cemetery",
+          "l01_escape",
+          "l02_garbage",
+          "l03_agroprom",
+          "l04_darkvalley",
+          "l05_bar",
+          "l06_rostok",
+          "l07_military",
+          "l08_yantar",
+          "l09_deadcity",
+          "y04_pole"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052448,
@@ -2491,7 +3717,12 @@
       "key": "af_monolith",
       "aliases": [
         "af_monolith"
-      ]
+      ],
+      "logic": {
+        "any_regions": [],
+        "all_regions": [],
+        "reliable": false
+      }
     },
     {
       "id": 28052449,
@@ -2505,7 +3736,34 @@
         "af_night_star_af_aam",
         "af_night_star_af_iam",
         "af_night_star_lead_box"
-      ]
+      ],
+      "logic": {
+        "any_regions": [
+          "jupiter",
+          "k00_marsh",
+          "k01_darkscape",
+          "k02_trucks_cemetery",
+          "l01_escape",
+          "l02_garbage",
+          "l03_agroprom",
+          "l04_darkvalley",
+          "l04u_labx18",
+          "l07_military",
+          "l08_yantar",
+          "l08u_brainlab",
+          "l09_deadcity",
+          "l10_limansk",
+          "l10_radar",
+          "l10_red_forest",
+          "l11_pripyat",
+          "l12_stancia",
+          "pripyat",
+          "y04_pole",
+          "zaton"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052450,
@@ -2519,7 +3777,12 @@
         "af_oasis_heart_af_aam",
         "af_oasis_heart_af_iam",
         "af_oasis_heart_lead_box"
-      ]
+      ],
+      "logic": {
+        "any_regions": [],
+        "all_regions": [],
+        "reliable": false
+      }
     },
     {
       "id": 28052451,
@@ -2529,7 +3792,27 @@
       "key": "af_peas",
       "aliases": [
         "af_peas"
-      ]
+      ],
+      "logic": {
+        "any_regions": [
+          "jupiter",
+          "k00_marsh",
+          "k01_darkscape",
+          "k02_trucks_cemetery",
+          "l01_escape",
+          "l02_garbage",
+          "l03_agroprom",
+          "l04_darkvalley",
+          "l05_bar",
+          "l06_rostok",
+          "l07_military",
+          "l08_yantar",
+          "l09_deadcity",
+          "y04_pole"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052452,
@@ -2543,7 +3826,25 @@
         "af_pin_af_aam",
         "af_pin_af_iam",
         "af_pin_lead_box"
-      ]
+      ],
+      "logic": {
+        "any_regions": [
+          "jupiter",
+          "k02_trucks_cemetery",
+          "l04u_labx18",
+          "l06_rostok",
+          "l07_military",
+          "l10_limansk",
+          "l10_red_forest",
+          "l11_pripyat",
+          "l12_stancia",
+          "l13_generators",
+          "pripyat",
+          "zaton"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052453,
@@ -2553,7 +3854,19 @@
       "key": "af_repei",
       "aliases": [
         "af_repei"
-      ]
+      ],
+      "logic": {
+        "any_regions": [
+          "jupiter",
+          "l10_limansk",
+          "l10_red_forest",
+          "l11_pripyat",
+          "pripyat",
+          "zaton"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052454,
@@ -2567,7 +3880,24 @@
         "af_ring_af_aam",
         "af_ring_af_iam",
         "af_ring_lead_box"
-      ]
+      ],
+      "logic": {
+        "any_regions": [
+          "jupiter",
+          "l06_rostok",
+          "l07_military",
+          "l10_limansk",
+          "l10_radar",
+          "l10_red_forest",
+          "l11_pripyat",
+          "l12_stancia",
+          "l13_generators",
+          "pripyat",
+          "zaton"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052455,
@@ -2577,7 +3907,27 @@
       "key": "af_sandstone",
       "aliases": [
         "af_sandstone"
-      ]
+      ],
+      "logic": {
+        "any_regions": [
+          "jupiter",
+          "k00_marsh",
+          "k01_darkscape",
+          "k02_trucks_cemetery",
+          "l01_escape",
+          "l02_garbage",
+          "l03_agroprom",
+          "l04_darkvalley",
+          "l05_bar",
+          "l06_rostok",
+          "l07_military",
+          "l08_yantar",
+          "l09_deadcity",
+          "y04_pole"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052456,
@@ -2587,7 +3937,19 @@
       "key": "af_serofim",
       "aliases": [
         "af_serofim"
-      ]
+      ],
+      "logic": {
+        "any_regions": [
+          "jupiter",
+          "l10_limansk",
+          "l10_red_forest",
+          "l11_pripyat",
+          "pripyat",
+          "zaton"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052457,
@@ -2597,7 +3959,27 @@
       "key": "af_signet",
       "aliases": [
         "af_signet"
-      ]
+      ],
+      "logic": {
+        "any_regions": [
+          "jupiter",
+          "k00_marsh",
+          "k01_darkscape",
+          "k02_trucks_cemetery",
+          "l01_escape",
+          "l02_garbage",
+          "l03_agroprom",
+          "l04_darkvalley",
+          "l05_bar",
+          "l06_rostok",
+          "l07_military",
+          "l08_yantar",
+          "l09_deadcity",
+          "y04_pole"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052458,
@@ -2607,7 +3989,27 @@
       "key": "af_skull_miser",
       "aliases": [
         "af_skull_miser"
-      ]
+      ],
+      "logic": {
+        "any_regions": [
+          "jupiter",
+          "k00_marsh",
+          "k01_darkscape",
+          "k02_trucks_cemetery",
+          "l01_escape",
+          "l02_garbage",
+          "l03_agroprom",
+          "l04_darkvalley",
+          "l05_bar",
+          "l06_rostok",
+          "l07_military",
+          "l08_yantar",
+          "l09_deadcity",
+          "y04_pole"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052459,
@@ -2621,7 +4023,35 @@
         "af_soul_af_aam",
         "af_soul_af_iam",
         "af_soul_lead_box"
-      ]
+      ],
+      "logic": {
+        "any_regions": [
+          "jupiter",
+          "k00_marsh",
+          "k01_darkscape",
+          "k02_trucks_cemetery",
+          "l01_escape",
+          "l02_garbage",
+          "l03_agroprom",
+          "l04_darkvalley",
+          "l04u_labx18",
+          "l07_military",
+          "l08_yantar",
+          "l08u_brainlab",
+          "l09_deadcity",
+          "l10_limansk",
+          "l10_radar",
+          "l10_red_forest",
+          "l11_pripyat",
+          "l12_stancia",
+          "l12_stancia_2",
+          "pripyat",
+          "y04_pole",
+          "zaton"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052460,
@@ -2631,7 +4061,27 @@
       "key": "af_spaika",
       "aliases": [
         "af_spaika"
-      ]
+      ],
+      "logic": {
+        "any_regions": [
+          "jupiter",
+          "k00_marsh",
+          "k01_darkscape",
+          "k02_trucks_cemetery",
+          "l01_escape",
+          "l02_garbage",
+          "l03_agroprom",
+          "l04_darkvalley",
+          "l05_bar",
+          "l06_rostok",
+          "l07_military",
+          "l08_yantar",
+          "l09_deadcity",
+          "y04_pole"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052461,
@@ -2645,7 +4095,25 @@
         "af_sponge_af_aam",
         "af_sponge_af_iam",
         "af_sponge_lead_box"
-      ]
+      ],
+      "logic": {
+        "any_regions": [
+          "jupiter",
+          "k02_trucks_cemetery",
+          "l07_military",
+          "l10_limansk",
+          "l10_radar",
+          "l10_red_forest",
+          "l11_pripyat",
+          "l12_stancia",
+          "l12u_sarcofag",
+          "l13_generators",
+          "pripyat",
+          "zaton"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052462,
@@ -2655,7 +4123,25 @@
       "key": "af_star_phantom",
       "aliases": [
         "af_star_phantom"
-      ]
+      ],
+      "logic": {
+        "any_regions": [
+          "jupiter",
+          "k01_darkscape",
+          "l02_garbage",
+          "l03_agroprom",
+          "l05_bar",
+          "l07_military",
+          "l08_yantar",
+          "l10_limansk",
+          "l10_red_forest",
+          "l11_pripyat",
+          "pripyat",
+          "zaton"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052463,
@@ -2665,7 +4151,25 @@
       "key": "af_sun",
       "aliases": [
         "af_sun"
-      ]
+      ],
+      "logic": {
+        "any_regions": [
+          "jupiter",
+          "k01_darkscape",
+          "l02_garbage",
+          "l03_agroprom",
+          "l05_bar",
+          "l07_military",
+          "l08_yantar",
+          "l10_limansk",
+          "l10_red_forest",
+          "l11_pripyat",
+          "pripyat",
+          "zaton"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052464,
@@ -2675,7 +4179,27 @@
       "key": "af_tapeworm",
       "aliases": [
         "af_tapeworm"
-      ]
+      ],
+      "logic": {
+        "any_regions": [
+          "jupiter",
+          "k00_marsh",
+          "k01_darkscape",
+          "k02_trucks_cemetery",
+          "l01_escape",
+          "l02_garbage",
+          "l03_agroprom",
+          "l04_darkvalley",
+          "l05_bar",
+          "l06_rostok",
+          "l07_military",
+          "l08_yantar",
+          "l09_deadcity",
+          "y04_pole"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052465,
@@ -2689,7 +4213,27 @@
         "af_vyvert_af_aam",
         "af_vyvert_af_iam",
         "af_vyvert_lead_box"
-      ]
+      ],
+      "logic": {
+        "any_regions": [
+          "jupiter",
+          "k02_trucks_cemetery",
+          "l04u_labx18",
+          "l07_military",
+          "l10_limansk",
+          "l10_radar",
+          "l10_red_forest",
+          "l11_pripyat",
+          "l12_stancia",
+          "l12_stancia_2",
+          "l12u_sarcofag",
+          "l13_generators",
+          "pripyat",
+          "zaton"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052466,
@@ -2699,98 +4243,212 @@
       "key": "af_zhelch",
       "aliases": [
         "af_zhelch"
-      ]
+      ],
+      "logic": {
+        "any_regions": [
+          "jupiter",
+          "k00_marsh",
+          "k01_darkscape",
+          "k02_trucks_cemetery",
+          "l01_escape",
+          "l02_garbage",
+          "l03_agroprom",
+          "l04_darkvalley",
+          "l05_bar",
+          "l06_rostok",
+          "l07_military",
+          "l08_yantar",
+          "l09_deadcity",
+          "y04_pole"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052501,
       "name": "Complete Quest Type: Fetch",
       "level": "Menu",
       "category": "checks_quest_types",
-      "key": "fetch"
+      "key": "fetch",
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "l01_escape"
+        ],
+        "reliable": true
+      }
     },
     {
       "id": 28052502,
       "name": "Complete Quest Type: Delivery",
       "level": "Menu",
       "category": "checks_quest_types",
-      "key": "delivery"
+      "key": "delivery",
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "l01_escape",
+          "l05_bar"
+        ],
+        "reliable": false
+      }
     },
     {
       "id": 28052503,
       "name": "Complete Quest Type: Recovery",
       "level": "Menu",
       "category": "checks_quest_types",
-      "key": "recovery"
+      "key": "recovery",
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "l02_garbage"
+        ],
+        "reliable": false
+      }
     },
     {
       "id": 28052504,
       "name": "Complete Quest Type: Hunting",
       "level": "Menu",
       "category": "checks_quest_types",
-      "key": "hunting"
+      "key": "hunting",
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "l01_escape",
+          "y04_pole"
+        ],
+        "reliable": true
+      }
     },
     {
       "id": 28052505,
       "name": "Complete Quest Type: Bounty",
       "level": "Menu",
       "category": "checks_quest_types",
-      "key": "bounty"
+      "key": "bounty",
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "l01_escape"
+        ],
+        "reliable": false
+      }
     },
     {
       "id": 28052506,
       "name": "Complete Quest Type: Rescue",
       "level": "Menu",
       "category": "checks_quest_types",
-      "key": "rescue"
+      "key": "rescue",
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "l07_military"
+        ],
+        "reliable": false
+      }
     },
     {
       "id": 28052507,
       "name": "Complete Quest Type: Defence",
       "level": "Menu",
       "category": "checks_quest_types",
-      "key": "defence"
+      "key": "defence",
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "l07_military"
+        ],
+        "reliable": false
+      }
     },
     {
       "id": 28052508,
       "name": "Complete Quest Type: Research",
       "level": "Menu",
       "category": "checks_quest_types",
-      "key": "research"
+      "key": "research",
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "l08_yantar",
+          "jupiter"
+        ],
+        "reliable": false
+      }
     },
     {
       "id": 28052509,
       "name": "Complete Quest Type: Investigation",
       "level": "Menu",
       "category": "checks_quest_types",
-      "key": "investigation"
+      "key": "investigation",
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "l02_garbage"
+        ],
+        "reliable": false
+      }
     },
     {
       "id": 28052510,
       "name": "Complete Quest Type: Assault",
       "level": "Menu",
       "category": "checks_quest_types",
-      "key": "assault"
+      "key": "assault",
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "l01_escape"
+        ],
+        "reliable": true
+      }
     },
     {
       "id": 28052511,
       "name": "Complete Quest Type: Donation",
       "level": "Menu",
       "category": "checks_quest_types",
-      "key": "donation"
+      "key": "donation",
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "l01_escape"
+        ],
+        "reliable": false
+      }
     },
     {
       "id": 28052512,
       "name": "Complete Quest Type: Territory",
       "level": "Menu",
       "category": "checks_quest_types",
-      "key": "territory"
+      "key": "territory",
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "l01_escape"
+        ],
+        "reliable": true
+      }
     },
     {
       "id": 28052513,
       "name": "Complete Quest Type: Vehicle",
       "level": "Menu",
       "category": "checks_quest_types",
-      "key": "vehicle"
+      "key": "vehicle",
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "l07_military"
+        ],
+        "reliable": false
+      }
     },
     {
       "id": 28052601,
@@ -2800,7 +4458,16 @@
       "key": "lttz_ll_find_doctor",
       "tasks": [
         "lttz_ll_find_doctor"
-      ]
+      ],
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "k00_marsh",
+          "l01_escape"
+        ],
+        "reliable": true,
+        "combat": false
+      }
     },
     {
       "id": 28052602,
@@ -2810,7 +4477,18 @@
       "key": "lttz_ll_visit_agro_ug",
       "tasks": [
         "lttz_ll_visit_agro_ug"
-      ]
+      ],
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "k00_marsh",
+          "l01_escape",
+          "l03_agroprom",
+          "l03u_agr_underground"
+        ],
+        "reliable": true,
+        "combat": false
+      }
     },
     {
       "id": 28052603,
@@ -2820,7 +4498,19 @@
       "key": "lttz_ll_visit_barkeep",
       "tasks": [
         "lttz_ll_visit_barkeep"
-      ]
+      ],
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "k00_marsh",
+          "l01_escape",
+          "l03_agroprom",
+          "l03u_agr_underground",
+          "l05_bar"
+        ],
+        "reliable": true,
+        "combat": false
+      }
     },
     {
       "id": 28052604,
@@ -2830,7 +4520,20 @@
       "key": "lttz_ll_visit_blackjack",
       "tasks": [
         "lttz_ll_visit_blackjack"
-      ]
+      ],
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "k00_marsh",
+          "l01_escape",
+          "l03_agroprom",
+          "l03u_agr_underground",
+          "l05_bar",
+          "l09_deadcity"
+        ],
+        "reliable": true,
+        "combat": false
+      }
     },
     {
       "id": 28052605,
@@ -2840,7 +4543,22 @@
       "key": "lttz_ll_call_north",
       "tasks": [
         "lttz_ll_call_north"
-      ]
+      ],
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "k00_marsh",
+          "l01_escape",
+          "l03_agroprom",
+          "l03u_agr_underground",
+          "l05_bar",
+          "l07_military",
+          "l08_yantar",
+          "l09_deadcity"
+        ],
+        "reliable": true,
+        "combat": false
+      }
     },
     {
       "id": 28052606,
@@ -2850,7 +4568,22 @@
       "key": "lttz_ll_breakthrough",
       "tasks": [
         "lttz_ll_breakthrough"
-      ]
+      ],
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "k00_marsh",
+          "l01_escape",
+          "l03_agroprom",
+          "l03u_agr_underground",
+          "l05_bar",
+          "l07_military",
+          "l08_yantar",
+          "l09_deadcity"
+        ],
+        "reliable": true,
+        "combat": true
+      }
     },
     {
       "id": 28052607,
@@ -2860,7 +4593,24 @@
       "key": "lttz_ll_turn_off_brain_scorcher",
       "tasks": [
         "lttz_ll_turn_off_brain_scorcher"
-      ]
+      ],
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "k00_marsh",
+          "l01_escape",
+          "l03_agroprom",
+          "l03u_agr_underground",
+          "l05_bar",
+          "l07_military",
+          "l08_yantar",
+          "l09_deadcity",
+          "l10_radar",
+          "l10u_bunker"
+        ],
+        "reliable": true,
+        "combat": true
+      }
     },
     {
       "id": 28052608,
@@ -2870,7 +4620,25 @@
       "key": "lttz_ll_visit_beard",
       "tasks": [
         "lttz_ll_visit_beard"
-      ]
+      ],
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "k00_marsh",
+          "l01_escape",
+          "l03_agroprom",
+          "l03u_agr_underground",
+          "l05_bar",
+          "l07_military",
+          "l08_yantar",
+          "l09_deadcity",
+          "l10_radar",
+          "l10u_bunker",
+          "zaton"
+        ],
+        "reliable": true,
+        "combat": true
+      }
     },
     {
       "id": 28052609,
@@ -2880,7 +4648,26 @@
       "key": "lttz_ll_meet_rogue",
       "tasks": [
         "lttz_ll_meet_rogue"
-      ]
+      ],
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "jupiter",
+          "k00_marsh",
+          "l01_escape",
+          "l03_agroprom",
+          "l03u_agr_underground",
+          "l05_bar",
+          "l07_military",
+          "l08_yantar",
+          "l09_deadcity",
+          "l10_radar",
+          "l10u_bunker",
+          "zaton"
+        ],
+        "reliable": true,
+        "combat": true
+      }
     },
     {
       "id": 28052610,
@@ -2890,7 +4677,26 @@
       "key": "lttz_ll_fetch_gauss",
       "tasks": [
         "lttz_ll_fetch_gauss"
-      ]
+      ],
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "jupiter",
+          "k00_marsh",
+          "l01_escape",
+          "l03_agroprom",
+          "l03u_agr_underground",
+          "l05_bar",
+          "l07_military",
+          "l08_yantar",
+          "l09_deadcity",
+          "l10_radar",
+          "l10u_bunker",
+          "zaton"
+        ],
+        "reliable": true,
+        "combat": true
+      }
     },
     {
       "id": 28052611,
@@ -2900,7 +4706,28 @@
       "key": "lttz_ll_path_pripyat",
       "tasks": [
         "lttz_ll_path_pripyat"
-      ]
+      ],
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "jupiter",
+          "jupiter_underground",
+          "k00_marsh",
+          "l01_escape",
+          "l03_agroprom",
+          "l03u_agr_underground",
+          "l05_bar",
+          "l07_military",
+          "l08_yantar",
+          "l09_deadcity",
+          "l10_radar",
+          "l10u_bunker",
+          "pripyat",
+          "zaton"
+        ],
+        "reliable": true,
+        "combat": true
+      }
     },
     {
       "id": 28052612,
@@ -2910,7 +4737,28 @@
       "key": "lttz_ll_medical_supplies",
       "tasks": [
         "lttz_ll_medical_supplies"
-      ]
+      ],
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "jupiter",
+          "jupiter_underground",
+          "k00_marsh",
+          "l01_escape",
+          "l03_agroprom",
+          "l03u_agr_underground",
+          "l05_bar",
+          "l07_military",
+          "l08_yantar",
+          "l09_deadcity",
+          "l10_radar",
+          "l10u_bunker",
+          "pripyat",
+          "zaton"
+        ],
+        "reliable": true,
+        "combat": true
+      }
     },
     {
       "id": 28052613,
@@ -2920,7 +4768,28 @@
       "key": "lttz_ll_attack_on_titan",
       "tasks": [
         "lttz_ll_attack_on_titan"
-      ]
+      ],
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "jupiter",
+          "jupiter_underground",
+          "k00_marsh",
+          "l01_escape",
+          "l03_agroprom",
+          "l03u_agr_underground",
+          "l05_bar",
+          "l07_military",
+          "l08_yantar",
+          "l09_deadcity",
+          "l10_radar",
+          "l10u_bunker",
+          "pripyat",
+          "zaton"
+        ],
+        "reliable": true,
+        "combat": true
+      }
     },
     {
       "id": 28052614,
@@ -2930,7 +4799,29 @@
       "key": "lttz_ll_find_documents",
       "tasks": [
         "lttz_ll_find_documents"
-      ]
+      ],
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "jupiter",
+          "jupiter_underground",
+          "k00_marsh",
+          "l01_escape",
+          "l03_agroprom",
+          "l03u_agr_underground",
+          "l05_bar",
+          "l07_military",
+          "l08_yantar",
+          "l09_deadcity",
+          "l10_radar",
+          "l10u_bunker",
+          "labx8",
+          "pripyat",
+          "zaton"
+        ],
+        "reliable": true,
+        "combat": true
+      }
     },
     {
       "id": 28052615,
@@ -2940,7 +4831,29 @@
       "key": "lttz_ll_eidolon_start",
       "tasks": [
         "lttz_ll_eidolon_start"
-      ]
+      ],
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "jupiter",
+          "jupiter_underground",
+          "k00_marsh",
+          "l01_escape",
+          "l03_agroprom",
+          "l03u_agr_underground",
+          "l05_bar",
+          "l07_military",
+          "l08_yantar",
+          "l09_deadcity",
+          "l10_radar",
+          "l10u_bunker",
+          "labx8",
+          "pripyat",
+          "zaton"
+        ],
+        "reliable": true,
+        "combat": true
+      }
     },
     {
       "id": 28052616,
@@ -2950,7 +4863,29 @@
       "key": "lttz_ll_eidolon",
       "tasks": [
         "lttz_ll_eidolon"
-      ]
+      ],
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "jupiter",
+          "jupiter_underground",
+          "k00_marsh",
+          "l01_escape",
+          "l03_agroprom",
+          "l03u_agr_underground",
+          "l05_bar",
+          "l07_military",
+          "l08_yantar",
+          "l09_deadcity",
+          "l10_radar",
+          "l10u_bunker",
+          "labx8",
+          "pripyat",
+          "zaton"
+        ],
+        "reliable": true,
+        "combat": true
+      }
     },
     {
       "id": 28052617,
@@ -2960,7 +4895,29 @@
       "key": "lttz_ll_strelok_objective",
       "tasks": [
         "lttz_ll_strelok_objective"
-      ]
+      ],
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "jupiter",
+          "jupiter_underground",
+          "k00_marsh",
+          "l01_escape",
+          "l03_agroprom",
+          "l03u_agr_underground",
+          "l05_bar",
+          "l07_military",
+          "l08_yantar",
+          "l09_deadcity",
+          "l10_radar",
+          "l10u_bunker",
+          "labx8",
+          "pripyat",
+          "zaton"
+        ],
+        "reliable": true,
+        "combat": true
+      }
     },
     {
       "id": 28052618,
@@ -2970,7 +4927,30 @@
       "key": "lttz_ll_chernobyl_raid",
       "tasks": [
         "lttz_ll_chernobyl_raid"
-      ]
+      ],
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "jupiter",
+          "jupiter_underground",
+          "k00_marsh",
+          "l01_escape",
+          "l03_agroprom",
+          "l03u_agr_underground",
+          "l05_bar",
+          "l07_military",
+          "l08_yantar",
+          "l09_deadcity",
+          "l10_radar",
+          "l10u_bunker",
+          "l12_stancia",
+          "labx8",
+          "pripyat",
+          "zaton"
+        ],
+        "reliable": true,
+        "combat": true
+      }
     },
     {
       "id": 28052619,
@@ -2980,7 +4960,32 @@
       "key": "lttz_ll_crucible",
       "tasks": [
         "lttz_ll_crucible"
-      ]
+      ],
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "jupiter",
+          "jupiter_underground",
+          "k00_marsh",
+          "l01_escape",
+          "l03_agroprom",
+          "l03u_agr_underground",
+          "l05_bar",
+          "l07_military",
+          "l08_yantar",
+          "l09_deadcity",
+          "l10_radar",
+          "l10u_bunker",
+          "l12_stancia",
+          "l12u_control_monolith",
+          "l12u_sarcofag",
+          "labx8",
+          "pripyat",
+          "zaton"
+        ],
+        "reliable": true,
+        "combat": true
+      }
     },
     {
       "id": 28052620,
@@ -2990,7 +4995,32 @@
       "key": "lttz_ll_answers",
       "tasks": [
         "lttz_ll_answers"
-      ]
+      ],
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "jupiter",
+          "jupiter_underground",
+          "k00_marsh",
+          "l01_escape",
+          "l03_agroprom",
+          "l03u_agr_underground",
+          "l05_bar",
+          "l07_military",
+          "l08_yantar",
+          "l09_deadcity",
+          "l10_radar",
+          "l10u_bunker",
+          "l12_stancia",
+          "l12u_control_monolith",
+          "l12u_sarcofag",
+          "labx8",
+          "pripyat",
+          "zaton"
+        ],
+        "reliable": true,
+        "combat": true
+      }
     },
     {
       "id": 28052621,
@@ -3005,7 +5035,32 @@
         "lttz_ll_finish_csky",
         "lttz_ll_finish_freedom",
         "lttz_ll_finish_ecolog"
-      ]
+      ],
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "jupiter",
+          "jupiter_underground",
+          "k00_marsh",
+          "l01_escape",
+          "l03_agroprom",
+          "l03u_agr_underground",
+          "l05_bar",
+          "l07_military",
+          "l08_yantar",
+          "l09_deadcity",
+          "l10_radar",
+          "l10u_bunker",
+          "l12_stancia",
+          "l12u_control_monolith",
+          "l12u_sarcofag",
+          "labx8",
+          "pripyat",
+          "zaton"
+        ],
+        "reliable": true,
+        "combat": true
+      }
     },
     {
       "id": 28052622,
@@ -3020,7 +5075,32 @@
         "lttz_ms_start_csky",
         "lttz_ms_start_freedom",
         "lttz_ms_start_ecolog"
-      ]
+      ],
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "jupiter",
+          "jupiter_underground",
+          "k00_marsh",
+          "l01_escape",
+          "l03_agroprom",
+          "l03u_agr_underground",
+          "l05_bar",
+          "l07_military",
+          "l08_yantar",
+          "l09_deadcity",
+          "l10_radar",
+          "l10u_bunker",
+          "l12_stancia",
+          "l12u_control_monolith",
+          "l12u_sarcofag",
+          "labx8",
+          "pripyat",
+          "zaton"
+        ],
+        "reliable": true,
+        "combat": true
+      }
     },
     {
       "id": 28052623,
@@ -3030,7 +5110,33 @@
       "key": "lttz_ms_red_forester",
       "tasks": [
         "lttz_ms_red_forester"
-      ]
+      ],
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "jupiter",
+          "jupiter_underground",
+          "k00_marsh",
+          "l01_escape",
+          "l03_agroprom",
+          "l03u_agr_underground",
+          "l05_bar",
+          "l07_military",
+          "l08_yantar",
+          "l09_deadcity",
+          "l10_radar",
+          "l10_red_forest",
+          "l10u_bunker",
+          "l12_stancia",
+          "l12u_control_monolith",
+          "l12u_sarcofag",
+          "labx8",
+          "pripyat",
+          "zaton"
+        ],
+        "reliable": true,
+        "combat": true
+      }
     },
     {
       "id": 28052624,
@@ -3040,7 +5146,33 @@
       "key": "lttz_ms_red_forest_attackers",
       "tasks": [
         "lttz_ms_red_forest_attackers"
-      ]
+      ],
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "jupiter",
+          "jupiter_underground",
+          "k00_marsh",
+          "l01_escape",
+          "l03_agroprom",
+          "l03u_agr_underground",
+          "l05_bar",
+          "l07_military",
+          "l08_yantar",
+          "l09_deadcity",
+          "l10_radar",
+          "l10_red_forest",
+          "l10u_bunker",
+          "l12_stancia",
+          "l12u_control_monolith",
+          "l12u_sarcofag",
+          "labx8",
+          "pripyat",
+          "zaton"
+        ],
+        "reliable": true,
+        "combat": true
+      }
     },
     {
       "id": 28052625,
@@ -3050,7 +5182,33 @@
       "key": "lttz_ms_runaway",
       "tasks": [
         "lttz_ms_runaway"
-      ]
+      ],
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "jupiter",
+          "jupiter_underground",
+          "k00_marsh",
+          "l01_escape",
+          "l03_agroprom",
+          "l03u_agr_underground",
+          "l05_bar",
+          "l07_military",
+          "l08_yantar",
+          "l09_deadcity",
+          "l10_radar",
+          "l10_red_forest",
+          "l10u_bunker",
+          "l12_stancia",
+          "l12u_control_monolith",
+          "l12u_sarcofag",
+          "labx8",
+          "pripyat",
+          "zaton"
+        ],
+        "reliable": true,
+        "combat": true
+      }
     },
     {
       "id": 28052626,
@@ -3060,7 +5218,33 @@
       "key": "lttz_ms_needle_haystack",
       "tasks": [
         "lttz_ms_needle_haystack"
-      ]
+      ],
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "jupiter",
+          "jupiter_underground",
+          "k00_marsh",
+          "l01_escape",
+          "l03_agroprom",
+          "l03u_agr_underground",
+          "l05_bar",
+          "l07_military",
+          "l08_yantar",
+          "l09_deadcity",
+          "l10_radar",
+          "l10_red_forest",
+          "l10u_bunker",
+          "l12_stancia",
+          "l12u_control_monolith",
+          "l12u_sarcofag",
+          "labx8",
+          "pripyat",
+          "zaton"
+        ],
+        "reliable": true,
+        "combat": true
+      }
     },
     {
       "id": 28052627,
@@ -3075,7 +5259,33 @@
         "lttz_ms_report_csky",
         "lttz_ms_report_freedom",
         "lttz_ms_report_ecolog"
-      ]
+      ],
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "jupiter",
+          "jupiter_underground",
+          "k00_marsh",
+          "l01_escape",
+          "l03_agroprom",
+          "l03u_agr_underground",
+          "l05_bar",
+          "l07_military",
+          "l08_yantar",
+          "l09_deadcity",
+          "l10_radar",
+          "l10_red_forest",
+          "l10u_bunker",
+          "l12_stancia",
+          "l12u_control_monolith",
+          "l12u_sarcofag",
+          "labx8",
+          "pripyat",
+          "zaton"
+        ],
+        "reliable": true,
+        "combat": true
+      }
     },
     {
       "id": 28052628,
@@ -3090,7 +5300,33 @@
         "lttz_ms_ambush_csky",
         "lttz_ms_ambush_freedom",
         "lttz_ms_ambush_ecolog"
-      ]
+      ],
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "jupiter",
+          "jupiter_underground",
+          "k00_marsh",
+          "l01_escape",
+          "l03_agroprom",
+          "l03u_agr_underground",
+          "l05_bar",
+          "l07_military",
+          "l08_yantar",
+          "l09_deadcity",
+          "l10_radar",
+          "l10_red_forest",
+          "l10u_bunker",
+          "l12_stancia",
+          "l12u_control_monolith",
+          "l12u_sarcofag",
+          "labx8",
+          "pripyat",
+          "zaton"
+        ],
+        "reliable": true,
+        "combat": true
+      }
     },
     {
       "id": 28052629,
@@ -3100,7 +5336,33 @@
       "key": "lttz_ms_dark_crusade",
       "tasks": [
         "lttz_ms_dark_crusade"
-      ]
+      ],
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "jupiter",
+          "jupiter_underground",
+          "k00_marsh",
+          "l01_escape",
+          "l03_agroprom",
+          "l03u_agr_underground",
+          "l05_bar",
+          "l07_military",
+          "l08_yantar",
+          "l09_deadcity",
+          "l10_radar",
+          "l10_red_forest",
+          "l10u_bunker",
+          "l12_stancia",
+          "l12u_control_monolith",
+          "l12u_sarcofag",
+          "labx8",
+          "pripyat",
+          "zaton"
+        ],
+        "reliable": true,
+        "combat": true
+      }
     },
     {
       "id": 28052630,
@@ -3110,7 +5372,34 @@
       "key": "lttz_ms_protect_miracle_machine",
       "tasks": [
         "lttz_ms_protect_miracle_machine"
-      ]
+      ],
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "jupiter",
+          "jupiter_underground",
+          "k00_marsh",
+          "l01_escape",
+          "l03_agroprom",
+          "l03u_agr_underground",
+          "l05_bar",
+          "l07_military",
+          "l08_yantar",
+          "l08u_brainlab",
+          "l09_deadcity",
+          "l10_radar",
+          "l10_red_forest",
+          "l10u_bunker",
+          "l12_stancia",
+          "l12u_control_monolith",
+          "l12u_sarcofag",
+          "labx8",
+          "pripyat",
+          "zaton"
+        ],
+        "reliable": true,
+        "combat": true
+      }
     },
     {
       "id": 28052631,
@@ -3120,7 +5409,34 @@
       "key": "lttz_ms_protect_brain_scorcher",
       "tasks": [
         "lttz_ms_protect_brain_scorcher"
-      ]
+      ],
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "jupiter",
+          "jupiter_underground",
+          "k00_marsh",
+          "l01_escape",
+          "l03_agroprom",
+          "l03u_agr_underground",
+          "l05_bar",
+          "l07_military",
+          "l08_yantar",
+          "l08u_brainlab",
+          "l09_deadcity",
+          "l10_radar",
+          "l10_red_forest",
+          "l10u_bunker",
+          "l12_stancia",
+          "l12u_control_monolith",
+          "l12u_sarcofag",
+          "labx8",
+          "pripyat",
+          "zaton"
+        ],
+        "reliable": true,
+        "combat": true
+      }
     },
     {
       "id": 28052632,
@@ -3130,7 +5446,34 @@
       "key": "lttz_ms_to_war",
       "tasks": [
         "lttz_ms_to_war"
-      ]
+      ],
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "jupiter",
+          "jupiter_underground",
+          "k00_marsh",
+          "l01_escape",
+          "l03_agroprom",
+          "l03u_agr_underground",
+          "l05_bar",
+          "l07_military",
+          "l08_yantar",
+          "l08u_brainlab",
+          "l09_deadcity",
+          "l10_radar",
+          "l10_red_forest",
+          "l10u_bunker",
+          "l12_stancia",
+          "l12u_control_monolith",
+          "l12u_sarcofag",
+          "labx8",
+          "pripyat",
+          "zaton"
+        ],
+        "reliable": true,
+        "combat": true
+      }
     },
     {
       "id": 28052633,
@@ -3145,7 +5488,34 @@
         "lttz_ms_urban_warfare_csky",
         "lttz_ms_urban_warfare_freedom",
         "lttz_ms_urban_warfare_ecolog"
-      ]
+      ],
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "jupiter",
+          "jupiter_underground",
+          "k00_marsh",
+          "l01_escape",
+          "l03_agroprom",
+          "l03u_agr_underground",
+          "l05_bar",
+          "l07_military",
+          "l08_yantar",
+          "l08u_brainlab",
+          "l09_deadcity",
+          "l10_radar",
+          "l10_red_forest",
+          "l10u_bunker",
+          "l12_stancia",
+          "l12u_control_monolith",
+          "l12u_sarcofag",
+          "labx8",
+          "pripyat",
+          "zaton"
+        ],
+        "reliable": true,
+        "combat": true
+      }
     },
     {
       "id": 28052634,
@@ -3155,7 +5525,34 @@
       "key": "lttz_ms_war_prisoner",
       "tasks": [
         "lttz_ms_war_prisoner"
-      ]
+      ],
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "jupiter",
+          "jupiter_underground",
+          "k00_marsh",
+          "l01_escape",
+          "l03_agroprom",
+          "l03u_agr_underground",
+          "l05_bar",
+          "l07_military",
+          "l08_yantar",
+          "l08u_brainlab",
+          "l09_deadcity",
+          "l10_radar",
+          "l10_red_forest",
+          "l10u_bunker",
+          "l12_stancia",
+          "l12u_control_monolith",
+          "l12u_sarcofag",
+          "labx8",
+          "pripyat",
+          "zaton"
+        ],
+        "reliable": true,
+        "combat": true
+      }
     },
     {
       "id": 28052635,
@@ -3165,7 +5562,35 @@
       "key": "lttz_ms_contact_lost",
       "tasks": [
         "lttz_ms_contact_lost"
-      ]
+      ],
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "jupiter",
+          "jupiter_underground",
+          "k00_marsh",
+          "l01_escape",
+          "l03_agroprom",
+          "l03u_agr_underground",
+          "l05_bar",
+          "l07_military",
+          "l08_yantar",
+          "l08u_brainlab",
+          "l09_deadcity",
+          "l10_limansk",
+          "l10_radar",
+          "l10_red_forest",
+          "l10u_bunker",
+          "l12_stancia",
+          "l12u_control_monolith",
+          "l12u_sarcofag",
+          "labx8",
+          "pripyat",
+          "zaton"
+        ],
+        "reliable": true,
+        "combat": true
+      }
     },
     {
       "id": 28052636,
@@ -3175,7 +5600,35 @@
       "key": "lttz_ms_destruction_site",
       "tasks": [
         "lttz_ms_destruction_site"
-      ]
+      ],
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "jupiter",
+          "jupiter_underground",
+          "k00_marsh",
+          "l01_escape",
+          "l03_agroprom",
+          "l03u_agr_underground",
+          "l05_bar",
+          "l07_military",
+          "l08_yantar",
+          "l08u_brainlab",
+          "l09_deadcity",
+          "l10_limansk",
+          "l10_radar",
+          "l10_red_forest",
+          "l10u_bunker",
+          "l12_stancia",
+          "l12u_control_monolith",
+          "l12u_sarcofag",
+          "labx8",
+          "pripyat",
+          "zaton"
+        ],
+        "reliable": true,
+        "combat": true
+      }
     },
     {
       "id": 28052637,
@@ -3185,7 +5638,36 @@
       "key": "lttz_ms_hospital_assault",
       "tasks": [
         "lttz_ms_hospital_assault"
-      ]
+      ],
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "jupiter",
+          "jupiter_underground",
+          "k00_marsh",
+          "l01_escape",
+          "l03_agroprom",
+          "l03u_agr_underground",
+          "l05_bar",
+          "l07_military",
+          "l08_yantar",
+          "l08u_brainlab",
+          "l09_deadcity",
+          "l10_limansk",
+          "l10_radar",
+          "l10_red_forest",
+          "l10u_bunker",
+          "l11_hospital",
+          "l12_stancia",
+          "l12u_control_monolith",
+          "l12u_sarcofag",
+          "labx8",
+          "pripyat",
+          "zaton"
+        ],
+        "reliable": true,
+        "combat": true
+      }
     },
     {
       "id": 28052638,
@@ -3195,7 +5677,38 @@
       "key": "lttz_ms_heart_zone",
       "tasks": [
         "lttz_ms_heart_zone"
-      ]
+      ],
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "jupiter",
+          "jupiter_underground",
+          "k00_marsh",
+          "l01_escape",
+          "l03_agroprom",
+          "l03u_agr_underground",
+          "l05_bar",
+          "l07_military",
+          "l08_yantar",
+          "l08u_brainlab",
+          "l09_deadcity",
+          "l10_limansk",
+          "l10_radar",
+          "l10_red_forest",
+          "l10u_bunker",
+          "l11_hospital",
+          "l12_stancia",
+          "l12_stancia_2",
+          "l12u_control_monolith",
+          "l12u_sarcofag",
+          "l13_generators",
+          "labx8",
+          "pripyat",
+          "zaton"
+        ],
+        "reliable": true,
+        "combat": true
+      }
     },
     {
       "id": 28052639,
@@ -3205,7 +5718,38 @@
       "key": "lttz_ms_decisive_blow",
       "tasks": [
         "lttz_ms_decisive_blow"
-      ]
+      ],
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "jupiter",
+          "jupiter_underground",
+          "k00_marsh",
+          "l01_escape",
+          "l03_agroprom",
+          "l03u_agr_underground",
+          "l05_bar",
+          "l07_military",
+          "l08_yantar",
+          "l08u_brainlab",
+          "l09_deadcity",
+          "l10_limansk",
+          "l10_radar",
+          "l10_red_forest",
+          "l10u_bunker",
+          "l11_hospital",
+          "l12_stancia",
+          "l12_stancia_2",
+          "l12u_control_monolith",
+          "l12u_sarcofag",
+          "l13_generators",
+          "labx8",
+          "pripyat",
+          "zaton"
+        ],
+        "reliable": true,
+        "combat": true
+      }
     },
     {
       "id": 28052640,
@@ -3215,7 +5759,38 @@
       "key": "lttz_ms_confrontation",
       "tasks": [
         "lttz_ms_confrontation"
-      ]
+      ],
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "jupiter",
+          "jupiter_underground",
+          "k00_marsh",
+          "l01_escape",
+          "l03_agroprom",
+          "l03u_agr_underground",
+          "l05_bar",
+          "l07_military",
+          "l08_yantar",
+          "l08u_brainlab",
+          "l09_deadcity",
+          "l10_limansk",
+          "l10_radar",
+          "l10_red_forest",
+          "l10u_bunker",
+          "l11_hospital",
+          "l12_stancia",
+          "l12_stancia_2",
+          "l12u_control_monolith",
+          "l12u_sarcofag",
+          "l13_generators",
+          "labx8",
+          "pripyat",
+          "zaton"
+        ],
+        "reliable": true,
+        "combat": true
+      }
     },
     {
       "id": 28052641,
@@ -3225,7 +5800,38 @@
       "key": "lttz_ms_endgame",
       "tasks": [
         "lttz_ms_endgame"
-      ]
+      ],
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "jupiter",
+          "jupiter_underground",
+          "k00_marsh",
+          "l01_escape",
+          "l03_agroprom",
+          "l03u_agr_underground",
+          "l05_bar",
+          "l07_military",
+          "l08_yantar",
+          "l08u_brainlab",
+          "l09_deadcity",
+          "l10_limansk",
+          "l10_radar",
+          "l10_red_forest",
+          "l10u_bunker",
+          "l11_hospital",
+          "l12_stancia",
+          "l12_stancia_2",
+          "l12u_control_monolith",
+          "l12u_sarcofag",
+          "l13_generators",
+          "labx8",
+          "pripyat",
+          "zaton"
+        ],
+        "reliable": true,
+        "combat": true
+      }
     },
     {
       "id": 28052642,
@@ -3235,7 +5841,38 @@
       "key": "lttz_ms_choice",
       "tasks": [
         "lttz_ms_choice"
-      ]
+      ],
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "jupiter",
+          "jupiter_underground",
+          "k00_marsh",
+          "l01_escape",
+          "l03_agroprom",
+          "l03u_agr_underground",
+          "l05_bar",
+          "l07_military",
+          "l08_yantar",
+          "l08u_brainlab",
+          "l09_deadcity",
+          "l10_limansk",
+          "l10_radar",
+          "l10_red_forest",
+          "l10u_bunker",
+          "l11_hospital",
+          "l12_stancia",
+          "l12_stancia_2",
+          "l12u_control_monolith",
+          "l12u_sarcofag",
+          "l13_generators",
+          "labx8",
+          "pripyat",
+          "zaton"
+        ],
+        "reliable": true,
+        "combat": true
+      }
     },
     {
       "id": 28052643,
@@ -3250,7 +5887,38 @@
         "lttz_ms_zone_hero_csky",
         "lttz_ms_zone_hero_freedom",
         "lttz_ms_zone_hero_ecolog"
-      ]
+      ],
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "jupiter",
+          "jupiter_underground",
+          "k00_marsh",
+          "l01_escape",
+          "l03_agroprom",
+          "l03u_agr_underground",
+          "l05_bar",
+          "l07_military",
+          "l08_yantar",
+          "l08u_brainlab",
+          "l09_deadcity",
+          "l10_limansk",
+          "l10_radar",
+          "l10_red_forest",
+          "l10u_bunker",
+          "l11_hospital",
+          "l12_stancia",
+          "l12_stancia_2",
+          "l12u_control_monolith",
+          "l12u_sarcofag",
+          "l13_generators",
+          "labx8",
+          "pripyat",
+          "zaton"
+        ],
+        "reliable": true,
+        "combat": true
+      }
     },
     {
       "id": 28052644,
@@ -3260,7 +5928,38 @@
       "key": "lttz_oa_encrypted_transmission",
       "tasks": [
         "lttz_oa_encrypted_transmission"
-      ]
+      ],
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "jupiter",
+          "jupiter_underground",
+          "k00_marsh",
+          "l01_escape",
+          "l03_agroprom",
+          "l03u_agr_underground",
+          "l05_bar",
+          "l07_military",
+          "l08_yantar",
+          "l08u_brainlab",
+          "l09_deadcity",
+          "l10_limansk",
+          "l10_radar",
+          "l10_red_forest",
+          "l10u_bunker",
+          "l11_hospital",
+          "l12_stancia",
+          "l12_stancia_2",
+          "l12u_control_monolith",
+          "l12u_sarcofag",
+          "l13_generators",
+          "labx8",
+          "pripyat",
+          "zaton"
+        ],
+        "reliable": true,
+        "combat": true
+      }
     },
     {
       "id": 28052645,
@@ -3270,7 +5969,38 @@
       "key": "lttz_oa_rally_point",
       "tasks": [
         "lttz_oa_rally_point"
-      ]
+      ],
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "jupiter",
+          "jupiter_underground",
+          "k00_marsh",
+          "l01_escape",
+          "l03_agroprom",
+          "l03u_agr_underground",
+          "l05_bar",
+          "l07_military",
+          "l08_yantar",
+          "l08u_brainlab",
+          "l09_deadcity",
+          "l10_limansk",
+          "l10_radar",
+          "l10_red_forest",
+          "l10u_bunker",
+          "l11_hospital",
+          "l12_stancia",
+          "l12_stancia_2",
+          "l12u_control_monolith",
+          "l12u_sarcofag",
+          "l13_generators",
+          "labx8",
+          "pripyat",
+          "zaton"
+        ],
+        "reliable": true,
+        "combat": true
+      }
     },
     {
       "id": 28052646,
@@ -3280,7 +6010,38 @@
       "key": "lttz_oa_report",
       "tasks": [
         "lttz_oa_report"
-      ]
+      ],
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "jupiter",
+          "jupiter_underground",
+          "k00_marsh",
+          "l01_escape",
+          "l03_agroprom",
+          "l03u_agr_underground",
+          "l05_bar",
+          "l07_military",
+          "l08_yantar",
+          "l08u_brainlab",
+          "l09_deadcity",
+          "l10_limansk",
+          "l10_radar",
+          "l10_red_forest",
+          "l10u_bunker",
+          "l11_hospital",
+          "l12_stancia",
+          "l12_stancia_2",
+          "l12u_control_monolith",
+          "l12u_sarcofag",
+          "l13_generators",
+          "labx8",
+          "pripyat",
+          "zaton"
+        ],
+        "reliable": true,
+        "combat": true
+      }
     },
     {
       "id": 28052647,
@@ -3290,7 +6051,38 @@
       "key": "lttz_oa_special_delivery",
       "tasks": [
         "lttz_oa_special_delivery"
-      ]
+      ],
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "jupiter",
+          "jupiter_underground",
+          "k00_marsh",
+          "l01_escape",
+          "l03_agroprom",
+          "l03u_agr_underground",
+          "l05_bar",
+          "l07_military",
+          "l08_yantar",
+          "l08u_brainlab",
+          "l09_deadcity",
+          "l10_limansk",
+          "l10_radar",
+          "l10_red_forest",
+          "l10u_bunker",
+          "l11_hospital",
+          "l12_stancia",
+          "l12_stancia_2",
+          "l12u_control_monolith",
+          "l12u_sarcofag",
+          "l13_generators",
+          "labx8",
+          "pripyat",
+          "zaton"
+        ],
+        "reliable": true,
+        "combat": true
+      }
     },
     {
       "id": 28052648,
@@ -3300,7 +6092,38 @@
       "key": "lttz_oa_undercover_agent",
       "tasks": [
         "lttz_oa_undercover_agent"
-      ]
+      ],
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "jupiter",
+          "jupiter_underground",
+          "k00_marsh",
+          "l01_escape",
+          "l03_agroprom",
+          "l03u_agr_underground",
+          "l05_bar",
+          "l07_military",
+          "l08_yantar",
+          "l08u_brainlab",
+          "l09_deadcity",
+          "l10_limansk",
+          "l10_radar",
+          "l10_red_forest",
+          "l10u_bunker",
+          "l11_hospital",
+          "l12_stancia",
+          "l12_stancia_2",
+          "l12u_control_monolith",
+          "l12u_sarcofag",
+          "l13_generators",
+          "labx8",
+          "pripyat",
+          "zaton"
+        ],
+        "reliable": true,
+        "combat": true
+      }
     },
     {
       "id": 28052649,
@@ -3310,7 +6133,38 @@
       "key": "lttz_oa_search_unit",
       "tasks": [
         "lttz_oa_search_unit"
-      ]
+      ],
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "jupiter",
+          "jupiter_underground",
+          "k00_marsh",
+          "l01_escape",
+          "l03_agroprom",
+          "l03u_agr_underground",
+          "l05_bar",
+          "l07_military",
+          "l08_yantar",
+          "l08u_brainlab",
+          "l09_deadcity",
+          "l10_limansk",
+          "l10_radar",
+          "l10_red_forest",
+          "l10u_bunker",
+          "l11_hospital",
+          "l12_stancia",
+          "l12_stancia_2",
+          "l12u_control_monolith",
+          "l12u_sarcofag",
+          "l13_generators",
+          "labx8",
+          "pripyat",
+          "zaton"
+        ],
+        "reliable": true,
+        "combat": true
+      }
     },
     {
       "id": 28052650,
@@ -3320,7 +6174,38 @@
       "key": "lttz_oa_strelok",
       "tasks": [
         "lttz_oa_strelok"
-      ]
+      ],
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "jupiter",
+          "jupiter_underground",
+          "k00_marsh",
+          "l01_escape",
+          "l03_agroprom",
+          "l03u_agr_underground",
+          "l05_bar",
+          "l07_military",
+          "l08_yantar",
+          "l08u_brainlab",
+          "l09_deadcity",
+          "l10_limansk",
+          "l10_radar",
+          "l10_red_forest",
+          "l10u_bunker",
+          "l11_hospital",
+          "l12_stancia",
+          "l12_stancia_2",
+          "l12u_control_monolith",
+          "l12u_sarcofag",
+          "l13_generators",
+          "labx8",
+          "pripyat",
+          "zaton"
+        ],
+        "reliable": true,
+        "combat": true
+      }
     },
     {
       "id": 28052651,
@@ -3330,7 +6215,38 @@
       "key": "lttz_oa_rogue",
       "tasks": [
         "lttz_oa_rogue"
-      ]
+      ],
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "jupiter",
+          "jupiter_underground",
+          "k00_marsh",
+          "l01_escape",
+          "l03_agroprom",
+          "l03u_agr_underground",
+          "l05_bar",
+          "l07_military",
+          "l08_yantar",
+          "l08u_brainlab",
+          "l09_deadcity",
+          "l10_limansk",
+          "l10_radar",
+          "l10_red_forest",
+          "l10u_bunker",
+          "l11_hospital",
+          "l12_stancia",
+          "l12_stancia_2",
+          "l12u_control_monolith",
+          "l12u_sarcofag",
+          "l13_generators",
+          "labx8",
+          "pripyat",
+          "zaton"
+        ],
+        "reliable": true,
+        "combat": true
+      }
     },
     {
       "id": 28052652,
@@ -3340,7 +6256,38 @@
       "key": "lttz_oa_stitch",
       "tasks": [
         "lttz_oa_stitch"
-      ]
+      ],
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "jupiter",
+          "jupiter_underground",
+          "k00_marsh",
+          "l01_escape",
+          "l03_agroprom",
+          "l03u_agr_underground",
+          "l05_bar",
+          "l07_military",
+          "l08_yantar",
+          "l08u_brainlab",
+          "l09_deadcity",
+          "l10_limansk",
+          "l10_radar",
+          "l10_red_forest",
+          "l10u_bunker",
+          "l11_hospital",
+          "l12_stancia",
+          "l12_stancia_2",
+          "l12u_control_monolith",
+          "l12u_sarcofag",
+          "l13_generators",
+          "labx8",
+          "pripyat",
+          "zaton"
+        ],
+        "reliable": true,
+        "combat": true
+      }
     },
     {
       "id": 28052653,
@@ -3350,7 +6297,38 @@
       "key": "lttz_oa_loose_ends",
       "tasks": [
         "lttz_oa_loose_ends"
-      ]
+      ],
+      "logic": {
+        "any_regions": [],
+        "all_regions": [
+          "jupiter",
+          "jupiter_underground",
+          "k00_marsh",
+          "l01_escape",
+          "l03_agroprom",
+          "l03u_agr_underground",
+          "l05_bar",
+          "l07_military",
+          "l08_yantar",
+          "l08u_brainlab",
+          "l09_deadcity",
+          "l10_limansk",
+          "l10_radar",
+          "l10_red_forest",
+          "l10u_bunker",
+          "l11_hospital",
+          "l12_stancia",
+          "l12_stancia_2",
+          "l12u_control_monolith",
+          "l12u_sarcofag",
+          "l13_generators",
+          "labx8",
+          "pripyat",
+          "zaton"
+        ],
+        "reliable": true,
+        "combat": true
+      }
     },
     {
       "id": 28052701,
@@ -3504,7 +6482,12 @@
       "level": "Menu",
       "category": "checks_rank_milestones",
       "key": "novice",
-      "minimum": 0
+      "minimum": 0,
+      "logic": {
+        "any_regions": [],
+        "all_regions": [],
+        "reliable": true
+      }
     },
     {
       "id": 28052802,
@@ -5285,5 +8268,40 @@
       "name": "Rostok lodging house",
       "level": "l05_bar"
     }
-  ]
+  ],
+  "activity_regions": {
+    "checks_kill_milestones": [
+      "l01_escape",
+      "k00_marsh",
+      "l02_garbage"
+    ],
+    "checks_side_task_milestones": [
+      "l01_escape"
+    ],
+    "checks_rank_milestones": [
+      "l01_escape"
+    ],
+    "checks_armour_tiers": [
+      "l01_escape"
+    ],
+    "checks_weapon_tiers": [
+      "l01_escape"
+    ],
+    "checks_knife_tiers": [
+      "l01_escape"
+    ],
+    "checks_gear_upgrades": [
+      "l01_escape",
+      "l05_bar",
+      "l08_yantar"
+    ],
+    "checks_faction_standing": [
+      "l01_escape",
+      "l05_bar"
+    ]
+  },
+  "story_goal_checks": {
+    "Conclude Strelok's First Conversation": 28052611,
+    "Return After Living Legend": 28052621
+  }
 }

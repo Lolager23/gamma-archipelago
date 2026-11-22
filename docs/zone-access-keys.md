@@ -9,11 +9,11 @@ including common local/non-local settings. Only sparse exploration pools
 retain an anti-cycle route: each key comes from a reached map and unlocks an
 adjacent destination, with Yantar before psi-gated routes. Regression seeds
 1/4/5/22 cover that exception. See [generation pacing](generation-pacing.md) for
-the optional early-hub request and remaining conservative global-activity logic.
+the optional early-hub request and regional-activity opening safeguards.
 
 All entrances to a keyed region require its key, including alternate graph edges.
-Global activities conservatively require access to every zone instead of claiming
-all species, artefacts and story events occur in Cordon. Equipment-dependent
+Regional activities now use [supported source/capability rules](regional-activity-logic.md).
+Distinct source types follow their curated regions; uncertain sources stay optional. Equipment-dependent
 checks also require selected AP gear permissions. Radar/X19/X16 access accounts
 for protection via a reachable Yantar supplier or the local orange stash claim.
 This is conservative logical availability, not an ALife spawn-rate guarantee.

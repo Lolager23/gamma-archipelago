@@ -73,9 +73,12 @@ YAML name `random_frontier` remains an alias for value zero.
 
 Expanded regional pools, including multiworlds, leave zone keys in normal AP fill.
 Local/non-local item settings, priorities and exclusions apply normally. Only a
-pool with maps and no other regional network checks retains the exploration
-anti-cycle fallback: global activities currently require all zones and cannot
-provide intermediate route checks. Pinned AP fill failed sparse maps-only solo/multiworld
+pool without a reliable non-map opening opportunity retains the exploration
+anti-cycle fallback. Regional activities can now supply intermediate checks;
+story-only checks behind the first area key cannot supply opening slack.
+A fully locked activity opening requests one usable permission through upstream
+`early_items`, without a fixed location or starting gift. Explicit early requests
+and protected openings remain authoritative. Pinned AP fill failed sparse maps-only solo/multiworld
 regression seeds without this exception. Fallback placements remain unlocked
 and respect item rules; excluded route checks and conflicting sparse-route non-local
 keys fail explicitly. This does not claim uniform sampling.
@@ -139,14 +142,12 @@ not a guarantee of specific gear quality or hours played. Opening protection,
 user plando/locality/exclusions and discovery filler tails remain explicit
 exceptions. Do not remove essential requirements just to make checks look early.
 
-The all-zones guard for global activities remains a conservative modelling limit.
-Next: establish primary-source region/capability requirements for each supported
-mutant and artefact roster, generic quota, quest type, rank and upgrade route;
-share those requirements with the PDA, then test opening and later progression
-through actual generator spheres. Do not assume 15 distinct types can be found
-in Cordon or turn uncertain spawns into progression guarantees. Native encounter
-availability and measured pacing remain unverified. Revisit the sparse fallback
-when richer logic provides enough reliable non-map checks.
+The all-zones activity guard has been replaced by
+[regional source and equipment requirements](regional-activity-logic.md).
+Common early kills, artefacts and supported tasks can now hold zone keys. Distinct
+quotas count supported reachable types after exclusions; uncertain sources and
+quota excess are filler-only. No strict item tiers or category-placement quotas
+are imposed. Native encounter availability and measured pacing remain unverified.
 
 References checked against pinned AP 0.6.8 and current official documentation:
 [World API](https://github.com/ArchipelagoMW/Archipelago/blob/0.6.8/docs/world%20api.md),

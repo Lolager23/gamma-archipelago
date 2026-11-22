@@ -2,6 +2,7 @@
 
 from typing import TYPE_CHECKING, Any
 
+from BaseClasses import CollectionState, LocationProgressType
 from Options import OptionError
 
 from gamma_archipelago.starting import starting_level
@@ -16,12 +17,23 @@ def place_zone_keys(world: "GammaWorld", catalog: dict[str, Any]) -> None:
         or "checks_maps" not in world.configuration.checks
     ):
         return
-    # Global activities currently require every zone, so they cannot provide
-    # intermediate route checks. Expanded regional pools must use normal AP
-    # fill instead of reserving keys onto map checks, including in multiworlds.
+    # Only extra checks usable before any zone key can break a sparse opening
+    # cycle. Story-only checks behind the first area key do not provide that slack.
     network = [row for row in world.multiworld.get_locations(world.player) if row.address]
     map_names = {row["name"] for row in catalog["locations"] if row["category"] == "checks_maps"}
-    if any(row.name not in map_names and row.parent_region.name != "Menu" for row in network):
+    zone_names = {
+        row["name"] for row in catalog["items"] if row.get("category") == "rewards_zone_keys"
+    }
+    capable = CollectionState(world.multiworld)
+    for item in world.multiworld.itempool:
+        if item.player == world.player and item.name not in zone_names:
+            capable.collect(item, True)
+    if any(
+        row.name not in map_names
+        and row.progress_type != LocationProgressType.EXCLUDED
+        and row.can_reach(capable)
+        for row in network
+    ):
         return
     previous = starting_level(world.configuration)
     visited = {previous}

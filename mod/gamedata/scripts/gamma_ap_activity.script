@@ -1,0 +1,29 @@
+-- Stateless regional projection. The catalogue and coordinator remain authoritative.
+local function any_region(choices, regions)
+    for _,where in ipairs(choices) do if regions[where] then return true end end
+    return false
+end
+
+function available(state, row, regions, id)
+    if row.quota and row.quota ~= "" then
+        local known, accessible = 0,0
+        for source_id,source in pairs(gamma_ap_catalog.discovery_sources) do
+            local rule = gamma_ap_catalog.activity_rules[source_id]
+            if source.group == row.quota and rule.reliable
+                and not gamma_ap_discovery.excluded(state.configuration,source.token) then
+                known = known+1
+                if any_region(rule.any_regions,regions) then accessible=accessible+1 end
+            end
+        end
+        return accessible >= math.min(row.minimum,known), row.minimum <= known
+    end
+    local rule = gamma_ap_catalog.activity_rules[id]
+    if rule then
+        for _,where in ipairs(rule.all_regions) do
+            if not regions[where] then return false,rule.reliable end
+        end
+        return #rule.any_regions == 0 or any_region(rule.any_regions,regions),rule.reliable
+    end
+    local choices = gamma_ap_catalog.activity_regions[row.category]
+    return not choices or any_region(choices,regions),true
+end

@@ -75,13 +75,8 @@ def add_goal_events(
         finish = location_type(
             world.player, "Return After Living Legend", None, regions["l01_escape"]
         )
-        finish.access_rule = lambda state: (
-            state.has("Met Strelok", world.player)
-            and all(
-                state.can_reach_region(region.name, world.player)
-                for region in world.multiworld.get_regions(world.player)
-            )
-        )
+        # The shared access pass adds this terminal story check's route/equipment.
+        finish.access_rule = lambda state: state.has("Met Strelok", world.player)
         finish.place_locked_item(
             item_type("Living Legend Complete", ItemClassification.progression, None, world.player)
         )

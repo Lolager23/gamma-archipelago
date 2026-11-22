@@ -28,6 +28,7 @@ def lua():
         "deliveries",
         "workshop",
         "discovery",
+        "activity",
         "combat",
         "collection",
         "tasks",
