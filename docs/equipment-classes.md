@@ -38,7 +38,8 @@ through the existing start wrapper. Post-spawn reconciliation covers native
 default grants. Later earned inventory is never stripped by the initial plan.
 
 `equipment_check_condition` defaults to 65, range 0–100 inclusive. This is item
-condition, not the proportion of installed upgrade attachments. Broken or invalid
+condition, not the proportion of installed upgrade attachments. A small numerical
+tolerance accepts an exact threshold after native floating-point rounding. Broken or invalid
 items never count. Equipped armour, active weapon/knife tiers and newly observed
 upgrade installations use this threshold. Checks also require the corresponding
 repair tools in AP logic: A/B and Light use Basic, C and Medium use Advanced,

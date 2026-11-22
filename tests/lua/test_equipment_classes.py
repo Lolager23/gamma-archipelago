@@ -104,6 +104,16 @@ def test_condition_threshold_is_inclusive_and_rejects_broken_or_invalid_gear(
     assert lua.globals().gamma_ap_equipment_classes.usable_condition(state, item) is expected
 
 
+def test_condition_threshold_accepts_a_percentage_after_native_float_rounding(lua):
+    import struct
+
+    condition = struct.unpack("<f", struct.pack("<f", 0.65))[0]
+    assert condition < 0.65
+    state = fresh(lua, equipment_check_condition=65)
+    item = lua.table(condition=lua.eval(f"function() return {condition} end"))
+    assert lua.globals().gamma_ap_equipment_classes.usable_condition(state, item)
+
+
 def test_generic_tools_supply_in_order_and_save_reload_never_regrants(lua):
     game, engine, _ = kit_game(lua, (28051801,) * 3, progressive_tool_receipts=1)
     for _ in range(3):
