@@ -121,3 +121,11 @@ stacked increments after #69: practical combat/rank/equipment and paid shops;
 weather/story/tools/artefacts and optional stamina; then reward quantities and
 step analysis in the generator. Each has its own PR and exact-head evidence.
 Current game/session files remain unchanged and native acceptance stays with Owen.
+
+## Equipment classes and quest-safe progression
+
+The [tiered progression plan](tiered-progression-plan.md) records three stacked
+increments after #76: native quest travel; cumulative equipment permissions and
+creation/condition/tool handling; then regional mutant quotas, story readiness
+and artefact rewards. Each retains legacy seed interpretation, has its own PR and
+full verification, and leaves deployment and native acceptance for later.

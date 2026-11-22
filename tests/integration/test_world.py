@@ -15,9 +15,15 @@ pytestmark = pytest.mark.integration
 ROOT = Path(__file__).resolve().parents[2]
 
 
+def network_locations(multiworld):
+    return [loc for loc in multiworld.get_locations(1) if loc.address is not None]
+
+
 def generate(seed, *, mixed=False):
     worlds = [GammaWorld, APQuestWorld] if mixed else [GammaWorld]
-    multiworld = setup_multiworld(worlds, seed=seed, options={"reward_quantities": 0})
+    multiworld = setup_multiworld(
+        worlds, seed=seed, options={"reward_quantities": 0, "quest_zone_logic": 0}
+    )
     distribute_items_restrictive(multiworld)
     return multiworld
 
@@ -83,7 +89,7 @@ def test_category_manifests_pools_and_reachability(maps, settlements, count):
     distribute_items_restrictive(multiworld)
     world = multiworld.worlds[1]
     expected = enabled_location_ids(world.configuration.checks)
-    assert len(multiworld.get_locations(1)) == len(expected) == count
+    assert len(network_locations(multiworld)) == len(expected) == count
     assert set(world.fill_slot_data()["location_ids"]) == expected
     assert all(location.item is not None for location in multiworld.get_locations(1))
     assert multiworld.can_beat_game()
@@ -112,7 +118,7 @@ def test_combat_categories_and_custom_milestones_generate_exactly(category, coun
     )
     distribute_items_restrictive(multiworld)
     world = multiworld.worlds[1]
-    assert len(multiworld.get_locations(1)) == count
+    assert len(network_locations(multiworld)) == count
     assert set(world.fill_slot_data()["location_ids"]) == configured_location_ids(
         world.configuration
     )
@@ -130,8 +136,8 @@ def test_single_threshold_seed_has_one_reward_without_pool_overflow():
         },
     )
     distribute_items_restrictive(multiworld)
-    assert len(multiworld.get_locations()) == 1
-    assert next(iter(multiworld.get_locations())).item is not None
+    assert len(network_locations(multiworld)) == 1
+    assert next(iter(network_locations(multiworld))).item is not None
 
 
 @pytest.mark.parametrize(
@@ -156,7 +162,7 @@ def test_task_categories_generate_independently_with_stable_custom_thresholds(ca
     )
     distribute_items_restrictive(multiworld)
     world = multiworld.worlds[1]
-    assert len(multiworld.get_locations(1)) == count
+    assert len(network_locations(multiworld)) == count
     assert set(world.fill_slot_data()["location_ids"]) == configured_location_ids(
         world.configuration
     )
@@ -186,7 +192,7 @@ def test_rank_category_generates_exactly_the_eight_supported_ranks():
         GammaWorld, seed=13, options={"checks_maps": 0, "checks_rank_milestones": 1}
     )
     distribute_items_restrictive(multiworld)
-    assert len(multiworld.get_locations()) == 8
+    assert len(network_locations(multiworld)) == 8
     assert all(location.item for location in multiworld.get_locations())
     assert multiworld.can_beat_game()
 
@@ -236,7 +242,7 @@ def test_loot_stash_pool_is_optional_seeded_and_fits_even_one_check():
         },
     )
     distribute_items_restrictive(single)
-    assert "Loot Stash:" in next(iter(single.get_locations())).item.name
+    assert "Loot Stash:" in next(iter(network_locations(single))).item.name
 
 
 def test_orange_stash_is_required_and_its_local_claim_is_a_separate_event():
@@ -389,9 +395,7 @@ def test_sidorovich_goal_is_local_and_needs_no_psi_helmet_or_additional_check_sl
     event = multiworld.get_location("Talk to Sidorovich", 1)
     assert event.address is None and event.item.code is None
     assert event.parent_region.name == "l01_escape" and event.can_reach(state)
-    assert "Obtain Calibrated Helmet from Sakharov" not in {
-        location.name for location in multiworld.get_locations()
-    }
+    assert not state.has("Calibrated Psi Protection", 1)
     state.collect(event.item, prevent_sweep=True)
     assert multiworld.completion_condition[1](state)
     assert multiworld.worlds[1].fill_slot_data()["goal"] == "talk_sidorovich"

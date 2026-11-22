@@ -184,6 +184,7 @@ def defaults() -> dict[str, object]:
         content_progression=1,
         tool_use_permissions=1,
         reward_quantities=1,
+        quest_zone_logic=1,
         artefact_extra_ceiling=60,
         **{name: count for name, count in DEFAULT_COUNTS.items()},
         artefact_discovery_count=40,
@@ -373,6 +374,7 @@ def encode_configuration(
             name
             in {
                 "checks_shop_purchases",
+                "quest_zone_logic",
                 "ap_start",
                 "starting_faction",
                 "starting_location",

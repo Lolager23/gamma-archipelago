@@ -18,6 +18,7 @@ def add_goal_events(
 ) -> None:
     if (
         world.configuration.goal not in {"pilot_tour", "talk_sidorovich"}
+        or world.configuration.option("quest_zone_logic")
         or (
             world.configuration.option("playability_logic")
             and bool(world.configuration.checks & {"checks_armour_tiers", "checks_weapon_tiers"})
@@ -40,7 +41,21 @@ def add_goal_events(
             item_type("Talked to Sidorovich", ItemClassification.progression, None, world.player)
         )
         regions["l01_escape"].locations.append(conversation)
-    if world.configuration.goal in {
+    if world.configuration.option("quest_zone_logic"):
+        machine = location_type(
+            world.player, "Disable Miracle Machine", None, regions["l08u_brainlab"]
+        )
+        machine.access_rule = lambda state: (
+            dict(world.configuration.gear)["starting_pda"] != 2
+            or state.has("Equipment Unlock: PDA", world.player)
+        )
+        machine.place_locked_item(
+            item_type(
+                "Miracle Machine Disabled", ItemClassification.progression, None, world.player
+            )
+        )
+        regions["l08u_brainlab"].locations.append(machine)
+    if world.configuration.option("quest_zone_logic") or world.configuration.goal in {
         "brain_scorcher",
         "meet_strelok",
         "living_legend",

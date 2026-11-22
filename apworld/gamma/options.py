@@ -14,6 +14,12 @@ from Options import (
 )
 
 
+class QuestZoneLogic(DefaultOnToggle):
+    """Require native Miracle Machine/Brain Scorcher shutdowns for northern travel."""
+
+    display_name = "Quest-restricted northern zones"
+
+
 class RewardQuantities(DefaultOnToggle):
     """Use explicit repeatable counts instead of a weighted optional pool."""
 
@@ -608,6 +614,7 @@ class OptionalCheckPolicy(Choice):
 
 @dataclass
 class GammaOptions(PerGameCommonOptions):
+    quest_zone_logic: QuestZoneLogic
     basic_toolkits: BasicToolkits
     reward_quantities: RewardQuantities
     artefact_extra_ceiling: ArtefactExtraCeiling

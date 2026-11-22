@@ -120,6 +120,12 @@ regions and cumulative story routes to both the AP world and PDA. Distinct quota
 count supported non-excluded source types; uncertain sources and excess quotas
 remain optional filler checks and are excluded before progression budgeting.
 
+[Quest-restricted travel](quest-zone-logic.md) shares catalogue-backed northern
+gates between the world and PDA. Local AP shutdown events model achievable native
+quests without consuming network slots. The game reads the real info portions;
+neither the tracker nor a received zone key grants quest completion. Sparse key
+planning queries the same access graph rather than maintaining a second route model.
+
 ## State and failure boundaries
 
 [Generation pacing](generation-pacing.md) keeps a pure shared pool budget separate

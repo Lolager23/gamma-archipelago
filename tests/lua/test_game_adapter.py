@@ -15,7 +15,8 @@ def load_game(lua):
                   files={}, logs={}, created={}, callbacks={}, fail_open=false,
                   fail_write=false, fail_close=false, fail_reward=false,
                   frame=100, precache=0, paused=false, present=true}
-        db = {actor={alive=function() return engine.alive end}}
+        db = {actor={alive=function() return engine.alive end,
+                     has_info=function() return false end}}
         time_global = function() return engine.now end
         level = {name=function() return engine.level end,
                  present=function() return engine.present end}

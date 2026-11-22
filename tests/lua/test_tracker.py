@@ -57,6 +57,7 @@ def test_upgrade_tracker_allows_carried_equipment_before_equip_unlock(lua, outfi
 
 
 def test_tracker_is_read_only_counts_saved_checks_and_reports_pending_receipts(lua):
+    lua.execute("has_alife_info=function() return true end")
     state = state_for(lua)
     state.checks[28052001] = True
     state.received_count = 1
@@ -98,6 +99,7 @@ def test_tracker_projection_is_generated_from_the_authoritative_catalogue(lua):
 
 
 def test_zone_and_psi_reasons_and_undirected_route_match_world_connections(lua):
+    lua.execute("has_alife_info=function() return true end")
     state = state_for(lua, rewards_zone_keys=1)
     result = view(lua, state)
     assert result.available == 1 and result.blocked == 32

@@ -8665,5 +8665,30 @@
   "opening_economy": {
     "starting_money_rubles": 5000,
     "contract_key": "esc_m_trader_1"
+  },
+  "quest_zone_gates": {
+    "northern_levels": {
+      "l10_limansk": true,
+      "l10_red_forest": true,
+      "zaton": true,
+      "jupiter": true,
+      "pripyat": true,
+      "l11_hospital": true,
+      "l11_pripyat": true,
+      "l12_stancia": true,
+      "l12_stancia_2": true,
+      "l13_generators": true,
+      "jupiter_underground": true,
+      "l12u_sarcofag": true,
+      "l12u_control_monolith": true,
+      "l13u_warlab": true
+    },
+    "event_checks": {
+      "Shut Down Brain Scorcher": 28052607
+    },
+    "shutdown_events": {
+      "Miracle Machine Disabled": "yan_labx16_switcher_primary_off",
+      "Brain Scorcher Disabled": "bar_deactivate_radar_done"
+    }
   }
 }

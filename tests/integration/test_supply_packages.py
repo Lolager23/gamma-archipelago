@@ -44,8 +44,9 @@ def test_legacy_optional_pool_does_not_put_a_useful_toolkit_in_excluded_shops():
         GammaWorld, options={"checks_maps": 0, "checks_shops": 1, "reward_quantities": 0}
     )
     distribute_items_restrictive(multiworld)
-    assert len(multiworld.get_locations(1)) == 3
+    locations = [loc for loc in multiworld.get_locations(1) if loc.address is not None]
+    assert len(locations) == 3
     assert all(
         row.item.name != "Basic Toolkit" and not row.item.advancement and not row.item.useful
-        for row in multiworld.get_locations(1)
+        for row in locations
     )

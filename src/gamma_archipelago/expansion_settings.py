@@ -1,6 +1,7 @@
 """Additional bounded settings; legacy values preserve pre-expansion seed identities."""
 
 EXPANSION_LIMITS = {
+    "quest_zone_logic": 1,
     "tool_use_permissions": 1,
     "reward_quantities": 1,
     "basic_toolkits": 4000,

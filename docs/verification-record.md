@@ -948,3 +948,25 @@ Stacks on #75. Exact-head Windows/Linux CI and retained package parity are attac
 to the PR when complete. Native acceptance remains not run for Owen. No deployment,
 merge, game launch or session reset occurred; installed Dev files, the private
 developer panel, existing progress and protected normal installations are untouched.
+
+### Quest-restricted northern travel — 22 November 2026
+
+The active Free Stalker northern psi field requires both X16 Miracle Machine
+and X19 Brain Scorcher shutdowns. Fresh AP worlds and PDA routes now model both
+through local events; the Scorcher event inherits Living Legend's cumulative
+Agroprom/underground route and quest permissions. Sparse key planning queries the
+same CollectionState graph. New 04's archived Agroprom key at Generators reproduces
+the missing native gate; the regression rejects that route while Agroprom is absent.
+Old omitted-field seeds retain their identities and declared legacy rules.
+
+The complete verifier passed 1,765 covered tests, 83 untraced generation/server
+cases and nine Node tests (1,857 total), including the unchanged 9,000-seed matrix.
+All owned Python runtime modules measured 100% lines and branches; Lua executable-
+line gates passed. Lua branch coverage is not measured. Frozen source hashes matched.
+Sparse maps-only/PDA-locked configurations without an adjacent opening key are
+refused with an actionable error, since no extra check can break the quest/key cycle.
+
+Stacks on #76. Current-head Windows/Linux CI and retained package hashes are linked
+from the PR when complete. Native acceptance is not run and belongs to Owen. No
+merge, deployment, game launch, current-session change or private-panel edit occurred.
+Protected normal installations remain untouched.

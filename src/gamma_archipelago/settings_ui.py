@@ -4,6 +4,7 @@ from .expansion_settings import EXPANSION_LIMITS
 from .reward_quantities import DEFAULT_COUNTS
 
 CHOICES = {
+    "quest_zone_logic": ["Legacy travel assumptions", "Native quest and northern psi restrictions"],
     "tool_use_permissions": ["Legacy physical tool rewards", "Tool-use permissions and free kits"],
     "reward_quantities": ["Legacy weighted rewards", "Explicit repeatable reward quantities"],
     "content_progression": [

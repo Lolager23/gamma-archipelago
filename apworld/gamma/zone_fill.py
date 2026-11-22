@@ -24,10 +24,35 @@ def place_zone_keys(world: "GammaWorld", catalog: dict[str, Any]) -> None:
     zone_names = {
         row["name"] for row in catalog["items"] if row.get("category") == "rewards_zone_keys"
     }
+    extra = [
+        row
+        for row in network
+        if row.name not in map_names and row.progress_type != LocationProgressType.EXCLUDED
+    ]
+    if (
+        world.configuration.option("quest_zone_logic")
+        and "checks_story_milestones" in world.configuration.checks
+        and "rewards_quest_keys" in world.configuration.rewards
+    ):
+        return  # Keyed introductory quests provide checks before northern shutdowns.
+    opening = CollectionState(world.multiworld)
+    if (
+        world.configuration.option("quest_zone_logic")
+        and not extra
+        and dict(world.configuration.gear)["starting_pda"] == 2
+        and not opening.has("Equipment Unlock: PDA", world.player)
+        and sum(row.can_reach(opening) for row in network if row.name in map_names) < 2
+    ):
+        raise OptionError(
+            "Quest-restricted map-only starts need another reliable check category "
+            "or a starting PDA/adjacent key; otherwise the PDA locks northern progression"
+        )
     capable = CollectionState(world.multiworld)
     for item in world.multiworld.itempool:
         if item.player == world.player and item.name not in zone_names:
             capable.collect(item, True)
+    filled = world.multiworld.get_filled_locations(world.player)
+    capable.sweep_for_advancements(locations=filled)
     if any(
         row.name not in map_names
         and row.progress_type != LocationProgressType.EXCLUDED
@@ -36,7 +61,6 @@ def place_zone_keys(world: "GammaWorld", catalog: dict[str, Any]) -> None:
     ):
         return
     previous = starting_level(world.configuration)
-    visited = {previous}
     checks = {
         row["level"]: row["name"]
         for row in catalog["locations"]
@@ -59,40 +83,23 @@ def place_zone_keys(world: "GammaWorld", catalog: dict[str, Any]) -> None:
             "Sparse zone-key progression must remain local; enable regional "
             "checks or remove remaining zone keys from non_local_items"
         )
-    held = {item.name for item in world.multiworld.precollected_items[world.player]}
-    held_levels = {level for name, level in levels.items() if name in held} | {
-        "l01_escape",
-        previous,
-    }
     while keys:
-        changed = True
-        while changed:
-            before = len(visited)
-            for a, b in catalog["connections"]:
-                if a in visited and b in held_levels:
-                    visited.add(b)
-                if b in visited and a in held_levels:
-                    visited.add(a)
-            changed = len(visited) > before
-        frontier = sorted(
-            {
-                target
-                for a, b in catalog["connections"]
-                for source, target in ((a, b), (b, a))
-                if source in visited
-                and target in keys
-                and (
-                    target not in {"l10_radar", "l10u_bunker", "l08u_brainlab"}
-                    or (
-                        "l08_yantar" in visited
-                        and (
-                            "rewards_progression_stashes" not in world.configuration.rewards
-                            or "l01_escape" in visited
-                        )
-                    )
-                )
-            }
-        )
+        visited = {level for level in checks if capable.can_reach_region(level, world.player)}
+        adjacent = {
+            target
+            for a, b in catalog["connections"]
+            for source, target in ((a, b), (b, a))
+            if source in visited
+        }
+        frontier = []
+        for target, key in sorted(keys.items()):
+            if target not in adjacent:
+                continue
+            trial = capable.copy()
+            trial.collect(key, True)
+            trial.sweep_for_advancements(locations=filled)
+            if trial.can_reach_region(target, world.player):
+                frontier.append(target)
         if not frontier:
             raise OptionError("Zone-key graph cannot reach every remaining destination")
         if world.configuration.option("access_pacing"):
@@ -116,7 +123,8 @@ def place_zone_keys(world: "GammaWorld", catalog: dict[str, Any]) -> None:
             raise OptionError("Sparse zone route conflicts with location item restrictions")
         world.multiworld.push_item(location, item, False)
         world.multiworld.itempool.remove(item)
-        visited.add(target)
+        capable.collect(item, True)
+        capable.sweep_for_advancements(locations=filled)
         previous = target
 
 

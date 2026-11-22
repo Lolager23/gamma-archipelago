@@ -185,6 +185,7 @@ settlement_rules = {
 }
 rank_goodwill_proxy = {["0"]=0,["3999"]=250,["5999"]=500,["9999"]=750,["15999"]=1000,["23999"]=1500,["34999"]=2000,["49999"]=3000}
 northern_equipment_regions = {"jupiter","zaton","l11_pripyat","pripyat","l11_hospital","l12_stancia","l12_stancia_2","l13_generators"}
+quest_zone_gates = {["northern_levels"]={["l10_limansk"]=true,["l10_red_forest"]=true,["zaton"]=true,["jupiter"]=true,["pripyat"]=true,["l11_hospital"]=true,["l11_pripyat"]=true,["l12_stancia"]=true,["l12_stancia_2"]=true,["l13_generators"]=true,["jupiter_underground"]=true,["l12u_sarcofag"]=true,["l12u_control_monolith"]=true,["l13u_warlab"]=true},["event_checks"]={["Shut Down Brain Scorcher"]=28052607},["shutdown_events"]={["Miracle Machine Disabled"]="yan_labx16_switcher_primary_off",["Brain Scorcher Disabled"]="bar_deactivate_radar_done"}}
 tool_use_items = {[28051831]={["tool_key"]="basic",["tool_section"]="itm_basickit",["permission"]="tool_basic",["category"]="rewards_progressive_tools",["tier"]=1,["name"]="Tool Use: Basic Tools"},[28051832]={["tool_key"]="advanced",["tool_section"]="itm_advancedkit",["permission"]="tool_advanced",["category"]="rewards_progressive_tools",["tier"]=2,["name"]="Tool Use: Advanced Tools"},[28051833]={["tool_key"]="expert",["tool_section"]="itm_expertkit",["permission"]="tool_expert",["category"]="rewards_progressive_tools",["tier"]=3,["name"]="Tool Use: Expert Tools"},[28051834]={["tool_key"]="medical",["tool_section"]="itm_drugkit",["permission"]="tool_medical",["category"]="rewards_drug_making_tools",["tier"]=0,["name"]="Tool Use: Drug-making Kit"},[28051835]={["tool_key"]="ammo",["tool_section"]="itm_ammokit",["permission"]="tool_ammo",["category"]="rewards_gunsmithing_tools",["tier"]=0,["name"]="Tool Use: Gunsmithing Tools"},[28051836]={["tool_key"]="artefact",["tool_section"]="itm_artefactskit",["permission"]="tool_artefact",["category"]="rewards_artefact_melter",["tier"]=0,["name"]="Tool Use: Artefact Melter"}}
 opening_economy = {["starting_money_rubles"]=5000,["contract_key"]="esc_m_trader_1"}
 friendly_goodwill_factions = {["csky"]=true,["dolg"]=true,["ecolog"]=true,["freedom"]=true,["stalker"]=true}
@@ -2155,6 +2156,7 @@ config_limits = {
     ["pda_tracker"] = 1,
     ["permission_supplies"] = 1,
     ["playability_logic"] = 1,
+    ["quest_zone_logic"] = 1,
     ["random_starting_unlock"] = 1,
     ["reward_previews"] = 1,
     ["reward_quantities"] = 1,
@@ -3118,6 +3120,7 @@ config_defaults = {
     ["pda_tracker"]=1,
     ["permission_supplies"]=0,
     ["playability_logic"]=0,
+    ["quest_zone_logic"]=0,
     ["random_starting_unlock"]=0,
     ["reward_previews"]=0,
     ["reward_quantities"]=0,

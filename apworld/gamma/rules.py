@@ -7,6 +7,7 @@ from BaseClasses import CollectionState
 from gamma_archipelago.activity_requirements import regional_requirement
 from gamma_archipelago.content_progression import melter_check, tool_level
 from gamma_archipelago.playability import allowed
+from gamma_archipelago.quest_routes import allowed as quest_allowed
 from gamma_archipelago.settlement_access import requirement
 from gamma_archipelago.starting import starting_level
 from gamma_archipelago.tool_permissions import enabled as tool_permissions_enabled
@@ -27,6 +28,8 @@ def apply_access_rules(world: "GammaWorld", catalog: dict[str, Any]) -> None:
     zoned = "rewards_zone_keys" in world.configuration.rewards
 
     def enter(state: CollectionState, level: str) -> bool:
+        if not quest_allowed(world.configuration, level, lambda name: state.count(name, player)):
+            return False
         if (
             zoned
             and level not in {"l01_escape", starting_level(world.configuration)}
@@ -51,6 +54,8 @@ def apply_access_rules(world: "GammaWorld", catalog: dict[str, Any]) -> None:
         if definition is None:
             if location.address is None:
                 story = catalog["story_goal_checks"].get(location.name)
+                if story is None and world.configuration.option("quest_zone_logic"):
+                    story = catalog["quest_zone_gates"]["event_checks"].get(location.name)
                 if story is None:
                     continue
                 definition = definitions[story]
@@ -90,6 +95,13 @@ def apply_access_rules(world: "GammaWorld", catalog: dict[str, Any]) -> None:
             for group in required
             if gear["starting_" + group] == 2
         ]
+        if "rewards_quest_keys" in world.configuration.rewards:
+            for task in definition.get("tasks", ()):
+                gate = catalog["quest_gates"][task]
+                permissions = catalog["quest_key_requirements"][gate]
+                names.extend(
+                    row["name"] for row in catalog["items"] if row.get("permission") in permissions
+                )
         tool_tier = required_tier(world.configuration, definition)
         if (
             "rewards_progressive_tools" in world.configuration.rewards

@@ -1,0 +1,21 @@
+-- Native info portions own shutdown state; this projection never grants them.
+function facts()
+    local ok,shutdowns = pcall(function()
+        for _,flag in pairs(gamma_ap_catalog.quest_zone_gates.shutdown_events) do
+            if has_alife_info(flag) ~= true then return false end
+        end
+        return true
+    end)
+    return ok and shutdowns or false
+end
+
+function allowed(configuration,where,shutdowns)
+    return not configuration or configuration.options.quest_zone_logic ~= 1
+        or not gamma_ap_catalog.quest_zone_gates.northern_levels[where] or shutdowns == true
+end
+
+function reason(state,where)
+    if not allowed(state.configuration,where,facts()) then
+        return "Disable the Miracle Machine (X16) and Brain Scorcher (X19) before northern travel"
+    end
+end
