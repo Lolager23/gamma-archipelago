@@ -67,7 +67,11 @@ def test_pda_detector_and_weapon_requirements_apply_to_typed_and_generic_checks(
         mutant_discovery_mode=1,
         artefact_discovery_mode=1,
     )
-    multiworld = setup_multiworld(GammaWorld, options=values)
+    multiworld = setup_multiworld(
+        GammaWorld,
+        options=values,
+        steps=("generate_early", "create_regions", "create_items", "set_rules"),
+    )
     for address, permission in [
         (28052501, "PDA"),
         (28120005, "PDA"),

@@ -8,6 +8,7 @@ from worlds.gamma import GammaWorld
 def test_carried_firearms_can_be_upgraded_but_need_tool_workshop_permissions(mode):
     multiworld = setup_multiworld(
         GammaWorld,
+        steps=("generate_early", "create_regions", "create_items", "set_rules"),
         options=dict(
             checks_gear_upgrades=1,
             starting_firearms=mode,
@@ -35,6 +36,7 @@ def test_carried_firearms_can_be_upgraded_but_need_tool_workshop_permissions(mod
 def test_carried_armour_can_be_upgraded_before_equipping_is_unlocked(outfit, helmet, unlock):
     multiworld = setup_multiworld(
         GammaWorld,
+        steps=("generate_early", "create_regions", "create_items", "set_rules"),
         options=dict(
             checks_gear_upgrades=1,
             starting_outfit=outfit,

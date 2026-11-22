@@ -131,7 +131,12 @@ def test_rank_has_a_viable_quest_or_combat_path_and_upgrades_respect_tool_use_pe
 
 
 def test_later_story_checks_and_local_victory_retain_earlier_mandatory_combat():
-    multi = setup_multiworld(GammaWorld, options=presets()["full_story"], seed=20)
+    multi = setup_multiworld(
+        GammaWorld,
+        options=presets()["full_story"],
+        seed=20,
+        steps=("generate_early", "create_regions", "create_items", "set_rules"),
+    )
     world = multi.worlds[1]
     state = CollectionState(multi)
     for item in multi.itempool:
@@ -159,7 +164,8 @@ def test_activity_opener_uses_upstream_early_requests_and_preserves_user_request
 
     multi = setup_multiworld(
         GammaWorld,
-        options=presets()["full_story"],
+        options=presets()["full_story"]
+        | {"starting_money": 0, "checks_emissions": 0, "checks_psi_storms": 0, "checks_shops": 0},
         seed=740,
         steps=("generate_early", "create_regions", "create_items", "set_rules"),
     )
@@ -186,3 +192,17 @@ def test_dependent_tools_cannot_clog_the_fully_locked_opening(seed, start):
     state = CollectionState(multi)
     state.sweep_for_advancements()
     assert all(loc.can_reach(state) for loc in multi.get_locations())
+
+
+def test_activity_opener_requests_a_capability_when_no_paid_start_is_affordable():
+    from worlds.gamma.opening import request_activity_opener
+
+    multi = setup_multiworld(
+        GammaWorld,
+        options=presets()["full_story"]
+        | {"starting_money": 0, "checks_emissions": 0, "checks_psi_storms": 0, "checks_shops": 0},
+        steps=("generate_early", "create_regions", "create_items", "set_rules"),
+    )
+    request_activity_opener(multi.worlds[1], CATALOG)
+    assert sum(multi.early_items[1].values()) == 1
+    assert next(iter(multi.early_items[1])).startswith("Equipment Unlock:")

@@ -10,9 +10,12 @@ from gamma_archipelago.presets import presets
 from gamma_archipelago.web_planner import catalogue
 
 
-@pytest.mark.parametrize("seed", range(30))
-def test_all_local_equipment_arrives_in_three_low_grind_spheres_without_zone_keys(seed):
-    multi = setup_multiworld(GammaWorld, options=presets()["full_story"], seed=seed)
+@pytest.mark.parametrize("seed", range(10))
+@pytest.mark.parametrize("starting", [0, 1, 2])
+def test_all_local_equipment_arrives_in_three_low_grind_spheres_without_zone_keys(seed, starting):
+    multi = setup_multiworld(
+        GammaWorld, options=presets()["full_story"] | {"starting_location": starting}, seed=seed
+    )
     selected = [
         row
         for row in multi.get_filled_locations(1)
@@ -51,6 +54,22 @@ def test_insufficient_early_checks_refuse_instead_of_hiding_gear_behind_late_rou
         "rewards_starting_gear_unlocks": 1,
         "ap_start": 1,
         "checks_rank_milestones": 1,
+        "exclude_locations": [
+            region + ": First Arrival"
+            for region in (
+                "Garbage",
+                "Great Swamps",
+                "Darkscape",
+                "Meadow",
+                "Agroprom",
+                "Dark Valley",
+                "Rostok",
+                "Truck Cemetery",
+                "Wild Territory",
+                "Army Warehouses",
+                "Yantar",
+            )
+        ],
     }
     multi = setup_multiworld(
         GammaWorld,
@@ -62,3 +81,38 @@ def test_insufficient_early_checks_refuse_instead_of_hiding_gear_behind_late_rou
     with pytest.raises(OptionError, match="Early equipment"):
         place_equipment(world, catalogue())
     assert world.opening_placements == []
+
+
+def test_gifts_and_existing_plando_equipment_are_not_duplicated_or_moved():
+    from test_pacing import started_world
+
+    multi, world = started_world(presets()["full_story"], ("Equipment Unlock: PDA",))
+    item = next(row for row in multi.itempool if row.name == "Equipment Unlock: Helmet")
+    multi.itempool.remove(item)
+    planned = multi.get_location("Darkscape: First Arrival", 1)
+    planned.place_locked_item(item)
+    world.pre_fill()
+    assert planned.item is item
+    assert not any(
+        row["item"] in {"Equipment Unlock: PDA", "Equipment Unlock: Helmet"}
+        for row in world.opening_placements
+    )
+    distribute_items_restrictive(multi)
+    assert multi.can_beat_game()
+
+
+def test_unlocked_nearby_maps_keep_small_custom_equipment_pools_supported():
+    multi = setup_multiworld(
+        GammaWorld,
+        options={
+            "checks_gear_upgrades": 1,
+            "starting_outfit": 2,
+            "starting_helmet": 2,
+            "rewards_starting_gear_unlocks": 1,
+        },
+    )
+    world = multi.worlds[1]
+    assert len(world.opening_placements) == 2
+    assert any(row["location"] == "Cordon: First Arrival" for row in world.opening_placements)
+    distribute_items_restrictive(multi)
+    assert multi.can_beat_game()

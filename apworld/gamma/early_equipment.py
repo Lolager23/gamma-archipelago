@@ -57,10 +57,27 @@ def place_equipment(world: "GammaWorld", catalog: dict[str, Any]) -> None:
     _place_local(world, catalog, local)
 
 
+def _regions(
+    world: "GammaWorld", catalog: dict[str, Any], state: CollectionState
+) -> frozenset[str]:
+    regions = {starting_level(world.configuration)}
+    for _ in range(2):
+        regions |= {
+            destination
+            for a, b in catalog["connections"]
+            for source, destination in ((a, b), (b, a))
+            if source in regions
+        }
+    return frozenset(level for level in regions if state.can_reach_region(level, world.player))
+
+
 def _place_local(world: "GammaWorld", catalog: dict[str, Any], items: list) -> None:
     if not items:
         return
     start = starting_level(world.configuration)
+    state = CollectionState(world.multiworld)
+    state.sweep_for_advancements(locations=world.multiworld.get_filled_locations(world.player))
+    regions = _regions(world, catalog, state)
     definitions = {row["id"]: row for row in catalog["locations"]}
     candidates = [
         row
@@ -72,10 +89,8 @@ def _place_local(world: "GammaWorld", catalog: dict[str, Any], items: list) -> N
             "rewards_zone_keys" in world.configuration.rewards
             and row.address == MAP_LOCATIONS[start]
         )
-        and early_check(_definition(row.address, definitions), frozenset({start}))
+        and early_check(_definition(row.address, definitions), regions)
     ]
-    state = CollectionState(world.multiworld)
-    state.sweep_for_advancements(locations=world.multiworld.get_filled_locations(world.player))
     initial = state.copy()
     plan = []
     for item in items:
@@ -85,6 +100,12 @@ def _place_local(world: "GammaWorld", catalog: dict[str, Any], items: list) -> N
                 "Early equipment needs more low-grind checks in the starting region; "
                 "enable generic discoveries/tasks, reduce locks, or disable playability logic"
             )
+        local = [
+            row
+            for row in available
+            if _definition(row.address, definitions)["level"] in {start, "Menu"}
+        ]
+        available = local or available
         immediate = [row for row in available if row.can_fill(initial, item, True)]
         location = world.random.choice(immediate or available)
         candidates.remove(location)
