@@ -45,7 +45,7 @@ release run still measures every owned module. Lua retains its complete 95%
 executable-line gate and decision tests; branch coverage remains unmeasured.
 
 Large generation sweeps are marked `generation` and run untraced only for releases.
-This includes the 9,000-seed preset matrix, 1,000-pilot sweep and broad category-pair
+This includes the 10,000-seed preset matrix, 1,000-pilot sweep and broad category-pair
 sweep. Focused generation, deadlock, access-rule and placement regressions remain
 in the normal world suite. No tests or seed counts are deleted or reduced.
 

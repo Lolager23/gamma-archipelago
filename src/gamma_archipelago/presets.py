@@ -36,7 +36,13 @@ def presets() -> dict[str, dict[str, object]]:
         "pilot": pilot,
         "explorer": explorer,
         "mvp": mvp,
-        "full_story": {**full, "goal": 4},
+        "living_legend": {
+            **full,
+            "goal": 4,
+            "checks_mortal_sin": 0,
+            "checks_operation_afterglow": 0,
+        },
+        "full_story": {**full, "goal": 8},
         "full_labs": {**full, "goal": 5},
         "restricted": {
             **mvp,

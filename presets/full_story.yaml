@@ -106,7 +106,7 @@ S.T.A.L.K.E.R. GAMMA:
   artefact_discovery_mode: 1
   artefact_discovery_count: 40
   optional_check_policy: 0
-  goal: 4
+  goal: 8
   no_starting_weapons: 0
   kill_milestones:
   - 10

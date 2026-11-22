@@ -78,7 +78,7 @@ GOAL_LABELS = (
     "Visit all five X-Labs",
     "Talk to Sidorovich (quick pilot)",
     "Finish Mortal Sin",
-    "Finish Operation Afterglow",
+    "Finish all three story chains (Operation Afterglow finale)",
 )
 
 
