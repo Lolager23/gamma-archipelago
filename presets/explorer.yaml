@@ -56,6 +56,7 @@ S.T.A.L.K.E.R. GAMMA:
   starting_medicine: 100
   starting_food: 100
   starting_money: 100
+  progressive_sphere_pacing: 0
   regional_progression: 1
   artefact_rewards: 4
   equipment_class_progression: 1

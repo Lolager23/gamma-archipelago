@@ -1,5 +1,39 @@
 # Generation budgets, openings and previews
 
+## Actual progressive reward spacing
+
+`progressive_sphere_pacing` constrains item placements, not just the step report.
+Living Legend, Full Story, Full Labs, Standard and Extended enable it. Sparse
+Pilot/Explorer/MVP/Restricted/Short presets keep it off because they can lack
+enough gated checks for all copies. It is editable in the APWorld and workbench.
+
+After normal AP fill, a bounded repair moves overlapping progressive equipment
+or tool receipts into later reachable checks by swapping with non-progression
+rewards. It preserves item counts, item rules, locality, fixed/planned placements,
+all GAMMA check reachability, every player's goal and the three-step recipe
+deadline. Zone keys and other progression rewards are not swap candidates. No
+new artificial access rule is attached to a check.
+
+Each recipient chain gets at most one receipt per network sphere with local
+events settled, and at most one per actual upstream `get_spheres()` sphere.
+Explicit starting inventory is exempt. Item-link groups count as shared recipients.
+Fixed contradictions or insufficient depth fail with an actionable option error;
+failed attempts restore the original placement and locks.
+
+The pinned framework permits placement changes in `finalize_multiworld` after
+upstream balancing, provided accessibility is preserved or increased. The hook
+runs there and requires every previously reachable location in both models to
+remain reachable, including other games' optional locations. It locks the resulting
+progressive placements. `pre_output` only validates again, after all finalisers;
+it never moves items. A later change that violates spacing rejects generation
+rather than exporting an invalid seed. Some custom finaliser/plando combinations
+can therefore require revised settings or disabling this constraint.
+
+The displayed AP progression remains the paced activity model (including task,
+kill and five-artefact batches). The separately labelled raw sphere report retains
+ordinary AP activity reachability; both now respect the actual progressive-reward
+placement constraint when enabled. Sphere/step counts are not measured playtime.
+
 Step 39 builds on the convenience-reward increment. The world owns placements;
 the shared core calculates counts and validates settings. Neither the browser nor
 the game chooses rewards. Native acceptance and measured playtime calibration

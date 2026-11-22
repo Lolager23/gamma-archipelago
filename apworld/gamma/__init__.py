@@ -3,7 +3,15 @@
 import json
 from importlib.resources import files
 
-from BaseClasses import Item, ItemClassification, Location, LocationProgressType, Region, Tutorial
+from BaseClasses import (
+    Item,
+    ItemClassification,
+    Location,
+    LocationProgressType,
+    MultiWorld,
+    Region,
+    Tutorial,
+)
 from Options import OptionError
 from worlds.AutoWorld import WebWorld, World
 
@@ -261,6 +269,18 @@ class GammaWorld(World):
             from .content import order_tool_items
 
             order_tool_items(self.player, progitempool)
+
+    @classmethod
+    def stage_finalize_multiworld(cls, multiworld: MultiWorld) -> None:
+        from .sphere_pacing import pace
+
+        pace(multiworld)
+
+    @classmethod
+    def stage_pre_output(cls, multiworld: MultiWorld) -> None:
+        from .sphere_pacing import validate
+
+        validate(multiworld)
 
     def fill_slot_data(self) -> dict[str, object]:
         identity = generation_identity(self)

@@ -4,6 +4,10 @@ from .expansion_settings import EXPANSION_LIMITS
 from .reward_quantities import DEFAULT_COUNTS
 
 CHOICES = {
+    "progressive_sphere_pacing": [
+        "Unrestricted progressive placement",
+        "One tier per raw AP sphere",
+    ],
     "regional_progression": [
         "Legacy activity assumptions",
         "Regional diversity and story readiness",

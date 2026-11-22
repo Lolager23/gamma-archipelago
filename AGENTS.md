@@ -115,6 +115,10 @@ items, gaps, wrong seed/slot, malformed/partial files, save/load, older-save rol
 reward failure and forbidden paths/links. Add generation and game-gate tests when
 changing progression; never place an unlock behind its own requirement.
 
+Use the `living_legend` preset for seed batches requested for Owen to review,
+unless he explicitly selects another tier. Keep review archives separate from the
+active play session; generating a review batch does not authorize switching it.
+
 On 22 November 2026 Owen requested affected-area verification for normal work and
 the full suite only for GitHub releases. This supersedes the former full-suite
 requirement on every push. Keep adding meaningful tests and reproducing regressions.
