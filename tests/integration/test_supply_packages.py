@@ -37,3 +37,15 @@ def test_every_package_category_and_minimal_pools_fill_reproducibly():
         assert_seed(
             {**options, "checks_maps": 0, "checks_kill_milestones": 1, "kill_milestones": [1]}, seed
         )
+
+
+def test_legacy_optional_pool_does_not_put_a_useful_toolkit_in_excluded_shops():
+    multiworld = setup_multiworld(
+        GammaWorld, options={"checks_maps": 0, "checks_shops": 1, "reward_quantities": 0}
+    )
+    distribute_items_restrictive(multiworld)
+    assert len(multiworld.get_locations(1)) == 3
+    assert all(
+        row.item.name != "Basic Toolkit" and not row.item.advancement and not row.item.useful
+        for row in multiworld.get_locations(1)
+    )

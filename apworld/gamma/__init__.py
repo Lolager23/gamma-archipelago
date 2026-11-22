@@ -244,6 +244,21 @@ class GammaWorld(World):
         place_zone_keys(self, _catalog)
         prefer_early_hub(self, _catalog)
 
+    def fill_hook(
+        self,
+        progitempool: list[Item],
+        usefulitempool: list[Item],
+        filleritempool: list[Item],
+        fill_locations: list[Location],
+    ) -> None:
+        if (
+            self.configuration.option("content_progression")
+            and "rewards_progressive_tools" in self.configuration.rewards
+        ):
+            from .content import order_tool_items
+
+            order_tool_items(self.player, progitempool)
+
     def fill_slot_data(self) -> dict[str, object]:
         identity = generation_identity(self)
         return {
