@@ -115,25 +115,31 @@ items, gaps, wrong seed/slot, malformed/partial files, save/load, older-save rol
 reward failure and forbidden paths/links. Add generation and game-gate tests when
 changing progression; never place an unlock behind its own requirement.
 
-Run the documented verification command before pushing:
+On 22 November 2026 Owen requested affected-area verification for normal work and
+the full suite only for GitHub releases. This supersedes the former full-suite
+requirement on every push. Keep adding meaningful tests and reproducing regressions.
+Follow [Testing policy](docs/testing-policy.md) and run before pushing:
 
 ```powershell
-& 'D:/GAMMAAPTools/python-env/Scripts/python.exe' tools/verify.py
+& 'D:/GAMMAAPTools/python-env/Scripts/python.exe' tools/verify.py --base origin/main
 ```
 
 For another environment, use its Python environment and explicit AP tooling paths:
 
 ```text
-python tools/verify.py --ap-source <pinned-upstream-checkout> --ap-root <separate-runtime>
+python tools/verify.py --base <PR-base> --ap-source <pinned-upstream-checkout> --ap-root <separate-runtime>
 ```
 
-- Require at least 95% line and branch coverage per owned Python runtime module;
-  protocol validation, session identity and receipt ordering require 100% of both.
+- On normal PRs require at least 95% line and branch coverage per changed owned
+  Python runtime module; releases measure every owned module.
+  Protocol validation, session identity and receipt ordering require 100% of both.
 - Require at least 95% Lua executable-line coverage and tests for decision
   outcomes. Do not claim Lua branch coverage until the collector measures it.
   Generated tables are checked for catalogue parity; do not add coverage exclusions
   or weaken gates to pass a failing change.
-- Run the complete verifier: lint, format, typing, regression/coverage, Lua tests,
+- Normal work runs affected component regressions and their coverage gates. Use the
+  actual parent as `--base` for a stacked PR and review the recorded scope.
+- For full releases run `tools/verify.py --full`: lint, format, typing, regression/coverage, Lua tests,
   catalogue parity, reproducible packaging, actual APWorld archive loading and
   real generator/server sessions. Both the covered and untraced server passes
   are required; see the guide for the local Python/YAML tracing limitation.
