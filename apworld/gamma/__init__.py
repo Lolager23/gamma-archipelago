@@ -236,6 +236,9 @@ class GammaWorld(World):
         from .settlement_fill import request_neutrality_opener
 
         place_opening(self, _catalog)
+        from .early_equipment import place_equipment
+
+        place_equipment(self, _catalog)
         request_activity_opener(self, _catalog)
         request_neutrality_opener(self)
         place_zone_keys(self, _catalog)
