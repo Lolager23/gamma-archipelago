@@ -79,7 +79,8 @@ Conditional artefact overflow and quantity controls remain the next increment.
 - [x] Increment 2 compatibility regressions: disabled additions omitted from old
   snapshots, story-mode controls required before starting, new tool rewards tested
   through actual AP server traffic.
-- [ ] Increment 2 complete verifier and exact-head Windows/Linux CI.
+- [x] Increment 2 complete local verifier: 1,703 tests including the 9,000-seed matrix.
+- [ ] Increment 2 exact-head Windows/Linux CI and retained package parity.
 - [ ] Increment 3 quantities, conditional overflow and paced report publication.
 - [ ] Owen: fresh story-mode creation for both new goals and independent checkboxes.
 - [ ] Owen: emission/Psi Storm observations after loading, plus reload persistence.
