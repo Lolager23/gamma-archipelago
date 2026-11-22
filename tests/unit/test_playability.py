@@ -52,9 +52,19 @@ def test_ap_goodwill_proxy_requires_one_faction_not_combined_native_reputation()
     assert allowed(values, row, held.__getitem__, lambda _: True)
     assert goodwill_required(dict(category="checks_faction_standing", minimum=2000)) == 2000
     assert protected(config())
-    assert not protected(values) and not protected(config(playability_logic=0))
+    assert protected(values) == protected(config(playability_logic=0))
     assert 28052921 not in fragile_ids(values)
     assert 28052921 in fragile_ids(config(playability_logic=0))
+
+
+@pytest.mark.parametrize("playability", [0, 1])
+@pytest.mark.parametrize("reputation", [0, 1])
+def test_every_rank_is_filler_only_regardless_of_goodwill_or_legacy_logic(playability, reputation):
+    values = config(playability_logic=playability, rewards_faction_reputation=reputation)
+    ranks = frozenset(range(28052801, 28052809))
+    assert ranks <= protected(values)
+    # Unsupported faction-standing checks keep their existing protection.
+    assert (len(protected(values)) > len(ranks)) == bool(playability and not reputation)
 
 
 def test_heavy_equipment_has_two_independent_access_routes():

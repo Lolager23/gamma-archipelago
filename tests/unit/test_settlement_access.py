@@ -66,7 +66,7 @@ def test_reputation_is_budgeted_before_optional_rewards_and_starting_copies_are_
         config, ids, starting={"Faction Goodwill: army": 5}, from_pool={"Faction Goodwill: army": 5}
     )
     assert dict(depleted.from_pool)["Faction Goodwill: army"] == 5
-    assert plan.eligible_checks == 228
+    assert plan.eligible_checks == 220  # All eight rank checks now accept filler only.
     data = preview(config.to_values(), {})
     for reward in data["rewards"]:
         if reward["name"] in NEUTRALITY_ITEMS:

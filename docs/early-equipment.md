@@ -8,8 +8,12 @@ For fresh content_progression=1/playability_logic=1 activity pools, remaining lo
 equipment and workshop permissions are placed on reliable, low-grind checks in the selected
 starting region or global activities accessible there. Nearby maps within two
 transitions are also eligible when already reachable without new zone keys; the
-starting region takes priority. This preserves small custom pools with unlocked routes. Starting-map arrival is
-reserved for ordinary zone-key fill when keys are enabled. The planner prioritises
+starting region takes priority. This preserves small custom pools with unlocked routes.
+Starting-map arrival is eligible in these activity pools: once all rank checks
+became filler-only, reserving it for keys starved the Clear Sky and Rostok gear
+openings. Keys still use ordinary fill across the remaining eligible activities.
+The separate protected-opening and sparse-exploration policies retain their
+own reservations. The planner prioritises
 PDA, firearms, detector and melee, preferring checks already reachable before any
 new permission. Further permissions can use the capabilities gained from those
 receipts. It plans the whole local allocation before changing locations or pool.
@@ -26,7 +30,8 @@ No zone key, faction goodwill, melter or tool-tier stash is assumed by this plan
 Excluded locations and item rules remain enforced. Explicit non-local permissions
 use upstream early_items requests instead of being forced into the local slot;
 other players' timing remains outside a local guarantee. Gifts and prior plando
-placements are respected. Sparse map/settlement-only pools retain the existing
+placements are respected. Sparse map/settlement pools, including filler-only
+rank milestones, retain the existing
 exploration fallback. Incompatible activity pools fail clearly, offering more
 low-grind checks, fewer restrictions or legacy playability assumptions.
 

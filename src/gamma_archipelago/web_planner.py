@@ -235,6 +235,8 @@ def preview(values: Mapping[str, object], assumptions: Mapping[str, object]) -> 
             "Zone keys use Archipelago fill and can cross players; local/non-local settings apply.",
             "Local goal events do not consume network checks or reward slots.",
             "Generic discovery tails accept filler only; repeated types do not advance checks.",
+            "All Stalker Rank checks accept filler only, including Novice; "
+            "progression never depends on earning native rank.",
             *(
                 [
                     "Random starting permission is unresolved here; per-choice budgets are shown "

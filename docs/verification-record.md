@@ -923,3 +923,28 @@ Stacks on #72. Exact-head Windows/Linux CI and retained package parity are attac
 to the PR when complete. Native acceptance remains not run for Owen. No deployment,
 merge, game launch or session reset occurred; existing Dev progress and normal game
 remain untouched. The opening target of one to two hours still needs timed playtests.
+
+### Filler-only Stalker Rank checks — 22 November 2026
+
+All eight ranks, including Novice, are excluded from progression and useful-item
+placement for new generations, independently of goodwill, legacy playability and
+optional-check policies. Full Story retains 253 checks with 220 reliable placement
+slots. Native rank detection, its goodwill access proxy and existing archives
+are unchanged. Starting-map arrival is available to the activity-pool equipment
+planner so Clear Sky and Rostok keep early gear access without relying on Novice.
+Sparse exploration detection ignores filler-only rank checks in both allocation
+and item rules; maps plus ranks with a locked PDA retain their route fallback.
+
+The complete verifier passed 1,742 covered regressions, 83 untraced generation/server
+cases and nine Node tests (1,834 total), including all 9,000 preset seeds. Every
+owned Python module measured 100% line and branch coverage. Lua executable-line
+gates passed; Lua branch coverage is not measured. Frozen functional/test/input
+hashes matched. The MO2 and probe packages are byte-identical to the parent.
+Regressions cover all rank-placement policy combinations, disabling the category,
+solo/mixed fills, capacity, sparse maps/ranks/PDA fill and thirty early-equipment
+seed/start combinations.
+
+Stacks on #75. Exact-head Windows/Linux CI and retained package parity are attached
+to the PR when complete. Native acceptance remains not run for Owen. No deployment,
+merge, game launch or session reset occurred; installed Dev files, the private
+developer panel, existing progress and protected normal installations are untouched.

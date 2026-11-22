@@ -33,6 +33,11 @@ mandatory progression copies, precollected gifts, starting-from-pool depletion,
 capped carry rewards and remaining filler slots before creating pool items.
 Progressive Tools need three copies. Required permissions are never truncated.
 AP's excluded locations accept filler only: they forbid useful items too.
+All eight Stalker Rank checks are always excluded from progression placement,
+including Novice, even when AP goodwill is enabled or legacy playability logic
+is selected. They remain optional checks with ordinary filler rewards. Their
+native triggers and AP-goodwill access proxy are unchanged. Existing archives
+keep their original placements; this policy applies to newly generated worlds.
 
 Standard AP `start_inventory` gifts reduce mandatory copies. The newly supported
 `start_inventory_from_pool` precollects guaranteed permission/carry copies and
