@@ -12,7 +12,8 @@ manager reporting an active event. These checks are excluded from early equipmen
 placements. They do not assert that the actor survived the entire event.
 
 Living Legend, Mortal Sin and Operation Afterglow have independent check switches.
-The latter arcs also have separate goals. Goal completion uses recorded native
+The latter arcs also have separate goals. The forced AP start enables native
+story mode for any enabled story arc or story goal before character creation. Goal completion uses recorded native
 completed-task callbacks, not early objective info flags. Their AP access chains
 retain preceding story permissions. Brain Scorcher shutdown is Radar/X19
 (bar_deactivate_radar_done); X18 supplies Dark Valley documents, while X16 is the
