@@ -69,7 +69,8 @@ authorizes a merge, deployment, session reset or game launch.
 Stage 2 implements weather checks, split story goals, tiered physical tool stashes,
 melter access, late equipment check gates and opt-in stamina. See
 [content progression](content-progression.md) for exact contracts and native limits.
-Conditional artefact overflow and quantity controls remain the next increment.
+Increment 3 adds conditional artefact overflow, quantity controls and paced reports;
+see [generator quantities](generator-quantities.md).
 
 ## Implementation and acceptance status
 
@@ -81,7 +82,11 @@ Conditional artefact overflow and quantity controls remain the next increment.
   through actual AP server traffic.
 - [x] Increment 2 complete local verifier: 1,703 tests including the 9,000-seed matrix.
 - [ ] Increment 2 exact-head Windows/Linux CI and retained package parity.
-- [ ] Increment 3 quantities, conditional overflow and paced report publication.
+- [x] Increment 3 source: quantities, conditional non-filler overflow and paced reports.
+- [x] Increment 3 complete local verifier: 1,726 tests including the 9,000-seed matrix.
+- [ ] Increment 3 exact-head Windows/Linux CI and retained package parity.
+- [ ] Follow-up: replace spatial-only opening placement with actual reachable capabilities.
+- [ ] Owen: calibrate early equipment timing and repeatable-reward economy in play.
 - [ ] Owen: fresh story-mode creation for both new goals and independent checkboxes.
 - [ ] Owen: emission/Psi Storm observations after loading, plus reload persistence.
 - [ ] Owen: all three orange tool caches contain the right kits and unlock in order.
