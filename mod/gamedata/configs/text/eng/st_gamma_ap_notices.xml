@@ -1527,6 +1527,24 @@
     <string id="gamma_ap_reward_28051824">
         <text>Recipe Access: Artefacts</text>
     </string>
+    <string id="gamma_ap_reward_28051831">
+        <text>Tool Use: Basic Tools</text>
+    </string>
+    <string id="gamma_ap_reward_28051832">
+        <text>Tool Use: Advanced Tools</text>
+    </string>
+    <string id="gamma_ap_reward_28051833">
+        <text>Tool Use: Expert Tools</text>
+    </string>
+    <string id="gamma_ap_reward_28051834">
+        <text>Tool Use: Drug-making Kit</text>
+    </string>
+    <string id="gamma_ap_reward_28051835">
+        <text>Tool Use: Gunsmithing Tools</text>
+    </string>
+    <string id="gamma_ap_reward_28051836">
+        <text>Tool Use: Artefact Melter</text>
+    </string>
     <string id="gamma_ap_reward_28051901">
         <text>Medical Supply Package</text>
     </string>
@@ -1541,5 +1559,11 @@
     </string>
     <string id="gamma_ap_reward_28051911">
         <text>Carry Capacity +5 kg</text>
+    </string>
+    <string id="gamma_ap_tool_permission_required">
+        <text>AP permission required to use: </text>
+    </string>
+    <string id="gamma_ap_tool_session_required">
+        <text>Restore a valid AP session before using this kit</text>
     </string>
 </string_table>

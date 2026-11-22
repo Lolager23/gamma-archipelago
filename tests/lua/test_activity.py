@@ -173,6 +173,11 @@ def test_pda_check_availability_matches_actual_ap_access_rules(lua, gear, keys, 
         permission = lua.globals().gamma_ap_catalog.permissions[item.code]
         if permission:
             native.unlocks[permission] = True
+    from gamma_archipelago.tool_permissions import TOOL_CAPABILITIES
+
+    ap.sweep_for_advancements(
+        locations=[loc for loc in multi.get_locations() if loc.name in TOOL_CAPABILITIES]
+    )
     statuses = {
         row.id: row.status
         for row in rows(lua.globals().gamma_ap_tracker.snapshot(native, 0, None, psi))

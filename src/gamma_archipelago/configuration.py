@@ -39,6 +39,8 @@ CHECK_OPTIONS = (
     "checks_faction_standing",
 )
 REWARD_OPTIONS = (
+    "rewards_drug_making_tools",
+    "rewards_gunsmithing_tools",
     "rewards_artefact_melter",
     "rewards_supply_medical",
     "rewards_supply_maintenance",
@@ -125,6 +127,8 @@ SUPPORTED_CHECKS = frozenset(
 )
 SUPPORTED_REWARDS: frozenset[str] = frozenset(
     {
+        "rewards_drug_making_tools",
+        "rewards_gunsmithing_tools",
         "rewards_artefact_melter",
         "rewards_supply_medical",
         "rewards_supply_maintenance",
@@ -178,6 +182,7 @@ def defaults() -> dict[str, object]:
         settlement_reputation_logic=1,
         playability_logic=1,
         content_progression=1,
+        tool_use_permissions=1,
         reward_quantities=1,
         artefact_extra_ceiling=60,
         **{name: count for name, count in DEFAULT_COUNTS.items()},
@@ -377,6 +382,9 @@ def encode_configuration(
                 "settlement_reputation_logic",
                 "playability_logic",
                 "content_progression",
+                "tool_use_permissions",
+                "rewards_drug_making_tools",
+                "rewards_gunsmithing_tools",
                 "infinite_stamina",
                 "reward_quantities",
                 "artefact_extra_ceiling",

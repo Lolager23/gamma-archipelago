@@ -36,7 +36,7 @@ AP options; actual generated reports are authoritative.
 Every optional actual-seed preview includes ordinary AP logical spheres and paced
 steps. Paced steps complete all newly reachable checks, but take at most one tier
 per knife, armour, repair-grade, rank, firearm-upgrade, armour-upgrade and tool-claim
-chain. Rewards arrive at the end of the step. Ordinary local goal events settle
+chain (or fresh tool-use capability). Rewards arrive at the end of the step. Ordinary local goal events settle
 between steps. This does not alter access rules, fill or actual game callbacks.
 It models a slower playthrough, not measured minutes or a guarantee of difficulty.
 

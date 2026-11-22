@@ -96,6 +96,20 @@ class ContentProgression(DefaultOnToggle):
     display_name = "Expanded content progression"
 
 
+class ToolUsePermissions(DefaultOnToggle):
+    """Unlock kit use through AP and receive one free kit; looting/crafting never unlocks use."""
+
+    display_name = "Tool-use permissions with free kits"
+
+
+class RewardsDrugMakingTools(Toggle):
+    display_name = "Rewards: Drug-making kit permission"
+
+
+class RewardsGunsmithingTools(Toggle):
+    display_name = "Rewards: Gunsmithing tools permission"
+
+
 class InfiniteStamina(Toggle):
     """Restore actor stamina during active world frames; does not alter other stats."""
 
@@ -609,6 +623,9 @@ class GammaOptions(PerGameCommonOptions):
     stat_level_rewards: StatLevelRewards
 
     content_progression: ContentProgression
+    tool_use_permissions: ToolUsePermissions
+    rewards_drug_making_tools: RewardsDrugMakingTools
+    rewards_gunsmithing_tools: RewardsGunsmithingTools
     infinite_stamina: InfiniteStamina
     checks_emissions: ChecksEmissions
     checks_psi_storms: ChecksPsiStorms

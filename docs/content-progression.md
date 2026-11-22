@@ -22,18 +22,19 @@ has no explicit X18 shutdown dependency.
 
 ## Tools, melter and equipment
 
-Fresh progressive-tool seeds replace the three generic copies with Basic,
-Advanced and Expert orange progression stashes. Each contains its physical kit
-in a supported Cordon container. Applied receipts unlock the corresponding
-permission; solver claim events also require reaching Cordon and prior tiers.
-Advanced and Expert placements require progressively later reliable checks.
-Only the calibrated psi stash grants psi protection; tool boxes cannot do so.
-The Artefact Melter is a separate optional physical reward (itm_artefactskit).
+Fresh seeds use [tool-use permissions and free kits](tool-use-permissions.md).
+Basic/Advanced/Expert use remains progressive; Drug-making, Gunsmithing and Melter
+permissions are independent. Ordinary acquisition never grants permission and
+is not blocked. The reward delivers its free kit directly, without a Cordon
+stash claim. Advanced and Expert retain later reliable placement requirements.
+Older `tool_use_permissions=0` contracts retain their physical Cordon tool stashes
+and separate physical melter. Only the calibrated psi stash grants psi protection.
 Generic distinct artefacts above 20 require melter and tool-use access; without
 that reward enabled these late checks cannot hold progression or useful items.
 
 Weapon checks cover the existing role classes plus repair grades A/B/C/D, using
-the active repair_type mapping. Heavy/exosuit and grade D AP checks wait for usable
+the active repair_type mapping. Fresh progressive-tool checks require Basic for
+A/B, Advanced for C, and Expert for D. Heavy/exosuit and grade D AP checks wait for usable
 psi protection, Red Forest and a northern region, or 2000 AP-earned goodwill with
 one baseline-friendly trader faction. This changes check eligibility only;
 equipping those items remains governed by ordinary equipment permissions.

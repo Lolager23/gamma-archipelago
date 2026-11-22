@@ -5,7 +5,7 @@ local function active(configuration)
     if not configuration or not configuration.expanded then return false end
     local options = configuration.options
     return options.rewards_progressive_tools == 1 or options.rewards_workshop_access == 1
-        or options.rewards_recipe_access == 1
+        or options.rewards_recipe_access == 1 or gamma_ap_tool_permissions.any_enabled(configuration)
 end
 
 local function recipe_tier(dialog)
@@ -27,7 +27,7 @@ function tools_level(state)
         if count < tier and not tiers[tier] then break end
         result = tier
     end
-    return result
+    return math.max(result,gamma_ap_tool_permissions.level(state))
 end
 
 function allowed(state, action, dialog)
@@ -42,6 +42,8 @@ function allowed(state, action, dialog)
     if action == "craft" then
         local tier = recipe_tier(dialog)
         if not tier then return false,"Cannot identify this workshop recipe's tool requirement" end
+        local kit_problem = gamma_ap_tool_permissions.recipe_reason(state,tier)
+        if kit_problem then return false,kit_problem end
         local group = tier <= 3 and "general" or ({[4]="medical",[5]="ammo",[6]="artefact"})[tier]
         if configuration.options.rewards_recipe_access == 1 and not state.unlocks["recipe_"..group] then
             return false,"Archipelago recipe permission required: "..group

@@ -1,0 +1,88 @@
+-- Pure use permissions. Inventory copies never become an independent unlock owner.
+local tier_keys = {"basic","advanced","expert"}
+local recipe_keys = {"basic","advanced","expert","medical","ammo","artefact"}
+local grades = {A=1,B=1,C=2,D=3}
+
+function enabled(configuration)
+    return configuration and configuration.expanded
+        and configuration.options.content_progression == 1
+        and configuration.options.tool_use_permissions == 1
+end
+
+function any_enabled(configuration)
+    if not enabled(configuration) then return false end
+    for _,row in pairs(gamma_ap_catalog.tool_use_items) do
+        if configuration.options[row.category] == 1 then return true end
+    end
+    return false
+end
+
+local function definition(key)
+    for id,row in pairs(gamma_ap_catalog.tool_use_items) do
+        if row.tool_key == key then return row,id end
+    end
+end
+
+local function translated(key,fallback)
+    local ok,text = pcall(function() return game.translate_string(key) end)
+    return ok and type(text) == "string" and text ~= "" and text ~= key and text or fallback
+end
+
+function item_enabled(configuration,id)
+    local direct = enabled(configuration)
+    if gamma_ap_catalog.tool_use_items[id] then return direct == true end
+    return not (direct and (gamma_ap_catalog.tool_stash_levels[id] or id == 28051801 or id == 28051802))
+end
+
+function supplies(state,id)
+    return enabled(state.configuration) and gamma_ap_catalog.tool_use_items[id] ~= nil
+end
+
+function level(state)
+    local value = 0
+    for tier,key in ipairs(tier_keys) do
+        if not state.unlocks["tool_"..key] then break end
+        value = tier
+    end
+    return value
+end
+
+function reason(state,key)
+    local config = state.configuration
+    local row,id = definition(key)
+    if not enabled(config) or not row or config.options[row.category] ~= 1 then return end
+    if not state.session_key or state.refused_save then
+        return translated("gamma_ap_tool_session_required","Restore a valid AP session before using this kit")
+    end
+    if not state.unlocks[row.permission] or (row.tier > 0 and level(state) < row.tier) then
+        return translated("gamma_ap_tool_permission_required","AP permission required to use: ")
+            ..translated("gamma_ap_reward_"..id,row.name)
+    end
+end
+
+function section_reason(state,section)
+    for _,row in pairs(gamma_ap_catalog.tool_use_items) do
+        if row.tool_section == section then return reason(state,row.tool_key) end
+    end
+end
+
+function before_use(state,item,flags)
+    if not item then return end
+    local problem = section_reason(state,item:section())
+    if problem then flags.ret_value=false; return problem end
+end
+
+function recipe_reason(state,tier)
+    return reason(state,recipe_keys[tier])
+end
+
+function grade_reason(state,row)
+    local tier = grades[row.weapon_grade]
+    if enabled(state.configuration) and tier then return reason(state,tier_keys[tier]) end
+end
+
+function melter_received(state)
+    if enabled(state.configuration) then return state.unlocks.tool_artefact == true end
+    for _,id in ipairs(state.applied_items) do if id == 28051802 then return true end end
+    return false
+end

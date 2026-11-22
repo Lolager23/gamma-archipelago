@@ -1,6 +1,7 @@
 """Additional bounded settings; legacy values preserve pre-expansion seed identities."""
 
 EXPANSION_LIMITS = {
+    "tool_use_permissions": 1,
     "reward_quantities": 1,
     "basic_toolkits": 4000,
     "artefact_extra_ceiling": 60,
@@ -43,6 +44,8 @@ EXPANSION_LIMITS = {
 }
 EXPANSION_DEFAULTS = dict.fromkeys(EXPANSION_LIMITS, 0)
 LEGACY_REWARD_DEFAULTS = {
+    "rewards_drug_making_tools": 0,
+    "rewards_gunsmithing_tools": 0,
     "rewards_artefact_melter": 0,
     "rewards_convenience": 0,
     "rewards_supply_medical": 0,

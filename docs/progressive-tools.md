@@ -61,6 +61,8 @@ reached 100% measured executable lines. Lua branch coverage is not measured.
 
 ## Fresh content progression
 
-The later [content contract](content-progression.md) replaces generic copies with
-three named physical tool stashes for fresh seeds. The rules above remain the
-compatibility contract for older content_progression=0 sessions.
+The later [content contract](content-progression.md) introduced named physical
+tool stashes. Fresh seeds now use [tool-use permissions and free kits](tool-use-permissions.md),
+including independent specialist kits. The rules above remain the compatibility
+contract for older content_progression=0 sessions; content_progression=1 with
+tool_use_permissions=0 preserves the physical-stash contract.

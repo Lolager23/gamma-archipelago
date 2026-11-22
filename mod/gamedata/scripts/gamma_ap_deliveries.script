@@ -15,7 +15,8 @@ end
 
 local function enabled(state, id)
     return state.session_key and state.configuration and state.allowed_items and state.allowed_items[id]
-        and (gamma_ap_catalog.item_effects[id] == "supply_package" or state.configuration.options.permission_supplies == 1)
+        and (gamma_ap_catalog.item_effects[id] == "supply_package" or state.configuration.options.permission_supplies == 1
+            or gamma_ap_tool_permissions.supplies(state,id))
 end
 
 function copy(plans)

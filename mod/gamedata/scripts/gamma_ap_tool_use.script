@@ -1,0 +1,24 @@
+-- Wrap the six native tool shortcuts; actual crafting also checks kit permissions.
+local hooks = {}
+local functions = {
+    start_workshop_basic="basic", start_workshop_advanced="advanced",
+    start_workshop_expert="expert", start_workshop_medic="medical",
+    start_workshop_ammo="ammo", start_workshop_artefacts="artefact",
+}
+
+function install(get_state)
+    if not gamma_ap_tool_permissions.any_enabled(get_state().configuration) then return end
+    if not workshop_tool then return end
+    for name,key in pairs(functions) do
+        local current = workshop_tool[name]
+        if type(current) == "function" and current ~= hooks[name] then
+            local delegate,kind = current,key
+            local wrapper = function(...)
+                local problem = gamma_ap_tool_permissions.reason(get_state(),kind)
+                if problem then gamma_ap_equipment_use.warn(problem); return false end
+                return delegate(...)
+            end
+            workshop_tool[name],hooks[name] = wrapper,wrapper
+        end
+    end
+end

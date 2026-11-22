@@ -80,6 +80,12 @@ melter access, late equipment check gates and opt-in stamina. See
 Increment 3 adds conditional artefact overflow, quantity controls and paced reports;
 see [generator quantities](generator-quantities.md).
 
+The later [tool-use follow-up](tool-use-permissions.md) changes fresh tool rewards
+to permissions plus a free kit, retaining ordinary kit acquisition. It adds
+independent Drug-making/Gunsmithing permissions and matches repair-grade checks
+to Basic/Advanced/Expert capability. Earlier orange-stash contracts remain valid
+for existing sessions; this source change does not modify those archives.
+
 ## Implementation and acceptance status
 
 - [x] Increment 1 source and complete local verification; PR #70 stacks on #69.

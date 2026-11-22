@@ -77,7 +77,11 @@ keeps selection and observation mappings aligned with published IDs.
 [Progressive tools](progressive-tools.md) derive their tier directly from applied
 receipts. Native workshop wrappers receive an explicit state getter, validate the
 supported entry points before installation, and delegate permitted actions to
-their captured native methods. The AP world and PDA use matching conservative
+their captured native methods. Fresh [tool permissions](tool-use-permissions.md)
+read the central save's unlocks, deliver one kit through the existing receipt
+plan, and allow ordinary acquisition without granting use. Local capability
+events express the same contiguous tool tiers to the solver and paced analysis.
+The AP world and PDA use matching conservative
 upgrade requirements; physical supplies remain owned by the ordinary game.
 
 [Workshop and recipe access](workshop-access.md) extend the same explicit guards

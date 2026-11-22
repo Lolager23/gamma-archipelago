@@ -34,6 +34,14 @@ def activity_lines(catalog: dict[str, Any]) -> list[str]:
     lines.append("rank_goodwill_proxy = " + encoded({str(k): v for k, v in RANK_PROXY.items()}))
     lines.append("northern_equipment_regions = " + encoded(list(NORTH)))
     projections = {
+        "tool_use_items": {
+            row["id"]: {
+                key: row[key] for key in ("tool_key", "tool_section", "permission", "category")
+            }
+            | {"tier": row.get("kit_tier", 0), "name": row["name"]}
+            for row in catalog["items"]
+            if "tool_key" in row
+        },
         "opening_economy": catalog["opening_economy"],
         "friendly_goodwill_factions": {name: True for name in sorted(FRIENDLY_FACTIONS)},
         "melter_sections": {

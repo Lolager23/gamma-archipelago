@@ -100,6 +100,9 @@ local function grant_reward(section)
 end
 
 local function apply_reward(section)
+    if type(section) == "number" and gamma_ap_tool_permissions.supplies(state,section) then
+        return gamma_ap_deliveries.receive(state,section,grant_reward)
+    end
     if type(section) == "number" and gamma_ap_catalog.item_effects[section] == "supply_package" then
         return gamma_ap_deliveries.receive(state,section,grant_reward)
     end
@@ -250,6 +253,8 @@ function actor_on_item_before_pickup(item, flags)
 end
 
 function actor_on_item_before_use(item, flags)
+    local kit_problem = gamma_ap_tool_permissions.before_use(state,item,flags)
+    if kit_problem then gamma_ap_equipment_use.warn(kit_problem) end
     gamma_ap_gear_locks.before(state, item, flags)
     if gamma_ap_gear_locks.locked(state,item) then gamma_ap_equipment_use.warn() end
 end
