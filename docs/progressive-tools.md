@@ -58,3 +58,9 @@ The complete verifier passed: 894 covered tests, 36 untraced generator/server
 tests and five Node tests (935 total), including 50 filled progressive-tool seeds.
 Owned Python runtime modules reached 100% measured line/branch coverage; Lua
 reached 100% measured executable lines. Lua branch coverage is not measured.
+
+## Fresh content progression
+
+The later [content contract](content-progression.md) replaces generic copies with
+three named physical tool stashes for fresh seeds. The rules above remain the
+compatibility contract for older content_progression=0 sessions.

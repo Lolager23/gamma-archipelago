@@ -24,7 +24,7 @@ local function level_allowed(state, where, psi)
     return gamma_ap_zone_keys.allowed(state, where) and (not psi_regions[where] or psi == true)
 end
 
-local function reachable(state, psi)
+function reachable(state, psi)
     local result, changed = {[gamma_ap_start.level_name(state.configuration)]=true}, true
     while changed do
         changed = false
@@ -55,6 +55,10 @@ local function blocked(state, row, regions, psi, id, standing)
     if diplomacy then return diplomacy end
     if config.rewards_progressive_tools == 1 and row.category == "checks_gear_upgrades"
         and gamma_ap_workshop.tools_level(state) < 3 then return "Expert tool permission required" end
+    if config.content_progression == 1 and config.rewards_progressive_tools == 1
+        and row.category == "checks_gear_upgrades" and not regions.l01_escape then
+        return "Cordon tool-stash retrieval route required for guaranteed physical kits"
+    end
     if config.rewards_workshop_access == 1 and row.category == "checks_gear_upgrades"
         and not state.unlocks.workshop_upgrade then return "Workshop upgrade permission required" end
     local group = equipment[row.category]
@@ -70,7 +74,7 @@ local function blocked(state, row, regions, psi, id, standing)
     if fighting and not weapon then
         return "A firearm or melee permission is required"
     end
-    if ((row.category == "checks_rank_milestones" and row.minimum > 0) or row.category == "checks_faction_standing")
+    if ((row.category == "checks_rank_milestones" and row.minimum > 0) or (row.category == "checks_faction_standing" and not (config.playability_logic == 1 and config.rewards_faction_reputation == 1)))
         and not weapon and config.starting_pda == 2 and not state.unlocks.gear_pda then
         return "A PDA, firearm or melee permission is required to earn rank or standing"
     end

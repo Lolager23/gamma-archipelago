@@ -56,4 +56,6 @@
     <string id="gamma_ap_pda_unbound"><text>Start a matching AP session</text></string>
     <string id="gamma_ap_pda_disabled"><text>Tracker disabled by this seed</text></string>
     <string id="gamma_ap_pda_offline"><text>Server connectivity not reported by this snapshot</text></string>
+    <string id="gamma_ap_pda_goal_7"><text>Finish Mortal Sin</text></string>
+    <string id="gamma_ap_pda_goal_8"><text>Finish Operation Afterglow</text></string>
 </string_table>

@@ -17,8 +17,23 @@ end
 
 function minimum_goodwill(state, pending)
     local result = {}
-    if not state.session_key or state.refused_save or not state.configuration
-        or state.configuration.options.checks_settlements ~= 1 then return result end
+    if not state.session_key or state.refused_save or not state.expanded or not state.configuration then return result end
+    local options = state.configuration.options
+    local broad = options.content_progression == 1 and options.playability_logic == 1
+        and options.rewards_faction_reputation == 1 and (options.checks_rank_milestones == 1
+            or options.checks_faction_standing == 1 or options.checks_armour_tiers == 1 or options.checks_weapon_tiers == 1)
+    if broad then
+        local counts = {}
+        for _,id in ipairs(state.applied_items) do
+            if gamma_ap_catalog.reputation_rewards[id] then counts[id]=(counts[id] or 0)+1 end
+        end
+        if pending and gamma_ap_catalog.reputation_rewards[pending] then counts[pending]=(counts[pending] or 0)+1 end
+        for id,count in pairs(counts) do
+            local reward = gamma_ap_catalog.reputation_rewards[id]
+            result[reward.faction] = math.min(reward.cap,count*reward.bonus)
+        end
+    end
+    if options.checks_settlements ~= 1 then return result end
     for id in pairs(gamma_ap_catalog.settlement_rules) do
         local entry = rule(state,id)
         if gated(state,entry) then

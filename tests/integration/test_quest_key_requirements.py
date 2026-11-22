@@ -25,7 +25,13 @@ ROOT = Path(__file__).resolve().parents[2]
 )
 def test_quest_story_checks_require_permissions_for_all_prior_native_chains(chain, missing):
     multiworld = setup_multiworld(
-        GammaWorld, options={"checks_story_milestones": 1, "rewards_quest_keys": 1}
+        GammaWorld,
+        options={
+            "checks_story_milestones": 1,
+            "checks_mortal_sin": 1,
+            "checks_operation_afterglow": 1,
+            "rewards_quest_keys": 1,
+        },
     )
     world = multiworld.worlds[1]
     catalogue = json.loads((ROOT / "src/gamma_archipelago/catalog.json").read_text())

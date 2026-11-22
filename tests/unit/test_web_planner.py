@@ -10,9 +10,9 @@ from gamma_archipelago.web_planner import metadata, player_document, preview
 
 def test_metadata_and_all_presets_match_authoritative_catalogues():
     data = metadata()
-    assert len(data["checks"]) == 17 and len(data["rewards"]) == 15
+    assert len(data["checks"]) == 21 and len(data["rewards"]) == 16
     assert len(data["gear"]) == 9 and len(data["quantities"]) == 4
-    assert len(data["goals"]) == 7 and len(data["levels"]) == 33
+    assert len(data["goals"]) == 9 and len(data["levels"]) == 33
     for values in presets().values():
         configuration = build_configuration(values)
         result = preview(values, {})
@@ -23,7 +23,7 @@ def test_metadata_and_all_presets_match_authoritative_catalogues():
         assert result["reward_slots"] == result["network_checks"]
         assert result["digest"] == configuration.digest
     full = preview(presets()["full_story"], {})
-    assert (full["network_checks"], full["reward_types"]) == (273, 100)
+    assert (full["network_checks"], full["reward_types"]) == (253, 104)
 
 
 def test_quick_pilot_estimates_goal_separately_from_optional_map_completion():

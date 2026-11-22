@@ -3,7 +3,7 @@
 from typing import TYPE_CHECKING
 
 from gamma_archipelago.catalog import KILL_MILESTONE_BASE, SIDE_TASK_MILESTONE_BASE
-from gamma_archipelago.playability import early_check
+from gamma_archipelago.playability import NORTH, early_check, late_equipment
 from gamma_archipelago.starting import starting_level
 
 if TYPE_CHECKING:
@@ -23,7 +23,7 @@ def restrict_placements(world: "GammaWorld", catalog: dict) -> None:
             for start, end in ((a, b), (b, a))
             if start in regions
         }
-    regions -= {"l10_radar", "l10u_bunker", "l08u_brainlab"}
+    regions -= {"l10_radar", "l10u_bunker", "l08u_brainlab", "l10_red_forest"}
     equipment = {
         row["id"]
         for row in catalog["items"]
@@ -51,4 +51,35 @@ def restrict_placements(world: "GammaWorld", catalog: dict) -> None:
         previous = location.item_rule
         location.item_rule = lambda item, prior=previous, early=early: (
             prior(item) and (item.code not in equipment or early)
+        )
+
+
+def restrict_tool_stashes(world: "GammaWorld", catalog: dict) -> None:
+    if not world.configuration.option("content_progression"):
+        return
+    definitions = {row["id"]: row for row in catalog["locations"]}
+    tiers = {row["id"]: row["tool_level"] for row in catalog["items"] if "tool_level" in row}
+    middle = {"l03_agroprom", "l05_bar", "l06_rostok", "l08_yantar", "l07_military"}
+    for location in world.multiworld.get_locations(world.player):
+        row = definitions.get(location.address)
+        if row is None:
+            continue
+        routes = set(row.get("logic", {}).get("all_regions", ())) | {row["level"]}
+        medium = bool(routes & middle) or (
+            row["category"] == "checks_rank_milestones" and row["minimum"] >= 5999
+        )
+        expert = (
+            bool(routes & set(NORTH))
+            or late_equipment(row)
+            or (row["category"] == "checks_rank_milestones" and row["minimum"] >= 34999)
+        )
+        previous = location.item_rule
+        location.item_rule = lambda item, prior=previous, medium=medium, expert=expert: (
+            prior(item)
+            and (
+                item.code not in tiers
+                or tiers[item.code] == 1
+                or (tiers[item.code] == 2 and medium)
+                or (tiers[item.code] == 3 and expert)
+            )
         )

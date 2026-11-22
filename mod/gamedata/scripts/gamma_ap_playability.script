@@ -1,9 +1,10 @@
 -- Pure tracker assumptions. Native observers remain the authority on completed facts.
 local knife_mutants = {boar=true,dog=true,flesh=true,cat=true,tushkano=true}
-local function goodwill(state)
+local function goodwill(state, friendly)
     local counts,best = {},0
     for _,id in ipairs(state.applied_items) do
-        if gamma_ap_catalog.reputation_rewards[id] then
+        local reward = gamma_ap_catalog.reputation_rewards[id]
+        if reward and (not friendly or gamma_ap_catalog.friendly_goodwill_factions[reward.faction]) then
             counts[id] = (counts[id] or 0)+1
             best = math.max(best,counts[id]*250)
         end
@@ -13,8 +14,23 @@ end
 
 function reason(state, row, regions, psi)
     local config = state.configuration and state.configuration.options or {}
-    if config.playability_logic ~= 1 then return end
     local category = row.category
+    if config.content_progression == 1 and row.quota == "artefact" and row.minimum > 20
+        and config.rewards_artefact_melter == 1 then
+        local received = false
+        for _,id in ipairs(state.applied_items) do if id == 28051802 then received=true end end
+        if not received then return "Artefact Melter required for distinct artefacts 21 and above" end
+        if config.starting_tools == 2 and not state.unlocks.gear_tools then return "Equipment permission required: tools (artefact melter)" end
+    end
+    if config.playability_logic ~= 1 then return end
+    local economy = gamma_ap_catalog.opening_economy
+    local cash = category == "checks_shop_purchases" and row.key == economy.contract_key
+        and math.floor(economy.starting_money_rubles*(config.starting_money or 0)/100) >= row.price
+    if category == "checks_shop_purchases" and not cash
+        and config.starting_pda == 2 and not state.unlocks.gear_pda
+        and config.starting_firearms == 2 and not state.unlocks.gear_firearms then
+        return "AP money-earning route required: PDA tasks or firearms; existing cash may permit earlier purchase"
+    end
     local firearm = category == "checks_faction_first_kills"
         or (category == "checks_mutant_first_kills" and ((row.quota == "" and not knife_mutants[row.key]) or (row.quota ~= "" and row.minimum > 5)))
         or (category == "checks_kill_milestones" and row.minimum > 25)
@@ -25,7 +41,11 @@ function reason(state, row, regions, psi)
         or (category == "checks_faction_standing" and row.minimum or 0)
     local late = category == "checks_armour_tiers" and tonumber(row.key) >= 3 or row.weapon_grade == "D"
     if amount == 0 and not late then return end
-    local earned = config.rewards_faction_reputation == 1 and goodwill(state) or 0
+    if category == "checks_rank_milestones" and amount > 0 and config.starting_pda == 2
+        and config.starting_firearms == 2 and not state.unlocks.gear_pda and not state.unlocks.gear_firearms then
+        return "PDA tasks or firearms required for repeatable rank progression"
+    end
+    local earned = config.rewards_faction_reputation == 1 and goodwill(state,late or category == "checks_faction_standing") or 0
     if config.rewards_faction_reputation == 1 and earned < amount then
         return "AP-granted faction goodwill: "..earned.." / "..amount.." in one faction (rank proxy)"
     end

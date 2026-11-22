@@ -57,11 +57,26 @@ def configured_location_ids(configuration: "SeedConfiguration") -> frozenset[int
             continue
         if configuration.option(f"{group}_discovery_mode"):
             count = configuration.option(f"{group}_discovery_count") or len(qualifying)
+            if group == "artefact" and configuration.option("content_progression"):
+                count = min(count, 40)
             if not 1 <= count <= len(qualifying):
                 raise ValueError(f"{group} discovery quota exceeds its qualifying roster")
             ids.update(QUOTAS[group][:count])
         else:
             ids.update(roster[token] for token in qualifying)
+    if not configuration.option("content_progression"):
+        ids.difference_update(row["id"] for row in _data["locations"] if "weapon_grade" in row)
+    for row in _data["locations"]:
+        arc = row.get("story_arc")
+        if arc and arc != "living_legend":
+            if configuration.option("content_progression"):
+                ids.discard(row["id"])
+            if "checks_" + arc in configuration.checks:
+                ids.add(row["id"])
+    if configuration.option("content_progression") and configuration.option(
+        "artefact_discovery_mode"
+    ):
+        ids.difference_update(QUOTAS["artefact"][40:])
     if configuration.option("optional_check_policy") == 1:
         ids.difference_update(fragile_ids(configuration))
     protected_tail_ids(configuration, frozenset(ids))
@@ -86,6 +101,8 @@ def protected_tail_ids(
         count = configuration.option(f"{group}_discovery_count") or len(
             set(SOURCES[group]) - set(configuration.discovery_exclusions)
         )
+        if group == "artefact" and configuration.option("content_progression"):
+            count = min(count, 40)
         selected = QUOTAS[group][:count]
         if tail > len(selected):
             raise ValueError(f"{group} filler tail exceeds its configured discovery quota")

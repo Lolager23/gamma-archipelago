@@ -82,6 +82,7 @@ def presets() -> dict[str, dict[str, object]]:
         },
         "extended": {
             **mvp,
+            "rewards_artefact_melter": 1,
             "starting_detector": 0,
             "goal": 4,
             "checks_settlements": 1,

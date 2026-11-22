@@ -51,7 +51,8 @@ function install(read_configuration)
                 window:LoadFaction(false,"stalker")
                 select_map(window,start)
                 if window.ck_warfare then window.ck_warfare:SetCheck(false) end
-                if window.ck_story and (configuration.options.goal == 3 or configuration.options.goal == 4) then
+                if gamma_ap_start.story_required(configuration) then
+                    if not window.ck_story then warning(window,"gamma_ap_start_unsupported"); return false end
                     window.ck_story:SetCheck(true)
                 end
                 return delegate(window,...)

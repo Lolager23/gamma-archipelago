@@ -59,7 +59,7 @@ def test_all_requested_check_reward_and_goal_adapters_are_available():
         {"checks_maps": True},
         {"checks_maps": -1},
         {"rewards_zone_keys": 2},
-        {"goal": 7},
+        {"goal": 9},
         {"no_starting_weapons": 2},
         {"starting_pda": 3},
         {"starting_money": 101},
@@ -150,14 +150,18 @@ def test_travel_configuration_preserves_old_default_digest_and_requires_zone_key
     values = defaults()
     values.pop("zone_unlock_travel")
     values.pop("pda_tracker")
-    from gamma_archipelago.expansion_settings import EXPANSION_DEFAULTS, LEGACY_REWARD_DEFAULTS
+    from gamma_archipelago.expansion_settings import (
+        EXPANSION_DEFAULTS,
+        LEGACY_CHECK_DEFAULTS,
+        LEGACY_REWARD_DEFAULTS,
+    )
 
     values.pop("discovery_exclusions")
     for name in EXPANSION_DEFAULTS:
         values.pop(name)
     for name in LEGACY_REWARD_DEFAULTS:
         values.pop(name)
-    for name in ("checks_shops", "checks_shop_purchases", "checks_faction_standing"):
+    for name in LEGACY_CHECK_DEFAULTS:
         values.pop(name)
     expected = hashlib.sha256(
         json.dumps(values, sort_keys=True, separators=(",", ":")).encode()

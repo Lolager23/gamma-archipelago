@@ -48,7 +48,7 @@ def write_snapshot(client, *, received=0):
         ("extended", 4, 20261121),
         ("full_story", 4, 20261301),
         ("full_story", 4, 20261302),
-        *[("full_story", goal, 20261200 + goal) for goal in range(7)],
+        *[("full_story", goal, 20261200 + goal) for goal in range(9)],
     ],
 )
 def test_two_gamma_slots_and_foreign_game_transfer_restart_and_each_goal(
@@ -75,7 +75,10 @@ def test_two_gamma_slots_and_foreign_game_transfer_restart_and_each_goal(
             artefact_discovery_count=20,
             discovery_exclusions=["mutant:bibliotekar", "artefact:af_compass"],
             start_inventory={"Equipment Unlock: PDA": 1, "Zone Key: Garbage": 1},
-            start_inventory_from_pool={"Progressive Tools": 2},
+            start_inventory_from_pool={
+                "Progression Stash: Basic Tools": 1,
+                "Progression Stash: Advanced Tools": 1,
+            },
             generation_preview=1,
             non_local_items=["Zone Key: Agroprom"],
         )
@@ -146,7 +149,8 @@ def test_two_gamma_slots_and_foreign_game_transfer_restart_and_each_goal(
                     await until(lambda client=client: client.session is not None)
                     if expansion_case:
                         await until(lambda client=client: len(client.session.item_ids) >= 4)
-                        assert client.session.item_ids.count(28051801) == 2
+                        assert client.session.item_ids.count(28051202) == 1
+                        assert client.session.item_ids.count(28051203) == 1
                         assert client.expanded and client.require_configuration
                 await quest.connect(address)
                 await until(lambda: quest.slot is not None)
@@ -216,7 +220,10 @@ def test_two_gamma_slots_and_foreign_game_transfer_restart_and_each_goal(
                     await client.poll_game_once()
                     assert len(client.session.notices) >= expected
                     if expansion_case:
-                        assert client.session.item_ids.count(28051801) == 3
+                        assert all(
+                            client.session.item_ids.count(id_) == 1
+                            for id_ in (28051202, 28051203, 28051204)
+                        )
                         assert client.session.item_ids.count(28051911) == 3
                 assert any(item.player != clients[0].slot for item in clients[0].items_received)
                 await until(lambda: any(key.startswith("s:") for key in clients[0].session.notices))

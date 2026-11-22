@@ -12,9 +12,14 @@ from gamma_archipelago.catalog import (
     KILL_MILESTONE_BASE,
     LOCATION_NAMES,
     SIDE_TASK_MILESTONE_BASE,
-    enabled_item_ids,
 )
 from gamma_archipelago.configuration import OPTION_NAMES, SeedConfiguration, build_configuration
+from gamma_archipelago.content_progression import (
+    configured_item_ids,
+)
+from gamma_archipelago.content_progression import (
+    protected as content_protected,
+)
 from gamma_archipelago.discovery import configured_location_ids, protected_tail_ids
 from gamma_archipelago.pool_budget import PoolBudget
 from gamma_archipelago.starting_unlock import unlock_candidates
@@ -103,6 +108,8 @@ class GammaWorld(World):
             and (
                 self.options.checks_rank_milestones.value
                 or self.options.checks_faction_standing.value
+                or self.options.checks_armour_tiers.value
+                or self.options.checks_weapon_tiers.value
             )
             and definition.get("effect") == "reputation"
         ):
@@ -121,6 +128,9 @@ class GammaWorld(World):
 
         menu.connect(regions[starting_level(self.configuration)])
         add_goal_events(self, regions, GammaLocation, GammaItem)
+        from .content import add_tool_claims
+
+        add_tool_claims(self, regions, GammaLocation, GammaItem)
         if "rewards_progression_stashes" in self.configuration.rewards:
             claim = GammaLocation(
                 self.player, "Claim Cordon Psi Stash", None, regions["l01_escape"]
@@ -148,6 +158,7 @@ class GammaWorld(World):
         protected |= protected_settlements(self.configuration) | practical_protected(
             self.configuration
         )
+        protected |= content_protected(self.configuration)
         fragile = fragile_ids(self.configuration)
         for location in _catalog["locations"]:
             if location["id"] not in allowed:
@@ -200,9 +211,10 @@ class GammaWorld(World):
 
     def set_rules(self) -> None:
         apply_access_rules(self, _catalog)
-        from .playability import restrict_placements
+        from .playability import restrict_placements, restrict_tool_stashes
 
         restrict_placements(self, _catalog)
+        restrict_tool_stashes(self, _catalog)
         set_goal_rule(self, _catalog)
 
     def pre_fill(self) -> None:
@@ -213,6 +225,21 @@ class GammaWorld(World):
         request_neutrality_opener(self)
         place_zone_keys(self, _catalog)
         prefer_early_hub(self, _catalog)
+
+    def fill_hook(
+        self,
+        progitempool: list[Item],
+        usefulitempool: list[Item],
+        filleritempool: list[Item],
+        fill_locations: list[Location],
+    ) -> None:
+        if (
+            self.configuration.option("content_progression")
+            and "rewards_progressive_tools" in self.configuration.rewards
+        ):
+            from .content import order_tool_items
+
+            order_tool_items(self.player, progitempool)
 
     def fill_slot_data(self) -> dict[str, object]:
         identity = generation_identity(self)
@@ -230,9 +257,7 @@ class GammaWorld(World):
                 for location in self.multiworld.get_locations(self.player)
                 if location.address is not None
             ),
-            "item_ids": sorted(
-                enabled_item_ids(self.configuration.rewards, self.configuration.gear)
-            ),
+            "item_ids": sorted(configured_item_ids(self.configuration)),
         }
 
     def get_filler_item_name(self) -> str:

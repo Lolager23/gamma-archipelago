@@ -12,7 +12,9 @@ from gamma_archipelago.web_planner import preview
 
 def test_three_tool_copies_precede_filler_and_solver_requires_expert_for_upgrade_checks():
     multiworld = setup_multiworld(
-        GammaWorld, seed=9, options=dict(rewards_progressive_tools=1, checks_gear_upgrades=1)
+        GammaWorld,
+        seed=9,
+        options=dict(rewards_progressive_tools=1, checks_gear_upgrades=1, content_progression=0),
     )
     world = multiworld.worlds[1]
     assert sum(item.name == "Progressive Tools" for item in multiworld.itempool) == 3
@@ -36,6 +38,7 @@ def test_three_tool_copies_precede_filler_and_solver_requires_expert_for_upgrade
         setup_multiworld(
             GammaWorld,
             options={
+                "content_progression": 0,
                 **values,
                 "checks_maps": 0,
                 "checks_side_task_milestones": 1,

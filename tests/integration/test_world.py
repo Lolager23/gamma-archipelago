@@ -95,7 +95,7 @@ def test_category_manifests_pools_and_reachability(maps, settlements, count):
         ("checks_mutant_first_kills", 25),
         ("checks_faction_first_kills", 13),
         ("checks_kill_milestones", 3),
-        ("checks_artefacts", 66),
+        ("checks_artefacts", 40),
     ],
 )
 def test_combat_categories_and_custom_milestones_generate_exactly(category, count):
@@ -138,12 +138,12 @@ def test_single_threshold_seed_has_one_reward_without_pool_overflow():
     "category,count",
     [
         ("checks_quest_types", 13),
-        ("checks_story_milestones", 53),
+        ("checks_story_milestones", 21),
         ("checks_side_task_milestones", 3),
     ],
 )
 def test_task_categories_generate_independently_with_stable_custom_thresholds(category, count):
-    from gamma_archipelago.catalog import enabled_location_ids
+    from gamma_archipelago.discovery import configured_location_ids
 
     multiworld = setup_multiworld(
         GammaWorld,
@@ -157,10 +157,8 @@ def test_task_categories_generate_independently_with_stable_custom_thresholds(ca
     distribute_items_restrictive(multiworld)
     world = multiworld.worlds[1]
     assert len(multiworld.get_locations(1)) == count
-    assert set(world.fill_slot_data()["location_ids"]) == enabled_location_ids(
-        world.configuration.checks,
-        world.configuration.kill_milestones,
-        world.configuration.side_task_milestones,
+    assert set(world.fill_slot_data()["location_ids"]) == configured_location_ids(
+        world.configuration
     )
     assert all(location.item for location in multiworld.get_locations())
     assert multiworld.can_beat_game()
@@ -171,7 +169,7 @@ def test_task_categories_generate_independently_with_stable_custom_thresholds(ca
     [
         ("checks_gear_upgrades", 6),
         ("checks_armour_tiers", 4),
-        ("checks_weapon_tiers", 6),
+        ("checks_weapon_tiers", 10),
         ("checks_knife_tiers", 4),
     ],
 )
@@ -206,7 +204,7 @@ def test_loot_stash_pool_is_optional_seeded_and_fits_even_one_check():
         assert "Basic Toolkit" in names
         assert set(world.fill_slot_data()["item_ids"]) == ITEM_IDS - {
             *range(28051801, 28052000),
-            28051201,
+            *range(28051201, 28051205),
             *range(28051301, 28051309),
             *range(28051401, 28051405),
             *range(28051501, 28051504),
@@ -215,7 +213,7 @@ def test_loot_stash_pool_is_optional_seeded_and_fits_even_one_check():
         }
         assert enabled_item_ids(world.configuration.rewards) == ITEM_IDS - {
             *range(28051801, 28052000),
-            28051201,
+            *range(28051201, 28051205),
             *range(28051301, 28051309),
             *range(28051401, 28051405),
             *range(28051501, 28051504),

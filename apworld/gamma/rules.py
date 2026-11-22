@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING, Any
 from BaseClasses import CollectionState
 
 from gamma_archipelago.activity_requirements import regional_requirement
+from gamma_archipelago.content_progression import melter_check, tool_level
 from gamma_archipelago.playability import allowed
 from gamma_archipelago.settlement_access import requirement
 from gamma_archipelago.starting import starting_level
@@ -64,6 +65,8 @@ def apply_access_rules(world: "GammaWorld", catalog: dict[str, Any]) -> None:
         required = []
         if category in {"checks_artefacts"}:
             required.append("detector")
+            if melter_check(world.configuration, definition):
+                required.append("tools")
         if category in {
             "checks_quest_types",
             "checks_side_task_milestones",
@@ -117,6 +120,11 @@ def apply_access_rules(world: "GammaWorld", catalog: dict[str, Any]) -> None:
         earning = (
             category in {"checks_rank_milestones", "checks_faction_standing"}
             and definition.get("minimum", 1) > 0
+            and not (
+                category == "checks_faction_standing"
+                and world.configuration.option("playability_logic")
+                and "rewards_faction_reputation" in world.configuration.rewards
+            )
         )
 
         def activity(
@@ -145,7 +153,12 @@ def apply_access_rules(world: "GammaWorld", catalog: dict[str, Any]) -> None:
                     lambda level: state.can_reach_region(level, player),
                 )
                 and (settlement is None or state.has(settlement.name, player, settlement.copies))
-                and (not tools or state.has("Progressive Tools", player, 3))
+                and (not tools or tool_level(lambda name: state.count(name, player)) >= 3)
+                and (
+                    not melter_check(world.configuration, definition)
+                    or "rewards_artefact_melter" not in world.configuration.rewards
+                    or state.has("Artefact Melter", player)
+                )
                 and all(state.has(name, player) for name in items)
                 and regional.accessible(lambda level: state.can_reach_region(level, player))
                 and (not fight or weapon)

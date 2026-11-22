@@ -447,7 +447,8 @@
         "good_psy_helmet"
       ],
       "cache": "esc_treasure_3",
-      "level": "l01_escape"
+      "level": "l01_escape",
+      "protect_psi": true
     },
     {
       "id": 28051301,
@@ -1251,6 +1252,50 @@
       "classification": "useful",
       "effect": "convenience",
       "copies": 3
+    },
+    {
+      "id": 28051202,
+      "name": "Progression Stash: Basic Tools",
+      "classification": "progression",
+      "category": "rewards_progressive_tools",
+      "effect": "progression_stash",
+      "cache": "esc_treasure_2",
+      "contents": [
+        "itm_basickit"
+      ],
+      "tool_level": 1
+    },
+    {
+      "id": 28051203,
+      "name": "Progression Stash: Advanced Tools",
+      "classification": "progression",
+      "category": "rewards_progressive_tools",
+      "effect": "progression_stash",
+      "cache": "esc_treasure_10",
+      "contents": [
+        "itm_advancedkit"
+      ],
+      "tool_level": 2
+    },
+    {
+      "id": 28051204,
+      "name": "Progression Stash: Expert Tools",
+      "classification": "progression",
+      "category": "rewards_progressive_tools",
+      "effect": "progression_stash",
+      "cache": "esc_treasure_17",
+      "contents": [
+        "itm_expertkit"
+      ],
+      "tool_level": 3
+    },
+    {
+      "id": 28051802,
+      "name": "Artefact Melter",
+      "classification": "progression",
+      "category": "rewards_artefact_melter",
+      "effect": "artefact_melter",
+      "melter_section": "itm_artefactskit"
     }
   ],
   "locations": [
@@ -4473,7 +4518,8 @@
         ],
         "reliable": true,
         "combat": false
-      }
+      },
+      "story_arc": "living_legend"
     },
     {
       "id": 28052602,
@@ -4494,7 +4540,8 @@
         ],
         "reliable": true,
         "combat": false
-      }
+      },
+      "story_arc": "living_legend"
     },
     {
       "id": 28052603,
@@ -4516,7 +4563,8 @@
         ],
         "reliable": true,
         "combat": false
-      }
+      },
+      "story_arc": "living_legend"
     },
     {
       "id": 28052604,
@@ -4539,7 +4587,8 @@
         ],
         "reliable": true,
         "combat": false
-      }
+      },
+      "story_arc": "living_legend"
     },
     {
       "id": 28052605,
@@ -4564,7 +4613,8 @@
         ],
         "reliable": true,
         "combat": false
-      }
+      },
+      "story_arc": "living_legend"
     },
     {
       "id": 28052606,
@@ -4589,7 +4639,8 @@
         ],
         "reliable": true,
         "combat": true
-      }
+      },
+      "story_arc": "living_legend"
     },
     {
       "id": 28052607,
@@ -4616,7 +4667,8 @@
         ],
         "reliable": true,
         "combat": true
-      }
+      },
+      "story_arc": "living_legend"
     },
     {
       "id": 28052608,
@@ -4644,7 +4696,8 @@
         ],
         "reliable": true,
         "combat": true
-      }
+      },
+      "story_arc": "living_legend"
     },
     {
       "id": 28052609,
@@ -4673,7 +4726,8 @@
         ],
         "reliable": true,
         "combat": true
-      }
+      },
+      "story_arc": "living_legend"
     },
     {
       "id": 28052610,
@@ -4702,7 +4756,8 @@
         ],
         "reliable": true,
         "combat": true
-      }
+      },
+      "story_arc": "living_legend"
     },
     {
       "id": 28052611,
@@ -4733,7 +4788,8 @@
         ],
         "reliable": true,
         "combat": true
-      }
+      },
+      "story_arc": "living_legend"
     },
     {
       "id": 28052612,
@@ -4764,7 +4820,8 @@
         ],
         "reliable": true,
         "combat": true
-      }
+      },
+      "story_arc": "living_legend"
     },
     {
       "id": 28052613,
@@ -4795,7 +4852,8 @@
         ],
         "reliable": true,
         "combat": true
-      }
+      },
+      "story_arc": "living_legend"
     },
     {
       "id": 28052614,
@@ -4827,7 +4885,8 @@
         ],
         "reliable": true,
         "combat": true
-      }
+      },
+      "story_arc": "living_legend"
     },
     {
       "id": 28052615,
@@ -4859,7 +4918,8 @@
         ],
         "reliable": true,
         "combat": true
-      }
+      },
+      "story_arc": "living_legend"
     },
     {
       "id": 28052616,
@@ -4891,7 +4951,8 @@
         ],
         "reliable": true,
         "combat": true
-      }
+      },
+      "story_arc": "living_legend"
     },
     {
       "id": 28052617,
@@ -4923,7 +4984,8 @@
         ],
         "reliable": true,
         "combat": true
-      }
+      },
+      "story_arc": "living_legend"
     },
     {
       "id": 28052618,
@@ -4956,7 +5018,8 @@
         ],
         "reliable": true,
         "combat": true
-      }
+      },
+      "story_arc": "living_legend"
     },
     {
       "id": 28052619,
@@ -4991,7 +5054,8 @@
         ],
         "reliable": true,
         "combat": true
-      }
+      },
+      "story_arc": "living_legend"
     },
     {
       "id": 28052620,
@@ -5026,7 +5090,8 @@
         ],
         "reliable": true,
         "combat": true
-      }
+      },
+      "story_arc": "living_legend"
     },
     {
       "id": 28052621,
@@ -5066,7 +5131,8 @@
         ],
         "reliable": true,
         "combat": true
-      }
+      },
+      "story_arc": "living_legend"
     },
     {
       "id": 28052622,
@@ -5106,7 +5172,8 @@
         ],
         "reliable": true,
         "combat": true
-      }
+      },
+      "story_arc": "mortal_sin"
     },
     {
       "id": 28052623,
@@ -5142,7 +5209,8 @@
         ],
         "reliable": true,
         "combat": true
-      }
+      },
+      "story_arc": "mortal_sin"
     },
     {
       "id": 28052624,
@@ -5178,7 +5246,8 @@
         ],
         "reliable": true,
         "combat": true
-      }
+      },
+      "story_arc": "mortal_sin"
     },
     {
       "id": 28052625,
@@ -5214,7 +5283,8 @@
         ],
         "reliable": true,
         "combat": true
-      }
+      },
+      "story_arc": "mortal_sin"
     },
     {
       "id": 28052626,
@@ -5250,7 +5320,8 @@
         ],
         "reliable": true,
         "combat": true
-      }
+      },
+      "story_arc": "mortal_sin"
     },
     {
       "id": 28052627,
@@ -5291,7 +5362,8 @@
         ],
         "reliable": true,
         "combat": true
-      }
+      },
+      "story_arc": "mortal_sin"
     },
     {
       "id": 28052628,
@@ -5332,7 +5404,8 @@
         ],
         "reliable": true,
         "combat": true
-      }
+      },
+      "story_arc": "mortal_sin"
     },
     {
       "id": 28052629,
@@ -5368,7 +5441,8 @@
         ],
         "reliable": true,
         "combat": true
-      }
+      },
+      "story_arc": "mortal_sin"
     },
     {
       "id": 28052630,
@@ -5405,7 +5479,8 @@
         ],
         "reliable": true,
         "combat": true
-      }
+      },
+      "story_arc": "mortal_sin"
     },
     {
       "id": 28052631,
@@ -5442,7 +5517,8 @@
         ],
         "reliable": true,
         "combat": true
-      }
+      },
+      "story_arc": "mortal_sin"
     },
     {
       "id": 28052632,
@@ -5479,7 +5555,8 @@
         ],
         "reliable": true,
         "combat": true
-      }
+      },
+      "story_arc": "mortal_sin"
     },
     {
       "id": 28052633,
@@ -5521,7 +5598,8 @@
         ],
         "reliable": true,
         "combat": true
-      }
+      },
+      "story_arc": "mortal_sin"
     },
     {
       "id": 28052634,
@@ -5558,7 +5636,8 @@
         ],
         "reliable": true,
         "combat": true
-      }
+      },
+      "story_arc": "mortal_sin"
     },
     {
       "id": 28052635,
@@ -5596,7 +5675,8 @@
         ],
         "reliable": true,
         "combat": true
-      }
+      },
+      "story_arc": "mortal_sin"
     },
     {
       "id": 28052636,
@@ -5634,7 +5714,8 @@
         ],
         "reliable": true,
         "combat": true
-      }
+      },
+      "story_arc": "mortal_sin"
     },
     {
       "id": 28052637,
@@ -5673,7 +5754,8 @@
         ],
         "reliable": true,
         "combat": true
-      }
+      },
+      "story_arc": "mortal_sin"
     },
     {
       "id": 28052638,
@@ -5714,7 +5796,8 @@
         ],
         "reliable": true,
         "combat": true
-      }
+      },
+      "story_arc": "mortal_sin"
     },
     {
       "id": 28052639,
@@ -5755,7 +5838,8 @@
         ],
         "reliable": true,
         "combat": true
-      }
+      },
+      "story_arc": "mortal_sin"
     },
     {
       "id": 28052640,
@@ -5796,7 +5880,8 @@
         ],
         "reliable": true,
         "combat": true
-      }
+      },
+      "story_arc": "mortal_sin"
     },
     {
       "id": 28052641,
@@ -5837,7 +5922,8 @@
         ],
         "reliable": true,
         "combat": true
-      }
+      },
+      "story_arc": "mortal_sin"
     },
     {
       "id": 28052642,
@@ -5878,7 +5964,8 @@
         ],
         "reliable": true,
         "combat": true
-      }
+      },
+      "story_arc": "mortal_sin"
     },
     {
       "id": 28052643,
@@ -5924,7 +6011,8 @@
         ],
         "reliable": true,
         "combat": true
-      }
+      },
+      "story_arc": "mortal_sin"
     },
     {
       "id": 28052644,
@@ -5965,7 +6053,8 @@
         ],
         "reliable": true,
         "combat": true
-      }
+      },
+      "story_arc": "operation_afterglow"
     },
     {
       "id": 28052645,
@@ -6006,7 +6095,8 @@
         ],
         "reliable": true,
         "combat": true
-      }
+      },
+      "story_arc": "operation_afterglow"
     },
     {
       "id": 28052646,
@@ -6047,7 +6137,8 @@
         ],
         "reliable": true,
         "combat": true
-      }
+      },
+      "story_arc": "operation_afterglow"
     },
     {
       "id": 28052647,
@@ -6088,7 +6179,8 @@
         ],
         "reliable": true,
         "combat": true
-      }
+      },
+      "story_arc": "operation_afterglow"
     },
     {
       "id": 28052648,
@@ -6129,7 +6221,8 @@
         ],
         "reliable": true,
         "combat": true
-      }
+      },
+      "story_arc": "operation_afterglow"
     },
     {
       "id": 28052649,
@@ -6170,7 +6263,8 @@
         ],
         "reliable": true,
         "combat": true
-      }
+      },
+      "story_arc": "operation_afterglow"
     },
     {
       "id": 28052650,
@@ -6211,7 +6305,8 @@
         ],
         "reliable": true,
         "combat": true
-      }
+      },
+      "story_arc": "operation_afterglow"
     },
     {
       "id": 28052651,
@@ -6252,7 +6347,8 @@
         ],
         "reliable": true,
         "combat": true
-      }
+      },
+      "story_arc": "operation_afterglow"
     },
     {
       "id": 28052652,
@@ -6293,7 +6389,8 @@
         ],
         "reliable": true,
         "combat": true
-      }
+      },
+      "story_arc": "operation_afterglow"
     },
     {
       "id": 28052653,
@@ -6334,7 +6431,8 @@
         ],
         "reliable": true,
         "combat": true
-      }
+      },
+      "story_arc": "operation_afterglow"
     },
     {
       "id": 28052701,
@@ -7550,6 +7648,120 @@
       "level": "Menu",
       "quota_group": "artefact",
       "minimum": 66
+    },
+    {
+      "id": 28053001,
+      "name": "Experience an Emission",
+      "level": "Menu",
+      "category": "checks_emissions",
+      "key": "emission_start",
+      "logic": {
+        "any_regions": [
+          "k00_marsh",
+          "l01_escape",
+          "l02_garbage",
+          "l03_agroprom",
+          "k01_darkscape",
+          "l04_darkvalley",
+          "l05_bar",
+          "l06_rostok",
+          "l07_military",
+          "l08_yantar",
+          "l09_deadcity",
+          "l10_limansk",
+          "l10_radar",
+          "l10_red_forest",
+          "l11_hospital",
+          "l11_pripyat",
+          "l12_stancia",
+          "l12_stancia_2",
+          "l13_generators",
+          "zaton",
+          "jupiter",
+          "pripyat",
+          "k02_trucks_cemetery",
+          "y04_pole"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
+    },
+    {
+      "id": 28053002,
+      "name": "Experience a Psi Storm",
+      "level": "Menu",
+      "category": "checks_psi_storms",
+      "key": "psi_storm_start",
+      "logic": {
+        "any_regions": [
+          "k00_marsh",
+          "l01_escape",
+          "l02_garbage",
+          "l03_agroprom",
+          "k01_darkscape",
+          "l04_darkvalley",
+          "l05_bar",
+          "l06_rostok",
+          "l07_military",
+          "l08_yantar",
+          "l09_deadcity",
+          "l10_limansk",
+          "l10_radar",
+          "l10_red_forest",
+          "l11_hospital",
+          "l11_pripyat",
+          "l12_stancia",
+          "l12_stancia_2",
+          "l13_generators",
+          "zaton",
+          "jupiter",
+          "pripyat",
+          "k02_trucks_cemetery",
+          "y04_pole"
+        ],
+        "all_regions": [],
+        "reliable": true
+      }
+    },
+    {
+      "id": 28052751,
+      "name": "Use Firearm Repair Class: A",
+      "level": "Menu",
+      "category": "checks_weapon_tiers",
+      "key": "grade_A",
+      "weapon_grade": "A",
+      "repair_kit": "toolkit_p",
+      "repair_type": "pistol"
+    },
+    {
+      "id": 28052752,
+      "name": "Use Firearm Repair Class: B",
+      "level": "Menu",
+      "category": "checks_weapon_tiers",
+      "key": "grade_B",
+      "weapon_grade": "B",
+      "repair_kit": "toolkit_s",
+      "repair_type": "shotgun"
+    },
+    {
+      "id": 28052753,
+      "name": "Use Firearm Repair Class: C",
+      "level": "Menu",
+      "category": "checks_weapon_tiers",
+      "key": "grade_C",
+      "weapon_grade": "C",
+      "repair_kit": "toolkit_r5",
+      "repair_type": "rifle_5"
+    },
+    {
+      "id": 28052754,
+      "name": "Use Firearm Repair Class: D",
+      "level": "Menu",
+      "category": "checks_weapon_tiers",
+      "key": "grade_D",
+      "weapon_grade": "D",
+      "repair_kit": "toolkit_r7",
+      "repair_type": "rifle_7"
     }
   ],
   "content_inventory": {
@@ -8308,7 +8520,9 @@
   },
   "story_goal_checks": {
     "Conclude Strelok's First Conversation": 28052611,
-    "Return After Living Legend": 28052621
+    "Return After Living Legend": 28052621,
+    "Return After Mortal Sin": 28052643,
+    "Finish Operation Afterglow": 28052653
   },
   "settlement_relations": {
     "neutral_threshold": -999,
@@ -8340,5 +8554,35 @@
         "reward": 0
       }
     }
+  },
+  "weather_levels": [
+    "k00_marsh",
+    "l01_escape",
+    "l02_garbage",
+    "l03_agroprom",
+    "k01_darkscape",
+    "l04_darkvalley",
+    "l05_bar",
+    "l06_rostok",
+    "l07_military",
+    "l08_yantar",
+    "l09_deadcity",
+    "l10_limansk",
+    "l10_radar",
+    "l10_red_forest",
+    "l11_hospital",
+    "l11_pripyat",
+    "l12_stancia",
+    "l12_stancia_2",
+    "l13_generators",
+    "zaton",
+    "jupiter",
+    "pripyat",
+    "k02_trucks_cemetery",
+    "y04_pole"
+  ],
+  "opening_economy": {
+    "starting_money_rubles": 5000,
+    "contract_key": "esc_m_trader_1"
   }
 }

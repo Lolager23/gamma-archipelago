@@ -133,3 +133,29 @@ def test_quick_start_does_not_require_story_controls(lua):
     window.ck_warfare = None
     assert window.OnStartGame(window) == "started"
     assert engine.story is None
+
+
+@pytest.mark.parametrize(
+    "values",
+    [
+        {"goal": 7},
+        {"goal": 8},
+        {"checks_story_milestones": 1},
+        {"checks_mortal_sin": 1},
+        {"checks_operation_afterglow": 1},
+    ],
+)
+def test_independent_story_checks_and_new_goals_enable_story_mode_before_start(lua, values):
+    window, engine = menu(lua, **values)
+    assert window.OnStartGame(window) == "started"
+    assert engine.story is True
+    engine.creation.new_game_faction = "stalker"
+    assert lua.globals().gamma_ap_start.prepare(lua.globals().configuration) == (True, True)
+    assert engine.creation.new_game_story_mode is True
+
+
+def test_required_story_start_refuses_a_missing_native_story_control(lua):
+    window, engine = menu(lua, goal=8)
+    window.ck_story = None
+    assert window.OnStartGame(window) is False
+    assert engine.starts == 0 and engine.warning == "gamma_ap_start_unsupported"

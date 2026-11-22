@@ -61,10 +61,22 @@ function acquired(state, object)
     return true
 end
 
+local function eligible(state, id)
+    local row = gamma_ap_catalog.tracker_checks[id]
+    if state.configuration.options.playability_logic ~= 1
+        or not (row.category == "checks_armour_tiers" and tonumber(row.key) >= 3 or row.weapon_grade == "D") then return true end
+    local ok,psi = pcall(function()
+        local helmet = db.actor:object("good_psy_helmet")
+        return helmet ~= nil and helmet:condition() > 0 and helmet:condition() <= 1
+    end)
+    local regions = gamma_ap_tracker.reachable(state,ok and psi)
+    return gamma_ap_playability.reason(state,row,regions,ok and psi) == nil
+end
+
 local function award_tiers(state, locations, tier)
     if not tier then return end
     for text, id in pairs(locations) do
-        if tonumber(text) <= tier and state.enabled_checks[id] then state.checks[id] = true end
+        if tonumber(text) <= tier and state.enabled_checks[id] and eligible(state,id) then state.checks[id] = true end
     end
 end
 
@@ -86,6 +98,10 @@ local function check_equipped(state, options)
                 or gamma_ap_catalog.weapon_kinds[kind(section)]
             local id = gamma_ap_catalog.weapon_locations[class]
             if id and state.enabled_checks[id] then state.checks[id] = true end
+            if options.content_progression == 1 then
+                local grade = gamma_ap_catalog.weapon_grade_locations[ini_sys:r_string_ex(section,"repair_type")]
+                if grade and state.enabled_checks[grade] and eligible(state,grade) then state.checks[grade] = true end
+            end
             award_tiers(state, gamma_ap_catalog.knife_locations, gamma_ap_catalog.knives[section])
         end
     end

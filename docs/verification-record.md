@@ -802,3 +802,27 @@ push/PR jobs hit the inherited 25-minute execution limit. GitHub annotations
 confirmed timeout cancellation rather than an assertion failure. The allowance
 is now 40 minutes; seed counts, tests and coverage gates are unchanged. Exact-head
 CI results are recorded separately after the rerun. No game deployment occurred.
+
+### Expanded content progression — 22 November 2026
+
+Complete verifier passed with the separate pinned AP runtime: 1,614 covered
+regressions, 82 untraced generator/server cases and seven Node tests (1,703 total).
+The unchanged nine-preset matrix contains 1,000 filled seeds per preset. Python
+aggregate measured coverage was 99.94%; all owned per-module line/branch gates
+and critical 100% gates passed. Lua executable-line gates passed; branch coverage
+is not measured. The private developer panel's 111 compatibility tests also passed
+against source and the installed core using a scratch legacy configuration fixture.
+
+Seed 260 reproduced a constrained Expert Tools fill failure. The upstream fill
+hook now orders only this player's constrained tiers before flexible progression;
+late-tier access restrictions remain. Both Full Story and Full Labs regression
+cases and the complete matrix passed. Disabled additions retain legacy wire
+records, and independent story arcs enable story mode before character creation.
+
+Functional source fingerprints matched after verification. Source review covered
+state ownership, named tool-cache contents, psi separation, optional effect guards,
+manifest parity, completion callbacks and old configuration identities. The World
+framework coordinator retains some methods over the size guide; content policy
+and engine effects live in separate cohesive helpers. Windows/Linux exact-head CI
+and retained artifact parity are pending publication. Native acceptance is not run
+and belongs to Owen. No installed game, current session or private panel changed.

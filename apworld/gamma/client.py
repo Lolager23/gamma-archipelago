@@ -23,6 +23,7 @@ from gamma_archipelago.configuration import (
     build_configuration,
     legacy_defaults,
 )
+from gamma_archipelago.content_progression import configured_item_ids
 from gamma_archipelago.discovery import configured_location_ids
 from gamma_archipelago.notice_text import clean_label
 from gamma_archipelago.paths import DEFAULT_GAME_ROOT
@@ -119,7 +120,7 @@ class GammaContext(CommonContext):
             if self.expanded:
                 validate_id_manifest(slot_data.get("location_ids"), allowed, "check")
             item_ids = (
-                enabled_item_ids(self.configuration.rewards, self.configuration.gear)
+                configured_item_ids(self.configuration)
                 if self.expanded
                 else frozenset(ITEM_SECTIONS)
             )

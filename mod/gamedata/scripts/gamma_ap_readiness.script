@@ -1,4 +1,4 @@
--- Presentation only: actor updates also run behind the loading/entry screen.
+-- Active-world readiness: actor updates also run behind the loading/entry screen.
 local dismissed_frame = nil
 
 function reset()

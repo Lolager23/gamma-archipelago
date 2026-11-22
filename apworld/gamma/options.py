@@ -14,6 +14,38 @@ from Options import (
 )
 
 
+class ContentProgression(DefaultOnToggle):
+    """Split story arcs, physical tool stashes and tiered distinct artefacts."""
+
+    display_name = "Expanded content progression"
+
+
+class InfiniteStamina(Toggle):
+    """Restore actor stamina during active world frames; does not alter other stats."""
+
+    display_name = "Infinite stamina"
+
+
+class ChecksEmissions(Toggle):
+    display_name = "Checks: Experience an emission"
+
+
+class ChecksPsiStorms(Toggle):
+    display_name = "Checks: Experience a Psi Storm"
+
+
+class ChecksMortalSin(Toggle):
+    display_name = "Checks: Mortal Sin"
+
+
+class ChecksOperationAfterglow(Toggle):
+    display_name = "Checks: Operation Afterglow"
+
+
+class RewardsArtefactMelter(Toggle):
+    display_name = "Rewards: Artefact Melter"
+
+
 class PlayabilityLogic(DefaultOnToggle):
     """Limit knife grind, model AP goodwill and keep equipment permissions early."""
 
@@ -273,6 +305,8 @@ class Goal(Choice):
     option_living_legend = 4
     option_all_x_labs = 5
     option_talk_sidorovich = 6
+    option_mortal_sin = 7
+    option_operation_afterglow = 8
     default = 0
 
 
@@ -446,6 +480,8 @@ class ArtefactDiscoveryCount(MutantDiscoveryCount):
     display_name = "Distinct artefact quota"
     range_end = 66
 
+    default = 40
+
 
 class MutantFillerTail(Range):
     """Final X generic mutant discoveries accept filler only, with no progression/useful rewards."""
@@ -482,6 +518,13 @@ class OptionalCheckPolicy(Choice):
 
 @dataclass
 class GammaOptions(PerGameCommonOptions):
+    content_progression: ContentProgression
+    infinite_stamina: InfiniteStamina
+    checks_emissions: ChecksEmissions
+    checks_psi_storms: ChecksPsiStorms
+    checks_mortal_sin: ChecksMortalSin
+    checks_operation_afterglow: ChecksOperationAfterglow
+    rewards_artefact_melter: RewardsArtefactMelter
     playability_logic: PlayabilityLogic
     settlement_reputation_logic: SettlementReputationLogic
     ap_start: ArchipelagoStart

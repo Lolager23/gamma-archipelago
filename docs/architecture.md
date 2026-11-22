@@ -32,7 +32,8 @@ advancing connection heartbeat for startup/reconnect PDA notices. Its transient
 game cache owns only presentation; it never enters save, item or check state.
 Automatic join/transfer display also shares one transient loading-readiness gate:
 native screen dismissal followed by a later unpaused, non-precaching world frame.
-This gate never delays or acknowledges item/check state.
+The same gate protects weather observations and optional stamina restoration.
+It does not acknowledge items or delay receipt application.
 
 The [PDA tracker](pda-tracker.md) reads a detached view from the game-state owner.
 Settlement diplomacy uses catalogue-backed solver requirements and a read-only
