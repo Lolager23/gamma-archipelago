@@ -61,6 +61,6 @@ are examples. Contained Jellyfish variants are still one type. Crystal
 
 Source inspection used the effective Dev override index and pinned engine
 7289a03f19a3cc712d9fc4cf6122345984c8c094. The engine exposes writable actor power;
-GAMMA repair-kit naming and repair_type definitions establish grade A–D mapping.
+GAMMA repair-kit naming and repair_type definitions establish grade Aâ€“D mapping.
 This is source evidence. Native weather, story callbacks, physical kit retrieval,
 late equipment eligibility and stamina acceptance remain not run for Owen.
