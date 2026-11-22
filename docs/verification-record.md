@@ -970,3 +970,30 @@ Stacks on #76. Current-head Windows/Linux CI and retained package hashes are lin
 from the PR when complete. Native acceptance is not run and belongs to Owen. No
 merge, deployment, game launch, current-session change or private-panel edit occurred.
 Protected normal installations remain untouched.
+
+
+### Cumulative equipment classes and generic tool receipts — 22 November 2026
+
+Fresh equipment permissions progress through firearm, outfit, helmet and backpack
+classes. All default to level one and may start at zero. Backpacks include free
+physical copies; knives are always usable and supplied when absent. Native
+creation offers are filtered before construction. Knife, armour and firearm-grade
+checks backfill eligible lower tiers. Equipment condition defaults to 65% with a
+0–100 setting and an exact-threshold float-rounding regression. Generic tools
+unlock and supply Basic, Advanced and Expert in receipt order. Old omitted-field
+contracts retain their binary permissions, named tool rewards and identities.
+
+The complete verifier passed 1,819 covered tests, 83 untraced generation/server
+cases and ten Node tests (1,912 total), including all 9,000 preset seeds. Every
+owned Python runtime module measured 100% line and branch coverage. Lua executable-
+line gates passed; Lua branch coverage is not measured. Frozen functional, test
+and input hashes matched. Regressions cover zero/default class starts, cumulative
+receipts, expensive-shop exclusions, creation filtering/restoration, free-supply
+failure and uncertainty, save validation, skipped-tier credit, condition boundaries,
+legacy manifests, actual server receipt ordering and paced one-tier steps.
+
+Stacks on quest travel PR #77. Current-head Windows/Linux CI and retained package
+hashes are linked from the PR when complete. Native acceptance remains not run for
+Owen, including creation-menu integration, real section mappings, backpack delivery
+and older-save reload. No merge, deployment, game launch, current-session change,
+private-panel edit or write to the protected normal installations occurred.
