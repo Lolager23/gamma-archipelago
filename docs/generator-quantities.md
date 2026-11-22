@@ -8,6 +8,10 @@ Medical, maintenance, ammunition and expedition packages default to four each;
 Basic, Field and Advanced loot stashes default to four each; stat levels default
 to nine and extra faction goodwill to zero. Disabled categories contribute none.
 Physical Basic Toolkit copies have a separate count, defaulting to zero.
+The optional artefact reward category supplies physical non-quest artefacts;
+explicit quantity mode defaults to four when enabled. The Full Story preset
+enables it. See [regional story balance](regional-story-balance.md) for container
+selection, delivery limits and native acceptance still required.
 Counts rotate deterministically across that category's published reward IDs.
 Existing native reputation, skill, carry and finite stash/container caps remain;
 additional receipts do not invent extra levels or new native containers.
@@ -21,7 +25,8 @@ trimming useful rewards or permissions. Counts are not literally unbounded.
 
 With the new content contract, generic artefact checks use a base of at most 40.
 Numbers 1–20 use detector and regional source access. Numbers 21–40 also require
-melter/tool use. A configurable extra ceiling defaults to 60. Only a 40-type base
+melter/tool use, plus artefact recipe access in fresh regional contracts. A
+configurable extra ceiling defaults to 60. Only a 40-type base
 with melter enabled can add 41–60, and only enough checks to fit non-filler demand.
 The resolver runs before region creation, accounting for exclusions, gifts and
 start-inventory-from-pool. The resolved count enters slot data, configuration digest
@@ -36,7 +41,9 @@ AP options; actual generated reports are authoritative.
 Every optional actual-seed preview includes ordinary AP logical spheres and paced
 steps. Paced steps complete all newly reachable checks, but take at most one tier
 per knife, armour, repair-grade, rank, firearm-upgrade, armour-upgrade and tool-claim
-chain (or fresh tool-use capability). Rewards arrive at the end of the step. Ordinary local goal events settle
+chain (or fresh tool-use capability). Fresh equipment-class and generic-tool
+receipts also advance at most one tier per chain per step; deferred copies are
+listed in spoiler reports. Rewards arrive at the end of the step. Ordinary local goal events settle
 between steps. This does not alter access rules, fill or actual game callbacks.
 It models a slower playthrough, not measured minutes or a guarantee of difficulty.
 

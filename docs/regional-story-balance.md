@@ -88,6 +88,14 @@ Primary reference: [Archipelago 0.6.8 World API](https://github.com/ArchipelagoM
 Native source hashes and archived New 04 evidence are retained privately. No game
 assets or private session files are included in Git.
 
+Regenerating New 04's input seed with the corrected rules placed its Agroprom key
+at Sidorovich's Cordon Expedition Contract. Even collecting every other network
+reward leaves both Scorcher and Generators unavailable without the Agroprom key.
+That fresh archive is logically beatable with every check reachable: 22 initial
+checks, 11 logical spheres and 12 paced steps, with Living Legend at paced step 8.
+The original archive, its analysis and the current playable session are unchanged.
+This demonstrates the declared dependency and fresh fill, not native acceptance.
+
 ## Acceptance still needed
 
 Owen should verify real mutant availability across several regions, Scorcher and

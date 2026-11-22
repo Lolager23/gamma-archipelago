@@ -997,3 +997,39 @@ hashes are linked from the PR when complete. Native acceptance remains not run f
 Owen, including creation-menu integration, real section mappings, backpack delivery
 and older-save reload. No merge, deployment, game launch, current-session change,
 private-panel edit or write to the protected normal installations occurred.
+
+
+### Regional story readiness and artefact rewards - 22 November 2026
+
+Fresh generic mutant logic permits at most five distinct supported opening types
+plus two per additional supported reachable region. Region/type matching prevents
+double counting and does not reject actual early rare kills. Scorcher requires
+Advanced tools, Medium outfit and Class C; Path Pripyat requires Expert, Heavy and
+Class D. Machinegun and Exoskeleton checks require Scorcher, Red Forest and another
+northern region. Later artefact quotas require recipes alongside their melter.
+Optional physical artefact rewards reuse existing ordered delivery plans.
+
+The complete verifier passed 1,856 covered tests, 83 untraced generation/server
+cases and ten Node tests (1,949 total), including all 9,000 preset seeds. Every
+owned Python runtime module measured 100% lines and branches. Lua executable-line
+gates passed; Lua branch coverage is not measured. Frozen functional, test and
+input hashes matched. Regressions cover each missing readiness item even with all
+other keys and goodwill, terminal goal parity, recipe self-lock prevention,
+monotonic regional quotas and AP/PDA parity, artefact manifests, malformed delivery
+plans, failures/uncertain creation, repeated receipts, save/load and synchronous
+pickup suppression. No detector or recipe permission is implied by an artefact.
+
+A separate actual generation reused New 04's input seed. Its Agroprom key moved
+from Generators First Arrival to Sidorovich's Cordon Expedition Contract. With all
+other network rewards but no Agroprom key, both Scorcher and Generators remain
+unreachable. The fresh archive is logically beatable with all checks reachable:
+22 initial checks, 11 logical spheres, 12 paced steps and Living Legend at paced
+step 8. Archive SHA-256: 68734093bec0803719c5a236378833fb3bb5ba654fde76f04ece8a6096a977d9.
+The original archive, prior analysis and running session remain unchanged.
+
+Stacks on equipment PR #78. Current-head Windows/Linux CI and retained package
+hashes are linked from the PR when complete. Native acceptance remains not run for
+Owen: practical mutant diversity, story/equipment tracker timing, real artefact
+condition/container radiation and asynchronous pickup callbacks. This is source
+and isolated-tooling work only: no merge, deployment, game launch, private-panel
+edit, session change or protected normal-installation write occurred.
