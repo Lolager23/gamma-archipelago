@@ -22,13 +22,14 @@ def tracker_lines(catalogue: dict[str, Any]) -> list[str]:
                 ("region", "level", "Menu"),
                 ("category", "category", ""),
                 ("key", "key", ""),
+                ("weapon_grade", "weapon_grade", ""),
             )
         )
         quota = quoted(row.get("quota_group", ""))
         minimum = row.get("minimum", 0)
         lines.append(
             f"    [{row['id']}]={{{fields}, quota={quota}, minimum={minimum},"
-            f" quests={{{permissions}}}}},"
+            f" price={row.get('price', 0)}, quests={{{permissions}}}}},"
         )
     lines.extend(["}", "tracker_regions = {"])
     lines.extend(f"    [{quoted(row['id'])}]={quoted(row['name'])}," for row in catalogue["levels"])

@@ -25,6 +25,7 @@ function select(configuration, enabled)
             if (configuration.options[group.."_discovery_mode"] or 0) == 1 then
                 local limit = configuration.options[group.."_discovery_count"] or 0
                 if limit == 0 then limit = count end
+                if group == "artefact" and configuration.options.content_progression == 1 then limit = math.min(limit,40) end
                 if limit < 1 or limit > count then return nil,"Discovery quota exceeds its qualifying roster" end
                 for index=1,limit do enabled[gamma_ap_catalog.discovery_quotas[group][index]] = true end
             else

@@ -18,7 +18,9 @@ def test_new_defaults_use_generic_checks_and_named_types_remain_opt_in(group):
     values = {**defaults(), "checks_maps": 0, GROUPS[group]: 1}
     assert values[f"{group}_discovery_mode"] == 1
     generic = build_configuration(values)
-    assert configured_location_ids(generic) == frozenset(QUOTAS[group])
+    assert configured_location_ids(generic) == frozenset(
+        QUOTAS[group][:40] if group == "artefact" else QUOTAS[group]
+    )
     named = build_configuration({**values, f"{group}_discovery_mode": 0})
     assert configured_location_ids(named) == frozenset(SOURCES[group].values())
     assert generic.digest != named.digest
@@ -39,12 +41,16 @@ def test_quota_selects_fixed_milestones_and_exclusions_reduce_roster(group):
     assert configured_location_ids(configuration) == frozenset(QUOTAS[group][:3])
     assert {row["id"] for row in preview(values, {})["checks"]} == set(QUOTAS[group][:3])
     all_types = build_configuration({**values, f"{group}_discovery_count": 0})
-    assert len(configured_location_ids(all_types)) == len(SOURCES[group]) - 1
+    assert len(configured_location_ids(all_types)) == (
+        40 if group == "artefact" else len(SOURCES[group]) - 1
+    )
     per_type = build_configuration({**values, f"{group}_discovery_mode": 0})
     assert source not in configured_location_ids(per_type)
     assert len(configured_location_ids(per_type)) == len(SOURCES[group]) - 1
     with pytest.raises(ConfigurationError, match="roster"):
-        build_configuration({**values, f"{group}_discovery_count": len(SOURCES[group])})
+        build_configuration(
+            {**values, f"{group}_discovery_count": len(SOURCES[group]), "content_progression": 0}
+        )
 
 
 @pytest.mark.parametrize(
@@ -79,7 +85,14 @@ def test_optional_policy_exclusion_normalization_and_legacy_identity():
         if not key.endswith(("_discovery_mode", "_discovery_count"))
         and key not in {"discovery_exclusions", "optional_check_policy"}
     }
-    explicit_legacy = {**values, **{f"{group}_discovery_mode": 0 for group in GROUPS}}
+    explicit_legacy = {
+        **values,
+        **{
+            name: 0
+            for group in GROUPS
+            for name in (f"{group}_discovery_mode", f"{group}_discovery_count")
+        },
+    }
     assert build_configuration(explicit_legacy).digest == build_configuration(legacy).digest
     assert build_configuration(values).digest != build_configuration(legacy).digest
     assert normalize_exclusions(frozenset(TOKENS)) == tuple(sorted(TOKENS))

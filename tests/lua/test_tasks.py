@@ -90,7 +90,9 @@ def test_all_task_functors_and_monster_assault_normalize_to_the_finite_roster(lu
 
 
 def test_story_variants_share_checks_and_never_increment_side_totals(lua):
-    game, _, _ = task_game(lua, checks_story_milestones=1)
+    game, _, _ = task_game(
+        lua, checks_story_milestones=1, checks_mortal_sin=1, checks_operation_afterglow=1
+    )
     catalogue = lua.globals().gamma_ap_catalog
     for id_, location in catalogue.story_task_locations.items():
         emit(lua, game, entry(lua, storyline=True), id_)
@@ -157,7 +159,9 @@ def test_identity_dead_actor_legacy_and_unbound_guards(lua):
 
 
 def test_hook_requirement_late_registration_and_story_mode_refusal(lua):
-    game, engine, _ = task_game(lua, checks_story_milestones=1)
+    game, engine, _ = task_game(
+        lua, checks_story_milestones=1, checks_mortal_sin=1, checks_operation_afterglow=1
+    )
     assert engine.callbacks.actor_on_task_callback is not None
     lua.globals().callbacks_gameobject = None
     engine.now += 1000

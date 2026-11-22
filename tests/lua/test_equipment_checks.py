@@ -75,7 +75,7 @@ def test_pending_engine_deactivation_cannot_award_locked_equipment_tiers(lua):
 
 
 def test_armour_tiers_require_worn_usable_gear_and_keep_a_saved_high_water_mark(lua):
-    game, engine, _ = equipment_game(lua, checks_armour_tiers=1)
+    game, engine, _ = equipment_game(lua, checks_armour_tiers=1, playability_logic=0)
     item = gear(lua, section="test_light", kind="o_light", condition=0)
     engine.outfit = item
     poll(game, engine)

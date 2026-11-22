@@ -3,6 +3,11 @@
 from .expansion_settings import EXPANSION_LIMITS
 
 CHOICES = {
+    "content_progression": [
+        "Legacy content contracts",
+        "Tiered artefacts, tools and split story arcs",
+    ],
+    "infinite_stamina": ["Normal stamina", "Infinite stamina"],
     "playability_logic": ["Legacy assumptions", "Practical progression and early equipment"],
     "settlement_reputation_logic": [
         "Legacy settlement access",

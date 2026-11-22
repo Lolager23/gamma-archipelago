@@ -1,6 +1,8 @@
 """Additional bounded settings; legacy values preserve pre-expansion seed identities."""
 
 EXPANSION_LIMITS = {
+    "content_progression": 1,
+    "infinite_stamina": 1,
     "playability_logic": 1,
     "settlement_reputation_logic": 1,
     "ap_start": 1,
@@ -28,6 +30,7 @@ EXPANSION_LIMITS = {
 }
 EXPANSION_DEFAULTS = dict.fromkeys(EXPANSION_LIMITS, 0)
 LEGACY_REWARD_DEFAULTS = {
+    "rewards_artefact_melter": 0,
     "rewards_convenience": 0,
     "rewards_supply_medical": 0,
     "rewards_supply_maintenance": 0,
@@ -38,6 +41,10 @@ LEGACY_REWARD_DEFAULTS = {
     "rewards_recipe_access": 0,
 }
 LEGACY_CHECK_DEFAULTS = {
+    "checks_emissions": 0,
+    "checks_psi_storms": 0,
+    "checks_mortal_sin": 0,
+    "checks_operation_afterglow": 0,
     "checks_shops": 0,
     "checks_shop_purchases": 0,
     "checks_faction_standing": 0,

@@ -65,3 +65,8 @@ Each increment needs source review, regression/coverage, real generation/server
 verification, exact-head Windows/Linux CI and retained package hashes. Native
 acceptance stays **not run** until Owen reports results. None of these increments
 authorizes a merge, deployment, session reset or game launch.
+
+Stage 2 implements weather checks, split story goals, tiered physical tool stashes,
+melter access, late equipment check gates and opt-in stamina. See
+[content progression](content-progression.md) for exact contracts and native limits.
+Conditional artefact overflow and quantity controls remain the next increment.

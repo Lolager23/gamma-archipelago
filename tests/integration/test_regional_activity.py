@@ -45,7 +45,7 @@ def test_progression_excludes_uncertain_sources_and_keeps_the_native_check_manif
     multi = setup_multiworld(GammaWorld, options=presets()["full_story"])
     unsafe = unreliable_check_ids(multi.worlds[1].configuration)
     locations = [row for row in multi.get_locations() if row.address]
-    assert len(locations) == 273
+    assert len(locations) == 253
     assert all(
         row.progress_type == LocationProgressType.EXCLUDED
         for row in locations
@@ -114,6 +114,8 @@ def test_rank_has_a_viable_quest_or_combat_path_and_upgrades_respect_tool_use_pe
     assert rank.can_reach(state)
     other = CollectionState(multi)
     collect(world, other, "Equipment Unlock: Melee", "Faction Goodwill: stalker")
+    assert not rank.can_reach(other)
+    collect(world, other, "Equipment Unlock: PDA")
     assert rank.can_reach(other)
     collect(
         world,

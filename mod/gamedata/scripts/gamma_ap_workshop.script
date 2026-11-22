@@ -16,11 +16,18 @@ local function recipe_tier(dialog)
 end
 
 function tools_level(state)
-    local count = 0
+    local count,tiers = 0,{}
     for _,id in ipairs(state.applied_items) do
         if gamma_ap_catalog.item_effects[id] == "progressive_tools" then count=count+1 end
+        local tier = gamma_ap_catalog.tool_stash_levels[id]
+        if tier then tiers[tier] = true end
     end
-    return math.min(3,count)
+    local result = 0
+    for tier=1,3 do
+        if count < tier and not tiers[tier] then break end
+        result = tier
+    end
+    return result
 end
 
 function allowed(state, action, dialog)

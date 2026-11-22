@@ -40,7 +40,13 @@ def add_goal_events(
             item_type("Talked to Sidorovich", ItemClassification.progression, None, world.player)
         )
         regions["l01_escape"].locations.append(conversation)
-    if world.configuration.goal in {"brain_scorcher", "meet_strelok", "living_legend"}:
+    if world.configuration.goal in {
+        "brain_scorcher",
+        "meet_strelok",
+        "living_legend",
+        "mortal_sin",
+        "operation_afterglow",
+    }:
         shutdown = location_type(
             world.player, "Shut Down Brain Scorcher", None, regions["l10u_bunker"]
         )
@@ -49,7 +55,12 @@ def add_goal_events(
             item_type("Brain Scorcher Disabled", ItemClassification.progression, None, world.player)
         )
         regions["l10u_bunker"].locations.append(shutdown)
-    if world.configuration.goal in {"meet_strelok", "living_legend"}:
+    if world.configuration.goal in {
+        "meet_strelok",
+        "living_legend",
+        "mortal_sin",
+        "operation_afterglow",
+    }:
         encounter = location_type(
             world.player, "Conclude Strelok's First Conversation", None, regions["pripyat"]
         )
@@ -74,7 +85,7 @@ def add_goal_events(
             item_type("Met Strelok", ItemClassification.progression, None, world.player)
         )
         regions["pripyat"].locations.append(encounter)
-    if world.configuration.goal == "living_legend":
+    if world.configuration.goal in {"living_legend", "mortal_sin", "operation_afterglow"}:
         finish = location_type(
             world.player, "Return After Living Legend", None, regions["l01_escape"]
         )
@@ -85,9 +96,48 @@ def add_goal_events(
         )
         regions["l01_escape"].locations.append(finish)
 
+    for goal, title, event, prerequisite in (
+        ("mortal_sin", "Return After Mortal Sin", "Mortal Sin Complete", "Living Legend Complete"),
+        (
+            "operation_afterglow",
+            "Finish Operation Afterglow",
+            "Operation Afterglow Complete",
+            "Mortal Sin Complete",
+        ),
+    ):
+        if world.configuration.goal == goal or (
+            goal == "mortal_sin" and world.configuration.goal == "operation_afterglow"
+        ):
+            finish = location_type(world.player, title, None, regions["l01_escape"])
+            finish.access_rule = lambda state, prerequisite=prerequisite, goal=goal: (
+                state.has(prerequisite, world.player)
+                and (
+                    "rewards_quest_keys" not in world.configuration.rewards
+                    or state.has(
+                        "Quest Key: Mortal Sin"
+                        if goal == "mortal_sin"
+                        else "Quest Key: Operation Afterglow",
+                        world.player,
+                    )
+                )
+            )
+            finish.place_locked_item(
+                item_type(event, ItemClassification.progression, None, world.player)
+            )
+            regions["l01_escape"].locations.append(finish)
+
 
 def set_goal_rule(world: "GammaWorld", catalog: dict[str, Any]) -> None:
-    if world.configuration.goal == "talk_sidorovich":
+    if world.configuration.goal in {"mortal_sin", "operation_afterglow"}:
+        event = (
+            "Mortal Sin Complete"
+            if world.configuration.goal == "mortal_sin"
+            else "Operation Afterglow Complete"
+        )
+        world.multiworld.completion_condition[world.player] = lambda state: state.has(
+            event, world.player
+        )
+    elif world.configuration.goal == "talk_sidorovich":
         world.multiworld.completion_condition[world.player] = lambda state: state.has(
             "Talked to Sidorovich", world.player
         )

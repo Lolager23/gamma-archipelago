@@ -19,7 +19,8 @@ function prepare(configuration)
     if not config or not config:r_value("character_creation","new_game_faction",3) then return true,false end
     config:w_value("character_creation","new_game_faction","stalker")
     config:w_value("character_creation","new_game_map",start.key)
-    if configuration.options.goal == 3 or configuration.options.goal == 4 then
+    if configuration.options.goal == 3 or configuration.options.goal == 4
+        or configuration.options.goal == 7 or configuration.options.goal == 8 then
         config:w_value("character_creation","new_game_story_mode",true)
     end
     config:w_value("character_creation","new_game_warfare",nil)

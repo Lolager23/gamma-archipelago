@@ -1170,6 +1170,18 @@
     <string id="gamma_ap_cause_value_story_4f7065726174696f6e204166746572676c6f77202f20556e646572636f766572204167656e74">
         <text>Operation Afterglow / Undercover Agent</text>
     </string>
+    <string id="gamma_ap_cause_value_weapon_41">
+        <text>A</text>
+    </string>
+    <string id="gamma_ap_cause_value_weapon_42">
+        <text>B</text>
+    </string>
+    <string id="gamma_ap_cause_value_weapon_43">
+        <text>C</text>
+    </string>
+    <string id="gamma_ap_cause_value_weapon_44">
+        <text>D</text>
+    </string>
     <string id="gamma_ap_cause_value_weapon_4d616368696e6567756e">
         <text>Machinegun</text>
     </string>
@@ -1310,6 +1322,15 @@
     </string>
     <string id="gamma_ap_reward_28051201">
         <text>Progression Stash: Calibrated Psi Helmet</text>
+    </string>
+    <string id="gamma_ap_reward_28051202">
+        <text>Progression Stash: Basic Tools</text>
+    </string>
+    <string id="gamma_ap_reward_28051203">
+        <text>Progression Stash: Advanced Tools</text>
+    </string>
+    <string id="gamma_ap_reward_28051204">
+        <text>Progression Stash: Expert Tools</text>
     </string>
     <string id="gamma_ap_reward_28051301">
         <text>Faction Goodwill: stalker</text>
@@ -1481,6 +1502,9 @@
     </string>
     <string id="gamma_ap_reward_28051801">
         <text>Progressive Tools</text>
+    </string>
+    <string id="gamma_ap_reward_28051802">
+        <text>Artefact Melter</text>
     </string>
     <string id="gamma_ap_reward_28051811">
         <text>Workshop Access: Repair</text>

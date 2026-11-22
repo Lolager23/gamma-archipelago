@@ -1,0 +1,17 @@
+-- Observe actual weather only after the character has entered an active world.
+function poll(state)
+    if not state.session_key or state.refused_save or not state.configuration
+        or not gamma_ap_readiness.ready() or not gamma_ap_catalog.weather_levels[level.name()] then return true end
+    for _,definition in ipairs({{id=28053001,manager=surge_manager},{id=28053002,manager=psi_storm_manager}}) do
+        if state.enabled_checks[definition.id] and not state.checks[definition.id] then
+            local manager = definition.manager
+            if not manager or type(manager.is_started) ~= "function" then
+                return false,"Weather checks require the installed emission/Psi Storm manager APIs"
+            end
+            local ok,started = pcall(manager.is_started)
+            if not ok or type(started) ~= "boolean" then return false,"Cannot inspect active weather" end
+            if started then state.checks[definition.id] = true end
+        end
+    end
+    return true
+end

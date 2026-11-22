@@ -7,8 +7,10 @@ from dataclasses import dataclass
 from importlib.resources import files
 
 from .activity_requirements import unreliable_check_ids
-from .catalog import MAX_ITEMS, enabled_item_ids
+from .catalog import MAX_ITEMS
 from .configuration import SeedConfiguration
+from .content_progression import configured_item_ids, required_copy
+from .content_progression import protected as content_protected
 from .discovery import configured_location_ids, protected_tail_ids
 from .opening import opening_checks, opening_permissions
 from .playability import fragile_ids
@@ -71,7 +73,7 @@ def budget_pool(
         or not excluded <= check_ids
     ):
         raise ValueError("Pool checks must be a nonempty subset of this seed's enabled manifest")
-    enabled = enabled_item_ids(configuration.rewards, configuration.gear)
+    enabled = configured_item_ids(configuration)
     collected = _counts(starting or {}, enabled)
     depleted = _counts(from_pool or {}, enabled)
     if any(count > collected[name] for name, count in depleted.items()):
@@ -86,7 +88,7 @@ def budget_pool(
                 configuration
             ):
                 continue  # The chosen starting zone is always accessible.
-            required[name] = max(0, row.get("copies", 1) - gifts[name])
+            required[name] = max(0, required_copy(configuration, row) - gifts[name])
     for name, count in required_reputation(configuration, check_ids).items():
         required[name] = max(0, count - gifts[name])
     if (
@@ -95,6 +97,12 @@ def budget_pool(
         and configuration.checks & {"checks_rank_milestones", "checks_faction_standing"}
     ):
         required["Faction Goodwill: stalker"] = max(0, 12 - gifts["Faction Goodwill: stalker"])
+    elif (
+        configuration.option("playability_logic")
+        and "rewards_faction_reputation" in configuration.rewards
+        and configuration.checks & {"checks_armour_tiers", "checks_weapon_tiers"}
+    ):
+        required["Faction Goodwill: stalker"] = max(0, 8 - gifts["Faction Goodwill: stalker"])
     if configuration.option("optional_check_policy") == 0:
         excluded = excluded | (fragile_ids(configuration) & check_ids)
     excluded = (
@@ -103,6 +111,7 @@ def budget_pool(
         | (unreliable_check_ids(configuration) & check_ids)
         | (protected_settlements(configuration) & check_ids)
         | (practical_protected(configuration) & check_ids)
+        | (content_protected(configuration) & check_ids)
     )
     slots, eligible = len(check_ids), len(check_ids - excluded)
     remaining_required = sum(max(0, count - depleted[name]) for name, count in required.items())

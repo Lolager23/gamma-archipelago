@@ -77,6 +77,7 @@ local function grant_reward(section)
     if type(section) == "number" then
         if gamma_ap_catalog.item_effects[section] == "convenience" then return gamma_ap_convenience.receive(state,section) end
         if gamma_ap_catalog.item_effects[section] == "progressive_tools" then return true end
+        if gamma_ap_catalog.item_effects[section] == "artefact_melter" then return grant_reward(gamma_ap_catalog.melter_sections[section]) end
         if gamma_ap_catalog.gear_rewards[section] then return gamma_ap_gear_locks.receive(state, section) end
         if gamma_ap_catalog.item_effects[section] == "unlock" then
             state.unlocks[gamma_ap_catalog.permissions[section]] = true
@@ -111,6 +112,8 @@ end
 
 function actor_on_update()
     if not db.actor or not db.actor:alive() then return end
+    local stamina_ok,stamina_error = gamma_ap_stamina.poll(state)
+    if not stamina_ok then report_error(stamina_error); return end
     local now = time_global()
     if now < next_poll then return end
     next_poll = now + 500
@@ -119,6 +122,8 @@ function actor_on_update()
     if state.refused_save then report_error("AP save is refused; restore a valid backup"); return end
     local reputation_ready,reputation_error = gamma_ap_reputation.reconcile(state)
     if not reputation_ready then report_error(reputation_error); return end
+    local weather_ok,weather_error = gamma_ap_weather.poll(state)
+    if not weather_ok then report_error(weather_error); return end
     local incoming, reason = read_incoming()
     if not incoming then report_error(reason); return end
     local configuration, configuration_error = read_configuration(incoming)

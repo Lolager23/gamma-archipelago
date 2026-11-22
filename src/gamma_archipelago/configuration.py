@@ -15,6 +15,10 @@ from .expansion_settings import (
 from .protocol import validate_session_key
 
 CHECK_OPTIONS = (
+    "checks_emissions",
+    "checks_psi_storms",
+    "checks_mortal_sin",
+    "checks_operation_afterglow",
     "checks_maps",
     "checks_settlements",
     "checks_mutant_first_kills",
@@ -34,6 +38,7 @@ CHECK_OPTIONS = (
     "checks_faction_standing",
 )
 REWARD_OPTIONS = (
+    "rewards_artefact_melter",
     "rewards_supply_medical",
     "rewards_supply_maintenance",
     "rewards_supply_ammunition",
@@ -73,6 +78,8 @@ GOALS = (
     "living_legend",
     "all_x_labs",
     "talk_sidorovich",
+    "mortal_sin",
+    "operation_afterglow",
 )
 OPTION_NAMES = (
     CHECK_OPTIONS
@@ -92,6 +99,10 @@ OPTION_NAMES = (
 )
 SUPPORTED_CHECKS = frozenset(
     {
+        "checks_emissions",
+        "checks_psi_storms",
+        "checks_mortal_sin",
+        "checks_operation_afterglow",
         "checks_maps",
         "checks_settlements",
         "checks_mutant_first_kills",
@@ -113,6 +124,7 @@ SUPPORTED_CHECKS = frozenset(
 )
 SUPPORTED_REWARDS: frozenset[str] = frozenset(
     {
+        "rewards_artefact_melter",
         "rewards_supply_medical",
         "rewards_supply_maintenance",
         "rewards_supply_ammunition",
@@ -139,6 +151,8 @@ SUPPORTED_GOALS = frozenset(
         "living_legend",
         "all_x_labs",
         "talk_sidorovich",
+        "mortal_sin",
+        "operation_afterglow",
     }
 )
 
@@ -162,6 +176,8 @@ def defaults() -> dict[str, object]:
         artefact_discovery_mode=1,
         settlement_reputation_logic=1,
         playability_logic=1,
+        content_progression=1,
+        artefact_discovery_count=40,
     )
     return values
 
@@ -267,7 +283,10 @@ def build_configuration(values: Mapping[str, object]) -> SeedConfiguration:
     rewards = frozenset(name for name in REWARD_OPTIONS if _integer(values, name, 1))
     if not checks:
         raise ConfigurationError("Enable at least one check category")
-    if checks == {"checks_story_milestones"} and "rewards_quest_keys" in rewards:
+    if (
+        checks <= {"checks_story_milestones", "checks_mortal_sin", "checks_operation_afterglow"}
+        and "rewards_quest_keys" in rewards
+    ):
         raise ConfigurationError("Quest keys require checks outside their locked story chains")
     if "rewards_zone_keys" in rewards and "checks_maps" not in checks:
         raise ConfigurationError("Zone keys require map checks for a guaranteed exploration route")
@@ -353,6 +372,8 @@ def encode_configuration(
                 "artefact_filler_tail",
                 "settlement_reputation_logic",
                 "playability_logic",
+                "content_progression",
+                "infinite_stamina",
             }
             and value == 0
         ):

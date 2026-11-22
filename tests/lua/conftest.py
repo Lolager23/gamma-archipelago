@@ -30,6 +30,8 @@ def lua():
         "discovery",
         "activity",
         "playability",
+        "weather",
+        "stamina",
         "combat",
         "collection",
         "tasks",

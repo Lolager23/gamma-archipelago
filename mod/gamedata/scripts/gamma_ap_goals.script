@@ -41,6 +41,9 @@ function poll(state)
         end)
         if not ok or not supported then return false, "Strelok goals require a supported story-enabled faction" end
         state.goal_complete = met
+    elseif configuration.options.goal == 7 or configuration.options.goal == 8 then
+        local id = configuration.options.goal == 7 and 28052643 or 28052653
+        state.goal_complete = state.tasks.stories[id] == true
     elseif configuration.options.goal == 5 then
         local complete = true
         for where in pairs(gamma_ap_catalog.lab_levels) do

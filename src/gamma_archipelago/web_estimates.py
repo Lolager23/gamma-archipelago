@@ -14,7 +14,7 @@ ASSUMPTIONS = {
     "session_hours": (2, 1, 12),
     "multiworld_wait_minutes": (0, 0, 600),
 }
-GOAL_HOURS = (3, 8, 18, 30, 50, 30, 0.1)
+GOAL_HOURS = (3, 8, 18, 30, 50, 30, 0.1, 80, 110)
 
 
 def estimate_playtime(

@@ -74,6 +74,7 @@ def test_gifted_permissions_reduce_pool_and_precollected_zone_keys_do_not_break_
 def test_upstream_from_pool_depletion_is_counted_once_before_filler_replacement():
     options = {
         "rewards_progressive_tools": 1,
+        "content_progression": 0,
         "checks_gear_upgrades": 1,
         "start_inventory_from_pool": {"Progressive Tools": 2},
     }

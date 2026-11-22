@@ -1,0 +1,8 @@
+-- Opt-in native stamina restoration; no health, hunger or carry-stat changes.
+function poll(state)
+    if not state.session_key or state.refused_save or not state.configuration
+        or state.configuration.options.infinite_stamina ~= 1 or not gamma_ap_readiness.ready() then return true end
+    local ok = pcall(function() db.actor.power = 1 end)
+    if not ok then return false,"Infinite stamina requires the native writable actor power property" end
+    return true
+end

@@ -100,7 +100,7 @@ def test_rank_requires_an_earning_path_and_stored_upgrades_require_tool_use(lua)
     )
     checks = {row.id: row for row in rows(view(lua, state))}
     assert checks[28052801].status == "available"
-    assert "earn rank" in checks[28052802].reason
+    assert "rank progression" in checks[28052802].reason
     assert "tools" in checks[28052731].reason
     state.unlocks.gear_pda = True
     state.unlocks.gear_tools = True
@@ -108,6 +108,9 @@ def test_rank_requires_an_earning_path_and_stored_upgrades_require_tool_use(lua)
     assert checks[28052802].status == checks[28052731].status == "available"
     state.unlocks.gear_pda = False
     state.unlocks.gear_melee = True
+    checks = {row.id: row for row in rows(view(lua, state))}
+    assert checks[28052802].status == "blocked"
+    state.unlocks.gear_firearms = True
     checks = {row.id: row for row in rows(view(lua, state))}
     assert checks[28052802].status == "available"
 

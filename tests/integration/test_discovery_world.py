@@ -23,7 +23,9 @@ def test_omitted_yaml_mode_defaults_to_generic_but_explicit_per_type_still_works
     options = {"checks_maps": 0, GROUPS[group]: 1}
     world = setup_multiworld(GammaWorld, options=options).worlds[1]
     assert world.configuration.option(f"{group}_discovery_mode") == 1
-    assert set(world.fill_slot_data()["location_ids"]) == set(QUOTAS[group])
+    assert set(world.fill_slot_data()["location_ids"]) == set(
+        QUOTAS[group][:40] if group == "artefact" else QUOTAS[group]
+    )
     named = setup_multiworld(GammaWorld, options={**options, f"{group}_discovery_mode": 0}).worlds[
         1
     ]

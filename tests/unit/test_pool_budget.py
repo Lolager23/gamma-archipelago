@@ -14,7 +14,9 @@ def configuration(**values):
 
 
 def test_budget_accounts_for_progressive_copies_gifts_and_pool_depletion_before_filler():
-    config = configuration(rewards_progressive_tools=1, rewards_convenience=1)
+    config = configuration(
+        rewards_progressive_tools=1, rewards_convenience=1, content_progression=0
+    )
     plan = budget_pool(config, MAP_LOCATION_IDS, starting={"Progressive Tools": 2, CARRY: 1})
     assert plan.required == ("Progressive Tools",) and plan.convenience == (CARRY,) * 2
     assert plan.filler_slots == 30

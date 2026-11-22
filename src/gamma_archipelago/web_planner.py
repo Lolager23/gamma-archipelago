@@ -7,7 +7,7 @@ from collections.abc import Mapping
 from importlib.resources import files
 from typing import Any, cast
 
-from .catalog import GAME, enabled_item_ids
+from .catalog import GAME
 from .configuration import (
     CHECK_OPTIONS,
     GEAR_OPTIONS,
@@ -16,6 +16,7 @@ from .configuration import (
     REWARD_OPTIONS,
     build_configuration,
 )
+from .content_progression import configured_item_ids
 from .discovery import SOURCES, configured_location_ids
 from .opening import opening_permissions
 from .presets import presets
@@ -26,6 +27,11 @@ from .starting_unlock import preview_budget
 from .web_estimates import ASSUMPTIONS, estimate_playtime
 
 LABELS = {
+    "checks_emissions": "Experience an emission",
+    "checks_psi_storms": "Experience a Psi Storm",
+    "checks_mortal_sin": "Mortal Sin story checks",
+    "checks_operation_afterglow": "Operation Afterglow story checks",
+    "rewards_artefact_melter": "Artefact Melter",
     "rewards_convenience": "Bounded carry capacity",
     "rewards_supply_medical": "Medical Supply Package",
     "rewards_supply_maintenance": "Maintenance Supply Package",
@@ -67,6 +73,8 @@ GOAL_LABELS = (
     "Finish Living Legend",
     "Visit all five X-Labs",
     "Talk to Sidorovich (quick pilot)",
+    "Finish Mortal Sin",
+    "Finish Operation Afterglow",
 )
 
 
@@ -80,6 +88,9 @@ def catalogue() -> dict[str, Any]:
 def metadata() -> dict[str, object]:
     data = catalogue()
     check_counts = Counter(row["category"] for row in data["locations"] if "quota_group" not in row)
+    for arc in ("living_legend", "mortal_sin", "operation_afterglow"):
+        key = "checks_story_milestones" if arc == "living_legend" else "checks_" + arc
+        check_counts[key] = sum(row.get("story_arc") == arc for row in data["locations"])
     check_counts.update({"checks_kill_milestones": 4, "checks_side_task_milestones": 4})
     reward_counts = Counter(row.get("category") for row in data["items"])
     return {
@@ -145,7 +156,7 @@ def preview(values: Mapping[str, object], assumptions: Mapping[str, object]) -> 
                 )
                 for count in thresholds
             )
-    item_ids = enabled_item_ids(configuration.rewards, configuration.gear)
+    item_ids = configured_item_ids(configuration)
     rewards = [dict(row) for row in data["items"] if row["id"] in item_ids]
     budget, budget_report = preview_budget(configuration, ids)
     for reward in rewards:
@@ -156,7 +167,15 @@ def preview(values: Mapping[str, object], assumptions: Mapping[str, object]) -> 
         ) or (
             reward.get("effect") == "reputation"
             and configuration.option("playability_logic")
-            and bool(configuration.checks & {"checks_rank_milestones", "checks_faction_standing"})
+            and bool(
+                configuration.checks
+                & {
+                    "checks_rank_milestones",
+                    "checks_faction_standing",
+                    "checks_armour_tiers",
+                    "checks_weapon_tiers",
+                }
+            )
         ):
             reward["classification"] = "progression"
     required = len(budget.required)
