@@ -85,3 +85,11 @@ def test_tool_claim_routes_fill_from_every_supported_start(starting):
         )
         distribute_items_restrictive(multi)
         assert multi.can_beat_game()
+
+
+@pytest.mark.parametrize("goal", [4, 5])
+def test_constrained_tool_stash_regression_seed_260_fills_without_swapping_dead_ends(goal):
+    multi = setup_multiworld(GammaWorld, options=presets()["full_story"] | {"goal": goal}, seed=260)
+    distribute_items_restrictive(multi)
+    assert multi.can_beat_game()
+    assert sum(map(len, multi.get_spheres())) == len(multi.get_locations())
