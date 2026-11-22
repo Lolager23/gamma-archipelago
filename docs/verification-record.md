@@ -794,3 +794,11 @@ At that foundation observation, PR #1 was merged by the user's instruction while
 callback-probe PR #2 and MCM PR #3 were drafts. Later validation must identify its
 actual source commit. No normal multiplayer saves are used, and no claim of
 in-world multiplayer compatibility is made.
+
+### Practical progression CI allowance
+
+The first PR #70 head completed local verification, but all four Windows/Linux
+push/PR jobs hit the inherited 25-minute execution limit. GitHub annotations
+confirmed timeout cancellation rather than an assertion failure. The allowance
+is now 40 minutes; seed counts, tests and coverage gates are unchanged. Exact-head
+CI results are recorded separately after the rerun. No game deployment occurred.
