@@ -826,3 +826,26 @@ framework coordinator retains some methods over the size guide; content policy
 and engine effects live in separate cohesive helpers. Windows/Linux exact-head CI
 and retained artifact parity are pending publication. Native acceptance is not run
 and belongs to Owen. No installed game, current session or private panel changed.
+
+### Reward quantities and paced reports — 22 November 2026
+
+The complete verifier passed 1,635 covered regressions, 82 untraced generation/server
+cases and nine Node tests (1,726 total), including the unchanged 9,000-seed preset
+matrix. Aggregate Python coverage was 99.94%; every owned per-module line/branch
+and critical 100% gate passed. Lua executable-line gates passed; branch coverage
+is not measured. All 290 frozen functional, test and generation-input fingerprints
+matched after the run. The private panel's 111 compatibility tests passed against
+source and the installed core using a scratch fixture; original panel files were
+unchanged.
+
+Source review covered mandatory-before-optional pool budgeting, exact counts,
+conditional non-filler artefact allocation, common AP options, legacy identities,
+manifest parity, data-only preview rendering and one-tier analysis chains. Browser
+QA on an isolated loopback preview exercised a count above the suggested slider
+range, capacity refusal and recovery. The transport example now explicitly requests
+the Basic Toolkit that its real-server tests exercise; both solo and mixed-server
+regressions pass under fresh quantity mode. Native playtime calibration is not run.
+
+This stacks on #71. Exact-head Windows/Linux CI and retained package parity are
+pending publication. No merge, deployment, session reset or game launch occurred;
+installed Dev, private panel, current session and protected normal game are untouched.

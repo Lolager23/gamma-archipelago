@@ -14,6 +14,82 @@ from Options import (
 )
 
 
+class RewardQuantities(DefaultOnToggle):
+    """Use explicit repeatable counts instead of a weighted optional pool."""
+
+    display_name = "Explicit reward quantities"
+
+
+class ArtefactExtraCeiling(Range):
+    """Maximum distinct artefact check number; 41–60 appear only for non-filler demand."""
+
+    display_name = "Conditional artefact ceiling"
+    range_start = 0
+    range_end = 60
+    default = 60
+
+
+class ArtefactOverflowCount(Range):
+    """Internal derived count; generation recomputes this value before regions."""
+
+    display_name = "Derived extra artefacts"
+    range_start = 0
+    range_end = 20
+    default = 0
+    visibility = 0
+
+
+class RepeatableCount(Range):
+    """Requested copies; generation rejects counts that exceed finite check capacity."""
+
+    range_start = 0
+    range_end = 4000
+    default = 4
+
+
+class BasicToolkits(RepeatableCount):
+    display_name = "Basic toolkits"
+    default = 0
+
+
+class MedicalPackages(RepeatableCount):
+    display_name = "Medical packages"
+
+
+class MaintenancePackages(RepeatableCount):
+    display_name = "Maintenance packages"
+
+
+class AmmunitionPackages(RepeatableCount):
+    display_name = "Ammunition packages"
+
+
+class ExpeditionPackages(RepeatableCount):
+    display_name = "Expedition packages"
+
+
+class BasicLootStashes(RepeatableCount):
+    display_name = "Basic loot stashes"
+
+
+class FieldLootStashes(RepeatableCount):
+    display_name = "Field loot stashes"
+
+
+class AdvancedLootStashes(RepeatableCount):
+    display_name = "Advanced loot stashes"
+
+
+class ExtraFactionGoodwill(RepeatableCount):
+    display_name = "Extra faction goodwill"
+    default = 0
+
+
+class StatLevelRewards(RepeatableCount):
+    display_name = "Stat level rewards"
+    default = 9
+
+
 class ContentProgression(DefaultOnToggle):
     """Split story arcs, physical tool stashes and tiered distinct artefacts."""
 
@@ -518,6 +594,20 @@ class OptionalCheckPolicy(Choice):
 
 @dataclass
 class GammaOptions(PerGameCommonOptions):
+    basic_toolkits: BasicToolkits
+    reward_quantities: RewardQuantities
+    artefact_extra_ceiling: ArtefactExtraCeiling
+    artefact_overflow_count: ArtefactOverflowCount
+    medical_packages: MedicalPackages
+    maintenance_packages: MaintenancePackages
+    ammunition_packages: AmmunitionPackages
+    expedition_packages: ExpeditionPackages
+    basic_loot_stashes: BasicLootStashes
+    field_loot_stashes: FieldLootStashes
+    advanced_loot_stashes: AdvancedLootStashes
+    extra_faction_goodwill: ExtraFactionGoodwill
+    stat_level_rewards: StatLevelRewards
+
     content_progression: ContentProgression
     infinite_stamina: InfiniteStamina
     checks_emissions: ChecksEmissions

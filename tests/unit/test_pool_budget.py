@@ -10,7 +10,7 @@ from gamma_archipelago.web_planner import metadata, preview
 
 
 def configuration(**values):
-    return build_configuration({**defaults(), **values})
+    return build_configuration({**defaults(), "reward_quantities": 0, **values})
 
 
 def test_budget_accounts_for_progressive_copies_gifts_and_pool_depletion_before_filler():
@@ -92,6 +92,7 @@ def test_protected_opening_reports_local_permissions_and_refuses_overloaded_cord
     options = {
         **defaults(),
         "opening_policy": 1,
+        "reward_quantities": 0,
         "starting_pda": 2,
         "rewards_starting_gear_unlocks": 1,
         "rewards_zone_keys": 1,
@@ -120,7 +121,7 @@ def test_settings_metadata_covers_every_bounded_option_and_roster():
         if row["choices"] is not None:
             assert len(row["choices"]) == row["maximum"] + 1
         else:
-            assert row["key"].endswith(("_discovery_count", "_filler_tail"))
+            assert row["key"].endswith(("_discovery_count", "_filler_tail", "_ceiling"))
 
 
 @pytest.mark.parametrize(

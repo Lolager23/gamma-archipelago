@@ -51,6 +51,18 @@ def test_each_category_and_every_pair_generate_without_implicit_dependency_chang
             with pytest.raises(OptionError, match="cannot hold"):
                 setup_multiworld(GammaWorld, seed=seed, options=options)
             continue
+        if "rewards_zone_keys" in selected and set(selected) & {
+            "rewards_supply_medical",
+            "rewards_supply_maintenance",
+            "rewards_supply_ammunition",
+            "rewards_supply_expedition",
+            "rewards_loot_stashes",
+            "rewards_stat_levels",
+        }:
+            # Explicit default counts exceed the maps-only pool after 32 keys.
+            with pytest.raises(OptionError, match="quantities"):
+                setup_multiworld(GammaWorld, seed=seed, options=options)
+            continue
         if "rewards_starting_gear_unlocks" in selected:
             options["starting_pda"] = 2
         if "rewards_zone_keys" in selected and any(

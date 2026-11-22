@@ -15,6 +15,7 @@ from .discovery import configured_location_ids, protected_tail_ids
 from .opening import opening_checks, opening_permissions
 from .playability import fragile_ids
 from .playability import protected as practical_protected
+from .reward_quantities import requested, useful_count
 from .settlement_access import protected_settlements, required_reputation
 from .starting import starting_level
 
@@ -60,6 +61,55 @@ def _counts(values: Mapping[str, int], enabled: frozenset[int]) -> Counter[str]:
     return result
 
 
+def required_counts(
+    configuration: SeedConfiguration, check_ids: frozenset[int], gifts: Mapping[str, int]
+) -> Counter[str]:
+    enabled = configured_item_ids(configuration)
+    required: Counter[str] = Counter()
+    for name, row in _items.items():
+        if row["id"] in enabled and row["classification"] == "progression":
+            if row.get("category") == "rewards_zone_keys" and row.get("level") == starting_level(
+                configuration
+            ):
+                continue  # The chosen starting zone is always accessible.
+            required[name] = max(0, required_copy(configuration, row) - gifts.get(name, 0))
+    for name, count in required_reputation(configuration, check_ids).items():
+        required[name] = max(0, count - gifts.get(name, 0))
+    if (
+        configuration.option("playability_logic")
+        and "rewards_faction_reputation" in configuration.rewards
+        and configuration.checks & {"checks_rank_milestones", "checks_faction_standing"}
+    ):
+        required["Faction Goodwill: stalker"] = max(
+            0, 12 - gifts.get("Faction Goodwill: stalker", 0)
+        )
+    elif (
+        configuration.option("playability_logic")
+        and "rewards_faction_reputation" in configuration.rewards
+        and configuration.checks & {"checks_armour_tiers", "checks_weapon_tiers"}
+    ):
+        required["Faction Goodwill: stalker"] = max(
+            0, 8 - gifts.get("Faction Goodwill: stalker", 0)
+        )
+    return required
+
+
+def protected_checks(
+    configuration: SeedConfiguration, check_ids: frozenset[int], excluded: frozenset[int]
+) -> frozenset[int]:
+    if configuration.option("optional_check_policy") == 0:
+        excluded = excluded | (fragile_ids(configuration) & check_ids)
+    excluded = (
+        excluded
+        | protected_tail_ids(configuration, check_ids)
+        | (unreliable_check_ids(configuration) & check_ids)
+        | (protected_settlements(configuration) & check_ids)
+        | (practical_protected(configuration) & check_ids)
+        | (content_protected(configuration) & check_ids)
+    )
+    return excluded
+
+
 def budget_pool(
     configuration: SeedConfiguration,
     check_ids: frozenset[int],
@@ -81,38 +131,8 @@ def budget_pool(
     if len(check_ids) + collected.total() > MAX_ITEMS:
         raise ValueError("Generated and starting item history exceeds the supported receipt limit")
     gifts = collected - depleted
-    required: Counter[str] = Counter()
-    for name, row in _items.items():
-        if row["id"] in enabled and row["classification"] == "progression":
-            if row.get("category") == "rewards_zone_keys" and row.get("level") == starting_level(
-                configuration
-            ):
-                continue  # The chosen starting zone is always accessible.
-            required[name] = max(0, required_copy(configuration, row) - gifts[name])
-    for name, count in required_reputation(configuration, check_ids).items():
-        required[name] = max(0, count - gifts[name])
-    if (
-        configuration.option("playability_logic")
-        and "rewards_faction_reputation" in configuration.rewards
-        and configuration.checks & {"checks_rank_milestones", "checks_faction_standing"}
-    ):
-        required["Faction Goodwill: stalker"] = max(0, 12 - gifts["Faction Goodwill: stalker"])
-    elif (
-        configuration.option("playability_logic")
-        and "rewards_faction_reputation" in configuration.rewards
-        and configuration.checks & {"checks_armour_tiers", "checks_weapon_tiers"}
-    ):
-        required["Faction Goodwill: stalker"] = max(0, 8 - gifts["Faction Goodwill: stalker"])
-    if configuration.option("optional_check_policy") == 0:
-        excluded = excluded | (fragile_ids(configuration) & check_ids)
-    excluded = (
-        excluded
-        | protected_tail_ids(configuration, check_ids)
-        | (unreliable_check_ids(configuration) & check_ids)
-        | (protected_settlements(configuration) & check_ids)
-        | (practical_protected(configuration) & check_ids)
-        | (content_protected(configuration) & check_ids)
-    )
+    required = required_counts(configuration, check_ids, gifts)
+    excluded = protected_checks(configuration, check_ids, excluded)
     slots, eligible = len(check_ids), len(check_ids - excluded)
     remaining_required = sum(max(0, count - depleted[name]) for name, count in required.items())
     if required.total() > slots or remaining_required > eligible:
@@ -128,9 +148,17 @@ def budget_pool(
         )
         if convenience == 0 and not collected[CARRY]:
             raise ValueError("Convenience rewards need a reliable check after required progression")
-    guaranteed = required + Counter({CARRY: convenience})
+    extras = requested(configuration) - (gifts - required_counts(configuration, check_ids, {}))
+    guaranteed = required + Counter({CARRY: convenience}) + extras
     if any(count > guaranteed[name] for name, count in depleted.items()):
         raise ValueError("Starting-from-pool requests must fit guaranteed permission/carry copies")
+    extra_slots = extras.total()
+    total_useful = useful_count(required + extras + Counter({CARRY: convenience}) - depleted)
+    if required.total() + convenience + extra_slots > slots or total_useful > eligible:
+        raise ValueError(
+            "Requested reward quantities exceed available reliable checks; "
+            "enable more checks or reduce reward counts"
+        )
     zone_remaining = any(
         row.get("category") == "rewards_zone_keys" and required[name] > depleted[name]
         for name, row in _items.items()
@@ -145,8 +173,8 @@ def budget_pool(
         )
     return PoolBudget(
         tuple(required.elements()),
-        (CARRY,) * convenience,
-        slots - required.total() - convenience,
+        (CARRY,) * convenience + tuple(extras.elements()),
+        slots - required.total() - convenience - extra_slots,
         slots,
         eligible,
         tuple(sorted(collected.items())),

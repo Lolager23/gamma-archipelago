@@ -20,6 +20,7 @@ from .content_progression import configured_item_ids
 from .discovery import SOURCES, configured_location_ids
 from .opening import opening_permissions
 from .presets import presets
+from .reward_quantities import DEFAULT_COUNTS
 from .settings_ui import advanced_options
 from .settlement_access import NEUTRALITY_ITEMS
 from .starting import STARTS
@@ -110,6 +111,10 @@ def metadata() -> dict[str, object]:
         ],
         "gear": list(GEAR_OPTIONS),
         "quantities": list(QUANTITY_OPTIONS),
+        "reward_quantities": [
+            dict(key=key, label=key.replace("_", " ").capitalize(), suggested_max=50, default=count)
+            for key, count in DEFAULT_COUNTS.items()
+        ],
         "goals": [dict(value=i, key=key, label=GOAL_LABELS[i]) for i, key in enumerate(GOALS)],
         "assumptions": {
             key: dict(default=default, minimum=minimum, maximum=maximum)
@@ -137,7 +142,9 @@ def player_document(name: object, values: Mapping[str, object]) -> dict[str, obj
 
 
 def preview(values: Mapping[str, object], assumptions: Mapping[str, object]) -> dict[str, object]:
-    configuration = build_configuration({**values, "ap_start": 1})
+    from .artefact_capacity import resolve_capacity
+
+    configuration = resolve_capacity(build_configuration({**values, "ap_start": 1}))
     data = catalogue()
     ids = configured_location_ids(configuration)
     checks = [dict(row) for row in data["locations"] if row["id"] in ids]
@@ -215,8 +222,11 @@ def preview(values: Mapping[str, object], assumptions: Mapping[str, object]) -> 
                 if configuration.option("starting_location") < len(STARTS)
                 else "Random native preset (seed-fixed; preview budgets use Cordon)"
             ),
-            "Reward types are eligible IDs, not guaranteed quantities. Each check holds one item.",
-            "Required progression is budgeted first; progressive tools need three copies.",
+            "Each check holds one item. Explicit quantity mode guarantees "
+            "the requested repeatable copies.",
+            "Extra artefacts 41–60 appear only for non-filler capacity, up to the chosen ceiling.",
+            "Required progression is budgeted first; fresh progressive tools "
+            "use three tiered stashes.",
             "Missable exclusions accept filler only. Convenience has a capped useful allocation.",
             "Protected opening reserves reliable Cordon checks for a fresh Loner/Cordon start.",
             "Settings preview only. Actual-seed JSON is optional; placement mode reveals spoilers.",

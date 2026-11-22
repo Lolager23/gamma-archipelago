@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { advancedOptions, syncAdvanced } from "../../web/generator/ui.js";
+import { advancedOptions, syncAdvanced, rewardQuantityOptions, showStepReport } from "../../web/generator/ui.js";
 import {
   DraftConfiguration,
   playerNameError,
@@ -142,4 +142,48 @@ test("advanced controls have labels, bounded values and preserve editable quota 
     globalThis.document = oldDocument;
     globalThis.Option = oldOption;
   }
+});
+
+
+test("reward quantity numeric entry can exceed the suggested slider range", () => {
+  const previous = globalThis.document;
+  const container = {children: [], replaceChildren(...children) {this.children = children;}};
+  globalThis.document = {
+    getElementById: () => container,
+    createElement: () => ({children: [], listeners: {},
+      append(...nodes) {this.children.push(...nodes);},
+      setAttribute() {}, addEventListener(key, fn) {this.listeners[key] = fn;}}),
+  };
+  try {
+    const edits = [];
+    rewardQuantityOptions({reward_quantities: [{key:"medical_packages",label:"Medical",suggested_max:50}]},
+      {medical_packages:4}, (...edit) => edits.push(edit));
+    const [, slider, number] = container.children[0].children;
+    assert.equal(number.max, undefined);
+    number.value="72"; number.listeners.input();
+    assert.equal(slider.max,72); assert.equal(slider.value,72);
+    slider.value="20"; slider.listeners.input();
+    assert.equal(number.value,20); assert.equal(slider.max,50);
+    number.value=""; number.listeners.input();
+    assert.deepEqual(edits, [["medical_packages",72],["medical_packages",20],["medical_packages",null]]);
+  } finally {globalThis.document=previous;}
+});
+
+test("step report shows separate paced and logical lists using safe text", () => {
+  const previous = globalThis.document;
+  const node = () => ({children: [], append(...children) {this.children.push(...children);},
+    replaceChildren(...children) {this.children=children;}});
+  const container=node();
+  globalThis.document={getElementById:()=>container,createElement:node};
+  try {
+    assert.throws(()=>showStepReport({}), /actual GAMMA/);
+    const analysis={steps:[{step:1,checks:1,local_events:[],available_checks:[{location:"<img>",item:"PDA",recipient:1}]}],
+      goal_step:1,unreachable_checks:0,time_estimate:"Uncalibrated"};
+    showStepReport({kind:"actual_generated_seed",paced_steps:analysis,logical_spheres:analysis});
+    assert.equal(container.children.filter(n=>n.textContent==="Paced steps: one tier per chain").length,1);
+    assert.equal(container.children[2].children[1].children[0].textContent,"<img> -> PDA (player 1)");
+    delete analysis.steps[0].available_checks;
+    showStepReport({kind:"actual_generated_seed",paced_steps:analysis,logical_spheres:analysis});
+    assert.match(container.children[2].children[1].children[0].textContent,/spoilers/);
+  } finally {globalThis.document=previous;}
 });

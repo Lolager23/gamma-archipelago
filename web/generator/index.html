@@ -161,6 +161,10 @@
                 permissions appear once; supplies can repeat.
               </p>
               <div id="reward-options" class="option-grid"></div>
+              <details><summary>Repeatable reward quantities</summary>
+                <p class="section-note">Enable explicit quantities in advanced settings. Sliders suggest 0-50; type larger values directly. The finite check pool and 4000-receipt limit still apply. Native reputation and skill caps remain unchanged.</p>
+                <div id="reward-quantities" class="loadout-grid"></div>
+              </details>
               <label class="toggle-extra"
                 ><input id="unlock-travel" type="checkbox" /> Offer one optional
                 settlement trip when a zone key is received</label
@@ -202,6 +206,11 @@
             </label>
             <p id="exclusion-help" class="section-note">Select types to omit from per-type checks and quota rosters. Hold Ctrl to select several. Repeated encounters never advance distinct quotas.</p>
             <details><summary>Settings preview and reward budget</summary><pre id="budget-preview"></pre></details>
+            <details><summary>Actual seed step calculator</summary>
+              <p class="section-note">Enable a generation preview, generate the seed, then select its _gamma_preview.json from the ZIP. Placement-spoiler mode includes check and reward names. Paced steps are a planning assumption, separate from the AP solver.</p>
+              <label>Seed preview JSON <input id="step-file" type="file" accept=".json,application/json" /></label>
+              <p id="step-status" role="status"></p><div id="step-report"></div>
+            </details>
           </section>
           <section id="catalogue" class="panel catalogue">
             <div class="section-heading">

@@ -52,6 +52,12 @@ def build_pool(world: "GammaWorld", catalog: dict[str, Any]) -> None:
     world.multiworld.itempool.extend(
         world.create_item(name) for name in plan.required + plan.convenience
     )
+    if world.configuration.option("reward_quantities"):
+        world.multiworld.itempool.extend(
+            world.create_item("Bandage" if index % 2 else "Medkit")
+            for index in range(plan.filler_slots)
+        )
+        return
     names = [row["name"] for row in catalog["items"] if "category" not in row]
     neutrality = required_reputation(
         world.configuration, frozenset(row.address for row in locations)

@@ -207,3 +207,38 @@ def test_late_equipment_checks_wait_but_the_equipment_itself_is_not_restricted(l
     state.applied_items = lua.table_from([28051301] * 8)
     assert module.poll(state, state.configuration)
     assert state.checks[28052703] and state.checks[28052704] and state.checks[28052754]
+
+
+def test_conditional_artefact_manifest_matches_python_and_rejects_invalid_extra(lua):
+    from gamma_archipelago.catalog import MAP_LOCATION_IDS
+    from gamma_archipelago.configuration import build_configuration, defaults, encode_configuration
+    from gamma_archipelago.discovery import configured_location_ids
+
+    from .test_loadout import KEY
+
+    configuration = build_configuration(
+        {
+            **defaults(),
+            "checks_artefacts": 1,
+            "rewards_artefact_melter": 1,
+            "artefact_overflow_count": 7,
+        }
+    )
+    parsed = lua.globals().gamma_ap_configuration.parse(
+        encode_configuration(KEY, configuration, expanded=True), KEY, configuration.digest
+    )
+    assert parsed is not None
+    selected = lua.globals().gamma_ap_discovery.select(parsed, lua.table())
+    assert set(selected) == set(configured_location_ids(configuration)) - MAP_LOCATION_IDS
+    for key, value in [
+        ("content_progression", 0),
+        ("artefact_discovery_mode", 0),
+        ("checks_artefacts", 0),
+        ("artefact_discovery_count", 20),
+        ("artefact_extra_ceiling", 40),
+        ("rewards_artefact_melter", 0),
+    ]:
+        copied = lua.globals().gamma_ap_configuration.copy(parsed)
+        copied.options[key] = value
+        result, reason = lua.globals().gamma_ap_discovery.select(copied, lua.table())
+        assert result is None and "capacity" in reason

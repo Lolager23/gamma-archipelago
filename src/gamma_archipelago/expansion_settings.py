@@ -1,6 +1,19 @@
 """Additional bounded settings; legacy values preserve pre-expansion seed identities."""
 
 EXPANSION_LIMITS = {
+    "reward_quantities": 1,
+    "basic_toolkits": 4000,
+    "artefact_extra_ceiling": 60,
+    "artefact_overflow_count": 20,
+    "medical_packages": 4000,
+    "maintenance_packages": 4000,
+    "ammunition_packages": 4000,
+    "expedition_packages": 4000,
+    "basic_loot_stashes": 4000,
+    "field_loot_stashes": 4000,
+    "advanced_loot_stashes": 4000,
+    "extra_faction_goodwill": 4000,
+    "stat_level_rewards": 4000,
     "content_progression": 1,
     "infinite_stamina": 1,
     "playability_logic": 1,

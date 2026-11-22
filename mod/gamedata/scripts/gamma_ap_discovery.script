@@ -12,6 +12,15 @@ function excluded(configuration, token)
 end
 
 function select(configuration, enabled)
+    local extra = configuration.options.artefact_overflow_count or 0
+    if extra > 0 and (configuration.options.content_progression ~= 1
+        or configuration.options.artefact_discovery_mode ~= 1
+        or configuration.options.checks_artefacts ~= 1
+        or (configuration.options.artefact_discovery_count ~= 0 and configuration.options.artefact_discovery_count ~= 40)
+        or 40 + extra > (configuration.options.artefact_extra_ceiling or 0)
+        or configuration.options.rewards_artefact_melter ~= 1) then
+        return nil,"Invalid extra artefact capacity"
+    end
     for group,category in pairs(categories) do
         local count,roster = 0,{}
         for id,source in pairs(gamma_ap_catalog.discovery_sources) do
@@ -25,7 +34,7 @@ function select(configuration, enabled)
             if (configuration.options[group.."_discovery_mode"] or 0) == 1 then
                 local limit = configuration.options[group.."_discovery_count"] or 0
                 if limit == 0 then limit = count end
-                if group == "artefact" and configuration.options.content_progression == 1 then limit = math.min(limit,40) end
+                if group == "artefact" and configuration.options.content_progression == 1 then limit = math.min(limit,40) + extra end
                 if limit < 1 or limit > count then return nil,"Discovery quota exceeds its qualifying roster" end
                 for index=1,limit do enabled[gamma_ap_catalog.discovery_quotas[group][index]] = true end
             else

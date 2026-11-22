@@ -20,6 +20,13 @@ mock/server test does not close an unchecked engine acceptance item. Every stage
 still has an open engine/release exit gate. Earlier pilot acceptance stays valid
 on its stated evidence basis.
 
+## Current balancing additions
+
+The [practical progression expansion](playability-expansion.md) tracks the newer
+combat/shop/rank rules, weather and story content, physical tool stashes, quantity
+controls and paced analysis. These are stacked source PRs after #69, with native
+acceptance and deployment separate from the historical merged status below.
+
 ## Current status at a glance
 
 | Stage | Implemented / automated evidence | Still to validate or finish |

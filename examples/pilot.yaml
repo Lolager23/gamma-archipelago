@@ -2,5 +2,7 @@ name: GammaPilot
 game: S.T.A.L.K.E.R. GAMMA
 description: Three-region integration pilot; not the finished randomiser.
 S.T.A.L.K.E.R. GAMMA:
+  # Exercise all three base supply IDs in this transport example.
+  basic_toolkits: 1
   progression_balancing: 0
   accessibility: items

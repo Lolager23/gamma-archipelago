@@ -13,6 +13,7 @@ from .expansion_settings import (
     LEGACY_REWARD_DEFAULTS,
 )
 from .protocol import validate_session_key
+from .reward_quantities import DEFAULT_COUNTS
 
 CHECK_OPTIONS = (
     "checks_emissions",
@@ -177,6 +178,9 @@ def defaults() -> dict[str, object]:
         settlement_reputation_logic=1,
         playability_logic=1,
         content_progression=1,
+        reward_quantities=1,
+        artefact_extra_ceiling=60,
+        **{name: count for name, count in DEFAULT_COUNTS.items()},
         artefact_discovery_count=40,
     )
     return values
@@ -374,6 +378,10 @@ def encode_configuration(
                 "playability_logic",
                 "content_progression",
                 "infinite_stamina",
+                "reward_quantities",
+                "artefact_extra_ceiling",
+                "artefact_overflow_count",
+                *DEFAULT_COUNTS,
                 "checks_emissions",
                 "checks_psi_storms",
                 "checks_mortal_sin",
