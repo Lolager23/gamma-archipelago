@@ -949,7 +949,7 @@ to the PR when complete. Native acceptance remains not run for Owen. No deployme
 merge, game launch or session reset occurred; installed Dev files, the private
 developer panel, existing progress and protected normal installations are untouched.
 
-### Quest-restricted northern travel — 22 November 2026
+### Quest-restricted northern travel â€” 22 November 2026
 
 The active Free Stalker northern psi field requires both X16 Miracle Machine
 and X19 Brain Scorcher shutdowns. Fresh AP worlds and PDA routes now model both
