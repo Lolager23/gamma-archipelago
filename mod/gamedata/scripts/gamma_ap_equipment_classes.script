@@ -78,5 +78,6 @@ end
 function usable_condition(state,object)
     local condition=object:condition()
     local minimum=contract(state.configuration) and state.configuration.options.equipment_check_condition or 0
-    return condition > 0 and condition <= 1 and condition*100+0.000001 >= minimum
+    -- Native condition values can round just below an exact percentage.
+    return condition > 0 and condition <= 1 and condition*100+0.00001 >= minimum
 end

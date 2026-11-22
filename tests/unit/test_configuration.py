@@ -43,6 +43,26 @@ def test_default_configuration_is_immutable_and_deterministically_serialized():
     assert len(configuration.digest) == 64
 
 
+def test_option_lookup_cache_preserves_copy_and_seed_identity():
+    import pickle
+    from dataclasses import replace
+
+    configuration = build_configuration(defaults())
+    digest = configuration.digest
+    assert configuration.option("equipment_class_progression") == 1
+    options = dict(configuration.expansion)
+    options["equipment_class_progression"] = 0
+    changed = replace(configuration, expansion=tuple(options.items()))
+    assert changed.option("equipment_class_progression") == 0
+    assert (
+        configuration.option("equipment_class_progression") == 1 and configuration.digest == digest
+    )
+    assert changed.digest != digest
+    restored = pickle.loads(pickle.dumps(configuration))
+    assert restored == configuration and restored.digest == digest
+    assert restored.option("equipment_class_progression") == 1
+
+
 def test_all_requested_check_reward_and_goal_adapters_are_available():
     from gamma_archipelago.configuration import SUPPORTED_CHECKS, SUPPORTED_GOALS, SUPPORTED_REWARDS
 
