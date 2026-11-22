@@ -405,6 +405,7 @@ def encode_configuration(
                 "checks_shop_purchases",
                 "quest_zone_logic",
                 "regional_progression",
+                "progressive_sphere_pacing",
                 "rewards_artefacts",
                 "equipment_class_progression",
                 "progressive_tool_receipts",

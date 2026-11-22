@@ -1,6 +1,7 @@
 """Additional bounded settings; legacy values preserve pre-expansion seed identities."""
 
 EXPANSION_LIMITS = {
+    "progressive_sphere_pacing": 1,
     "regional_progression": 1,
     "artefact_rewards": 4000,
     "equipment_class_progression": 1,

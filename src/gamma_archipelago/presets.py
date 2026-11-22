@@ -31,6 +31,7 @@ def presets() -> dict[str, dict[str, object]]:
         **dict.fromkeys(CHECK_OPTIONS + REWARD_OPTIONS, 1),
         **dict.fromkeys(GEAR_OPTIONS, 2),
         "zone_unlock_travel": 1,
+        "progressive_sphere_pacing": 1,
     }
     definitions = {
         "pilot": pilot,
@@ -85,6 +86,7 @@ def presets() -> dict[str, dict[str, object]]:
             "checks_side_task_milestones": 1,
             "grind_profile": 2,
             "combat_logic": 1,
+            "progressive_sphere_pacing": 1,
         },
         "extended": {
             **mvp,
@@ -116,6 +118,7 @@ def presets() -> dict[str, dict[str, object]]:
             "checks_story_milestones": 1,
             "grind_profile": 3,
             "combat_logic": 2,
+            "progressive_sphere_pacing": 1,
         },
     }
 

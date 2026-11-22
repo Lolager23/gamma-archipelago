@@ -20,6 +20,16 @@ class RegionalProgression(DefaultOnToggle):
     display_name = "Regional progression requirements"
 
 
+class ProgressiveSpherePacing(Toggle):
+    """Separate progressive reward copies across real logical spheres.
+
+    Needs enough gated checks. Conflicting fixed placements fail generation.
+    Starting inventory is exempt; disabling this retains unrestricted placement.
+    """
+
+    display_name = "One progressive tier per AP sphere"
+
+
 class RewardsArtefacts(Toggle):
     """Useful physical artefacts from the supported non-quest roster."""
 
@@ -684,6 +694,7 @@ class OptionalCheckPolicy(Choice):
 
 @dataclass
 class GammaOptions(PerGameCommonOptions):
+    progressive_sphere_pacing: ProgressiveSpherePacing
     regional_progression: RegionalProgression
     rewards_artefacts: RewardsArtefacts
     artefact_rewards: ArtefactRewards

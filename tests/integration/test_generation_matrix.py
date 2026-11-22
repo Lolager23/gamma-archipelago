@@ -21,6 +21,8 @@ ROOT = Path(__file__).resolve().parents[2]
 def assert_seed(options, seed):
     multiworld = setup_multiworld(GammaWorld, seed=seed, options=options)
     distribute_items_restrictive(multiworld)
+    GammaWorld.stage_finalize_multiworld(multiworld)
+    GammaWorld.stage_pre_output(multiworld)
     assert all(location.item is not None for location in multiworld.get_locations())
     assert multiworld.can_beat_game()
     state = CollectionState(multiworld)

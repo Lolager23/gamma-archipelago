@@ -29,3 +29,14 @@ local exploration chain; other rewards use normal multiworld placement.
 All Labs means X18, X16, X19, X8 and War Lab. Ordinary underground maps do not
 count. Follow the source revision's acceptance/restore guide for save rollback,
 errors and updates. No engine-level exactly-once reward guarantee is claimed.
+
+## Story and progression presets
+
+Living Legend ends at that chain, with Mortal Sin/Operation Afterglow checks off.
+Full Story completes all three chains. `progressive_sphere_pacing` is on for these
+and other progression presets, separating progressive gear/tool receipts across
+actual AP spheres. Sparse presets keep it off. Conflicting plando or insufficient
+logical depth fails generation; revise settings or disable the option. Starting
+inventory is exempt. Old saved configurations that lack this option keep zero
+and their existing digest/wire encoding. Use matched updated client/mod packages
+when generating with the new option enabled.

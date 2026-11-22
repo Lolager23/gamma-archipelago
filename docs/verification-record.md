@@ -1142,3 +1142,29 @@ Lua cases with its executable-line gates. Real game acceptance is not run.
 The generator labels paced progression and raw unpaced spheres separately; actual
 progressive-reward placement is the next stacked increment requested by Owen.
 The PR records the final affected-verifier and current-head CI evidence.
+
+## 22 November 2026 — actual progressive sphere placement
+
+The optional actual-placement constraint separates each progressive gear/tool
+recipient chain across both network spheres (local events settled) and upstream
+spheres. Progression presets enable it; sparse legacy presets remain unrestricted.
+Repair preserves counts, item rules, fixed placements, reachability and early
+recipes; failure restores placements/locks. The finalisation hook runs after balancing and preserves every previously
+reachable check; pre-output validates without moving items. Focused coverage/regressions passed 28 cases with
+100% lines/branches for the placement module, including every default preset,
+non-Cordon/zero-class starts, mixed-game fill, recipe gifts/deadlines, fixed
+contradictions, rollback and bounded failure. One actual mixed-game server case
+also passed. The PR records final affected-verifier/current-head CI evidence.
+Full release sweeps and native GAMMA acceptance are not run. Review seeds use
+Living Legend and remain separate from the active session.
+
+The first real-server pass caught four seeds where later upstream balancing
+collapsed the initial spacing. Moving enforcement to the documented finalisation
+phase fixed all 15 expanded mixed-game/server cases. Every accepted repair must
+preserve the original reachable set for every game, not just GAMMA goals. The
+failed run is retained as pre-fix evidence; it is not a passing verification.
+
+The final affected verifier passed 2,016 covered cases and 19 untraced real-server
+cases. Changed owned Python modules reached 100% line and branch coverage; native
+Lua executable-line gates and package/archive checks passed. Full release sweeps
+and native GAMMA acceptance remain not run.
