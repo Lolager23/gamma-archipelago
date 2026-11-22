@@ -1,0 +1,40 @@
+-- Pure tracker assumptions. Native observers remain the authority on completed facts.
+local knife_mutants = {boar=true,dog=true,flesh=true,cat=true,tushkano=true}
+local function goodwill(state)
+    local counts,best = {},0
+    for _,id in ipairs(state.applied_items) do
+        if gamma_ap_catalog.reputation_rewards[id] then
+            counts[id] = (counts[id] or 0)+1
+            best = math.max(best,counts[id]*250)
+        end
+    end
+    return best
+end
+
+function reason(state, row, regions, psi)
+    local config = state.configuration and state.configuration.options or {}
+    if config.playability_logic ~= 1 then return end
+    local category = row.category
+    local firearm = category == "checks_faction_first_kills"
+        or (category == "checks_mutant_first_kills" and ((row.quota == "" and not knife_mutants[row.key]) or (row.quota ~= "" and row.minimum > 5)))
+        or (category == "checks_kill_milestones" and row.minimum > 25)
+    if firearm and config.starting_firearms == 2 and not state.unlocks.gear_firearms then
+        return "Firearms required (firearms permission): knife logic allows at most five mutant types or 25 total kills"
+    end
+    local amount = category == "checks_rank_milestones" and gamma_ap_catalog.rank_goodwill_proxy[tostring(row.minimum)]
+        or (category == "checks_faction_standing" and row.minimum or 0)
+    local late = category == "checks_armour_tiers" and tonumber(row.key) >= 3 or row.weapon_grade == "D"
+    if amount == 0 and not late then return end
+    local earned = config.rewards_faction_reputation == 1 and goodwill(state) or 0
+    if config.rewards_faction_reputation == 1 and earned < amount then
+        return "AP-granted faction goodwill: "..earned.." / "..amount.." in one faction (rank proxy)"
+    end
+    if late then
+        local north = false
+        for _,where in ipairs(gamma_ap_catalog.northern_equipment_regions) do north=north or regions[where] end
+        if not (psi and regions.l10_red_forest and north)
+            and not (config.rewards_faction_reputation == 1 and earned >= 2000) then
+            return "Heavy equipment: calibrated psi protection, Red Forest and a northern region, or 2,000 AP faction goodwill"
+        end
+    end
+end

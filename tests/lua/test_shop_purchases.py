@@ -271,7 +271,7 @@ def test_receipt_history_conflicts_prevent_payment_and_disabled_shop_categories_
     assert not buy(game)[0]
     engine.files[ROOT + "incoming.txt"] = encode_incoming(KEY, (28051001,), digest)
     assert not buy(game)[0] and engine.debits == 0
-    game, engine = shop_game(lua, optional_check_policy=1)
+    game, engine = shop_game(lua, optional_check_policy=1, playability_logic=0)
     assert len(game.shop_view().rows) == 0
     assert not buy(game)[0] and engine.debits == 0
 
@@ -285,8 +285,9 @@ def test_invalid_native_trader_identity_cannot_expose_a_purchase(lua, identity):
 
 
 @pytest.mark.parametrize("mode", [0, 1, 2])
-def test_shop_reward_details_respect_the_seed_scouting_option(lua, mode):
-    game, _ = shop_game(lua, scouting_mode=mode)
+@pytest.mark.parametrize("new_logic", [0, 1])
+def test_shop_reward_details_respect_the_seed_scouting_option(lua, mode, new_logic):
+    game, _ = shop_game(lua, scouting_mode=mode, playability_logic=new_logic)
     lua.execute("""
         scout_reads=0
         gamma_ap_scouting.view=function()
@@ -295,9 +296,9 @@ def test_shop_reward_details_respect_the_seed_scouting_option(lua, mode):
         end
     """)
     row = game.shop_view().rows[1]
-    assert lua.globals().scout_reads == (0 if mode == 0 else 1)
-    assert (row.reward is not None) == (mode > 0)
-    if mode:
+    assert lua.globals().scout_reads == (1 if mode or new_logic else 0)
+    assert (row.reward is not None) == bool(mode or new_logic)
+    if mode or new_logic:
         assert row.reward.item == "Foreign Key" and row.reward.player == "Friend"
 
 
@@ -316,3 +317,9 @@ def test_trader_region_and_zone_permissions_match_ap_world_access(lua):
     state.unlocks.zone_l05_bar = True
     assert len(module.snapshot(state).rows) == 3
     assert module.purchase(state, OFFER + 3, KEY, 1)[0]
+
+
+def test_new_paid_shop_contracts_remain_buyable_when_fragile_checks_are_omitted(lua):
+    game, engine = shop_game(lua, optional_check_policy=1)
+    assert len(game.shop_view().rows) == 3
+    assert buy(game)[0] and engine.debits == 1

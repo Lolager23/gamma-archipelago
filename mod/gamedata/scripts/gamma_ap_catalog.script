@@ -181,6 +181,8 @@ settlement_rules = {
     [28052113]={["faction"]="greh",["label"]="Sin",["item"]=0,["name"]="",["copies"]=0,["minimum"]=1001,["neutral"]=-999},
     [28052114]={["faction"]="monolith",["label"]="Monolith",["item"]=0,["name"]="",["copies"]=0,["minimum"]=1001,["neutral"]=-999},
 }
+rank_goodwill_proxy = {["0"]=0,["3999"]=250,["5999"]=500,["9999"]=750,["15999"]=1000,["23999"]=1500,["34999"]=2000,["49999"]=3000}
+northern_equipment_regions = {"jupiter","zaton","l11_pripyat","pripyat","l11_hospital","l12_stancia","l12_stancia_2","l13_generators"}
 start_locations = {
     [0]={key="rookie_village",name="Rookie Village",level="l01_escape"},
     [1]={key="hidden_base",name="Clear Sky Base",level="k00_marsh"},
@@ -2075,6 +2077,7 @@ config_limits = {
     ["optional_check_policy"] = 2,
     ["pda_tracker"] = 1,
     ["permission_supplies"] = 1,
+    ["playability_logic"] = 1,
     ["random_starting_unlock"] = 1,
     ["reward_previews"] = 1,
     ["rewards_convenience"] = 1,
@@ -2986,6 +2989,7 @@ config_defaults = {
     ["optional_check_policy"]=0,
     ["pda_tracker"]=1,
     ["permission_supplies"]=0,
+    ["playability_logic"]=0,
     ["random_starting_unlock"]=0,
     ["reward_previews"]=0,
     ["rewards_convenience"]=0,

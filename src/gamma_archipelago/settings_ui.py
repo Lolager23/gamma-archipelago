@@ -3,6 +3,7 @@
 from .expansion_settings import EXPANSION_LIMITS
 
 CHOICES = {
+    "playability_logic": ["Legacy assumptions", "Practical progression and early equipment"],
     "settlement_reputation_logic": [
         "Legacy settlement access",
         "Require neutral hostile settlements",

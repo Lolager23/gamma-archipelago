@@ -16,7 +16,10 @@ SHOPS = set(range(28052921, 28052930))
 @pytest.mark.parametrize("enabled,policy,count", [(0, 0, 0), (1, 0, 9), (1, 1, 0), (1, 2, 9)])
 def test_paid_shop_toggle_world_client_and_missable_policy_agree(enabled, policy, count):
     world = setup_multiworld(
-        GammaWorld, options=dict(checks_shop_purchases=enabled, optional_check_policy=policy)
+        GammaWorld,
+        options=dict(
+            checks_shop_purchases=enabled, optional_check_policy=policy, playability_logic=0
+        ),
     ).worlds[1]
     locations = [
         location for location in world.multiworld.get_locations(1) if location.address in SHOPS

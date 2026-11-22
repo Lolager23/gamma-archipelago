@@ -14,6 +14,7 @@ from gamma_archipelago.discovery import (
     SOURCES,
     configured_location_ids,
 )
+from gamma_archipelago.playability import protected as practical_protected
 from gamma_archipelago.presets import presets
 
 
@@ -53,7 +54,9 @@ def test_world_client_manifest_and_optional_policy_match(policy):
     checks = [row for row in world.multiworld.get_locations(1) if row.address in MISSABLE_IDS]
     assert len(checks) == (0 if policy == 1 else 7)
     assert all(
-        (row.progress_type == LocationProgressType.EXCLUDED) == (policy == 0) for row in checks
+        (row.progress_type == LocationProgressType.EXCLUDED)
+        == (policy == 0 or row.address in practical_protected(world.configuration))
+        for row in checks
     )
 
 

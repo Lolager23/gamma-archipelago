@@ -4,6 +4,7 @@ import json
 from dataclasses import asdict
 from typing import Any
 
+from gamma_archipelago.playability import NORTH, RANK_PROXY
 from gamma_archipelago.settlement_access import SETTLEMENT_RULES
 
 
@@ -30,4 +31,6 @@ def activity_lines(catalog: dict[str, Any]) -> list[str]:
     lines.append("settlement_rules = {")
     lines.extend(f"    [{id}]={encoded(asdict(rule))}," for id, rule in SETTLEMENT_RULES.items())
     lines.append("}")
+    lines.append("rank_goodwill_proxy = " + encoded({str(k): v for k, v in RANK_PROXY.items()}))
+    lines.append("northern_equipment_regions = " + encoded(list(NORTH)))
     return lines

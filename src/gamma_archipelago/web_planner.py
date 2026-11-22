@@ -153,6 +153,10 @@ def preview(values: Mapping[str, object], assumptions: Mapping[str, object]) -> 
             reward["name"] in NEUTRALITY_ITEMS
             and configuration.option("settlement_reputation_logic")
             and "checks_settlements" in configuration.checks
+        ) or (
+            reward.get("effect") == "reputation"
+            and configuration.option("playability_logic")
+            and bool(configuration.checks & {"checks_rank_milestones", "checks_faction_standing"})
         ):
             reward["classification"] = "progression"
     required = len(budget.required)

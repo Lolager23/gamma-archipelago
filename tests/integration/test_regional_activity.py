@@ -109,9 +109,11 @@ def test_rank_has_a_viable_quest_or_combat_path_and_upgrades_respect_tool_use_pe
     assert not rank.can_reach(state)
     assert next(loc for loc in multi.get_locations() if loc.address == 28052801).can_reach(state)
     collect(world, state, "Equipment Unlock: PDA")
+    assert not rank.can_reach(state)
+    collect(world, state, "Faction Goodwill: stalker")
     assert rank.can_reach(state)
     other = CollectionState(multi)
-    collect(world, other, "Equipment Unlock: Melee")
+    collect(world, other, "Equipment Unlock: Melee", "Faction Goodwill: stalker")
     assert rank.can_reach(other)
     collect(
         world,
@@ -173,7 +175,7 @@ def test_dependent_tools_cannot_clog_the_fully_locked_opening(seed, start):
     multi = setup_multiworld(
         GammaWorld, options={**presets()["full_story"], "starting_location": start}, seed=seed
     )
-    assert sum(multi.early_items[1].values()) == 1
+    assert sum(multi.early_items[1].values()) == 0  # Paid shop provides an opening.
     assert all(
         item.location is None for item in multi.itempool if item.name.startswith("Zone Key:")
     )

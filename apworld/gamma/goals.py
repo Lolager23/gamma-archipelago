@@ -18,8 +18,11 @@ def add_goal_events(
 ) -> None:
     if (
         world.configuration.goal not in {"pilot_tour", "talk_sidorovich"}
-        and "rewards_progression_stashes" not in world.configuration.rewards
-    ):
+        or (
+            world.configuration.option("playability_logic")
+            and bool(world.configuration.checks & {"checks_armour_tiers", "checks_weapon_tiers"})
+        )
+    ) and "rewards_progression_stashes" not in world.configuration.rewards:
         claim = location_type(
             world.player, "Obtain Calibrated Helmet from Sakharov", None, regions["l08_yantar"]
         )

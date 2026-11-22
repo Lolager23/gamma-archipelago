@@ -62,6 +62,7 @@ def build_pool(world: "GammaWorld", catalog: dict[str, Any]) -> None:
         if row.get("category") in OPTIONAL
         and row["category"] in world.configuration.rewards
         and row["name"] not in neutrality
+        and row["name"] not in plan.required
     ]
     # Excluded locations accept filler only, including after upstream pool depletion.
     useful_capacity = plan.eligible_checks - (

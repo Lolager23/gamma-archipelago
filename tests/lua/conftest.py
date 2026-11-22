@@ -29,6 +29,7 @@ def lua():
         "workshop",
         "discovery",
         "activity",
+        "playability",
         "combat",
         "collection",
         "tasks",

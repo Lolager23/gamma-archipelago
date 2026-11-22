@@ -50,6 +50,8 @@
     "starting_medicine": 100,
     "starting_food": 100,
     "starting_money": 100,
+    "playability_logic": 1,
+    "settlement_reputation_logic": 1,
     "ap_start": 1,
     "starting_faction": 0,
     "starting_location": 0,
@@ -88,7 +90,6 @@
     ],
     "zone_unlock_travel": 0,
     "pda_tracker": 1,
-    "discovery_exclusions": [],
-    "settlement_reputation_logic": 1
+    "discovery_exclusions": []
   }
 }
