@@ -382,6 +382,11 @@ def encode_configuration(
                 "artefact_extra_ceiling",
                 "artefact_overflow_count",
                 *DEFAULT_COUNTS,
+                "checks_emissions",
+                "checks_psi_storms",
+                "checks_mortal_sin",
+                "checks_operation_afterglow",
+                "rewards_artefact_melter",
             }
             and value == 0
         ):

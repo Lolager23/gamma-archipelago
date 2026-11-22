@@ -139,3 +139,20 @@ def test_starting_cash_is_not_reused_and_hostile_reputation_is_not_a_friendly_tr
         dict(category="checks_settlements", level="l01_escape", hostile_settlement_faction="army"),
         frozenset({"l01_escape"}),
     )
+
+
+def test_disabled_content_additions_do_not_change_legacy_wire_records():
+    from gamma_archipelago.configuration import encode_configuration, legacy_defaults
+
+    legacy = build_configuration(legacy_defaults())
+    wire = encode_configuration("a" * 64, legacy, True)
+    for key in (
+        "checks_emissions",
+        "checks_psi_storms",
+        "checks_mortal_sin",
+        "checks_operation_afterglow",
+        "rewards_artefact_melter",
+        "content_progression",
+        "infinite_stamina",
+    ):
+        assert "option|" + key + "|" not in wire
