@@ -1,5 +1,7 @@
 from collections import Counter
 
+import pytest
+
 from gamma_archipelago.configuration import build_configuration, defaults
 from gamma_archipelago.progression_readiness import allowed, requirements
 
@@ -69,3 +71,53 @@ def test_artefact_recipe_permission_applies_from_twenty_one_including_overflow()
         count["Recipe Access: Artefacts"] = 1
         assert allowed(config, row, count.__getitem__, lambda _: True, 0)
         count.clear()
+
+
+@pytest.mark.parametrize(
+    "minimum,tools,outfit,firearms",
+    [
+        (1, 0, 0, 0),
+        (10, 0, 0, 0),
+        (11, 2, 3, 2),
+        (15, 2, 3, 2),
+        (16, 3, 4, 3),
+        (25, 3, 4, 3),
+    ],
+)
+def test_mutant_quota_catalogue_has_exact_tier_boundaries(minimum, tools, outfit, firearms):
+    from gamma_archipelago.web_planner import catalogue
+
+    row = next(
+        r
+        for r in catalogue()["locations"]
+        if r.get("quota_group") == "mutant" and r["minimum"] == minimum
+    )
+    expected = dict(tools=tools, outfit=outfit, firearms=firearms) if tools else {}
+    assert requirements(configuration(), row) == expected
+    assert requirements(configuration(regional_progression=0), row) == {}
+
+
+@pytest.mark.parametrize("minimum,tools,outfit,firearms", [(11, 2, 3, 2), (16, 3, 4, 3)])
+def test_mutant_discovery_requires_each_permission_not_just_region_count(
+    minimum, tools, outfit, firearms
+):
+    from gamma_archipelago.web_planner import catalogue
+
+    row = next(
+        r
+        for r in catalogue()["locations"]
+        if r.get("quota_group") == "mutant" and r["minimum"] == minimum
+    )
+    count = Counter(
+        {"Progressive Outfit Class": outfit - 1, "Progressive Firearm Class": firearms - 1}
+    )
+    config = configuration()
+    assert allowed(config, row, count.__getitem__, lambda _: True, tools)
+    assert not allowed(config, row, count.__getitem__, lambda _: True, tools - 1)
+    for name in count:
+        count[name] -= 1
+        assert not allowed(config, row, count.__getitem__, lambda _: True, tools)
+        count[name] += 1
+    assert allowed(
+        configuration(rewards_progressive_tools=0), row, count.__getitem__, lambda _: True, 0
+    )

@@ -47,7 +47,7 @@ def test_contiguous_capabilities_do_not_follow_physical_item_names():
     assert tool_level(count.__getitem__) == 3
 
 
-@pytest.mark.parametrize("grade,tier", [("A", 1), ("B", 1), ("C", 2), ("D", 3), ("", 0)])
+@pytest.mark.parametrize("grade,tier", [("A", 0), ("B", 1), ("C", 2), ("D", 3), ("", 0)])
 def test_repair_grade_tool_requirement_is_optional_and_matches_native_crafting(grade, tier):
     row = {"weapon_grade": grade}
     assert required_tier(configuration(rewards_progressive_tools=1), row) == tier

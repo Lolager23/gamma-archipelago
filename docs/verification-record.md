@@ -1130,3 +1130,15 @@ save schema, native callbacks or installed game files change. Matching YAML and
 planner metadata are included. Focused preset, tier-fill/goal and scope tests
 passed 54 cases; the PR records the affected component and current-head CI results.
 The full release suite and in-game acceptance are not run.
+
+## 22 November 2026 — mutant readiness and early Class A checks
+
+Generic mutant checks 11–15 require Advanced Tools/Medium/Class B, and 16–25
+require Expert Tools/Heavy/Class C. Shared catalogue metadata feeds solver and PDA
+readiness. Class A condition/use checks no longer require Basic Tools; actual kit
+use permissions and the condition threshold remain in force. Focused Python/AP
+checks passed 34 cases and the affected native adapter suite passed 1,037 mocked
+Lua cases with its executable-line gates. Real game acceptance is not run.
+The generator labels paced progression and raw unpaced spheres separately; actual
+progressive-reward placement is the next stacked increment requested by Owen.
+The PR records the final affected-verifier and current-head CI evidence.
