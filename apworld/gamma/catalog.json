@@ -7874,7 +7874,12 @@
       "category": "checks_mutant_first_kills",
       "level": "Menu",
       "quota_group": "mutant",
-      "minimum": 11
+      "minimum": 11,
+      "readiness": {
+        "tools": 2,
+        "outfit": 3,
+        "firearms": 2
+      }
     },
     {
       "id": 28140012,
@@ -7882,7 +7887,12 @@
       "category": "checks_mutant_first_kills",
       "level": "Menu",
       "quota_group": "mutant",
-      "minimum": 12
+      "minimum": 12,
+      "readiness": {
+        "tools": 2,
+        "outfit": 3,
+        "firearms": 2
+      }
     },
     {
       "id": 28140013,
@@ -7890,7 +7900,12 @@
       "category": "checks_mutant_first_kills",
       "level": "Menu",
       "quota_group": "mutant",
-      "minimum": 13
+      "minimum": 13,
+      "readiness": {
+        "tools": 2,
+        "outfit": 3,
+        "firearms": 2
+      }
     },
     {
       "id": 28140014,
@@ -7898,7 +7913,12 @@
       "category": "checks_mutant_first_kills",
       "level": "Menu",
       "quota_group": "mutant",
-      "minimum": 14
+      "minimum": 14,
+      "readiness": {
+        "tools": 2,
+        "outfit": 3,
+        "firearms": 2
+      }
     },
     {
       "id": 28140015,
@@ -7906,7 +7926,12 @@
       "category": "checks_mutant_first_kills",
       "level": "Menu",
       "quota_group": "mutant",
-      "minimum": 15
+      "minimum": 15,
+      "readiness": {
+        "tools": 2,
+        "outfit": 3,
+        "firearms": 2
+      }
     },
     {
       "id": 28140016,
@@ -7914,7 +7939,12 @@
       "category": "checks_mutant_first_kills",
       "level": "Menu",
       "quota_group": "mutant",
-      "minimum": 16
+      "minimum": 16,
+      "readiness": {
+        "tools": 3,
+        "outfit": 4,
+        "firearms": 3
+      }
     },
     {
       "id": 28140017,
@@ -7922,7 +7952,12 @@
       "category": "checks_mutant_first_kills",
       "level": "Menu",
       "quota_group": "mutant",
-      "minimum": 17
+      "minimum": 17,
+      "readiness": {
+        "tools": 3,
+        "outfit": 4,
+        "firearms": 3
+      }
     },
     {
       "id": 28140018,
@@ -7930,7 +7965,12 @@
       "category": "checks_mutant_first_kills",
       "level": "Menu",
       "quota_group": "mutant",
-      "minimum": 18
+      "minimum": 18,
+      "readiness": {
+        "tools": 3,
+        "outfit": 4,
+        "firearms": 3
+      }
     },
     {
       "id": 28140019,
@@ -7938,7 +7978,12 @@
       "category": "checks_mutant_first_kills",
       "level": "Menu",
       "quota_group": "mutant",
-      "minimum": 19
+      "minimum": 19,
+      "readiness": {
+        "tools": 3,
+        "outfit": 4,
+        "firearms": 3
+      }
     },
     {
       "id": 28140020,
@@ -7946,7 +7991,12 @@
       "category": "checks_mutant_first_kills",
       "level": "Menu",
       "quota_group": "mutant",
-      "minimum": 20
+      "minimum": 20,
+      "readiness": {
+        "tools": 3,
+        "outfit": 4,
+        "firearms": 3
+      }
     },
     {
       "id": 28140021,
@@ -7954,7 +8004,12 @@
       "category": "checks_mutant_first_kills",
       "level": "Menu",
       "quota_group": "mutant",
-      "minimum": 21
+      "minimum": 21,
+      "readiness": {
+        "tools": 3,
+        "outfit": 4,
+        "firearms": 3
+      }
     },
     {
       "id": 28140022,
@@ -7962,7 +8017,12 @@
       "category": "checks_mutant_first_kills",
       "level": "Menu",
       "quota_group": "mutant",
-      "minimum": 22
+      "minimum": 22,
+      "readiness": {
+        "tools": 3,
+        "outfit": 4,
+        "firearms": 3
+      }
     },
     {
       "id": 28140023,
@@ -7970,7 +8030,12 @@
       "category": "checks_mutant_first_kills",
       "level": "Menu",
       "quota_group": "mutant",
-      "minimum": 23
+      "minimum": 23,
+      "readiness": {
+        "tools": 3,
+        "outfit": 4,
+        "firearms": 3
+      }
     },
     {
       "id": 28140024,
@@ -7978,7 +8043,12 @@
       "category": "checks_mutant_first_kills",
       "level": "Menu",
       "quota_group": "mutant",
-      "minimum": 24
+      "minimum": 24,
+      "readiness": {
+        "tools": 3,
+        "outfit": 4,
+        "firearms": 3
+      }
     },
     {
       "id": 28140025,
@@ -7986,7 +8056,12 @@
       "category": "checks_mutant_first_kills",
       "level": "Menu",
       "quota_group": "mutant",
-      "minimum": 25
+      "minimum": 25,
+      "readiness": {
+        "tools": 3,
+        "outfit": 4,
+        "firearms": 3
+      }
     },
     {
       "id": 28140101,

@@ -26,6 +26,16 @@ still counts. Equipment checks themselves inspect the real item and condition.
 
 ## Generic mutant checks
 
+| Distinct types | Additional equipment readiness |
+|---|---|
+| 1–10 | No additional tier gate |
+| 11–15 | Advanced Tools, Medium armour, Class B firearms |
+| 16–25 | Expert Tools, Heavy armour, Class C firearms |
+
+These catalogue-backed requirements augment the regional type cap below. They
+apply to generic mutant quotas, not the optional named-mutant roster. They are
+solver/PDA availability assumptions, not a veto on credit for a real kill.
+
 The starting region contributes at most five distinct supported mutant types.
 Each additional reachable region contributes at most two, and only when the
 catalogue documents distinct source types there. Visiting a region repeatedly,

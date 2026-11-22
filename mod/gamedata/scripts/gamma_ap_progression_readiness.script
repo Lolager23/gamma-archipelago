@@ -6,12 +6,14 @@ function reason(state,row,regions,id)
     for _,group in ipairs({"firearms","outfit"}) do
         if needed[group] and gamma_ap_equipment_classes.level(state,group) < needed[group] then
             local label=gamma_ap_catalog.equipment_classes.groups[group].labels[needed[group]]
-            return "Story equipment required: "..label
+            local prefix=row.quota == "mutant" and "Mutant discovery equipment required: " or "Story equipment required: "
+            return prefix..label
         end
     end
     if needed.tools and config.rewards_progressive_tools == 1
         and gamma_ap_workshop.tools_level(state) < needed.tools then
-        return needed.tools == 2 and "Story readiness: Advanced tools required" or "Story readiness: Expert tools required"
+        local prefix=row.quota == "mutant" and "Mutant discovery readiness: " or "Story readiness: "
+        return prefix..(needed.tools == 2 and "Advanced tools required" or "Expert tools required")
     end
     if gamma_ap_catalog.northern_readiness_checks[id] then
         local ok,shutdown=pcall(has_alife_info,"bar_deactivate_radar_done")

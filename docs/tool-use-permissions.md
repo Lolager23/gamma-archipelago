@@ -37,7 +37,7 @@ same permanent permission never delivers another free kit.
 ## Repair-grade checks and crafting
 
 The AP solver, PDA blocked reason and game check observer require Basic for
-firearm repair grades A/B, Advanced for C, and Expert for D when progressive
+firearm repair grade B, Advanced for C, and Expert for D when progressive
 permissions are enabled. These are check requirements; a rifle remains usable
 under its permitted equipment class. Fresh class checks also use the configurable
 condition threshold and toolkit requirements described in equipment classes. Existing grade D northern/psi or AP-goodwill
@@ -83,3 +83,7 @@ before/after their AP rewards, crafting locked output kits, field/technician
 repair and upgrades, actual grade C check/PDA state, one free kit per reward,
 save/load, and late wrappers from other enabled mods. No deployment, game launch,
 save write, developer-panel change or normal-game modification is part of this PR.
+
+Class A firearm condition/use checks can complete before Basic Tools. They still
+require the configured condition and usable firearm class; this does not grant
+permission to use a repair kit or change native repair/crafting requirements.

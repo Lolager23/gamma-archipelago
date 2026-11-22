@@ -210,10 +210,30 @@ test("step report shows separate paced and logical lists using safe text", () =>
     const analysis={steps:[{step:1,checks:1,local_events:[],available_checks:[{location:"<img>",item:"PDA",recipient:1}]}],
       goal_step:1,unreachable_checks:0,time_estimate:"Uncalibrated"};
     showStepReport({kind:"actual_generated_seed",paced_steps:analysis,logical_spheres:analysis});
-    assert.equal(container.children.filter(n=>n.textContent==="Paced steps: one tier per chain").length,1);
+    assert.equal(container.children.filter(n=>n.textContent==="AP progression: one tier per chain per step").length,1);
+    assert.equal(container.children.filter(n=>n.textContent==="Raw Archipelago logical spheres (unpaced)").length,1);
     assert.equal(container.children[2].children[1].children[0].textContent,"<img> -> PDA (player 1)");
     delete analysis.steps[0].available_checks;
     showStepReport({kind:"actual_generated_seed",paced_steps:analysis,logical_spheres:analysis});
     assert.match(container.children[2].children[1].children[0].textContent,/spoilers/);
+  } finally {globalThis.document=previous;}
+});
+
+test("AP progression keeps paced results separate from raw spheres", () => {
+  const previous=globalThis.document;
+  const node=()=>({children:[],append(...children){this.children.push(...children);},
+    replaceChildren(...children){this.children=children;}});
+  const container=node();
+  globalThis.document={getElementById:()=>container,createElement:node};
+  const report=(name)=>({steps:[{step:1,checks:1,local_events:[],
+    available_checks:[{location:name,item:"Tools",recipient:1}]}],goal_step:1,
+    unreachable_checks:0,time_estimate:"Uncalibrated"});
+  try {
+    showStepReport({kind:"actual_generated_seed",paced_steps:report("paced check"),
+      logical_spheres:report("raw check")});
+    assert.equal(container.children[0].textContent,"AP progression: one tier per chain per step");
+    assert.match(container.children[2].children[1].children[0].textContent,/^paced check/);
+    assert.equal(container.children[3].textContent,"Raw Archipelago logical spheres (unpaced)");
+    assert.match(container.children[5].children[1].children[0].textContent,/^raw check/);
   } finally {globalThis.document=previous;}
 });

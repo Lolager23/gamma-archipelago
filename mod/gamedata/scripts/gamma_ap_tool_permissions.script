@@ -1,7 +1,7 @@
 -- Pure use permissions. Inventory copies never become an independent unlock owner.
 local tier_keys = {"basic","advanced","expert"}
 local recipe_keys = {"basic","advanced","expert","medical","ammo","artefact"}
-local grades = {A=1,B=1,C=2,D=3}
+local grades = {A=0,B=1,C=2,D=3}
 
 function enabled(configuration)
     return configuration and configuration.expanded
@@ -102,7 +102,7 @@ function grade_reason(state,row)
             tier=({1,1,2,3})[role]
         end
     end
-    if enabled(state.configuration) and tier then return reason(state,tier_keys[tier]) end
+    if enabled(state.configuration) and tier and tier > 0 then return reason(state,tier_keys[tier]) end
 end
 
 function melter_received(state)

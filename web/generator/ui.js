@@ -309,8 +309,8 @@ export function showStepReport(report) {
     throw new Error("Choose an actual GAMMA seed preview JSON with step analysis.");
   const container = $("step-report");
   container.replaceChildren();
-  for (const [label, analysis] of [["Paced steps: one tier per chain", report.paced_steps],
-                                  ["Archipelago logical spheres", report.logical_spheres]]) {
+  for (const [label, analysis] of [["AP progression: one tier per chain per step", report.paced_steps],
+                                  ["Raw Archipelago logical spheres (unpaced)", report.logical_spheres]]) {
     container.append(element("h3", label));
     container.append(element("p", `${analysis.steps.length} steps - goal at step ${analysis.goal_step ?? "unreachable"} - ${analysis.unreachable_checks} unreachable checks. ${analysis.time_estimate}`));
     for (const step of analysis.steps) {

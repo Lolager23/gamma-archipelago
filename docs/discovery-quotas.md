@@ -1,5 +1,13 @@
 # Step 33: configurable distinct discoveries
 
+Regional generic mutant checks 1–10 retain the ordinary regional/source and combat
+requirements. Checks 11–15 additionally require Advanced Tools, Medium armour and
+Class B firearms. Checks 16–25 require Expert Tools, Heavy armour and Class C
+firearms. The catalogue owns these requirements; the AP solver and PDA read the
+same definitions. Disabled AP tool/equipment rewards retain their existing normal
+acquisition assumptions. Native kills continue to record completed facts even if
+a player exceeds the solver's conservative requirements.
+
 Fresh regional progression adds a maximum of five supported mutant types in the
 starting region and two per additional supported reachable region. This bounds
 generic logical availability without choosing particular rare species or rejecting

@@ -13,7 +13,7 @@ TOOL_ITEMS = {row["tool_key"]: row["name"] for row in _catalog["items"] if "tool
 TOOL_ITEM_IDS = frozenset(row["id"] for row in _catalog["items"] if "tool_key" in row)
 TOOL_TIERS = tuple(TOOL_ITEMS[key] for key in ("basic", "advanced", "expert"))
 TOOL_CAPABILITIES = tuple("Usable " + name.split(": ", 1)[1] for name in TOOL_TIERS)
-REPAIR_TIERS = {"A": 1, "B": 1, "C": 2, "D": 3}
+REPAIR_TIERS = {"A": 0, "B": 1, "C": 2, "D": 3}
 
 
 def enabled(configuration: "SeedConfiguration") -> bool:

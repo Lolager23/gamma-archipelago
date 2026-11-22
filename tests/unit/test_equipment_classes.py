@@ -87,6 +87,11 @@ def test_class_requirements_and_repair_capabilities_follow_each_tier():
         assert repair_tier(config, row) == expected
         assert repair_tier(configuration(), row) == 0
     assert repair_tier(config, {"category": "checks_maps"}) == 0
+    for grade, expected in zip("ABCD", (0, 1, 2, 3), strict=True):
+        assert (
+            repair_tier(config, {"category": "checks_weapon_tiers", "weapon_grade": grade})
+            == expected
+        )
 
 
 def test_random_start_only_offers_equipment_that_is_actually_locked():

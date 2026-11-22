@@ -89,7 +89,7 @@ def repair_tier(configuration: "SeedConfiguration", row: Mapping[str, Any]) -> i
     category = row.get("category")
     if category == "checks_weapon_tiers":
         tier = check_classes(configuration, row)["firearms"]
-        return (1, 1, 2, 3)[tier - 1]
+        return ((0, 1, 2, 3) if row.get("weapon_grade") else (1, 1, 2, 3))[tier - 1]
     if category == "checks_armour_tiers":
         return int(_catalog["equipment_classes"]["armour_tools"][row["key"]])
     if category == "checks_knife_tiers":
