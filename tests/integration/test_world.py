@@ -218,6 +218,7 @@ def test_loot_stash_pool_is_optional_seeded_and_fits_even_one_check():
             *range(28051501, 28051504),
             *range(28051601, 28051610),
             *range(28051701, 28051733),
+            *range(28053001, 28053005),
         }
         assert enabled_item_ids(world.configuration.rewards) == ITEM_IDS - {
             *range(28051801, 28052000),
@@ -227,6 +228,7 @@ def test_loot_stash_pool_is_optional_seeded_and_fits_even_one_check():
             *range(28051501, 28051504),
             *range(28051601, 28051610),
             *range(28051701, 28051733),
+            *range(28053001, 28053005),
         }
         assert multiworld.can_beat_game()
         placements.append(names)

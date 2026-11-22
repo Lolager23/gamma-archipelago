@@ -128,7 +128,8 @@ class GammaContext(CommonContext):
                 legacy = (
                     enabled_item_ids(self.configuration.rewards)
                     if self.expanded
-                    else frozenset(ITEM_SECTIONS)
+                    and not self.configuration.option("equipment_class_progression")
+                    else item_ids
                 )
                 manifest = slot_data["item_ids"]
                 expected = legacy if manifest == sorted(legacy) else item_ids

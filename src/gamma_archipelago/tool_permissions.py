@@ -22,6 +22,10 @@ def enabled(configuration: "SeedConfiguration") -> bool:
     )
 
 
+def generic(configuration: "SeedConfiguration") -> bool:
+    return enabled(configuration) and bool(configuration.option("progressive_tool_receipts"))
+
+
 def level(count: Callable[[str], int]) -> int:
     result = 0
     for tier, name in enumerate(TOOL_CAPABILITIES, 1):
@@ -34,7 +38,11 @@ def level(count: Callable[[str], int]) -> int:
 def required_tier(configuration: "SeedConfiguration", row: Mapping[str, Any]) -> int:
     if not enabled(configuration) or "rewards_progressive_tools" not in configuration.rewards:
         return 0
-    return REPAIR_TIERS.get(str(row.get("weapon_grade", "")), 0)
+    from .equipment_classes import repair_tier
+
+    return max(
+        REPAIR_TIERS.get(str(row.get("weapon_grade", "")), 0), repair_tier(configuration, row)
+    )
 
 
 def melter_item(configuration: "SeedConfiguration") -> str:

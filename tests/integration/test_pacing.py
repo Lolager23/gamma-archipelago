@@ -56,6 +56,7 @@ def test_nonlocal_permissions_and_protected_opening_plando_conflicts_are_explici
 
 def test_gifted_permissions_reduce_pool_and_precollected_zone_keys_do_not_break_route():
     options = {
+        "equipment_class_progression": 0,
         "rewards_zone_keys": 1,
         "checks_settlements": 1,
         "opening_policy": 1,

@@ -5,8 +5,12 @@ from collections.abc import Callable, Mapping
 from importlib.resources import files
 from typing import TYPE_CHECKING, Any
 
-from .catalog import enabled_item_ids
+from .catalog import CLASS_ITEM_IDS, enabled_item_ids
+from .equipment_classes import enabled as classes_enabled
+from .equipment_classes import item_enabled as class_item_enabled
+from .equipment_classes import required_copies as class_copies
 from .tool_permissions import TOOL_ITEM_IDS, enabled
+from .tool_permissions import generic as generic_tools
 from .tool_permissions import level as permission_level
 
 if TYPE_CHECKING:
@@ -33,7 +37,17 @@ def tool_level(count: Callable[[str], int]) -> int:
 
 def configured_item_ids(configuration: "SeedConfiguration") -> frozenset[int]:
     ids = enabled_item_ids(configuration.rewards, configuration.gear)
+    if classes_enabled(configuration):
+        ids |= CLASS_ITEM_IDS
+    ids &= frozenset(row["id"] for row in _data["items"] if class_item_enabled(configuration, row))
     if enabled(configuration):
+        if generic_tools(configuration):
+            return (
+                ids
+                - TOOL_IDS
+                - {28051802}
+                - frozenset(row["id"] for row in _data["items"] if row.get("kit_tier", 0) > 0)
+            )
         return ids - TOOL_IDS - {28051802, 28051801}
     ids -= TOOL_ITEM_IDS
     return ids if configuration.option("content_progression") else ids - TOOL_IDS
@@ -54,6 +68,10 @@ def protected(configuration: "SeedConfiguration") -> frozenset[int]:
 
 
 def required_copy(configuration: "SeedConfiguration", row: Mapping[str, Any]) -> int:
+    if "class_group" in row:
+        return class_copies(configuration, row)
+    if generic_tools(configuration) and row.get("name") == "Progressive Tools":
+        return 3
     if "tool_key" in row:
         return int(enabled(configuration))
     if enabled(configuration) and ("tool_level" in row or row["name"] == "Artefact Melter"):

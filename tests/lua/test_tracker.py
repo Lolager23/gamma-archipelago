@@ -13,7 +13,9 @@ KEY = "a" * 64
 
 
 def state_for(lua, **options):
-    configuration = build_configuration({**defaults(), **options})
+    configuration = build_configuration(
+        {**defaults(), "equipment_class_progression": 0, "progressive_tool_receipts": 0, **options}
+    )
     state = lua.globals().gamma_ap_state.new_state()
     state.session_key = KEY
     state.configuration = lua.globals().gamma_ap_configuration.parse(

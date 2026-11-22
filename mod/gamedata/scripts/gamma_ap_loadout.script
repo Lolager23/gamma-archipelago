@@ -1,6 +1,7 @@
 -- Initial omissions run once before AP rewards; later inventory is never swept.
 
 local function restricted(options)
+    if options.equipment_class_progression == 1 then return true end
     for name, value in pairs(options) do
         if name:sub(1, 9) == "starting_" then
             local quantity = name == "starting_ammo" or name == "starting_medicine"
@@ -11,7 +12,15 @@ local function restricted(options)
     return options.no_starting_weapons == 1
 end
 
-local function omitted(options, group)
+local function omitted(options, group, section)
+    if options.equipment_class_progression == 1 then
+        if group == "melee" or group == "tools" then return false end
+        local row=gamma_ap_catalog.equipment_classes.groups[group]
+        if row and options.rewards_starting_gear_unlocks == 1 then
+            return (options[row.option] or 0) < gamma_ap_equipment_classes.section_tier(section,group)
+                or group == "firearms" and options.no_starting_weapons == 1
+        end
+    end
     return group and ((options["starting_" .. group] or 0) > 0
         and group ~= "ammo" and group ~= "medicine" and group ~= "food"
         or (group == "explosives" and options.no_starting_weapons == 1))
@@ -27,7 +36,7 @@ function prepare(state, configuration)
     local keep = {}
     for section in (loadout or ""):gmatch("[^,]+") do
         section = section:match("^%s*(.-)%s*$")
-        if not omitted(configuration.options, gamma_ap_equipment.group(section)) then
+        if not omitted(configuration.options, gamma_ap_equipment.group(section),section) then
             keep[#keep + 1] = section
         end
     end
@@ -49,7 +58,7 @@ local function make_plan(options)
         local section = object:section()
         local group = gamma_ap_equipment.group(section)
         local target = nil
-        if omitted(options, group) then target = 0
+        if omitted(options, group,section) then target = 0
         elseif group == "ammo" then
             target = math.floor(object:ammo_get_count() * options.starting_ammo / 100)
             if target == object:ammo_get_count() then target = nil end
@@ -101,6 +110,9 @@ function apply(state, configuration)
         return false, "Waiting for the original starting loadout grant"
     end
     state.loadout_plan = state.loadout_plan or make_plan(configuration.options)
+    if state.loadout_plan.grants == nil then
+        state.loadout_plan.grants=gamma_ap_starting_supplies.plan(state,configuration)
+    end
     local work = 0
     for _, action in ipairs(state.loadout_plan.actions) do
         if not action.done then
@@ -116,13 +128,15 @@ function apply(state, configuration)
         return db.actor:money() <= state.loadout_plan.money
     end)
     if not ok or not confirmed then return false, "Cannot adjust starting money" end
+    local supplied,problem=gamma_ap_starting_supplies.apply(state,state.loadout_plan.grants)
+    if not supplied then return false,problem end
     state.loadout_initialized, state.loadout_plan = true, nil
     return true
 end
 
 function copy_plan(plan)
     if not plan then return nil end
-    local result = {money=plan.money, actions={}}
+    local result = {money=plan.money, actions={},grants=gamma_ap_starting_supplies.copy(plan.grants)}
     for _, action in ipairs(plan.actions) do
         result.actions[#result.actions + 1] = {
             id=action.id, section=action.section, target=action.target, done=action.done,

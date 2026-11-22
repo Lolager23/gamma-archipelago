@@ -20,6 +20,7 @@ function enabled_items(configuration)
             local gear = gamma_ap_catalog.gear_rewards[id]
             if (not gear or (configuration and configuration.options["starting_" .. gear.group] == 2))
                 and gamma_ap_tool_permissions.item_enabled(configuration,id)
+                and gamma_ap_equipment_classes.item_enabled(configuration,id)
                 and (not gamma_ap_catalog.tool_stash_levels[id] or (configuration and configuration.options.content_progression == 1)) then result[id] = true end
         end
     end

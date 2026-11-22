@@ -10,6 +10,15 @@ from worlds.gamma import GammaWorld
 from gamma_archipelago.activity_requirements import unreliable_check_ids
 from gamma_archipelago.presets import presets
 
+
+def legacy_full():
+    return presets()["full_story"] | {
+        "equipment_class_progression": 0,
+        "starting_melee": 2,
+        "starting_tools": 2,
+    }
+
+
 CATALOG = json.loads(files("gamma_archipelago").joinpath("catalog.json").read_text())
 CATEGORIES = {row["id"]: row["category"] for row in CATALOG["locations"]}
 
@@ -21,7 +30,7 @@ def collect(world, state, *names):
 
 def test_cordon_kills_artefacts_and_tasks_require_their_equipment_not_every_key():
     # Named-source access is still selectable after generic discoveries become default.
-    options = presets()["full_story"] | {"mutant_discovery_mode": 0, "artefact_discovery_mode": 0}
+    options = legacy_full() | {"mutant_discovery_mode": 0, "artefact_discovery_mode": 0}
     multi = setup_multiworld(GammaWorld, options=options, seed=1)
     world = multi.worlds[1]
     state = CollectionState(multi)
@@ -42,7 +51,7 @@ def test_cordon_kills_artefacts_and_tasks_require_their_equipment_not_every_key(
 
 
 def test_progression_excludes_uncertain_sources_and_keeps_the_native_check_manifest():
-    multi = setup_multiworld(GammaWorld, options=presets()["full_story"])
+    multi = setup_multiworld(GammaWorld, options=legacy_full())
     unsafe = unreliable_check_ids(multi.worlds[1].configuration)
     locations = [row for row in multi.get_locations() if row.address]
     assert len(locations) == 253
@@ -64,7 +73,7 @@ def test_progression_excludes_uncertain_sources_and_keeps_the_native_check_manif
 def test_regional_fill_reaches_all_checks_and_places_keys_outside_exploration():
     categories = set()
     for seed in range(40):
-        multi = setup_multiworld(GammaWorld, options=presets()["full_story"], seed=seed)
+        multi = setup_multiworld(GammaWorld, options=legacy_full(), seed=seed)
         distribute_items_restrictive(multi)
         assert multi.can_beat_game()
         seen = set()
@@ -101,7 +110,7 @@ def test_reliable_global_checks_use_general_fill_without_sparse_map_reservations
 
 
 def test_rank_has_a_viable_quest_or_combat_path_and_upgrades_respect_tool_use_permission():
-    multi = setup_multiworld(GammaWorld, options=presets()["full_story"], seed=11)
+    multi = setup_multiworld(GammaWorld, options=legacy_full(), seed=11)
     world = multi.worlds[1]
     state = CollectionState(multi)
     rank = next(loc for loc in multi.get_locations() if loc.address == 28052802)
@@ -133,7 +142,7 @@ def test_rank_has_a_viable_quest_or_combat_path_and_upgrades_respect_tool_use_pe
 def test_later_story_checks_and_local_victory_retain_earlier_mandatory_combat():
     multi = setup_multiworld(
         GammaWorld,
-        options=presets()["full_story"],
+        options=legacy_full(),
         seed=20,
         steps=("generate_early", "create_regions", "create_items", "set_rules"),
     )
@@ -164,7 +173,7 @@ def test_activity_opener_uses_upstream_early_requests_and_preserves_user_request
 
     multi = setup_multiworld(
         GammaWorld,
-        options=presets()["full_story"]
+        options=legacy_full()
         | {"starting_money": 0, "checks_emissions": 0, "checks_psi_storms": 0, "checks_shops": 0},
         seed=740,
         steps=("generate_early", "create_regions", "create_items", "set_rules"),
@@ -181,7 +190,7 @@ def test_activity_opener_uses_upstream_early_requests_and_preserves_user_request
 @pytest.mark.parametrize("seed,start", [(740, 0), (66, 2), (99, 3)])
 def test_dependent_tools_cannot_clog_the_fully_locked_opening(seed, start):
     multi = setup_multiworld(
-        GammaWorld, options={**presets()["full_story"], "starting_location": start}, seed=seed
+        GammaWorld, options={**legacy_full(), "starting_location": start}, seed=seed
     )
     assert sum(multi.early_items[1].values()) == 0  # Paid shop provides an opening.
     assert all(
@@ -199,7 +208,7 @@ def test_activity_opener_requests_a_capability_when_no_paid_start_is_affordable(
 
     multi = setup_multiworld(
         GammaWorld,
-        options=presets()["full_story"]
+        options=legacy_full()
         | {"starting_money": 0, "checks_emissions": 0, "checks_psi_storms": 0, "checks_shops": 0},
         steps=("generate_early", "create_regions", "create_items", "set_rules"),
     )

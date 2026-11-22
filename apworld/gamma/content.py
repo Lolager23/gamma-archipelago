@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING
 from BaseClasses import Item, ItemClassification, Location, Region
 
 from gamma_archipelago.content_progression import TOOL_CLAIMS, TOOL_STASHES
-from gamma_archipelago.tool_permissions import TOOL_CAPABILITIES, TOOL_TIERS, enabled
+from gamma_archipelago.tool_permissions import TOOL_CAPABILITIES, TOOL_TIERS, enabled, generic
 
 if TYPE_CHECKING:
     from . import GammaWorld
@@ -32,6 +32,10 @@ def add_tool_claims(
             state.has(coordinates, world.player)
             and (prior is None or state.has(prior, world.player))
         )
+        if generic(world.configuration):
+            claim.access_rule = lambda state, tier=tier: state.has(
+                "Progressive Tools", world.player, tier + 1
+            )
         claim.place_locked_item(
             item_type(event, ItemClassification.progression, None, world.player)
         )

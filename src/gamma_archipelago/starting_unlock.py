@@ -3,6 +3,8 @@
 from collections.abc import Mapping
 from typing import TYPE_CHECKING
 
+from .equipment_classes import GROUPS, count_with_aliases
+from .equipment_classes import enabled as class_enabled
 from .opening import opening_permissions
 from .pool_budget import PoolBudget, budget_pool
 
@@ -14,10 +16,13 @@ def unlock_candidates(
     configuration: "SeedConfiguration", held: Mapping[str, int]
 ) -> tuple[str, ...]:
     gear = dict(configuration.gear)
+    permitted = count_with_aliases(configuration, lambda name: held.get(name, 0))
     return tuple(
-        "Equipment Unlock: " + title
+        GROUPS["firearms"]["item_name"]
+        if group == "firearms" and class_enabled(configuration)
+        else "Equipment Unlock: " + title
         for group, title in (("pda", "PDA"), ("firearms", "Firearms"), ("detector", "Detector"))
-        if gear["starting_" + group] == 2 and not held.get("Equipment Unlock: " + title, 0)
+        if gear["starting_" + group] == 2 and not permitted("Equipment Unlock: " + title)
     )
 
 

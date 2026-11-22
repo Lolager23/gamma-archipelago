@@ -63,6 +63,7 @@ end
 
 local function eligible(state, id)
     local row = gamma_ap_catalog.tracker_checks[id]
+    if gamma_ap_equipment_classes.check_reason(state,row) then return false end
     if gamma_ap_tool_permissions.grade_reason(state,row) then return false end
     if state.configuration.options.playability_logic ~= 1
         or not (row.category == "checks_armour_tiers" and tonumber(row.key) >= 3 or row.weapon_grade == "D") then return true end
@@ -84,24 +85,32 @@ end
 local function check_equipped(state, options)
     if options.checks_armour_tiers == 1 then
         local outfit = db.actor:item_in_slot(7)
-        if outfit and not gamma_ap_gear_locks.locked(state,outfit) and outfit:condition() > 0 then
+        if outfit and not gamma_ap_gear_locks.locked(state,outfit) and gamma_ap_equipment_classes.usable_condition(state,outfit) then
             local section = outfit:section()
             local tier = gamma_ap_catalog.powered_outfits[section] and 4
                 or gamma_ap_catalog.armour_kinds[kind(section)]
+            if gamma_ap_equipment_classes.contract(state.configuration) then
+                tier=gamma_ap_equipment_classes.section_tier(section,"outfit")-1
+            end
             award_tiers(state, gamma_ap_catalog.armour_locations, tier)
         end
     end
     if options.checks_weapon_tiers == 1 or options.checks_knife_tiers == 1 then
         local active = db.actor:active_item()
-        if active and not gamma_ap_gear_locks.locked(state,active) and active:condition() > 0 then
+        if active and not gamma_ap_gear_locks.locked(state,active) and gamma_ap_equipment_classes.usable_condition(state,active) then
             local section = active:section()
             local class = gamma_ap_catalog.machineguns[section] and "machinegun"
                 or gamma_ap_catalog.weapon_kinds[kind(section)]
             local id = gamma_ap_catalog.weapon_locations[class]
-            if id and state.enabled_checks[id] then state.checks[id] = true end
+            if id and state.enabled_checks[id] and eligible(state,id) then state.checks[id] = true end
             if options.content_progression == 1 then
                 local grade = gamma_ap_catalog.weapon_grade_locations[ini_sys:r_string_ex(section,"repair_type")]
                 if grade and state.enabled_checks[grade] and eligible(state,grade) then state.checks[grade] = true end
+                if grade and gamma_ap_equipment_classes.contract(state.configuration) then
+                    for _,lower in pairs(gamma_ap_catalog.weapon_grade_locations) do
+                        if lower <= grade and state.enabled_checks[lower] and eligible(state,lower) then state.checks[lower]=true end
+                    end
+                end
             end
             award_tiers(state, gamma_ap_catalog.knife_locations, gamma_ap_catalog.knives[section])
         end
@@ -109,6 +118,10 @@ local function check_equipped(state, options)
 end
 
 local function observe_installations(state, object, group)
+    if not gamma_ap_equipment_classes.usable_condition(state,object) then return true end
+    if gamma_ap_equipment_classes.contract(state.configuration)
+        and state.configuration.options.rewards_progressive_tools == 1
+        and gamma_ap_workshop.tools_level(state) < 3 then return true end
     local values, reason = installed(object)
     if not values then return false, reason end
     local progress = state.equipment

@@ -97,6 +97,10 @@ function schedule() {
 
 function changeOption(key, value) {
   form.edit(key, value);
+  if (["equipment_class_progression", "rewards_starting_gear_unlocks"].includes(key)) {
+    loadoutOptions(metadata, form.options, changeOption);
+    advancedOptions(metadata, form.options, changeOption);
+  }
   renderGear();
   schedule();
 }
@@ -111,7 +115,7 @@ function renderGear() {
     node.value = overridden
       ? Math.max(1, form.options[key])
       : form.options[key];
-    node.disabled = overridden;
+    node.disabled = overridden || (/^initial_.*_class$/.test(key) && form.options.rewards_starting_gear_unlocks !== 1);
   });
 }
 

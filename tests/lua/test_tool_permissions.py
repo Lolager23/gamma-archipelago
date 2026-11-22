@@ -184,6 +184,8 @@ def test_python_and_lua_item_manifests_match_for_old_and_new_seeds(lua, mode):
 
     options = dict(
         tool_use_permissions=mode,
+        equipment_class_progression=0,
+        progressive_tool_receipts=0,
         rewards_progressive_tools=1,
         rewards_drug_making_tools=1,
         rewards_gunsmithing_tools=1,

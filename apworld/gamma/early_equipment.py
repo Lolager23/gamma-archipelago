@@ -6,6 +6,8 @@ from BaseClasses import CollectionState, LocationProgressType
 from Options import OptionError
 
 from gamma_archipelago.catalog import KILL_MILESTONE_BASE, SIDE_TASK_MILESTONE_BASE
+from gamma_archipelago.equipment_classes import ITEMS as CLASS_ITEMS
+from gamma_archipelago.equipment_classes import baseline_rewards
 from gamma_archipelago.playability import EARLY_REWARD_CATEGORIES, early_check
 from gamma_archipelago.starting import starting_level
 
@@ -40,10 +42,20 @@ def place_equipment(world: "GammaWorld", catalog: dict[str, Any]) -> None:
         for item in world.multiworld.itempool
         if item.player == world.player and item.name in names
     ]
+    baseline = baseline_rewards(configuration)
+    selected, seen = [], set()
+    for item in items:
+        if item.name in CLASS_ITEMS:
+            if item.name not in baseline or item.name in seen:
+                continue
+            seen.add(item.name)
+        selected.append(item)
+    items = selected
     order = {
         "Equipment Unlock: " + group: index
         for index, group in enumerate(("PDA", "Firearms", "Detector", "Melee"))
     }
+    order["Progressive Firearm Class"] = 1
     world.random.shuffle(items)
     items.sort(key=lambda item: order.get(item.name, 4))
     remote = world.options.non_local_items.value

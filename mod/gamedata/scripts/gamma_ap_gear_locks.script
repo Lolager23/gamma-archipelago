@@ -25,6 +25,9 @@ function install_pickup_guard(configuration)
 end
 
 function group_locked(state, group)
+    if gamma_ap_equipment_classes.contract(state.configuration) then
+        return not gamma_ap_equipment_classes.permitted(state,group)
+    end
     local configuration = state.configuration
     return configuration and configuration.expanded and group
         and configuration.options["starting_" .. group] == 2
@@ -40,6 +43,10 @@ function pickup_locked(state, item)
 end
 
 function locked(state, item)
+    if gamma_ap_equipment_classes.contract(state.configuration) then
+        return item and (pickup_locked(state,item)
+            or not gamma_ap_equipment_classes.section_allowed(state,item:section()))
+    end
     return item and (pickup_locked(state,item) or group_locked(state,gamma_ap_equipment.group(item:section())))
 end
 

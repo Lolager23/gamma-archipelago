@@ -7,4 +7,5 @@
     <string id="gamma_ap_start_required"><text>Start the matching Archipelago companion before creating an AP character.</text></string>
     <string id="gamma_ap_start_locked"><text>Archipelago controls this start: Free Stalkers, %s.</text></string>
     <string id="gamma_ap_start_unsupported"><text>The configured Archipelago starting location is unavailable in this GAMMA installation.</text></string>
+    <string id="gamma_ap_start_loadout_locked"><text>Starting equipment exceeds the Archipelago settings. The available loadout has been refreshed.</text></string>
 </string_table>

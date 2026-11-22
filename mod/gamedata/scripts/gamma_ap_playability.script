@@ -30,13 +30,13 @@ function reason(state, row, regions, psi)
         and math.floor(economy.starting_money_rubles*(config.starting_money or 0)/100) >= row.price
     if category == "checks_shop_purchases" and not cash
         and config.starting_pda == 2 and not state.unlocks.gear_pda
-        and config.starting_firearms == 2 and not state.unlocks.gear_firearms then
+        and not gamma_ap_equipment_classes.permitted(state,"firearms") then
         return "AP money-earning route required: PDA tasks or firearms; existing cash may permit earlier purchase"
     end
     local firearm = category == "checks_faction_first_kills"
         or (category == "checks_mutant_first_kills" and ((row.quota == "" and not knife_mutants[row.key]) or (row.quota ~= "" and row.minimum > 5)))
         or (category == "checks_kill_milestones" and row.minimum > 25)
-    if firearm and config.starting_firearms == 2 and not state.unlocks.gear_firearms then
+    if firearm and not gamma_ap_equipment_classes.permitted(state,"firearms") then
         return "Firearms required (firearms permission): knife logic allows at most five mutant types or 25 total kills"
     end
     local amount = category == "checks_rank_milestones" and gamma_ap_catalog.rank_goodwill_proxy[tostring(row.minimum)]

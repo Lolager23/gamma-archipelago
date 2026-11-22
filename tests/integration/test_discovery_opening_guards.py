@@ -53,6 +53,7 @@ def test_tail_fill_and_seeded_starting_permission_are_beatably_placed(seed):
 @pytest.mark.parametrize("mode", [0, 1, 2])
 def test_pda_detector_and_weapon_requirements_apply_to_typed_and_generic_checks(mode):
     values = dict(
+        equipment_class_progression=0,
         checks_quest_types=1,
         checks_side_task_milestones=1,
         checks_story_milestones=1,

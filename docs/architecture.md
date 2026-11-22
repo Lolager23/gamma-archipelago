@@ -44,6 +44,12 @@ and exploration without parsing presentation strings; its legacy flat list is
 retained. The UI's Checks/Progression pages and native list selection own no
 progression state.
 
+Fresh [equipment classes](equipment-classes.md) derive cumulative use tiers from
+starting settings and applied receipt history. Free initial supplies reuse the
+central loadout plan, and backpack receipts reuse ordered delivery plans. Native
+creation-list filtering constructs permitted section/price pairs before mutation.
+No additional persistent class owner or counter exists.
+
 Starting equipment permissions gate equip/use, not ownership. The game adapter
 keeps acquired gear in inventory, guards native UI/device/input entry points and
 reconciles the finite supported equipment slots back to the rucksack. All hooks

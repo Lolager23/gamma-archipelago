@@ -68,6 +68,7 @@ def test_new_zero_defaults_preserve_legacy_wire_and_random_unlock_requires_a_loc
 
 def test_start_candidates_skip_unlocked_or_held_permissions_and_preview_does_not_roll():
     values = defaults() | {
+        "equipment_class_progression": 0,
         "starting_pda": 2,
         "starting_detector": 2,
         "starting_firearms": 2,

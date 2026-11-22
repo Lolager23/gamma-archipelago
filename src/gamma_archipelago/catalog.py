@@ -10,6 +10,7 @@ ITEM_SECTIONS: dict[int, str] = {
     item["id"]: item["section"] for item in _data["items"] if "section" in item
 }
 ITEM_IDS = frozenset(item["id"] for item in _data["items"])
+CLASS_ITEM_IDS = frozenset(item["id"] for item in _data["items"] if "class_group" in item)
 ITEM_CATEGORIES: dict[int, str | None] = {
     item["id"]: item.get("category") for item in _data["items"]
 }
@@ -62,6 +63,7 @@ def enabled_item_ids(
     return frozenset(
         identity
         for identity, category in ITEM_CATEGORIES.items()
+        if identity not in CLASS_ITEM_IDS
         if category is None or category in rewards
         if gear is None
         or identity not in ITEM_GEAR

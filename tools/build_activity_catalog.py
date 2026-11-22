@@ -34,6 +34,10 @@ def activity_lines(catalog: dict[str, Any]) -> list[str]:
     lines.append("rank_goodwill_proxy = " + encoded({str(k): v for k, v in RANK_PROXY.items()}))
     lines.append("northern_equipment_regions = " + encoded(list(NORTH)))
     projections = {
+        "equipment_classes": catalog["equipment_classes"],
+        "equipment_class_items": {
+            row["id"]: row["class_group"] for row in catalog["items"] if "class_group" in row
+        },
         "quest_zone_gates": catalog["quest_zone_gates"],
         "tool_use_items": {
             row["id"]: {

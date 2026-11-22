@@ -1,6 +1,6 @@
 from gamma_archipelago.catalog import LOCATION_IDS, MAP_LOCATIONS
 from gamma_archipelago.catalog import MAP_LOCATION_IDS as ALL_LOCATION_IDS
-from gamma_archipelago.configuration import build_configuration, defaults, encode_configuration
+from gamma_archipelago.configuration import encode_configuration
 from gamma_archipelago.protocol import decode_outgoing, encode_confirmed
 
 from .test_game_adapter import saved_state
@@ -52,7 +52,7 @@ def test_expanded_configuration_drives_live_adapter_and_survives_load(lua):
     game.load_state(lua.table(gamma_archipelago_v1=state))
     assert saved_state(lua, game).gamma_archipelago_v1.expanded is True
     parsed = lua.globals().gamma_ap_configuration.parse(
-        encode_configuration(KEY, build_configuration(defaults()), expanded=True),
+        encode_configuration(KEY, configuration, expanded=True),
         KEY,
         configuration.digest,
     )

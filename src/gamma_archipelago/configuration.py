@@ -185,6 +185,13 @@ def defaults() -> dict[str, object]:
         tool_use_permissions=1,
         reward_quantities=1,
         quest_zone_logic=1,
+        equipment_class_progression=1,
+        progressive_tool_receipts=1,
+        initial_firearm_class=1,
+        initial_outfit_class=1,
+        initial_helmet_class=1,
+        initial_backpack_class=1,
+        equipment_check_condition=65,
         artefact_extra_ceiling=60,
         **{name: count for name, count in DEFAULT_COUNTS.items()},
         artefact_discovery_count=40,
@@ -312,10 +319,17 @@ def build_configuration(values: Mapping[str, object]) -> SeedConfiguration:
         raise ConfigurationError("Unlock travel requires zone keys")
     goal = GOALS[_integer(values, "goal", len(GOALS) - 1)]
     gear = {name: _integer(values, name, 2) for name in GEAR_OPTIONS}
+    if values["equipment_class_progression"] and "rewards_starting_gear_unlocks" in rewards:
+        for group in ("firearms", "outfit", "helmet", "backpack"):
+            gear["starting_" + group] = 2
+        gear["starting_melee"] = 0
+        gear["starting_tools"] = 0
     no_weapons = _integer(values, "no_starting_weapons", 1)
     if no_weapons:
         for name in ("starting_firearms", "starting_melee"):
             gear[name] = max(1, gear[name])
+    if values["equipment_class_progression"]:
+        gear["starting_melee"] = 0
     if 2 in gear.values() and "rewards_starting_gear_unlocks" not in rewards:
         raise ConfigurationError("AP-locked starts require rewards_starting_gear_unlocks")
     if "rewards_starting_gear_unlocks" in rewards and 2 not in gear.values():
@@ -323,7 +337,13 @@ def build_configuration(values: Mapping[str, object]) -> SeedConfiguration:
             "Starting gear rewards require at least one AP-locked starting group"
         )
     if values["random_starting_unlock"] and not any(
-        gear["starting_" + group] == 2 for group in ("pda", "firearms", "detector")
+        gear["starting_" + group] == 2
+        and not (
+            group == "firearms"
+            and values["equipment_class_progression"]
+            and _integer(values, "initial_firearm_class", 4) > 0
+        )
+        for group in ("pda", "firearms", "detector")
     ):
         raise ConfigurationError(
             "Random starting unlock needs an AP-locked PDA, firearms or detector"
@@ -375,6 +395,13 @@ def encode_configuration(
             in {
                 "checks_shop_purchases",
                 "quest_zone_logic",
+                "equipment_class_progression",
+                "progressive_tool_receipts",
+                "initial_firearm_class",
+                "initial_outfit_class",
+                "initial_helmet_class",
+                "initial_backpack_class",
+                "equipment_check_condition",
                 "ap_start",
                 "starting_faction",
                 "starting_location",

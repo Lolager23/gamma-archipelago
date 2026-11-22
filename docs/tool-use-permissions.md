@@ -1,5 +1,10 @@
 # Tool use permissions and free kits
 
+Fresh seeds also use `progressive_tool_receipts=1`: three identical Progressive
+Tools rewards supply and permit Basic, then Advanced, then Expert. Named tier
+rewards and their geographic placement rules below describe the retained
+`progressive_tool_receipts=0` contract. See [equipment classes](equipment-classes.md).
+
 New seeds use `content_progression=1` and `tool_use_permissions=1`. AP rewards
 unlock use of the six supported GAMMA toolkits and deliver one free physical kit
 directly to inventory. Ordinary kits can still be looted, bought, carried and
@@ -34,7 +39,8 @@ same permanent permission never delivers another free kit.
 The AP solver, PDA blocked reason and game check observer require Basic for
 firearm repair grades A/B, Advanced for C, and Expert for D when progressive
 permissions are enabled. These are check requirements; a rifle remains usable
-under its normal firearm permission. Existing grade D northern/psi or AP-goodwill
+under its permitted equipment class. Fresh class checks also use the configurable
+condition threshold and toolkit requirements described in equipment classes. Existing grade D northern/psi or AP-goodwill
 requirements also remain in effect. An Advanced permission cannot be placed
 behind a grade C check that requires it.
 

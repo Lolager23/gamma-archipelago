@@ -185,6 +185,8 @@ settlement_rules = {
 }
 rank_goodwill_proxy = {["0"]=0,["3999"]=250,["5999"]=500,["9999"]=750,["15999"]=1000,["23999"]=1500,["34999"]=2000,["49999"]=3000}
 northern_equipment_regions = {"jupiter","zaton","l11_pripyat","pripyat","l11_hospital","l12_stancia","l12_stancia_2","l13_generators"}
+equipment_classes = {["groups"]={["firearms"]={["name"]="Firearms",["option"]="initial_firearm_class",["labels"]={"Class A","Class B","Class C","Class D"},["repair_types"]={["pistol"]=1,["shotgun"]=2,["rifle_5"]=3,["rifle_7"]=4},["legacy"]="Equipment Unlock: Firearms",["item_id"]=28053001,["item_name"]="Progressive Firearm Class"},["outfit"]={["name"]="Outfits",["option"]="initial_outfit_class",["labels"]={"Novice","Light","Medium / Scientific","Heavy","Exoskeleton / Nosorog"},["repair_types"]={["outfit_novice"]=1,["outfit_light"]=2,["outfit_medium"]=3,["outfit_heavy"]=4,["outfit_exo"]=5,["outfit"]=1},["legacy"]="Equipment Unlock: Outfit",["item_id"]=28053002,["item_name"]="Progressive Outfit Class"},["helmet"]={["name"]="Helmets",["option"]="initial_helmet_class",["labels"]={"Light","Medium","Heavy","Exoskeleton"},["repair_types"]={["helmet_light"]=1,["helmet_medium"]=2,["helmet_heavy"]=3,["helmet_exo"]=4,["helmet"]=1},["legacy"]="Equipment Unlock: Helmet",["item_id"]=28053003,["item_name"]="Progressive Helmet Class"},["backpack"]={["name"]="Backpacks",["option"]="initial_backpack_class",["labels"]={"Basic","Small","Small Military","Military","Tourist"},["sections"]={["itm_backpack"]=1,["equ_small_pack"]=2,["equ_small_military_pack"]=3,["equ_military_pack"]=4,["equ_tourist_pack"]=5,["kit_hunt"]=1},["free_sections"]={"itm_backpack","equ_small_pack","equ_small_military_pack","equ_military_pack","equ_tourist_pack"},["legacy"]="Equipment Unlock: Backpack",["item_id"]=28053004,["item_name"]="Progressive Backpack"}},["weapon_role_minimum"]={["pistol"]=1,["shotgun"]=2,["smg"]=1,["rifle"]=3,["sniper"]=4,["machinegun"]=4},["knife_tools"]={["2"]=1,["3"]=2,["4"]=3,["5"]=3},["armour_tools"]={["1"]=1,["2"]=2,["3"]=3,["4"]=3}}
+equipment_class_items = {[28053001]="firearms",[28053002]="outfit",[28053003]="helmet",[28053004]="backpack"}
 quest_zone_gates = {["northern_levels"]={["l10_limansk"]=true,["l10_red_forest"]=true,["zaton"]=true,["jupiter"]=true,["pripyat"]=true,["l11_hospital"]=true,["l11_pripyat"]=true,["l12_stancia"]=true,["l12_stancia_2"]=true,["l13_generators"]=true,["jupiter_underground"]=true,["l12u_sarcofag"]=true,["l12u_control_monolith"]=true,["l13u_warlab"]=true},["event_checks"]={["Shut Down Brain Scorcher"]=28052607},["shutdown_events"]={["Miracle Machine Disabled"]="yan_labx16_switcher_primary_off",["Brain Scorcher Disabled"]="bar_deactivate_radar_done"}}
 tool_use_items = {[28051831]={["tool_key"]="basic",["tool_section"]="itm_basickit",["permission"]="tool_basic",["category"]="rewards_progressive_tools",["tier"]=1,["name"]="Tool Use: Basic Tools"},[28051832]={["tool_key"]="advanced",["tool_section"]="itm_advancedkit",["permission"]="tool_advanced",["category"]="rewards_progressive_tools",["tier"]=2,["name"]="Tool Use: Advanced Tools"},[28051833]={["tool_key"]="expert",["tool_section"]="itm_expertkit",["permission"]="tool_expert",["category"]="rewards_progressive_tools",["tier"]=3,["name"]="Tool Use: Expert Tools"},[28051834]={["tool_key"]="medical",["tool_section"]="itm_drugkit",["permission"]="tool_medical",["category"]="rewards_drug_making_tools",["tier"]=0,["name"]="Tool Use: Drug-making Kit"},[28051835]={["tool_key"]="ammo",["tool_section"]="itm_ammokit",["permission"]="tool_ammo",["category"]="rewards_gunsmithing_tools",["tier"]=0,["name"]="Tool Use: Gunsmithing Tools"},[28051836]={["tool_key"]="artefact",["tool_section"]="itm_artefactskit",["permission"]="tool_artefact",["category"]="rewards_artefact_melter",["tier"]=0,["name"]="Tool Use: Artefact Melter"}}
 opening_economy = {["starting_money_rubles"]=5000,["contract_key"]="esc_m_trader_1"}
@@ -317,6 +319,10 @@ item_effects = {
     [28051834] = "unlock",
     [28051835] = "unlock",
     [28051836] = "unlock",
+    [28053001] = "equipment_class",
+    [28053002] = "equipment_class",
+    [28053003] = "equipment_class",
+    [28053004] = "equipment_class",
 }
 item_categories = {
     [28051001] = "",
@@ -429,6 +435,10 @@ item_categories = {
     [28051834] = "rewards_drug_making_tools",
     [28051835] = "rewards_gunsmithing_tools",
     [28051836] = "rewards_artefact_melter",
+    [28053001] = "rewards_starting_gear_unlocks",
+    [28053002] = "rewards_starting_gear_unlocks",
+    [28053003] = "rewards_starting_gear_unlocks",
+    [28053004] = "rewards_starting_gear_unlocks",
 }
 lab_levels = {
     ["l04u_labx18"] = true,
@@ -2136,6 +2146,8 @@ config_limits = {
     ["checks_weapon_tiers"] = 1,
     ["combat_logic"] = 2,
     ["content_progression"] = 1,
+    ["equipment_check_condition"] = 100,
+    ["equipment_class_progression"] = 1,
     ["expedition_packages"] = 4000,
     ["extra_faction_goodwill"] = 4000,
     ["faction_discovery_count"] = 13,
@@ -2145,6 +2157,10 @@ config_limits = {
     ["goal"] = 8,
     ["grind_profile"] = 3,
     ["infinite_stamina"] = 1,
+    ["initial_backpack_class"] = 5,
+    ["initial_firearm_class"] = 4,
+    ["initial_helmet_class"] = 4,
+    ["initial_outfit_class"] = 5,
     ["maintenance_packages"] = 4000,
     ["medical_packages"] = 4000,
     ["mutant_discovery_count"] = 25,
@@ -2156,6 +2172,7 @@ config_limits = {
     ["pda_tracker"] = 1,
     ["permission_supplies"] = 1,
     ["playability_logic"] = 1,
+    ["progressive_tool_receipts"] = 1,
     ["quest_zone_logic"] = 1,
     ["random_starting_unlock"] = 1,
     ["reward_previews"] = 1,
@@ -2831,6 +2848,10 @@ tracker_item_names = {
     [28051834]="Tool Use: Drug-making Kit",
     [28051835]="Tool Use: Gunsmithing Tools",
     [28051836]="Tool Use: Artefact Melter",
+    [28053001]="Progressive Firearm Class",
+    [28053002]="Progressive Outfit Class",
+    [28053003]="Progressive Helmet Class",
+    [28053004]="Progressive Backpack",
 }
 tracker_milestones = {
     checks_kill_milestones="Defeat {count} Enemies",
@@ -3049,6 +3070,7 @@ delivery_contents = {
     [28051834]={{"itm_drugkit"}},
     [28051835]={{"itm_ammokit"}},
     [28051836]={{"itm_artefactskit"}},
+    [28053004]={{"itm_backpack"},{"equ_small_pack"},{"equ_small_military_pack"},{"equ_military_pack"},{"equ_tourist_pack"}},
 }
 notice_cause_templates = {
     ["enter"]="by entering {value}",
@@ -3102,6 +3124,8 @@ config_defaults = {
     ["checks_shops"]=0,
     ["combat_logic"]=0,
     ["content_progression"]=0,
+    ["equipment_check_condition"]=0,
+    ["equipment_class_progression"]=0,
     ["expedition_packages"]=0,
     ["extra_faction_goodwill"]=0,
     ["faction_discovery_count"]=0,
@@ -3110,6 +3134,10 @@ config_defaults = {
     ["generation_preview"]=0,
     ["grind_profile"]=0,
     ["infinite_stamina"]=0,
+    ["initial_backpack_class"]=0,
+    ["initial_firearm_class"]=0,
+    ["initial_helmet_class"]=0,
+    ["initial_outfit_class"]=0,
     ["maintenance_packages"]=0,
     ["medical_packages"]=0,
     ["mutant_discovery_count"]=0,
@@ -3120,6 +3148,7 @@ config_defaults = {
     ["pda_tracker"]=1,
     ["permission_supplies"]=0,
     ["playability_logic"]=0,
+    ["progressive_tool_receipts"]=0,
     ["quest_zone_logic"]=0,
     ["random_starting_unlock"]=0,
     ["reward_previews"]=0,

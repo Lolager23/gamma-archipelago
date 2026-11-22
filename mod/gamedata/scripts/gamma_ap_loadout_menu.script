@@ -1,0 +1,62 @@
+-- Filter native section/price pairs before cells and point costs are constructed.
+local wrappers={}
+
+function allowed(configuration,section)
+    if not configuration or not configuration.expanded then return true end
+    local state={configuration=configuration,applied_items={},unlocks={}}
+    local group=gamma_ap_equipment.group(section)
+    if gamma_ap_equipment_classes.contract(configuration) and group == "melee" then return true end
+    if group == "firearms" and configuration.options.no_starting_weapons == 1 then return false end
+    if not gamma_ap_equipment_classes.section_allowed(state,section) then return false end
+    return not group or configuration.options["starting_"..group] ~= 1
+end
+
+function selected_allowed(window,configuration)
+    for _,cell in pairs(window.CC and window.CC.inventory and window.CC.inventory.cell or {}) do
+        if cell.section and cell:IsShown() and not allowed(configuration,cell.section) then return false end
+    end
+    return true
+end
+
+local function reinit(container,delegate,configuration,sections,prices,...)
+    local keep,costs={},{}
+    for index,section in ipairs(sections) do
+        if allowed(configuration,section) then keep[#keep+1]=section; costs[#costs+1]=prices[index] end
+    end
+    return delegate(container,keep,costs,...)
+end
+
+local function load(window,delegate,configuration,...)
+    if not configuration or not window.CC then return delegate(window,...) end
+    local originals={}
+    for _,name in ipairs({"inventory","loadout"}) do
+        local container=window.CC[name]
+        if not container or type(container.Reinit) ~= "function" then error("AP loadout filter requires native containers") end
+        originals[name]=container.Reinit
+    end
+    for _,name in ipairs({"inventory","loadout"}) do
+        local container=window.CC[name]
+        container.Reinit=function(self,...) return reinit(self,originals[name],configuration,...) end
+    end
+    local ok,result=pcall(delegate,window,...)
+    for name,original in pairs(originals) do window.CC[name].Reinit=original end
+    if not ok then error(result) end
+    return result
+end
+
+function install(class,read_configuration)
+    for _,name in ipairs({"LoadLoadout","On_CC_Mouse1"}) do
+        if type(class[name]) == "function" and class[name] ~= wrappers[name] then
+            local delegate=class[name]
+            wrappers[name]=function(window,...)
+                local configuration=read_configuration()
+                if name == "LoadLoadout" then return load(window,delegate,configuration,...) end
+                local container,index=...
+                local cell=window.CC and window.CC[container] and window.CC[container].cell[index]
+                if container == "loadout" and cell and not allowed(configuration,cell.section) then return false end
+                return delegate(window,...)
+            end
+            class[name]=wrappers[name]
+        end
+    end
+end

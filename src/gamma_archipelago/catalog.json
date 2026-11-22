@@ -1377,6 +1377,59 @@
       "supplies": [
         "itm_artefactskit"
       ]
+    },
+    {
+      "id": 28053001,
+      "name": "Progressive Firearm Class",
+      "classification": "progression",
+      "category": "rewards_starting_gear_unlocks",
+      "effect": "equipment_class",
+      "class_group": "firearms",
+      "copies": 4
+    },
+    {
+      "id": 28053002,
+      "name": "Progressive Outfit Class",
+      "classification": "progression",
+      "category": "rewards_starting_gear_unlocks",
+      "effect": "equipment_class",
+      "class_group": "outfit",
+      "copies": 5
+    },
+    {
+      "id": 28053003,
+      "name": "Progressive Helmet Class",
+      "classification": "progression",
+      "category": "rewards_starting_gear_unlocks",
+      "effect": "equipment_class",
+      "class_group": "helmet",
+      "copies": 4
+    },
+    {
+      "id": 28053004,
+      "name": "Progressive Backpack",
+      "classification": "progression",
+      "category": "rewards_starting_gear_unlocks",
+      "effect": "equipment_class",
+      "class_group": "backpack",
+      "copies": 5,
+      "tier_supplies": [
+        [
+          "itm_backpack"
+        ],
+        [
+          "equ_small_pack"
+        ],
+        [
+          "equ_small_military_pack"
+        ],
+        [
+          "equ_military_pack"
+        ],
+        [
+          "equ_tourist_pack"
+        ]
+      ]
     }
   ],
   "locations": [
@@ -8689,6 +8742,120 @@
     "shutdown_events": {
       "Miracle Machine Disabled": "yan_labx16_switcher_primary_off",
       "Brain Scorcher Disabled": "bar_deactivate_radar_done"
+    }
+  },
+  "equipment_classes": {
+    "groups": {
+      "firearms": {
+        "name": "Firearms",
+        "option": "initial_firearm_class",
+        "labels": [
+          "Class A",
+          "Class B",
+          "Class C",
+          "Class D"
+        ],
+        "repair_types": {
+          "pistol": 1,
+          "shotgun": 2,
+          "rifle_5": 3,
+          "rifle_7": 4
+        },
+        "legacy": "Equipment Unlock: Firearms",
+        "item_id": 28053001,
+        "item_name": "Progressive Firearm Class"
+      },
+      "outfit": {
+        "name": "Outfits",
+        "option": "initial_outfit_class",
+        "labels": [
+          "Novice",
+          "Light",
+          "Medium / Scientific",
+          "Heavy",
+          "Exoskeleton / Nosorog"
+        ],
+        "repair_types": {
+          "outfit_novice": 1,
+          "outfit_light": 2,
+          "outfit_medium": 3,
+          "outfit_heavy": 4,
+          "outfit_exo": 5,
+          "outfit": 1
+        },
+        "legacy": "Equipment Unlock: Outfit",
+        "item_id": 28053002,
+        "item_name": "Progressive Outfit Class"
+      },
+      "helmet": {
+        "name": "Helmets",
+        "option": "initial_helmet_class",
+        "labels": [
+          "Light",
+          "Medium",
+          "Heavy",
+          "Exoskeleton"
+        ],
+        "repair_types": {
+          "helmet_light": 1,
+          "helmet_medium": 2,
+          "helmet_heavy": 3,
+          "helmet_exo": 4,
+          "helmet": 1
+        },
+        "legacy": "Equipment Unlock: Helmet",
+        "item_id": 28053003,
+        "item_name": "Progressive Helmet Class"
+      },
+      "backpack": {
+        "name": "Backpacks",
+        "option": "initial_backpack_class",
+        "labels": [
+          "Basic",
+          "Small",
+          "Small Military",
+          "Military",
+          "Tourist"
+        ],
+        "sections": {
+          "itm_backpack": 1,
+          "equ_small_pack": 2,
+          "equ_small_military_pack": 3,
+          "equ_military_pack": 4,
+          "equ_tourist_pack": 5,
+          "kit_hunt": 1
+        },
+        "free_sections": [
+          "itm_backpack",
+          "equ_small_pack",
+          "equ_small_military_pack",
+          "equ_military_pack",
+          "equ_tourist_pack"
+        ],
+        "legacy": "Equipment Unlock: Backpack",
+        "item_id": 28053004,
+        "item_name": "Progressive Backpack"
+      }
+    },
+    "weapon_role_minimum": {
+      "pistol": 1,
+      "shotgun": 2,
+      "smg": 1,
+      "rifle": 3,
+      "sniper": 4,
+      "machinegun": 4
+    },
+    "knife_tools": {
+      "2": 1,
+      "3": 2,
+      "4": 3,
+      "5": 3
+    },
+    "armour_tools": {
+      "1": 1,
+      "2": 2,
+      "3": 3,
+      "4": 3
     }
   }
 }

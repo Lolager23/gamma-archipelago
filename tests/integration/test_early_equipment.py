@@ -23,7 +23,7 @@ def test_equipment_and_workshops_arrive_in_three_low_grind_spheres_without_zone_
         for row in multi.get_filled_locations(1)
         if row.item.name.startswith(("Equipment Unlock:", "Workshop Access:"))
     ]
-    assert len(selected) == 12
+    assert len(selected) == 6
     assert not any(row.name.startswith("Reach Stalker Rank:") for row in selected)
     state = CollectionState(multi)
     for _ in range(3):
@@ -42,14 +42,15 @@ def test_equipment_and_workshops_arrive_in_three_low_grind_spheres_without_zone_
 def test_explicit_nonlocal_equipment_uses_upstream_early_requests():
     names = {
         "Equipment Unlock: PDA",
-        "Equipment Unlock: Firearms",
+        "Progressive Firearm Class",
         "Equipment Unlock: Detector",
         "Workshop Access: Repair",
         "Workshop Access: Upgrades",
         "Workshop Access: Crafting",
     }
     multi = setup_multiworld(
-        GammaWorld, options=presets()["full_story"] | {"non_local_items": names}
+        GammaWorld,
+        options=presets()["full_story"] | {"non_local_items": names, "initial_firearm_class": 0},
     )
     assert names <= multi.early_items[1].keys()
     assert not any(row.item.name in names for row in multi.get_filled_locations(1))
@@ -101,7 +102,7 @@ def test_gifts_and_existing_plando_equipment_are_not_duplicated_or_moved():
     multi, world = started_world(presets()["full_story"], gifts)
     plans = []
     for name, location in (
-        ("Equipment Unlock: Helmet", "Darkscape: First Arrival"),
+        ("Progressive Helmet Class", "Darkscape: First Arrival"),
         ("Workshop Access: Upgrades", "Meadow: First Arrival"),
     ):
         item = next(row for row in multi.itempool if row.name == name)
@@ -112,7 +113,7 @@ def test_gifts_and_existing_plando_equipment_are_not_duplicated_or_moved():
     world.pre_fill()
     assert all(planned.item is item for planned, item in plans)
     assert not any(
-        row["item"] in {*gifts, "Equipment Unlock: Helmet", "Workshop Access: Upgrades"}
+        row["item"] in {*gifts, "Progressive Helmet Class", "Workshop Access: Upgrades"}
         for row in world.opening_placements
     )
     distribute_items_restrictive(multi)
@@ -145,6 +146,7 @@ def test_unlocked_nearby_maps_keep_small_custom_equipment_pools_supported():
         GammaWorld,
         options={
             "checks_gear_upgrades": 1,
+            "equipment_class_progression": 0,
             "starting_outfit": 2,
             "starting_helmet": 2,
             "rewards_starting_gear_unlocks": 1,
@@ -162,6 +164,7 @@ def test_filler_only_rank_checks_preserve_the_sparse_exploration_fallback():
         GammaWorld,
         options={
             "quest_zone_logic": 0,
+            "equipment_class_progression": 0,
             "checks_rank_milestones": 1,
             "rewards_zone_keys": 1,
             "rewards_starting_gear_unlocks": 1,

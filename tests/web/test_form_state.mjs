@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { advancedOptions, syncAdvanced, rewardQuantityOptions, showStepReport } from "../../web/generator/ui.js";
+import { advancedOptions, syncAdvanced, rewardQuantityOptions, showStepReport, loadoutOptions } from "../../web/generator/ui.js";
 import {
   DraftConfiguration,
   playerNameError,
@@ -142,6 +142,36 @@ test("advanced controls have labels, bounded values and preserve editable quota 
     globalThis.document = oldDocument;
     globalThis.Option = oldOption;
   }
+});
+
+test("class loadout controls replace binary groups and allow a zero-class start", () => {
+  const previous = globalThis.document, oldOption = globalThis.Option;
+  const nodes = new Map();
+  const makeNode = () => ({dataset:{},children:[],listeners:{},
+    append(...children) {this.children.push(...children);},
+    add(child) {this.children.push(child);},
+    replaceChildren(...children) {this.children=children;},
+    addEventListener(key,fn) {this.listeners[key]=fn;}});
+  for (const id of ["gear-options","quantity-options"]) nodes.set(id,makeNode());
+  globalThis.document = {getElementById:(id)=>nodes.get(id),createElement:makeNode};
+  globalThis.Option = class {constructor(text,value) {this.text=text;this.value=value;}};
+  try {
+    const metadata={gear:["starting_pda","starting_firearms","starting_melee","starting_tools"],quantities:[],
+      advanced:[{key:"initial_firearm_class",label:"Initial firearm class",choices:["None","A","B","C","D"]}]};
+    const edits=[];
+    loadoutOptions(metadata,{equipment_class_progression:1,rewards_starting_gear_unlocks:1,
+      starting_pda:2,initial_firearm_class:1},(...edit)=>edits.push(edit));
+    const controls=nodes.get("gear-options").children.flatMap(row=>row.children);
+    assert.deepEqual(controls.map(node=>node.dataset.option),["starting_pda","initial_firearm_class"]);
+    const classes=controls[1];
+    assert.equal(classes.children[0].text,"None");
+    classes.value="0"; classes.listeners.change();
+    assert.deepEqual(edits,[["initial_firearm_class",0]]);
+    loadoutOptions(metadata,{equipment_class_progression:0},()=>{});
+    assert.equal(nodes.get("gear-options").children.length,4);
+    loadoutOptions(metadata,{equipment_class_progression:1,rewards_starting_gear_unlocks:0},()=>{});
+    assert.equal(nodes.get("gear-options").children[1].children[0].disabled,true);
+  } finally {globalThis.document=previous;globalThis.Option=oldOption;}
 });
 
 

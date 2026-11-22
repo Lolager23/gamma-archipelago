@@ -76,7 +76,7 @@ def test_configuration_names_values_and_empty_pools_are_validated(change):
 
 @pytest.mark.parametrize("name", GEAR_OPTIONS + QUANTITY_OPTIONS + ("no_starting_weapons",))
 def test_initial_omission_and_quantity_options_are_supported(name):
-    configuration = build_configuration({**defaults(), name: 1})
+    configuration = build_configuration({**defaults(), "equipment_class_progression": 0, name: 1})
     assert configuration.to_values()[name] == 1
 
 
@@ -95,7 +95,9 @@ def test_ap_locked_equipment_requires_its_unlock_reward_pool():
 
 def test_unlock_rewards_require_a_selected_locked_start():
     with pytest.raises(ConfigurationError, match="at least one AP-locked"):
-        build_configuration({**defaults(), "rewards_starting_gear_unlocks": 1})
+        build_configuration(
+            {**defaults(), "equipment_class_progression": 0, "rewards_starting_gear_unlocks": 1}
+        )
 
 
 @pytest.mark.parametrize("thresholds", [None, [], [1] * 21, [True], [0], [10001], [2, 1], [1, 1]])
@@ -120,7 +122,9 @@ def test_wire_configuration_is_deterministic_and_item_v2_references_its_identity
     from gamma_archipelago.bridge import FileBridge
     from gamma_archipelago.protocol import encode_incoming
 
-    configuration = build_configuration({**defaults(), "no_starting_weapons": 1})
+    configuration = build_configuration(
+        {**defaults(), "equipment_class_progression": 0, "no_starting_weapons": 1}
+    )
     assert dict(configuration.gear)["starting_firearms"] == 1
     assert dict(configuration.gear)["starting_melee"] == 1
     expected = encode_configuration("a" * 64, configuration)

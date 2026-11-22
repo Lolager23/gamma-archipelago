@@ -1,0 +1,77 @@
+-- Initial gifts share the loadout plan in the central save, never a second ledger.
+function plan(state,configuration)
+    configuration=configuration or state.configuration
+    if not gamma_ap_equipment_classes.contract(configuration) then return nil end
+    local knife,pack=false,false
+    local tier=configuration.options.initial_backpack_class or 0
+    db.actor:iterate_inventory(function(_,object)
+        local section=object:section()
+        knife=knife or gamma_ap_equipment.group(section) == "melee"
+        pack=pack or (gamma_ap_equipment.group(section) == "backpack"
+            and gamma_ap_equipment_classes.section_tier(section,"backpack") == tier)
+    end,db.actor)
+    local result={}
+    if not knife then result[#result+1]={section="wpn_knife",created=false,uncertain=false} end
+    if tier > 0 and not pack and gamma_ap_equipment_classes.enabled(configuration) then
+        result[#result+1]={section=gamma_ap_catalog.equipment_classes.groups.backpack.free_sections[tier],created=false,uncertain=false}
+    end
+    return result
+end
+
+function apply(state,grants)
+    for _,action in ipairs(grants or {}) do
+        if not action.created then
+            if action.uncertain then return false,"Starting supply creation uncertain; restore a valid save" end
+            if not ini_sys:section_exist(action.section) then return false,"Starting supply section unavailable" end
+            state.applying_reward=true
+            local ok,object=pcall(alife_create_item,action.section,db.actor,{cond=1})
+            state.applying_reward=false
+            if not ok then action.uncertain=true; return false,"Starting supply creation uncertain; retry blocked" end
+            if not object then return false,"Starting supply creation failed; retry pending" end
+            local valid,id=pcall(function() return type(object.id) == "function" and object:id() or object.id end)
+            if not valid or type(id) ~= "number" or id < 1 or id > 65534 or id ~= math.floor(id) then
+                action.uncertain=true;return false,"Starting supply identity uncertain; retry blocked"
+            end
+            action.created=true
+        end
+    end
+    return true
+end
+
+function copy(grants)
+    if not grants then return nil end
+    local result={}
+    for _,action in ipairs(grants) do
+        result[#result+1]={section=action.section,created=action.created,uncertain=action.uncertain}
+    end
+    return result
+end
+
+local function integer(value,low,high)
+    return type(value) == "number" and value == math.floor(value) and value >= low and value <= high
+end
+
+function validate(plan)
+    if plan == nil then return true end
+    if type(plan) ~= "table" or type(plan.actions) ~= "table" or #plan.actions > 4000
+        or not integer(plan.money,0,2147483647) then return false end
+    local count=0
+    for index,action in pairs(plan.actions) do
+        count=count+1
+        if not integer(index,1,#plan.actions) or type(action) ~= "table" or not integer(action.id,1,65534)
+            or type(action.section) ~= "string" or #action.section > 128 or not action.section:match("^[%w_]+$")
+            or not integer(action.target,0,65535) or type(action.done) ~= "boolean" then return false end
+    end
+    if count ~= #plan.actions then return false end
+    if plan.grants == nil then return true end -- Existing saved omission plans remain valid.
+    if type(plan.grants) ~= "table" or #plan.grants > 2 then return false end
+    local allowed={wpn_knife=true}
+    for _,section in ipairs(gamma_ap_catalog.equipment_classes.groups.backpack.free_sections) do allowed[section]=true end
+    for key,action in pairs(plan.grants) do
+        if type(key) ~= "number" or key ~= math.floor(key) or key < 1 or key > #plan.grants
+            or type(action) ~= "table" or not allowed[action.section]
+            or type(action.created) ~= "boolean" or type(action.uncertain) ~= "boolean"
+            or action.created and action.uncertain then return false end
+    end
+    return true
+end

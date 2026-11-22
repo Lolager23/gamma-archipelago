@@ -1,6 +1,13 @@
 """Additional bounded settings; legacy values preserve pre-expansion seed identities."""
 
 EXPANSION_LIMITS = {
+    "equipment_class_progression": 1,
+    "progressive_tool_receipts": 1,
+    "initial_firearm_class": 4,
+    "initial_outfit_class": 5,
+    "initial_helmet_class": 4,
+    "initial_backpack_class": 5,
+    "equipment_check_condition": 100,
     "quest_zone_logic": 1,
     "tool_use_permissions": 1,
     "reward_quantities": 1,
