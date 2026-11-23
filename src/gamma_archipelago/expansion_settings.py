@@ -1,6 +1,7 @@
 """Additional bounded settings; legacy values preserve pre-expansion seed identities."""
 
 EXPANSION_LIMITS = {
+    "randomized_stash_loot": 1,
     "progressive_sphere_pacing": 1,
     "regional_progression": 1,
     "artefact_rewards": 4000,

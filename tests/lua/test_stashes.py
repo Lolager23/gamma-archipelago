@@ -14,7 +14,9 @@ def stash_game(lua, *, items=(FIRST,), **options):
     lua.globals().modxml_gamma_ap_stashes = lua.table(
         registered=True, ready=lua.eval("function() return true end")
     )
-    game, engine, configuration = configured_game(lua, rewards_loot_stashes=1, **options)
+    game, engine, configuration = configured_game(
+        lua, **({"rewards_loot_stashes": 1, "randomized_stash_loot": 0} | options)
+    )
     engine.files[CONFIG_PATH] = encode_configuration(KEY, configuration, expanded=True)
     engine.files["D:/AnomalyAP/appdata/archipelago\\incoming.txt"] = encode_incoming(
         KEY, items, configuration.digest
