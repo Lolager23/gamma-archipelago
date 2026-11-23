@@ -1,5 +1,24 @@
 # Verification record
 
+## 23 November 2026 — novice headgear classification
+
+The enabled GAMMA helmet repair-kit override gives four novice mask sections
+the `outfit_novice` repair type. That type was missing from the helmet catalogue,
+so the conservative unknown-type fallback incorrectly required Exoskeleton
+permission. The authoritative catalogue now maps this type to Light helmets.
+Generated world and Lua catalogues use the same mapping. IDs, configuration
+digests, receipt history and save formats are unchanged; existing class-based
+sessions retain their starting permissions and progress without regeneration.
+
+Regressions reproduce the original failure and cover all four native sections,
+zero/Light starting permissions, unchanged higher/unknown helmet requirements,
+and the mocked inventory Equip and equipped-slot enforcement paths. The documented
+affected verifier **passed** 2,028 covered regressions, 19 untraced AP generator/server
+cases and nine Node tests. Lua executable-line gates passed; Lua branch coverage
+is not measured. Current-head Windows/Linux CI evidence is retained with the PR
+when available. Native acceptance is **not run**, reserved for Owen. No deployment, game launch, live
+session reset, developer-panel change or normal-game write is included.
+
 ## 22 November 2026 — early workshop permissions
 
 Workshop Repair, Crafting and Upgrades share the early equipment placement rules

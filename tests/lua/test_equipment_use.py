@@ -139,6 +139,33 @@ def install_native_ui(lua, game, engine):
     return lua.globals().gamma_ap_equipment_use
 
 
+@pytest.mark.parametrize("initial,allowed", [(0, False), (1, True)])
+def test_novice_mask_inventory_action_and_slot_respect_light_helmet_permission(
+    lua, initial, allowed
+):
+    game, engine, _ = configured_game(
+        lua,
+        equipment_class_progression=1,
+        rewards_starting_gear_unlocks=1,
+        initial_helmet_class=initial,
+    )
+    lua.execute("ini_sys.section_exist=function() return true end")
+    game.on_game_start()
+    engine.creation.new_game_faction = None
+    poll(game, engine)
+    install_native_ui(lua, game, engine)
+    item = lua.globals().add_item(50, "helm_cloth_mask", "E_HLMET", "o_helmet", 0)
+    engine.meta.helm_cloth_mask.repair_type = "outfit_novice"
+    callback = lua.globals().ui_inventory.UIInventory.Action_Equip
+    assert callback(lua.table(), item, "actor_bag", 1) == (
+        ("native", None, 3) if allowed else False
+    )
+    engine.slots[12] = item
+    game.actor_item_to_slot(item)
+    assert (engine.slots[12] is not None) is allowed
+    assert engine.objects[50] is not None
+
+
 @pytest.mark.parametrize("action", ["Cond_Equip", "Action_Equip", "Action_Use", "Action_Custom"])
 @pytest.mark.parametrize("numeric", [False, True])
 def test_inventory_guards_deny_before_native_action_and_preserve_delegate_arguments(
