@@ -42,3 +42,27 @@ def test_upstream_filler_replacement_uses_enabled_categories_and_legacy_keeps_ba
     assert all("Ammunition" in world.get_filler_item_name() for _ in range(30))
     legacy = setup_multiworld(GammaWorld, options={"varied_filler": 0}, seed=909).worlds[1]
     assert legacy.get_filler_item_name() == "Bandage"
+
+
+def test_protected_opening_can_reserve_better_medicine_and_respects_nonlocal_packages():
+    from test_pacing import CATALOG, started_world
+    from worlds.gamma.opening import place_opening
+
+    multi, world = started_world(presets()["standard"])
+    # A fixed pool makes this boundary independent of optional filler draws.
+    multi.itempool = [
+        item
+        for item in multi.itempool
+        if item.name not in {"Medkit", "Bandage", "Army Medkit", "Scientific Medkit"}
+    ]
+    place_opening(world, CATALOG)
+    assert "Medical Supply Package" in [row["item"] for row in world.opening_placements]
+    multi, world = started_world(presets()["standard"])
+    multi.itempool = [
+        item
+        for item in multi.itempool
+        if item.name not in {"Medkit", "Bandage", "Army Medkit", "Scientific Medkit"}
+    ]
+    world.options.non_local_items.value.add("Medical Supply Package")
+    place_opening(world, CATALOG)
+    assert "Medical Supply Package" not in [row["item"] for row in world.opening_placements]

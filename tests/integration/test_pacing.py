@@ -128,7 +128,7 @@ def test_opening_does_not_reserve_a_supply_without_a_spare_check():
 
 @pytest.mark.parametrize("restriction", ["nonlocal_medkit", "nonlocal_both", "item_rule"])
 def test_optional_opening_supplies_respect_common_locality_and_location_rules(restriction):
-    multiworld, world = started_world(presets()["standard"])
+    multiworld, world = started_world(presets()["standard"] | {"varied_filler": 0})
     if restriction.startswith("nonlocal"):
         world.options.non_local_items.value = {"Medkit"}
         if restriction == "nonlocal_both":

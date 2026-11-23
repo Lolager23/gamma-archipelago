@@ -99,7 +99,10 @@ def place_opening(world: "GammaWorld", catalog: dict[str, Any]) -> None:
         location.place_locked_item(item)
         pool.remove(item)
         world.opening_placements.append({"location": location.name, "item": name})
-    for name in ("Medkit", "Bandage"):
+    healing = ("Medkit", "Bandage")
+    if world.configuration.option("varied_filler"):
+        healing += ("Army Medkit", "Scientific Medkit", "Medical Supply Package")
+    for name in healing:
         item = next(
             (item for item in pool if item.player == world.player and item.name == name), None
         )

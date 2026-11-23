@@ -10,6 +10,10 @@ base. The native manifest rejects the new IDs when their category or mode is off
 Original configurable ammo packages retain calibre selection; named ammo drops
 deliver their advertised section regardless of that separate setting.
 
+The optional protected-opening health reservation recognizes the new medkits
+and the original Medical Supply Package, while preserving common locality and
+location rules. Legacy mode retains its original Medkit/Bandage selection.
+
 Focused Python/native/real AP tests cover randomized deterministic-seed selection,
 disabled categories, filler-only classifications, unchanged progression minima
 and guaranteed package counts, legacy manifest/digest/wire behaviour, delivery
