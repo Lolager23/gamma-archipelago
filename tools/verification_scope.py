@@ -125,7 +125,10 @@ def plan(root: Path, changed: list[str]) -> Scope:
         tests.update(path for path in files if path.startswith("tests/lua/"))
     existing = [path for path in changed if (root / path).is_file()]
     coverage = tuple(sorted({module for path in existing if (module := coverage_module(path))}))
-    bootstrap = any(path.startswith("tests/integration/") for path in tests)
+    # This native tracker test compares PDA availability with real APWorld rules.
+    bootstrap = "tests/lua/test_activity.py" in tests or any(
+        path.startswith("tests/integration/") for path in tests
+    )
     build = bootstrap or bool(areas & {"game", "world", "shared"})
     return Scope(
         tuple(sorted(areas)),

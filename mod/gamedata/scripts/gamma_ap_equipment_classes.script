@@ -75,9 +75,37 @@ function check_reason(state,row)
     end
 end
 
+local function firearm_condition(object)
+    local ok,condition=pcall(function()
+        if type(arti_jamming.has_parts) ~= "function" then return end
+        if not arti_jamming.has_parts(object) then return object:condition() end
+        local section=ini_sys:r_string_ex(object:section(),"parent_section") or object:section()
+        local names=itms_manager.ini_parts:r_string_ex("con_parts_list",section)
+        if type(names) ~= "string" or #names > 512 then return end
+        -- Read native saved parts; AP must not generate or reroll their condition.
+        local parts=item_parts.get_parts_con(object,nil,false)
+        if type(parts) ~= "table" then return end
+        local total,count,seen=0,0,{}
+        for name in names:gmatch("[^,%s]+") do
+            local value=parts[name]
+            if seen[name] or type(value) ~= "number" or value ~= value
+                or value < -1 or value > 100 or value < 0 and value ~= -1 then return end
+            seen[name]=true
+            total=total+math.max(0,value) -- Native -1 means a missing part; count it as zero.
+            count=count+1
+            if count > 16 then return end
+        end
+        if count > 0 then return total/(100*count) end
+    end)
+    return ok and condition or nil
+end
+
 function usable_condition(state,object)
-    local condition=object:condition()
+    local condition
+    if contract(state.configuration) and arti_jamming and gamma_ap_equipment.group(object:section()) == "firearms" then
+        condition=firearm_condition(object)
+    else condition=object:condition() end
     local minimum=contract(state.configuration) and state.configuration.options.equipment_check_condition or 0
     -- Native condition values can round just below an exact percentage.
-    return condition > 0 and condition <= 1 and condition*100+0.00001 >= minimum
+    return type(condition) == "number" and condition > 0 and condition <= 1 and condition*100+0.00001 >= minimum
 end

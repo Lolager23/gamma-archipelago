@@ -140,29 +140,36 @@ def install_native_ui(lua, game, engine):
 
 
 @pytest.mark.parametrize("initial,allowed", [(0, False), (1, True)])
-def test_novice_mask_inventory_action_and_slot_respect_light_helmet_permission(
-    lua, initial, allowed
+@pytest.mark.parametrize(
+    "group,section,cls,kind,slot",
+    [
+        ("helmet", "helm_cloth_mask", "E_HLMET", "o_helmet", 12),
+        ("outfit", "novice_outfit", "E_STLK", "o_light", 7),
+    ],
+)
+def test_starting_novice_gear_inventory_action_and_slot_respect_class_permission(
+    lua, initial, allowed, group, section, cls, kind, slot
 ):
     game, engine, _ = configured_game(
         lua,
         equipment_class_progression=1,
         rewards_starting_gear_unlocks=1,
-        initial_helmet_class=initial,
+        **{f"initial_{group}_class": initial},
     )
     lua.execute("ini_sys.section_exist=function() return true end")
     game.on_game_start()
     engine.creation.new_game_faction = None
     poll(game, engine)
     install_native_ui(lua, game, engine)
-    item = lua.globals().add_item(50, "helm_cloth_mask", "E_HLMET", "o_helmet", 0)
-    engine.meta.helm_cloth_mask.repair_type = "outfit_novice"
+    item = lua.globals().add_item(50, section, cls, kind, 0)
+    engine.meta[section].repair_type = "outfit_novice"
     callback = lua.globals().ui_inventory.UIInventory.Action_Equip
     assert callback(lua.table(), item, "actor_bag", 1) == (
         ("native", None, 3) if allowed else False
     )
-    engine.slots[12] = item
+    engine.slots[slot] = item
     game.actor_item_to_slot(item)
-    assert (engine.slots[12] is not None) is allowed
+    assert (engine.slots[slot] is not None) is allowed
     assert engine.objects[50] is not None
 
 

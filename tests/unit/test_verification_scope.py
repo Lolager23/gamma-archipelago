@@ -148,6 +148,14 @@ def test_lua_fixture_keeps_its_existing_complete_line_gate(tree):
     assert set(result.tests) == {"tests/lua/test_tasks.py", "tests/lua/test_state.py"}
 
 
+def test_native_pda_access_parity_prepares_its_real_apworld_dependency(tree):
+    (tree / "tests/lua/test_activity.py").touch()
+    result = scope.plan(tree, ["mod/gamedata/scripts/gamma_ap_equipment_classes.script"])
+    assert "tests/lua/test_activity.py" in result.tests
+    assert result.bootstrap and result.build
+    assert not any(path.startswith("tests/integration/") for path in result.tests)
+
+
 def test_docs_deleted_modules_and_empty_change_set(tree):
     assert scope.plan(tree, ["docs/testing.md"]).tests == ()
     assert scope.plan(tree, []).tests == ()

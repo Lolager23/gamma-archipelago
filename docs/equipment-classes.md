@@ -54,6 +54,22 @@ D and Heavy/Exoskeleton use Expert. Knife tiers 2, 3 and 4/5 use Basic, Advanced
 and Expert respectively. Attachment installation totals retain the existing
 conservative Expert-tool requirement.
 
+GAMMA's "Guns Have No Condition" add-on forces firearm engine condition to 83%,
+so class-based sessions use the arithmetic mean of the weapon's required native
+part conditions instead. The native `con_parts_list` and `parent_section` identify
+the parts; the weapon body's saved condition and unrelated entries are excluded.
+A native missing-part value of -1 contributes zero. Missing/unreadable or malformed
+part data blocks a new check until valid data is available, without falling back
+to the forced 83%. AP only reads existing part data; it never initializes or
+rerolls parts. Weapons without a part system, legacy binary-permission sessions,
+outfits, helmets and knives retain native item condition. The configured threshold
+and its inclusive boundary still apply. Previously earned checks remain complete.
+
+GAMMA's novice and trenchcoat outfits use `outfit_novice` and are permitted by
+starting outfit tier 1. Outfit Light is tier 2; helmet Light is tier 1. Condition
+requirements for earning equipment checks do not restrict carrying or equipping
+an otherwise permitted class.
+
 Fresh `progressive_tool_receipts: 1` replaces named Basic/Advanced/Expert rewards
 with three identical Progressive Tools receipts. They unlock and supply Basic,
 then Advanced, then Expert. Specialist kits retain their separate permissions.

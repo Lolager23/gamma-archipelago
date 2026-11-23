@@ -1,5 +1,35 @@
 # Verification record
 
+## 23 November 2026 — GAMMA weapon condition and novice armour audit
+
+The active "Guns Have No Condition" script sets firearm condition to 83% on
+pickup/ruck movement and firing. This made damaged-part SMGs satisfy the AP
+equipment threshold. Class-based sessions now use the agreed average of native
+required weapon-part conditions. Read-only native part access excludes the saved
+weapon-body condition, supports parent sections and fails closed on unavailable
+or invalid data. Legacy condition handling and earned checks remain unchanged.
+
+The active "Outfits Balances" configuration gives all 11 novice/trenchcoat
+sections the recognized `outfit_novice` type. No armour mapping correction was
+needed. Regressions cover zero/Novice starting permissions and actual mocked
+inventory Equip/slot enforcement alongside the mask fix. Weapon regressions
+reproduce the premature SMG/repair-grade award, exercise averages at the configured
+boundaries, missing parts/data/API failures, and preserve checks after deterioration.
+
+An initially fresh game-only verification run exposed a missing test dependency:
+the native PDA parity tests import the real APWorld. A scope-planner regression
+now requires runtime bootstrap whenever those tests are selected; it does not
+select unrelated integration cases or release seed sweeps.
+
+Affected verification **passed** 1,220 regressions, with 100% line and branch
+coverage for the changed Python scope planner and 100% executable-line coverage
+for the changed Lua equipment-class module. All native adapter line gates passed;
+Lua branch coverage is not measured. Windows/Linux CI evidence is retained with
+the PR when available. Native acceptance is **not run**, reserved for
+Owen. This increment stacks on the novice-headgear fix. No deployment, live
+session/configuration change, developer-panel modification or normal-game write
+is included. No IDs, protocol, save format or seed regeneration changes are needed.
+
 ## 23 November 2026 — novice headgear classification
 
 The enabled GAMMA helmet repair-kit override gives four novice mask sections
