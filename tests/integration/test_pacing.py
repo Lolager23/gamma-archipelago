@@ -106,9 +106,7 @@ def test_opening_supplies_are_optional_and_bandages_are_a_valid_fallback(supply)
         row["name"] for row in CATALOG["items"] if row.get("category") == "rewards_supply_medical"
     }
     multiworld.itempool[:] = [
-        item
-        for item in multiworld.itempool
-        if item.name not in medicine or item.name == supply
+        item for item in multiworld.itempool if item.name not in medicine or item.name == supply
     ]
     if supply:
         multiworld.itempool.append(world.create_item(supply))
