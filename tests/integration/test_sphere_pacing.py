@@ -131,6 +131,22 @@ def test_equal_collision_counts_prefer_separating_the_earliest_sphere():
     assert pacing.Trace(trace.waves, [], True, trace.state).priority < after.priority
 
 
+def test_final_sphere_collision_can_use_earlier_non_progression_checks():
+    multi = filled()
+    world = multi.worlds[1]
+    trace = pacing._trace(multi, {1})
+    source = trace.collisions[0][4][0]
+    # Final-sphere collisions have no later filler destination. Earlier checks
+    # must remain candidates; the complete trial still validates every rule.
+    mapping = {row: 1 for row in trace.waves["network"]}
+    mapping[source] = 2
+    final = pacing.Trace({"network": mapping}, [], trace.valid, trace.state)
+    destinations = pacing._candidates(world, final, {1}, source, "network", 2)
+    assert destinations
+    assert all(mapping[row] < 2 and not row.item.advancement for row in destinations)
+    assert all(not row.locked and not pacing._progressive(row, {1}) for row in destinations)
+
+
 def test_new_option_is_bound_and_missing_saved_option_keeps_legacy_wire_and_digest():
     values = presets()["living_legend"]
     assert values["progressive_sphere_pacing"] == 1

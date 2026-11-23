@@ -8,7 +8,7 @@ normal installation remain untouched unless deployment is separately authorized.
 |---|---|---|
 | Varied stash contents | Tier/calibre-aware supplies, ammo variants and quantities; saved once | Implemented; affected verification pending |
 | Practical Cordon faction budget | Two dependable faction opportunities; no opening Military assumption | Implemented; affected verification pending |
-| Useful randomized rewards | Varied supplies/ammo rather than alternating Bandage/Medkit filler | Planned |
+| Useful randomized rewards | Varied supplies/ammo rather than alternating Bandage/Medkit filler | Implemented; affected verification pending |
 | Generator controls | Clear reward controls with sliders and exact manual counts, enabled-state and pool feedback | Planned |
 
 ## White stash rolls
@@ -60,6 +60,36 @@ Pacing repair also accepts equal-count swaps that move the earliest collision
 later, before attempting another separation. It still requires every check and
 goal reachable, early recipes preserved and zero final tier collisions. This
 avoids the slow repair plateau exposed by the two-faction opening; it adds no gates.
+
+## Spare-slot reward variety
+
+`varied_filler` defaults on for new generations and omitted legacy fields retain
+zero. After mandatory progression, convenience minima and requested repeatable
+copies are reserved, spare slots draw weighted non-progression rewards from
+enabled categories. Seventeen new supply rewards (IDs 28051920–28051936) provide
+better medicines, repair supplies, named ammunition boxes and expedition supplies.
+Basic/Field white stashes can also fill spare slots. Advanced stashes remain useful
+rewards with their requested copies; protected filler-only checks never gain useful
+or progression items merely because a supply has a higher native value.
+
+Standalone Bandage/Medkit filler is absent when any enabled alternative exists.
+If all alternatives are disabled, basic supplies remain the fallback. Turning the
+option off retains the original filler policy and removes the new IDs from the
+slot manifest. Existing seed archives are unchanged. In explicit quantity mode,
+named package counts remain exact: extra single-supply drops have distinct IDs
+and do not consume or inflate guaranteed package counts. Ammunition names denote
+the actual fixed section; the generic package-calibre selector affects only its
+original configurable package. Native box sizes remain unchanged.
+
+Drops reuse the central ordered delivery plans, without a second inventory or
+receipt owner. Save/load preserves successful delivery; uncertain creation still
+blocks replay. Native availability and balance need Owen's acceptance. Coordinated
+world/client/game updates are required to use the new item IDs in a fresh seed.
+
+The altered pool exposed a final-sphere pacing collision with no later spare
+check. Repair now considers earlier non-progression checks after later ones.
+Complete trial tracing still preserves reachability, early recipes, fixed items
+and final tier separation; it never manufactures access gates.
 
 ## Follow-up boundaries
 

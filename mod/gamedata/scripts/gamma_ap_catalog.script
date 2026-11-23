@@ -185,6 +185,8 @@ settlement_rules = {
 }
 rank_goodwill_proxy = {["0"]=0,["3999"]=250,["5999"]=500,["9999"]=750,["15999"]=1000,["23999"]=1500,["34999"]=2000,["49999"]=3000}
 northern_equipment_regions = {"jupiter","zaton","l11_pripyat","pripyat","l11_hospital","l12_stancia","l12_stancia_2","l13_generators"}
+filler_reward_items = {[28051920]=true,[28051921]=true,[28051922]=true,[28051923]=true,[28051924]=true,[28051925]=true,[28051926]=true,[28051927]=true,[28051928]=true,[28051929]=true,[28051930]=true,[28051931]=true,[28051932]=true,[28051933]=true,[28051934]=true,[28051935]=true,[28051936]=true}
+delivery_ammo_choices = {[28051903]=true}
 stash_loot_profiles_v1 = {["basic"]={["minimum"]=3,["maximum"]=6,["ammo_minimum"]=1,["ammo_maximum"]=3,["quality"]={"medkit","antirad","gun_oil","glue_b"},["supplies"]={"bandage","medkit","antirad","gun_oil","glue_b","duct_tape","bread","water_drink"}},["field"]={["minimum"]=5,["maximum"]=8,["ammo_minimum"]=2,["ammo_maximum"]=5,["quality"]={"medkit_army","stimpack","drug_antidot","sewing_kit_a"},["supplies"]={"medkit_army","stimpack","antirad","drug_coagulant","drug_antidot","gun_oil_ru","glue_a","duct_tape","morphine","adrenalin"}},["advanced"]={["minimum"]=7,["maximum"]=11,["ammo_minimum"]=3,["ammo_maximum"]=7,["quality"]={"medkit_scientic","stimpack_army","stimpack_scientic","drug_psy_blockade","glue_e","sewing_kit_h"},["supplies"]={"medkit_scientic","stimpack_army","drug_psy_blockade","drug_antidot","drug_radioprotector","morphine","adrenalin","glue_e","sewing_kit_h"}}}
 stash_loot_rolls_v1 = {[28051101]={["profile"]="basic",["ammunition"]={}},[28051102]={["profile"]="basic",["ammunition"]={"ammo_9x18_fmj"}},[28051103]={["profile"]="basic",["ammunition"]={"ammo_9x19_fmj"}},[28051104]={["profile"]="basic",["ammunition"]={"ammo_5.45x39_fmj"}},[28051105]={["profile"]="basic",["ammunition"]={"ammo_5.56x45_ss190"}},[28051106]={["profile"]="basic",["ammunition"]={"ammo_7.62x39_fmj"}},[28051107]={["profile"]="basic",["ammunition"]={"ammo_7.62x51_fmj"}},[28051108]={["profile"]="basic",["ammunition"]={"ammo_7.62x54_7h1"}},[28051109]={["profile"]="basic",["ammunition"]={"ammo_12x70_buck"}},[28051110]={["profile"]="field",["ammunition"]={}},[28051111]={["profile"]="field",["ammunition"]={"ammo_9x18_fmj","ammo_9x18_pmm"}},[28051112]={["profile"]="field",["ammunition"]={"ammo_9x19_fmj","ammo_9x19_pbp"}},[28051113]={["profile"]="field",["ammunition"]={"ammo_5.45x39_fmj","ammo_5.45x39_ap"}},[28051114]={["profile"]="field",["ammunition"]={"ammo_5.56x45_ss190","ammo_5.56x45_ap"}},[28051115]={["profile"]="field",["ammunition"]={"ammo_7.62x39_fmj","ammo_7.62x39_ap"}},[28051116]={["profile"]="field",["ammunition"]={"ammo_7.62x51_fmj","ammo_7.62x51_ap"}},[28051117]={["profile"]="field",["ammunition"]={"ammo_7.62x54_7h1","ammo_7.62x54_7h14"}},[28051118]={["profile"]="field",["ammunition"]={"ammo_12x70_buck","ammo_12x76_zhekan"}},[28051119]={["profile"]="advanced",["ammunition"]={}},[28051120]={["profile"]="advanced",["ammunition"]={"ammo_9x18_fmj","ammo_9x18_pmm"}},[28051121]={["profile"]="advanced",["ammunition"]={"ammo_9x19_fmj","ammo_9x19_pbp"}},[28051122]={["profile"]="advanced",["ammunition"]={"ammo_5.45x39_fmj","ammo_5.45x39_ap"}},[28051123]={["profile"]="advanced",["ammunition"]={"ammo_5.56x45_ss190","ammo_5.56x45_ap"}},[28051124]={["profile"]="advanced",["ammunition"]={"ammo_7.62x39_fmj","ammo_7.62x39_ap"}},[28051125]={["profile"]="advanced",["ammunition"]={"ammo_7.62x51_fmj","ammo_7.62x51_ap"}},[28051126]={["profile"]="advanced",["ammunition"]={"ammo_7.62x54_7h1","ammo_7.62x54_7h14"}},[28051127]={["profile"]="advanced",["ammunition"]={"ammo_12x70_buck","ammo_12x76_zhekan"}}}
 post_red_forest_regions = {"jupiter","jupiter_underground","l10_limansk","l11_hospital","l11_pripyat","l12_stancia","l12_stancia_2","l12u_control_monolith","l12u_sarcofag","l13_generators","l13u_warlab","pripyat","zaton"}
@@ -388,6 +390,23 @@ item_effects = {
     [28053158] = "artefact_reward",
     [28053159] = "artefact_reward",
     [28053160] = "artefact_reward",
+    [28051920] = "supply_package",
+    [28051921] = "supply_package",
+    [28051922] = "supply_package",
+    [28051923] = "supply_package",
+    [28051924] = "supply_package",
+    [28051925] = "supply_package",
+    [28051926] = "supply_package",
+    [28051927] = "supply_package",
+    [28051928] = "supply_package",
+    [28051929] = "supply_package",
+    [28051930] = "supply_package",
+    [28051931] = "supply_package",
+    [28051932] = "supply_package",
+    [28051933] = "supply_package",
+    [28051934] = "supply_package",
+    [28051935] = "supply_package",
+    [28051936] = "supply_package",
 }
 item_categories = {
     [28051001] = "",
@@ -564,6 +583,23 @@ item_categories = {
     [28053158] = "rewards_artefacts",
     [28053159] = "rewards_artefacts",
     [28053160] = "rewards_artefacts",
+    [28051920] = "rewards_supply_medical",
+    [28051921] = "rewards_supply_medical",
+    [28051922] = "rewards_supply_medical",
+    [28051923] = "rewards_supply_medical",
+    [28051924] = "rewards_supply_medical",
+    [28051925] = "rewards_supply_medical",
+    [28051926] = "rewards_supply_maintenance",
+    [28051927] = "rewards_supply_maintenance",
+    [28051928] = "rewards_supply_maintenance",
+    [28051929] = "rewards_supply_ammunition",
+    [28051930] = "rewards_supply_ammunition",
+    [28051931] = "rewards_supply_ammunition",
+    [28051932] = "rewards_supply_ammunition",
+    [28051933] = "rewards_supply_ammunition",
+    [28051934] = "rewards_supply_expedition",
+    [28051935] = "rewards_supply_expedition",
+    [28051936] = "rewards_supply_expedition",
 }
 lab_levels = {
     ["l04u_labx18"] = true,
@@ -2345,6 +2381,7 @@ config_limits = {
     ["stat_level_rewards"] = 4000,
     ["supply_ammo_calibre"] = 4,
     ["tool_use_permissions"] = 1,
+    ["varied_filler"] = 1,
     ["zone_unlock_travel"] = 1,
 }
 tracker_checks = {
@@ -3042,6 +3079,23 @@ tracker_item_names = {
     [28053158]="Artefact: Tapeworm",
     [28053159]="Artefact: Wrenched",
     [28053160]="Artefact: Scar",
+    [28051920]="Army Medkit",
+    [28051921]="Scientific Medkit",
+    [28051922]="Army Stimpack",
+    [28051923]="Psi-block Medication",
+    [28051924]="Antidote",
+    [28051925]="Morphine",
+    [28051926]="Gun Oil",
+    [28051927]="Advanced Adhesive",
+    [28051928]="Heavy Sewing Kit",
+    [28051929]="5.45x39 AP Ammunition",
+    [28051930]="5.56x45 AP Ammunition",
+    [28051931]="7.62x39 AP Ammunition",
+    [28051932]="9x19 PBP Ammunition",
+    [28051933]="12 Gauge Slug Ammunition",
+    [28051934]="Field Ration",
+    [28051935]="Drinking Water",
+    [28051936]="Energy Drink",
 }
 tracker_milestones = {
     checks_kill_milestones="Defeat {count} Enemies",
@@ -3321,6 +3375,23 @@ delivery_contents = {
     [28053158]={{"af_tapeworm"}},
     [28053159]={{"af_vyvert_lead_box"}},
     [28053160]={{"af_zhelch"}},
+    [28051920]={{"medkit_army"}},
+    [28051921]={{"medkit_scientic"}},
+    [28051922]={{"stimpack_army"}},
+    [28051923]={{"drug_psy_blockade"}},
+    [28051924]={{"drug_antidot"}},
+    [28051925]={{"morphine"}},
+    [28051926]={{"gun_oil_ru"}},
+    [28051927]={{"glue_a"}},
+    [28051928]={{"sewing_kit_h"}},
+    [28051929]={{"ammo_5.45x39_ap"}},
+    [28051930]={{"ammo_5.56x45_ap"}},
+    [28051931]={{"ammo_7.62x39_ap"}},
+    [28051932]={{"ammo_9x19_pbp"}},
+    [28051933]={{"ammo_12x76_zhekan"}},
+    [28051934]={{"ration_ru"}},
+    [28051935]={{"water_drink"}},
+    [28051936]={{"energy_drink"}},
 }
 notice_cause_templates = {
     ["enter"]="by entering {value}",
@@ -3426,5 +3497,6 @@ config_defaults = {
     ["stat_level_rewards"]=0,
     ["supply_ammo_calibre"]=0,
     ["tool_use_permissions"]=0,
+    ["varied_filler"]=0,
     ["zone_unlock_travel"]=0,
 }

@@ -102,10 +102,11 @@ def test_opening_rejects_a_permission_check_that_cannot_accept_its_item():
 @pytest.mark.parametrize("supply", [None, "Bandage"])
 def test_opening_supplies_are_optional_and_bandages_are_a_valid_fallback(supply):
     multiworld, world = started_world(presets()["standard"])
+    medicine = {"Medkit", "Bandage"} | {
+        row["name"] for row in CATALOG["items"] if row.get("category") == "rewards_supply_medical"
+    }
     multiworld.itempool[:] = [
-        item
-        for item in multiworld.itempool
-        if item.name not in {"Medkit", "Bandage"} or item.name == supply
+        item for item in multiworld.itempool if item.name not in medicine or item.name == supply
     ]
     if supply:
         multiworld.itempool.append(world.create_item(supply))
@@ -128,7 +129,7 @@ def test_opening_does_not_reserve_a_supply_without_a_spare_check():
 
 @pytest.mark.parametrize("restriction", ["nonlocal_medkit", "nonlocal_both", "item_rule"])
 def test_optional_opening_supplies_respect_common_locality_and_location_rules(restriction):
-    multiworld, world = started_world(presets()["standard"])
+    multiworld, world = started_world(presets()["standard"] | {"varied_filler": 0})
     if restriction.startswith("nonlocal"):
         world.options.non_local_items.value = {"Medkit"}
         if restriction == "nonlocal_both":

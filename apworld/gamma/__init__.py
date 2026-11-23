@@ -302,7 +302,14 @@ class GammaWorld(World):
         }
 
     def get_filler_item_name(self) -> str:
-        return "Bandage"
+        from gamma_archipelago.filler_rewards import candidates
+
+        if not self.configuration.option("varied_filler"):
+            return "Bandage"
+        rows = candidates(self.configuration)
+        return self.random.choices(
+            [name for name, _ in rows], weights=[weight for _, weight in rows], k=1
+        )[0]
 
     def generate_output(self, output_directory: str) -> None:
         write_preview(self, output_directory)

@@ -18,7 +18,10 @@ def test_package_options_are_independent_useful_filler_without_progression_budge
     assert "Basic Toolkit" in names
     result = preview({**defaults(), option: 1}, {})
     assert result["required_rewards"] == 0
-    assert len([row for row in result["rewards"] if row.get("effect") == "supply_package"]) == 1
+    supplies = [row for row in result["rewards"] if row.get("effect") == "supply_package"]
+    assert len([row for row in supplies if row["classification"] == "useful"]) == 1
+    assert all(row["category"] == option for row in supplies)
+    assert any(row.get("filler_family") == category for row in supplies)
     legacy = defaults()
     for name in list(legacy):
         if name.startswith("rewards_supply_") or name == "supply_ammo_calibre":

@@ -43,6 +43,7 @@ def requested(configuration: "SeedConfiguration") -> Counter[str]:
                 else row.get("category") == category
             )
             and (tier is None or row["name"].startswith(tier + " Loot Stash:"))
+            and not row.get("filler_family")
         ]
         for index in range(configuration.option(key)):
             result[candidates[index % len(candidates)]] += 1

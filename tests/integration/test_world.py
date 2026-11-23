@@ -24,7 +24,12 @@ def generate(seed, *, mixed=False):
     multiworld = setup_multiworld(
         worlds,
         seed=seed,
-        options={"reward_quantities": 0, "quest_zone_logic": 0, "regional_progression": 0},
+        options={
+            "reward_quantities": 0,
+            "quest_zone_logic": 0,
+            "regional_progression": 0,
+            "varied_filler": 0,
+        },
     )
     distribute_items_restrictive(multiworld)
     return multiworld
