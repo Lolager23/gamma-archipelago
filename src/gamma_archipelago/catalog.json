@@ -9713,7 +9713,8 @@
           "helmet_medium": 2,
           "helmet_heavy": 3,
           "helmet_exo": 4,
-          "helmet": 1
+          "helmet": 1,
+          "outfit_novice": 1
         },
         "legacy": "Equipment Unlock: Helmet",
         "item_id": 28053003,

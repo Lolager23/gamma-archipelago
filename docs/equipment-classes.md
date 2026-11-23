@@ -18,6 +18,13 @@ inventory remains untouched. The catalogue owns repair-type and backpack mapping
 An MP5 using the native pistol repair kit belongs to A even though its role is SMG.
 Powered outfits are explicitly classified at the exoskeleton tier.
 
+GAMMA's enabled "Helmets need armor repair kits" override assigns
+`repair_type = outfit_novice` to `helm_bandana`, `helm_cloth_mask`,
+`helm_rp_bala` and `helm_resp`. These are helmet items and use the Light helmet
+permission (tier 1), including when that permission is granted at the start.
+The shared repair-kit name does not make them outfits. Medium, Heavy,
+Exoskeleton and unknown helmet repair types retain their existing requirements.
+
 Only backpacks include a physical class item: the initial permitted backpack is
 supplied if missing, and each reward supplies its matching backpack even when
 optional permission supplies are off. Firearms, outfits and helmets are use

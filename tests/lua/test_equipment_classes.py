@@ -24,6 +24,31 @@ def native(lua):
 
 
 @pytest.mark.parametrize(
+    "section", ["helm_bandana", "helm_cloth_mask", "helm_rp_bala", "helm_resp"]
+)
+@pytest.mark.parametrize("initial,allowed", [(0, False), (1, True)])
+def test_gamma_novice_masks_use_light_helmet_permission(lua, section, initial, allowed):
+    state = fresh(lua, initial_helmet_class=initial)
+    module = native(lua)
+    # GAMMA's enabled helmet repair-kit override uses an outfit repair type here.
+    lua.globals().metadata[section] = lua.table(
+        **{"class": "E_HLMET", "kind": "o_helmet", "repair_type": "outfit_novice"}
+    )
+    assert lua.globals().gamma_ap_equipment.group(section) == "helmet"
+    assert module.section_tier(section, "helmet") == 1
+    assert module.section_allowed(state, section) is allowed
+    for repair, tier in [
+        ("helmet_medium", 2),
+        ("helmet_heavy", 3),
+        ("helmet_exo", 4),
+        ("unknown", 4),
+    ]:
+        lua.globals().metadata.other_helmet = lua.table(kind="o_helmet", repair_type=repair)
+        assert module.section_tier("other_helmet", "helmet") == tier
+        assert module.section_allowed(state, "other_helmet") is False
+
+
+@pytest.mark.parametrize(
     "group,section,kind,repair,tier",
     [
         ("firearms", "rifle", "w_rifle", "rifle_5", 3),
