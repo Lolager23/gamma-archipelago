@@ -27,6 +27,13 @@ class Trace:
     def score(self) -> int:
         return sum(len(rows) - 1 for _, _, _, _, rows in self.collisions)
 
+    @property
+    def priority(self) -> tuple[int, tuple[int, ...]]:
+        # Equal collision counts can hide progress: moving the earliest clash to
+        # a later sphere may be necessary before another swap can separate it.
+        waves = sorted(number for _, _, _, number, rows in self.collisions for _ in rows[1:])
+        return self.score, tuple(-number for number in waves)
+
 
 def _worlds(multiworld: MultiWorld) -> list["GammaWorld"]:
     return [
@@ -165,7 +172,7 @@ def _improve(
                     candidate = _trace(world.multiworld, players)
                     usable = (
                         candidate.valid
-                        and candidate.score < trace.score
+                        and candidate.priority < trace.priority
                         and _recipes_on_time(worlds)
                         and all(
                             trace.waves[model].keys() <= candidate.waves[model].keys()

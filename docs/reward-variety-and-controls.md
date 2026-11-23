@@ -56,6 +56,11 @@ Fresh worlds fill with the corrected requirements; existing archived placements
 and completed observations are never rewritten. Native spawn/pacing acceptance
 remains Owen's. The five-type starting mutant budget is unchanged by this increment.
 
+Pacing repair also accepts equal-count swaps that move the earliest collision
+later, before attempting another separation. It still requires every check and
+goal reachable, early recipes preserved and zero final tier collisions. This
+avoids the slow repair plateau exposed by the two-faction opening; it adds no gates.
+
 ## Follow-up boundaries
 
 Faction modelling changes alter generation/PDA assumptions, never forbid actual

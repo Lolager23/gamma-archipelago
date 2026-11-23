@@ -118,6 +118,19 @@ def test_trial_must_preserve_even_optional_foreign_reachability():
     assert all(row.item is item and item.location is row for row, item in before.items())
 
 
+def test_equal_collision_counts_prefer_separating_the_earliest_sphere():
+    multi = filled()
+    trace = pacing._trace(multi, {1})
+    assert trace.collisions
+    early = trace.collisions[0]
+    moved = (*early[:3], early[3] + 1, early[4])
+    before = pacing.Trace(trace.waves, [early], trace.valid, trace.state)
+    after = pacing.Trace(trace.waves, [moved], trace.valid, trace.state)
+    assert before.score == after.score
+    assert after.priority < before.priority
+    assert pacing.Trace(trace.waves, [], True, trace.state).priority < after.priority
+
+
 def test_new_option_is_bound_and_missing_saved_option_keeps_legacy_wire_and_digest():
     values = presets()["living_legend"]
     assert values["progressive_sphere_pacing"] == 1
