@@ -1,5 +1,31 @@
 # Verification record
 
+## 23 November 2026 — GAMMA skill cap blocked reward announcements
+
+Read-only live bridge/log and saved-data inspection confirmed receipt 21 (Survival)
+failed with "The installed skill schema is incompatible". The save had applied 20
+receipts, while the server had delivered 30. Later faction, task, kill and artefact
+checks still reached the server, including the sixth distinct artefact (Bandage),
+but their rewards and announcements waited behind the failed skill receipt.
+
+The enabled GAMMA Skill System Balance configuration and saved Survival data use
+`max_level = 30`; the AP adapter previously accepted only original Haruka's 15.
+The adapter now supports these two inspected caps and retains rejection of unknown
+schemas. Native formulas, ordered receipt targets and cap behaviour are unchanged.
+Regressions cover all four skills at 0/15/29/30, recalculation failure/retry,
+save/load, actual GAMMA Survival stat fields, and later delivery/notification
+acknowledgement without replay. The original adapter failed all 17 initial
+30-level/queue reproductions before correction.
+
+Affected verification **passed** 1,117 regressions. The changed skill adapter
+measured 100% executable-line coverage and all Lua line gates passed; Lua branch
+coverage is not measured. Current-head Windows/Linux evidence is retained with
+the PR when available. Native acceptance is **not run**, reserved for
+Owen. This increment stacks on the weapon-condition fix. No live deployment,
+save edit, receipt skip, session reset, developer-panel change or normal-game
+write is included. No IDs, settings digests or save formats change; the existing
+pending receipt can retry after deployment without a new seed.
+
 ## 23 November 2026 — GAMMA weapon condition and novice armour audit
 
 The active "Guns Have No Condition" script sets firearm condition to 83% on
