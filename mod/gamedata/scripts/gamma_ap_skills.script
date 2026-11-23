@@ -19,7 +19,9 @@ local function build_plan(skill, levels, stats, increments)
     for _,key in ipairs({"current_level", "max_level", "base_requirement", "requirement", "experience"}) do
         if not finite(levels[key]) or levels[key] < 0 then return nil end
     end
-    if levels.current_level ~= math.floor(levels.current_level) or levels.max_level ~= 15
+    -- Original Haruka caps at 15; GAMMA's active balance configuration caps at 30.
+    if levels.current_level ~= math.floor(levels.current_level)
+        or (levels.max_level ~= 15 and levels.max_level ~= 30)
         or levels.current_level > levels.max_level or levels.base_requirement <= 0 then return nil end
     local target = math.min(levels.max_level, levels.current_level + 1)
     local plan = {skill=skill, levels={}, stats={}}

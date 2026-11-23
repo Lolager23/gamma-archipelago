@@ -33,6 +33,19 @@ label (`from "Server"` or `from "Cheat Console"`) rather than inventing a check.
 Unknown source metadata delays only the notice until its data package arrives;
 item history/application continues normally.
 
+Incoming announcements wait until their ordered reward has actually applied.
+If a native reward fails, later incoming rewards and their announcements remain
+pending; independent check reporting continues to the server. For example, a
+skill compatibility error can hold a later artefact reward even though its check
+is confirmed. Fixing the native adapter lets the same saved session retry the
+pending receipt. Notices already acknowledged are not repeated.
+
+The Haruka adapter supports the original 15-level cap and the active GAMMA
+"Skill System Balance" 30-level cap. Both use the inspected native level/stat
+increment formula. Other cap values remain unsupported and leave the reward
+pending. Failed recalculation retains its saved target for retry without adding
+the level again; a capped skill consumes the receipt without exceeding its cap.
+
 This presentation update does not change checks, rewards, IDs, settings digests
 or save schemas. Notice identities and acknowledgements remain unchanged, so
 already displayed announcements are not replayed merely to add their cause.

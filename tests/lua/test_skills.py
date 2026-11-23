@@ -1,6 +1,10 @@
 import pytest
 
-from .test_game_adapter import saved_state
+from gamma_archipelago.notifications import Notice, decode_acknowledgements, encode_notices
+from gamma_archipelago.protocol import encode_incoming
+
+from .test_game_adapter import enter_world, saved_state
+from .test_loadout import KEY
 from .test_stashes import poll, progress, stash_game
 
 
@@ -122,3 +126,85 @@ def test_saved_skill_plan_does_not_bypass_native_schema_validation_on_retry(lua,
     poll(game, engine)
     assert progress(lua, game).received_count == 0
     assert "schema is incompatible" in list(engine.logs.values())[-1]
+
+
+@pytest.mark.parametrize("item", range(28051401, 28051405))
+@pytest.mark.parametrize("current", [0, 15, 29, 30])
+def test_gamma_30_level_skills_apply_once_respect_cap_and_survive_recalculation_retry(
+    lua, item, current
+):
+    game, engine = skill_game(lua, item)
+    skill = lua.globals().gamma_ap_catalog.skill_rewards[item]
+    api = lua.globals().haru_skills
+    levels = api.skills_levels[skill]
+    levels.max_level, levels.current_level = 30, current
+    engine.fail_recalculate = skill != "scavenging"
+    poll(game, engine)
+    target = min(30, current + 1)
+    assert levels.current_level == target
+    assert api.skills_stats[skill].effect == pytest.approx(1 if current == 30 else 1.1)
+    game.load_state(saved_state(lua, game))
+    engine.fail_recalculate = False
+    poll(game, engine)
+    assert progress(lua, game).received_count == 1
+    assert levels.current_level == target
+    assert api.skills_stats[skill].effect == pytest.approx(1 if current == 30 else 1.1)
+    poll(game, engine)
+    assert progress(lua, game).received_count == 1
+
+
+def test_gamma_skill_reward_unblocks_later_delivery_and_pda_notices_without_replaying(lua):
+    game, engine = skill_game(lua, 28051403)
+    lua.execute("""
+        haru_skills.skills_levels.survival.max_level=30
+        engine.news={}
+        db.actor.give_game_news=function(self,title,text)
+            engine.news[#engine.news+1]=text
+        end
+    """)
+    engine.files["D:/AnomalyAP/appdata/archipelago\\incoming.txt"] = encode_incoming(
+        KEY, (28051403, 28051003), engine.configuration_key
+    )
+    engine.files["D:/AnomalyAP/appdata/archipelago\\notices.txt"] = encode_notices(
+        KEY, (Notice("r:0", 1, "Survival unlocked"), Notice("r:1", 2, "Bandage delivered"))
+    )
+    engine.fail_recalculate = True
+    poll(game, engine)
+    assert progress(lua, game).received_count == 0
+    assert not list(engine.news.values())
+    assert not list(engine.spawns)
+    game.load_state(saved_state(lua, game))
+    enter_world(engine)
+    engine.fail_recalculate = False
+    for _ in range(3):
+        poll(game, engine)
+    assert progress(lua, game).received_count == 2
+    assert lua.globals().haru_skills.skills_levels.survival.current_level == 1
+    assert len(list(engine.spawns)) == 1
+    assert list(engine.news.values()) == ["Survival unlocked", "Bandage delivered"]
+    ack = engine.files["D:/AnomalyAP/appdata/archipelago\\notices_ack.txt"]
+    assert decode_acknowledgements(ack, KEY) == {"r:0", "r:1"}
+    game.load_state(saved_state(lua, game))
+    enter_world(engine)
+    poll(game, engine)
+    assert len(list(engine.spawns)) == 1 and len(list(engine.news)) == 2
+
+
+def test_gamma_survival_balance_accepts_negative_base_stats_and_saved_level_schema(lua):
+    game, engine = skill_game(lua, 28051403)
+    lua.execute("""
+        haru_skills.skills_levels.survival={current_level=0,max_level=30,
+            base_requirement=750,requirement=750,experience=209.3,prev_requirement=0}
+        haru_skills.skills_stats.survival={resistance=1,bleed_restore=0,hunting_skill=-4,
+            functor='haru_skills.update_survival'}
+        haru_skills.skills_increments.survival={resistance=0,bleed_restore=.00005,hunting_skill=.25}
+    """)
+    poll(game, engine)
+    api = lua.globals().haru_skills
+    assert progress(lua, game).received_count == 1
+    assert api.skills_levels.survival.current_level == 1
+    assert api.skills_levels.survival.experience == 750
+    assert api.skills_levels.survival.requirement == 1687.5
+    assert api.skills_stats.survival.hunting_skill == -3.75
+    assert api.skills_stats.survival.bleed_restore == pytest.approx(0.00005)
+    assert api.skills_stats.survival.resistance == 1
