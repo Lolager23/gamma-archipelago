@@ -123,7 +123,7 @@ case generates and inspects a real AP seed ZIP. Python per-module line and branc
 coverage gates still apply. Browser interaction evidence is separate from these
 tests and from GAMMA acceptance.
 
-The expanded web matrix checks all six presets at seed 0 and the maximum 64-bit
+The expanded web matrix checks all ten presets at seed 0 and the maximum 64-bit
 seed against exact generated IDs/settings, repeated-seed placements, concurrent
 HTTP generation refusal and subsequent recovery. Node built-in regression
 tests exercise draft/preview isolation, stale responses, preset copies, names and

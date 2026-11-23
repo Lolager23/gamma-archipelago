@@ -18,6 +18,7 @@ from .configuration import (
 )
 from .content_progression import configured_item_ids
 from .discovery import SOURCES, configured_location_ids
+from .expansion_settings import EXPANSION_LIMITS
 from .filler_rewards import candidates as filler_candidates
 from .opening import opening_permissions
 from .presets import presets
@@ -121,7 +122,7 @@ def metadata() -> dict[str, object]:
                 key=key,
                 label=key.replace("_", " ").capitalize(),
                 suggested_max=30 if key == "stat_level_rewards" else 50,
-                maximum=4000,
+                maximum=EXPANSION_LIMITS[key],
                 default=count,
                 category=None if REWARD_GROUPS[key][0] == "base" else REWARD_GROUPS[key][0],
             )

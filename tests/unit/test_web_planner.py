@@ -32,13 +32,16 @@ def test_quick_pilot_estimates_goal_separately_from_optional_map_completion():
 
 
 def test_reward_controls_publish_categories_real_limits_and_actual_spare_slot_choices():
+    from gamma_archipelago.expansion_settings import EXPANSION_LIMITS
     from gamma_archipelago.filler_rewards import candidates
 
     data = metadata()
     categories = {row["key"] for row in data["rewards"]}
     for row in data["reward_quantities"]:
         assert row["category"] is None or row["category"] in categories
-        assert row["default"] <= row["suggested_max"] < row["maximum"] == 4000
+        assert (
+            row["default"] <= row["suggested_max"] < row["maximum"] == EXPANSION_LIMITS[row["key"]]
+        )
     values = presets()["living_legend"]
     result = preview(values, {})
     assert [(row["name"], row["weight"]) for row in result["filler_choices"]] == list(
