@@ -49,6 +49,36 @@ def test_gamma_novice_masks_use_light_helmet_permission(lua, section, initial, a
 
 
 @pytest.mark.parametrize(
+    "section",
+    [
+        "novice_outfit",
+        "novice_outfit_camo",
+        "novice_outfit_tourist",
+        "bandit_novice_outfit",
+        "bandit_novice_outfit_alt",
+        "cs_light_novice_outfit",
+        "cs_novice_outfit",
+        "dolg_novice_outfit",
+        "redline_novice_outfit",
+        "svoboda_novice_outfit",
+        "trenchcoat_outfit",
+    ],
+)
+@pytest.mark.parametrize("initial,allowed", [(0, False), (1, True)])
+def test_gamma_novice_armour_matches_starting_outfit_permission(lua, section, initial, allowed):
+    state = fresh(lua, initial_outfit_class=initial)
+    module = native(lua)
+    lua.globals().metadata[section] = lua.table(
+        **{"class": "E_STLK", "kind": "o_light", "repair_type": "outfit_novice"}
+    )
+    assert lua.globals().gamma_ap_equipment.group(section) == "outfit"
+    assert module.section_tier(section, "outfit") == 1
+    assert module.section_allowed(state, section) is allowed
+    lua.globals().metadata.light_suit = lua.table(kind="o_light", repair_type="outfit_light")
+    assert not module.section_allowed(state, "light_suit")
+
+
+@pytest.mark.parametrize(
     "group,section,kind,repair,tier",
     [
         ("firearms", "rifle", "w_rifle", "rifle_5", 3),
