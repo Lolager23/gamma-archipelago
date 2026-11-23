@@ -145,7 +145,7 @@ def _candidates(
     candidates = []
     for row, wave in trace.waves[model].items():
         if (
-            wave <= number
+            wave == number
             or row.address is None
             or row.locked
             or _progressive(row, players)
@@ -155,7 +155,15 @@ def _candidates(
         if row.can_fill(trace.state, item, False) and source.can_fill(trace.state, row.item, False):
             candidates.append(row)
     world.random.shuffle(candidates)
-    candidates.sort(key=lambda row: trace.waves[model][row])
+    # Prefer delaying a copy, but a collision in the final sphere can only be
+    # repaired by moving one copy earlier. Trial tracing still rejects broken
+    # access, another tier collision or an early-recipe violation.
+    candidates.sort(
+        key=lambda row: (
+            trace.waves[model][row] < number,
+            abs(trace.waves[model][row] - number),
+        )
+    )
     return candidates[:256]
 
 

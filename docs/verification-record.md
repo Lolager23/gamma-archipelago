@@ -1317,3 +1317,16 @@ shared-pool cases (backpacks and tools), including upstream linking, fill and
 balancing, passed after the correction. Current-head affected verification and
 Windows/Linux CI are recorded in PR #85 before merge. No installed files or
 active sessions are changed by this correction.
+
+
+### Useful-reward final-sphere regression — 23 November 2026
+
+The actual two-GAMMA/APQuest Full Story seed 20261302 (Great Swamps start)
+reproduced a final-sphere Progressive Backpack collision. Later-only repair had
+no destination. The repaired candidate search also considers earlier unlocked
+non-progression checks and retains all reachability/recipe/placement checks.
+The exact real-server reproducer passed after this correction. A focused
+candidate regression covers final-sphere fallback. Final affected verification
+and current-head Windows/Linux results are recorded in the stacked PR.
+No installation, session, developer panel or save was changed; native acceptance
+is not run.

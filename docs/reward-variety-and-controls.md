@@ -86,6 +86,11 @@ receipt owner. Save/load preserves successful delivery; uncertain creation still
 blocks replay. Native availability and balance need Owen's acceptance. Coordinated
 world/client/game updates are required to use the new item IDs in a fresh seed.
 
+The altered pool exposed a final-sphere pacing collision with no later spare
+check. Repair now considers earlier non-progression checks after later ones.
+Complete trial tracing still preserves reachability, early recipes, fixed items
+and final tier separation; it never manufactures access gates.
+
 ## Follow-up boundaries
 
 Faction modelling changes alter generation/PDA assumptions, never forbid actual
