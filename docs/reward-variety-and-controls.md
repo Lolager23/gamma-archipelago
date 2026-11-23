@@ -6,10 +6,10 @@ normal installation remain untouched unless deployment is separately authorized.
 
 | Increment | Intended behaviour | Status |
 |---|---|---|
-| Varied stash contents | Tier/calibre-aware supplies, ammo variants and quantities; saved once | Implemented; affected verification pending |
-| Practical Cordon faction budget | Two dependable faction opportunities; no opening Military assumption | Implemented; affected verification pending |
-| Useful randomized rewards | Varied supplies/ammo rather than alternating Bandage/Medkit filler | Implemented; affected verification pending |
-| Generator controls | Clear reward controls with sliders and exact manual counts, enabled-state and pool feedback | Planned |
+| Varied stash contents | Tier/calibre-aware supplies, ammo variants and quantities; saved once | [PR #89](https://github.com/Lolager23/gamma-archipelago/pull/89); local and Windows/Linux checks passed; native acceptance not run |
+| Practical Cordon faction budget | Two dependable faction opportunities; no opening Military assumption | [PR #90](https://github.com/Lolager23/gamma-archipelago/pull/90); local and Windows/Linux checks passed; native acceptance not run |
+| Useful randomized rewards | Varied supplies/ammo rather than alternating Bandage/Medkit filler | Implemented; verification and native acceptance tracked in the stacked PR |
+| Generator controls | Clear reward controls with sliders and exact manual counts, enabled-state and pool feedback | Implemented; verification and native acceptance tracked in the stacked PR |
 
 ## White stash rolls
 
@@ -90,6 +90,30 @@ The altered pool exposed a final-sphere pacing collision with no later spare
 check. Repair now considers earlier non-progression checks after later ones.
 Complete trial tracing still preserves reachability, early recipes, fixed items
 and final tier separation; it never manufactures access gates.
+
+## Generator reward workbench
+
+The Rewards tab groups category switches and repeatable quantities together:
+supplies; stashes/artefacts; progression/access; faction/skills/carry. Eleven
+repeatable settings have synchronized sliders and exact integer inputs. Suggested
+ranges are 0-50 (skill levels 0-30); manual entries expand the slider range up to
+the existing 4,000 configuration limit. Finite check capacity still applies.
+Disabling a category preserves its draft counts and makes its controls inactive.
+Weighted optional mode also disables exact counts rather than discarding them.
+
+Progression and permission copies remain calculated from enabled checks and
+starting tiers. Their cards show automatic minima rather than offering a slider
+that could remove mandatory unlocks. The live budget separates required copies,
+requested/convenience copies and spare checks, and reports actual enabled spare
+reward types. Invalid or stale previews clear old counts and block YAML/seed
+export; capacity errors must be corrected before generation.
+
+This is a local planner only. Editing or generating never replaces the current
+session or deploys game files. Existing seed archives remain unchanged. Automated
+DOM tests use a small fixture and do not claim native browser coverage. Earlier
+browser review confirmed a manual 72-stash entry beyond the suggested range;
+final browser review remains incomplete after Owen stopped Computer Use. API,
+export and actual generated archive evidence are recorded separately in the PR.
 
 ## Follow-up boundaries
 

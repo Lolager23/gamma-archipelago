@@ -15,6 +15,7 @@ ASSETS = {
     "/app.js": "app.js",
     "/ui.js": "ui.js",
     "/form_state.js": "form_state.js",
+    "/reward_controls.js": "reward_controls.js",
 }
 TYPES = {".html": "text/html", ".css": "text/css", ".js": "text/javascript"}
 

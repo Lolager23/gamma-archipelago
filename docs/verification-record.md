@@ -1330,3 +1330,27 @@ candidate regression covers final-sphere fallback. Final affected verification
 and current-head Windows/Linux results are recorded in the stacked PR.
 No installation, session, developer panel or save was changed; native acceptance
 is not run.
+
+
+## 23 November 2026 - generator reward controls
+
+Grouped category cards expose synchronized slider/exact-count controls for eleven
+repeatable quantities, computed progression minima and the authoritative pool
+budget. Node regressions exercise range expansion, dragging, invalid drafts,
+category disable/re-enable, stale budgets and future category rendering. HTTP
+regressions preserve a 72-stash export, refuse over-capacity preview/YAML/generation
+before subprocess execution, and recover after correcting the draft. Static checks,
+affected-module coverage and a real private generation are recorded in the PR.
+Earlier native browser review accepted 72 stashes beyond the suggested range;
+final visual review remains incomplete after Computer Use was stopped. No game
+was launched, installed files changed or active session replaced. Native acceptance
+is not run. Full release sweeps are reserved for releases.
+
+The generator increment's affected verifier passed 173 tests plus 13 Node tests.
+Changed Python runtime and verifier modules reached 100% lines/branches. A separate
+real HTTP generation at seed 2026112304 produced a valid 221-check Living Legend
+archive with matching preview/configuration. Its requested 72 Basic stashes were
+present, with three additional Basic stashes drawn in spare slots; no Bandage or
+Medkit filler was placed. The archive and logs remain in private tooling evidence,
+without changing the active game session. Final Windows/Linux checks are tracked
+on the stacked PR.

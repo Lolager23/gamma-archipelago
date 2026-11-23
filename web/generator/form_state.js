@@ -38,3 +38,17 @@ export function playerNameError(value) {
 export function validSeed(value) {
   return /^\d{1,20}$/.test(value) && BigInt(value) <= 18446744073709551615n;
 }
+
+export function rewardQuantityState(definition, options) {
+  const value = options[definition.key];
+  const maximum = definition.maximum;
+  const valid = Number.isSafeInteger(value) && value >= 0 && value <= maximum;
+  return {
+    value,
+    valid,
+    maximum,
+    sliderMaximum: Math.max(definition.suggested_max, valid ? value : 0),
+    enabled: options.reward_quantities === 1 &&
+      (!definition.category || options[definition.category] === 1),
+  };
+}

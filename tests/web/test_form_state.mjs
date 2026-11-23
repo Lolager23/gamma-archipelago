@@ -1,10 +1,12 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { advancedOptions, syncAdvanced, rewardQuantityOptions, showStepReport, loadoutOptions } from "../../web/generator/ui.js";
+import { advancedOptions, syncAdvanced, showStepReport, loadoutOptions } from "../../web/generator/ui.js";
+import { rewardControls, syncRewardControls } from "../../web/generator/reward_controls.js";
 import {
   DraftConfiguration,
   playerNameError,
   validSeed,
+  rewardQuantityState,
 } from "../../web/generator/form_state.js";
 
 test("canonical no-weapons previews never make temporary omissions permanent", () => {
@@ -175,27 +177,84 @@ test("class loadout controls replace binary groups and allow a zero-class start"
 });
 
 
-test("reward quantity numeric entry can exceed the suggested slider range", () => {
-  const previous = globalThis.document;
-  const container = {children: [], replaceChildren(...children) {this.children = children;}};
-  globalThis.document = {
-    getElementById: () => container,
-    createElement: () => ({children: [], listeners: {},
-      append(...nodes) {this.children.push(...nodes);},
-      setAttribute() {}, addEventListener(key, fn) {this.listeners[key] = fn;}}),
+const medicalCount = {key:"medical_packages", label:"Medical packages", suggested_max:50,
+  maximum:4000, category:"rewards_supply_medical"};
+
+test("reward counts allow manual values above suggestions but reject invalid transport counts", () => {
+  const options={reward_quantities:1,rewards_supply_medical:1,medical_packages:72};
+  assert.deepEqual(rewardQuantityState(medicalCount,options),
+    {value:72,valid:true,maximum:4000,sliderMaximum:72,enabled:true});
+  for (const value of [null,-1,1.5,4001,NaN,Infinity,"72"])
+    assert.equal(rewardQuantityState(medicalCount,{...options,medical_packages:value}).valid,false);
+  assert.equal(rewardQuantityState(medicalCount,{...options,medical_packages:4000}).valid,true);
+  assert.equal(rewardQuantityState(medicalCount,{...options,rewards_supply_medical:0}).enabled,false);
+  assert.equal(rewardQuantityState(medicalCount,{...options,reward_quantities:0}).enabled,false);
+});
+
+function rewardDocument() {
+  const descendants=(node)=>node.children.flatMap(child=>[child,...descendants(child)]);
+  const matches=(node,selector)=>{
+    if (selector==="input[type=checkbox]") return node.tag==="input"&&node.type==="checkbox";
+    const match=selector.match(/^\[data-([a-z-]+)(?:="([^"]*)")?\]$/);
+    if (!match) return false;
+    const key=match[1].replace(/-([a-z])/g,(_,letter)=>letter.toUpperCase());
+    return key in node.dataset&&(match[2]===undefined||node.dataset[key]===match[2]);
   };
+  const node=(tag)=>({tag,children:[],dataset:{},attributes:{},listeners:{},
+    classList:{toggle(){}},
+    append(...children){this.children.push(...children);},
+    replaceChildren(...children){this.children=children;},
+    setAttribute(key,value){this.attributes[key]=value;},
+    addEventListener(key,fn){this.listeners[key]=fn;},
+    querySelectorAll(selector){return descendants(this).filter(child=>matches(child,selector));},
+    querySelector(selector){return this.querySelectorAll(selector)[0]??null;}});
+  const root=node("div");root.id="reward-workbench";
+  return {root,createElement:node,activeElement:null,
+    getElementById(id){return [root,...descendants(root)].find(child=>child.id===id)??null;}};
+}
+
+test("reward inputs stay synchronized without shrinking a dragged range or losing disabled choices", () => {
+  const previous=globalThis.document;
+  const doc=rewardDocument();globalThis.document=doc;
   try {
-    const edits = [];
-    rewardQuantityOptions({reward_quantities: [{key:"medical_packages",label:"Medical",suggested_max:50}]},
-      {medical_packages:4}, (...edit) => edits.push(edit));
-    const [, slider, number] = container.children[0].children;
-    assert.equal(number.max, undefined);
-    number.value="72"; number.listeners.input();
-    assert.equal(slider.max,72); assert.equal(slider.value,72);
-    slider.value="20"; slider.listeners.input();
-    assert.equal(number.value,20); assert.equal(slider.max,50);
-    number.value=""; number.listeners.input();
-    assert.deepEqual(edits, [["medical_packages",72],["medical_packages",20],["medical_packages",null]]);
+    const metadata={rewards:[{key:"rewards_supply_medical",label:"Medical",count:7}],reward_quantities:[medicalCount]};
+    const options={reward_quantities:1,rewards_supply_medical:1,medical_packages:4};
+    const edits=[];
+    rewardControls(metadata,options,(key,value)=>{options[key]=value;edits.push([key,value]);syncRewardControls(metadata,options,null);});
+    const number=doc.root.querySelector('[data-reward-number="medical_packages"]');
+    const slider=doc.root.querySelector('[data-reward-slider="medical_packages"]');
+    assert.equal(number.max,4000);
+    number.value="72";number.listeners.input();
+    assert.equal(slider.max,72);assert.equal(slider.value,72);
+    slider.value="20";slider.listeners.input();
+    assert.equal(number.value,20);assert.equal(slider.max,72);
+    options.rewards_supply_medical=0;syncRewardControls(metadata,options,null);
+    assert.equal(number.disabled,true);assert.equal(number.value,20);
+    options.rewards_supply_medical=1;syncRewardControls(metadata,options,null);
+    assert.equal(number.disabled,false);assert.equal(number.value,20);
+    number.value="";number.listeners.input();
+    assert.equal(options.medical_packages,null);assert.equal(number.attributes["aria-invalid"],"true");
+    assert.deepEqual(edits,[["medical_packages",72],["medical_packages",20],["medical_packages",null]]);
+  } finally {globalThis.document=previous;}
+});
+
+test("reward cards show automatic minima and clear stale budgets on invalid previews", () => {
+  const previous=globalThis.document;
+  const doc=rewardDocument();globalThis.document=doc;
+  try {
+    const metadata={rewards:[{key:"rewards_supply_medical",label:"Medical",count:7},
+      {key:"future_reward",label:"Future category",count:1}],reward_quantities:[medicalCount]};
+    const options={reward_quantities:1,rewards_supply_medical:1,medical_packages:4};
+    rewardControls(metadata,options,()=>{});
+    assert.equal(doc.root.querySelectorAll("[data-reward-category]").length,2);
+    const result={pool_budget:{required_copies:2,guaranteed_useful:{Medical:4},filler_slots:7,network_checks:13,
+      required_progression:{Medical:2}},rewards:[{name:"Medical",category:"rewards_supply_medical"}],filler_choices:[{},{}]};
+    syncRewardControls(metadata,{...options,varied_filler:1},result);
+    assert.match(doc.getElementById("reward-budget-summary").textContent,/2 required \+ 4 requested.*7 spare = 13/);
+    assert.match(doc.root.querySelector('[data-required-category="rewards_supply_medical"]').textContent,/2 required copies/);
+    syncRewardControls(metadata,options,null,"Counts exceed the check pool");
+    assert.match(doc.getElementById("reward-budget-summary").textContent,/Counts exceed the check pool/);
+    assert.doesNotMatch(doc.root.querySelector('[data-required-category="rewards_supply_medical"]').textContent,/2 required/);
   } finally {globalThis.document=previous;}
 });
 

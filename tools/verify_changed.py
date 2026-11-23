@@ -59,7 +59,7 @@ def verify(arguments: argparse.Namespace) -> None:
     if any(path.startswith("src/") for path in changed):
         run("-m", "mypy", "src/gamma_archipelago")
     if scope.web:
-        for name in ("app.js", "ui.js", "form_state.js"):
+        for name in ("app.js", "ui.js", "form_state.js", "reward_controls.js"):
             subprocess.run(["node", "--check", str(ROOT / "web/generator" / name)], check=True)
         subprocess.run(["node", "--test", str(ROOT / "tests/web/test_form_state.mjs")], check=True)
     if scope.build:

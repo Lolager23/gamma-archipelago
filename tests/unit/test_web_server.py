@@ -13,7 +13,14 @@ from gamma_archipelago.web_server import serve
 
 @pytest.fixture
 def web(tmp_path):
-    for filename in ("index.html", "style.css", "app.js", "ui.js", "form_state.js"):
+    for filename in (
+        "index.html",
+        "style.css",
+        "app.js",
+        "ui.js",
+        "form_state.js",
+        "reward_controls.js",
+    ):
         (tmp_path / filename).write_text("asset")
     generator = SimpleNamespace(generate=lambda document, seed: ("AP_test.zip", b"seed archive"))
     server = serve(tmp_path, generator, 0)
@@ -50,7 +57,15 @@ def test_metadata_assets_preview_and_exports(web):
     assert status == 200 and "presets" in json.loads(body)
     assert "frame-ancestors 'none'" in headers["Content-Security-Policy"]
     assert "img-src 'self' data:" in headers["Content-Security-Policy"]
-    for path in ("/", "/index.html", "/style.css", "/app.js", "/ui.js", "/form_state.js"):
+    for path in (
+        "/",
+        "/index.html",
+        "/style.css",
+        "/app.js",
+        "/ui.js",
+        "/form_state.js",
+        "/reward_controls.js",
+    ):
         assert request("GET", path)[2] == b"asset"
     body = {"options": defaults(), "name": "Owen", "seed": "123"}
     assert json.loads(request("POST", "/api/preview", body)[2])["network_checks"] == 33
@@ -136,3 +151,40 @@ def test_stalled_request_times_out_and_server_handles_the_next_request(web):
 def test_depth_limit_ignores_brackets_and_escaped_quotes_inside_strings(web):
     body = {"options": defaults(), "note": '[{\\"' * 1000}
     assert web[0]("POST", "/api/preview", body)[0] == 200
+
+
+def test_reward_controls_preserve_exact_exports_and_refuse_over_capacity_generation(web):
+    from gamma_archipelago.presets import presets
+
+    request, generator = web
+    options = presets()["living_legend"] | {"basic_loot_stashes": 72}
+    body = dict(name="RewardReview", seed="20261123", options=options)
+    status, _, data = request("POST", "/api/preview", body)
+    assert status == 200
+    budget = json.loads(data)["pool_budget"]
+    assert (
+        sum(
+            count
+            for name, count in budget["guaranteed_useful"].items()
+            if name.startswith("Basic Loot Stash:")
+        )
+        == 72
+    )
+    status, _, data = request("POST", "/api/yaml", body)
+    assert status == 200
+    exported = json.loads(data)
+    assert exported[exported["game"]]["basic_loot_stashes"] == 72
+
+    options["rewards_loot_stashes"] = 0
+    status, _, data = request("POST", "/api/preview", body)
+    disabled = json.loads(data)
+    assert status == 200 and disabled["configuration"]["basic_loot_stashes"] == 72
+    assert not any(row.get("category") == "rewards_loot_stashes" for row in disabled["rewards"])
+    options["rewards_loot_stashes"] = 1
+    options["basic_loot_stashes"] = 500
+    generator.generate = lambda *_: pytest.fail("Invalid pool must not invoke generation")
+    for route in ("/api/preview", "/api/yaml", "/api/generate"):
+        status, _, data = request("POST", route, body)
+        assert status == 400 and "exceed available reliable checks" in json.loads(data)["error"]
+    options["basic_loot_stashes"] = 4
+    assert request("POST", "/api/preview", body)[0] == 200

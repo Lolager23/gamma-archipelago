@@ -59,7 +59,7 @@ def main() -> None:
     run("-m", "ruff", "check", "src", "apworld", "tools", "tests")
     run("-m", "ruff", "format", "--check", "src", "apworld", "tools", "tests")
     run("-m", "mypy", "src/gamma_archipelago")
-    for filename in ("app.js", "ui.js", "form_state.js"):
+    for filename in ("app.js", "ui.js", "form_state.js", "reward_controls.js"):
         subprocess.run(["node", "--check", str(ROOT / "web/generator" / filename)], check=True)
     subprocess.run(["node", "--test", str(ROOT / "tests/web/test_form_state.mjs")], check=True)
     run("tools/build.py")

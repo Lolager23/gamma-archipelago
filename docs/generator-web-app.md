@@ -52,6 +52,23 @@ required progression quantities. Random supply types can repeat or be absent
 from a particular seed. Local progression events are excluded from check counts.
 Searching filters enabled checks or eligible rewards by name, category or region.
 
+## Reward controls
+
+The Rewards tab groups supplies, stashes/artefacts, access permissions and
+faction/skill/carry rewards. Repeatable rewards have a slider plus an exact count
+field. Suggested ranges are 0-50, or 0-30 for skill levels. Manual input may go
+above that range, subject to the existing 4,000 count limit and available checks.
+Turning a category off retains its draft quantity for later re-enabling.
+
+The budget displays required progression, requested/convenience copies and spare
+slots. Permissions and progressive tiers are calculated from checks and starting
+settings, so their automatic minima cannot be removed with a slider. Separate
+switches control exact quantities, varied spare-slot rewards and varied stash
+contents. In weighted optional mode exact count controls are inactive. Invalid
+counts or insufficient check capacity block YAML/seed export and clear stale
+budget figures. See [reward variety](reward-variety-and-controls.md) for content,
+legacy compatibility and delivery limits.
+
 ## Generate and use
 
 Enter a 1–16 character player name and an unsigned 64-bit decimal seed number.
@@ -94,7 +111,7 @@ headers, requires bounded JSON requests and never accepts filesystem paths or
 shell commands from the browser. It deliberately exposes no LAN listener, CORS
 access, game controls or arbitrary file downloads. A local user owns the process;
 it is not an Internet-facing server. Source is split into catalogue projection,
-playtime estimates, generation execution, HTTP transport and three browser modules.
+playtime estimates, generation execution, HTTP transport and focused browser modules.
 Incomplete request bodies are rejected, stalled bodies time out after five
 seconds, and JSON nesting is capped at 16 levels before decoding. Quoted brackets
 and escaped quotes do not count as nesting.
@@ -108,7 +125,7 @@ tests and from GAMMA acceptance.
 
 The expanded web matrix checks all six presets at seed 0 and the maximum 64-bit
 seed against exact generated IDs/settings, repeated-seed placements, concurrent
-HTTP generation refusal and subsequent recovery. Five Node built-in regression
+HTTP generation refusal and subsequent recovery. Node built-in regression
 tests exercise draft/preview isolation, stale responses, preset copies, names and
 seed bounds. They run with the complete verifier; no frontend test dependencies
 or numeric JavaScript coverage claim are introduced.

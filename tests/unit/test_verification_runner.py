@@ -126,7 +126,7 @@ def test_affected_runner_separates_covered_regressions_and_real_server(harness, 
     assert any("server and not generation" in call for call in calls)
     assert any(call[0] == "coverage-gate" and call[-1] == chosen.coverage for call in calls)
     assert any("mypy" in call for call in calls)
-    assert sum(call[0] == "node" for call in calls) == 4
+    assert sum(call[0] == "node" for call in calls) == 5
 
 
 def test_test_only_runner_has_no_coverage_or_server_sweep(harness, monkeypatch):

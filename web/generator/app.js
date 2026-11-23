@@ -7,9 +7,9 @@ import {
   showSummary,
   advancedOptions,
   syncAdvanced,
-  rewardQuantityOptions,
   showStepReport,
 } from "./ui.js";
+import { rewardControls, syncRewardControls } from "./reward_controls.js";
 import {
   DraftConfiguration,
   playerNameError,
@@ -78,6 +78,7 @@ async function refresh(expected) {
     }
     $("validation").className = "validation error";
     $("validation").textContent = error.message;
+    syncRewardControls(metadata, form.options, null, error.message);
     enableActions();
   }
   showSummary(form.result, metadata, form.options);
@@ -107,6 +108,7 @@ function changeOption(key, value) {
 
 function renderGear() {
   syncAdvanced(form.options);
+  syncRewardControls(metadata, form.options, form.result);
   document.querySelectorAll("#gear-options select").forEach((node) => {
     const key = node.dataset.option;
     const overridden =
@@ -123,9 +125,8 @@ function loadPreset() {
   form.selectPreset(metadata.presets[$("preset").value]);
   const options = form.options;
   categoryOptions("check-options", metadata.checks, options, changeOption);
-  categoryOptions("reward-options", metadata.rewards, options, changeOption);
+  rewardControls(metadata, options, changeOption);
   loadoutOptions(metadata, options, changeOption);
-  rewardQuantityOptions(metadata, options, changeOption);
   advancedOptions(metadata, options, changeOption);
   renderGear();
   $("goal").value = options.goal;

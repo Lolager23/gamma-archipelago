@@ -18,9 +18,11 @@ from .configuration import (
 )
 from .content_progression import configured_item_ids
 from .discovery import SOURCES, configured_location_ids
+from .filler_rewards import candidates as filler_candidates
 from .opening import opening_permissions
 from .presets import presets
 from .reward_quantities import DEFAULT_COUNTS
+from .reward_quantities import GROUPS as REWARD_GROUPS
 from .settings_ui import advanced_options
 from .settlement_access import NEUTRALITY_ITEMS
 from .starting import STARTS
@@ -36,11 +38,11 @@ LABELS = {
     "checks_mortal_sin": "Mortal Sin story checks",
     "checks_operation_afterglow": "Operation Afterglow story checks",
     "rewards_artefact_melter": "Artefact Melter",
-    "rewards_convenience": "Bounded carry capacity",
-    "rewards_supply_medical": "Medical Supply Package",
-    "rewards_supply_maintenance": "Maintenance Supply Package",
-    "rewards_supply_ammunition": "Ammunition Supply Package",
-    "rewards_supply_expedition": "Expedition Supply Package",
+    "rewards_convenience": "Carry capacity increases",
+    "rewards_supply_medical": "Medical supplies",
+    "rewards_supply_maintenance": "Maintenance supplies",
+    "rewards_supply_ammunition": "Ammunition",
+    "rewards_supply_expedition": "Expedition supplies",
     "rewards_workshop_access": "Workshop action permissions",
     "rewards_recipe_access": "Recipe group permissions",
     "rewards_progressive_tools": "Progressive workshop tools",
@@ -61,11 +63,11 @@ LABELS = {
     "checks_side_task_milestones": "Side-task totals",
     "checks_story_milestones": "Story milestones",
     "checks_rank_milestones": "Stalker rank",
-    "rewards_loot_stashes": "White loot stashes",
-    "rewards_progression_stashes": "Orange progression stash",
+    "rewards_loot_stashes": "Loot stashes",
+    "rewards_progression_stashes": "Orange progression stashes",
     "rewards_quest_keys": "Quest progression keys",
     "rewards_faction_reputation": "Faction goodwill",
-    "rewards_stat_levels": "Haruka skill levels",
+    "rewards_stat_levels": "Character skill levels",
     "rewards_zone_keys": "Zone access keys",
     "rewards_starting_gear_unlocks": "Equipment permissions",
 }
@@ -115,7 +117,14 @@ def metadata() -> dict[str, object]:
         "gear": list(GEAR_OPTIONS),
         "quantities": list(QUANTITY_OPTIONS),
         "reward_quantities": [
-            dict(key=key, label=key.replace("_", " ").capitalize(), suggested_max=50, default=count)
+            dict(
+                key=key,
+                label=key.replace("_", " ").capitalize(),
+                suggested_max=30 if key == "stat_level_rewards" else 50,
+                maximum=4000,
+                default=count,
+                category=None if REWARD_GROUPS[key][0] == "base" else REWARD_GROUPS[key][0],
+            )
             for key, count in DEFAULT_COUNTS.items()
         ],
         "goals": [dict(value=i, key=key, label=GOAL_LABELS[i]) for i, key in enumerate(GOALS)],
@@ -195,6 +204,9 @@ def preview(values: Mapping[str, object], assumptions: Mapping[str, object]) -> 
         "configuration": configuration.to_values(),
         "preview_kind": "settings_only",
         "pool_budget": budget_report,
+        "filler_choices": [
+            dict(name=name, weight=weight) for name, weight in filler_candidates(configuration)
+        ],
         "opening_permissions": list(opening_permissions(configuration, dict(budget.starting))),
         "resolved_thresholds": {
             "kills": list(configuration.kill_milestones),
