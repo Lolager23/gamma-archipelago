@@ -69,6 +69,7 @@ S.T.A.L.K.E.R. GAMMA:
   quest_zone_logic: 1
   tool_use_permissions: 1
   reward_quantities: 1
+  randomized_stash_loot: 1
   basic_toolkits: 0
   artefact_extra_ceiling: 60
   artefact_overflow_count: 0

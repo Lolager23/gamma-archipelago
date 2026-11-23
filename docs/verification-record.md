@@ -1,5 +1,23 @@
 # Verification record
 
+## 23 November 2026 — varied white stash contents
+
+Versioned catalogue profiles now vary supply/ammunition mixes and quantities for
+all 27 white stash types while retaining the named tier/calibre. New generations
+default `randomized_stash_loot` on; omitted legacy fields remain zero without a
+digest/wire change. Orange progression supplies and existing fixed stash plans
+remain unchanged. Plans use local deterministic randomness and save their complete
+action order, version and existing creation markers before acknowledgement.
+
+Tests cover tier/calibre bounds and quality guarantees across all white types,
+repeatability, full session identity, no global RNG use, missing sections,
+save/load/retry/reopen, invalid edited plans and legacy assignments. The bounded
+plan format and downgrade requirement are documented in the reward-variety plan.
+Affected verification and current-head CI evidence are retained with the PR when
+available. Native acceptance is **not run**, reserved for
+Owen. No deployment, current-session change, developer-panel modification or
+normal-game write is included; IDs and the top-level save schema are unchanged.
+
 ## 23 November 2026 — GAMMA skill cap blocked reward announcements
 
 Read-only live bridge/log and saved-data inspection confirmed receipt 21 (Survival)

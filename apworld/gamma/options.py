@@ -106,6 +106,16 @@ class RewardQuantities(DefaultOnToggle):
     display_name = "Explicit reward quantities"
 
 
+class RandomizedStashLoot(DefaultOnToggle):
+    """Vary white stash supplies and ammo counts within their named tier/calibre.
+
+    Contents are fixed on receipt and do not reroll on opening or save/load.
+    Orange progression supplies remain guaranteed.
+    """
+
+    display_name = "Randomized loot stash contents"
+
+
 class ArtefactExtraCeiling(Range):
     """Maximum distinct artefact check number; 41–60 appear only for non-filler demand."""
 
@@ -708,6 +718,7 @@ class GammaOptions(PerGameCommonOptions):
     quest_zone_logic: QuestZoneLogic
     basic_toolkits: BasicToolkits
     reward_quantities: RewardQuantities
+    randomized_stash_loot: RandomizedStashLoot
     artefact_extra_ceiling: ArtefactExtraCeiling
     artefact_overflow_count: ArtefactOverflowCount
     medical_packages: MedicalPackages

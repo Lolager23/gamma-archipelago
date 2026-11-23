@@ -4,6 +4,7 @@ from .expansion_settings import EXPANSION_LIMITS
 from .reward_quantities import DEFAULT_COUNTS
 
 CHOICES = {
+    "randomized_stash_loot": ["Fixed legacy stash contents", "Varied tier/calibre stash contents"],
     "progressive_sphere_pacing": [
         "Unrestricted progressive placement",
         "One tier per raw AP sphere",

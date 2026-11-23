@@ -89,6 +89,7 @@ def test_packages_are_reproducible_and_load_from_apworld(tmp_path):
                 "goals",
                 "save_validation",
                 "stashes",
+                "stash_loot",
                 "shop",
                 "shop_ui",
             )

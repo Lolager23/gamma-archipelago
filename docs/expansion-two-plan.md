@@ -116,6 +116,10 @@ Anomaly API evidence:
 
 ## Natural progression correction and remaining modelling
 
+The 23 November [reward variety and generator controls](reward-variety-and-controls.md)
+increment plan tracks randomized stash contents, two dependable opening faction
+opportunities, useful reward variety and the generator control overhaul.
+
 - Implemented in source: remove unconditional map-only/local zone-key placement
   for expanded regional pools, including multiworlds. Use ordinary AP fill and
   common locality/exclusions. Hub preference requests one upstream early item.

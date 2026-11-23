@@ -14,7 +14,7 @@ function copy(progress)
         local record = progress.records[index]
         local cloned = {item_id=record.item_id, cache_id=record.cache_id, cache_name=record.cache_name,
             level=record.level, opened=record.opened, claimed=record.claimed,
-            next_action=record.next_action, actions={}}
+            next_action=record.next_action, loot_version=record.loot_version, actions={}}
         for _,action in ipairs(record.actions) do
             cloned.actions[#cloned.actions+1] = {section=action.section,
                 created_id=action.created_id, created_name=action.created_name, uncertain=action.uncertain}
@@ -96,14 +96,17 @@ function receive(state, item_id)
     if record and record.item_id ~= item_id then return false, "Conflicting pending stash receipt" end
     if not record then
         if #state.stashes.order >= 4000 then return false, "AP stash history exceeds the supported bound" end
-        for _,section in ipairs(gamma_ap_catalog.stash_contents[item_id]) do
+        local version=state.configuration and state.configuration.options.randomized_stash_loot == 1
+            and gamma_ap_catalog.stash_loot_rolls_v1[item_id] and 1 or nil
+        local sections=gamma_ap_stash_loot.sections(state.session_key,item_id,receipt,version)
+        for _,section in ipairs(sections) do
             if not ini_sys:section_exist(section) then return false, "An approved AP stash loot section is unavailable" end
         end
         local candidate = choose_cache(state, item_id, receipt)
         if not candidate then return false, "Waiting for the native Cordon stash roster to initialize" end
         record = {item_id=item_id, cache_id=candidate.id, cache_name=candidate.name,
-            level=candidate.level, opened=false, claimed=false, next_action=1, actions={}}
-        for _,section in ipairs(gamma_ap_catalog.stash_contents[item_id]) do
+            level=candidate.level, opened=false, claimed=false, next_action=1, loot_version=version, actions={}}
+        for _,section in ipairs(sections) do
             record.actions[#record.actions+1] = {section=section}
         end
         state.stashes.records[receipt] = record

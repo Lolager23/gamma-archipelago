@@ -30,7 +30,11 @@
         "bandage",
         "bandage",
         "medkit"
-      ]
+      ],
+      "loot_roll_v1": {
+        "profile": "basic",
+        "ammunition": []
+      }
     },
     {
       "id": 28051102,
@@ -43,7 +47,13 @@
         "bandage",
         "medkit",
         "ammo_9x18_fmj"
-      ]
+      ],
+      "loot_roll_v1": {
+        "profile": "basic",
+        "ammunition": [
+          "ammo_9x18_fmj"
+        ]
+      }
     },
     {
       "id": 28051103,
@@ -56,7 +66,13 @@
         "bandage",
         "medkit",
         "ammo_9x19_fmj"
-      ]
+      ],
+      "loot_roll_v1": {
+        "profile": "basic",
+        "ammunition": [
+          "ammo_9x19_fmj"
+        ]
+      }
     },
     {
       "id": 28051104,
@@ -69,7 +85,13 @@
         "bandage",
         "medkit",
         "ammo_5.45x39_fmj"
-      ]
+      ],
+      "loot_roll_v1": {
+        "profile": "basic",
+        "ammunition": [
+          "ammo_5.45x39_fmj"
+        ]
+      }
     },
     {
       "id": 28051105,
@@ -82,7 +104,13 @@
         "bandage",
         "medkit",
         "ammo_5.56x45_ss190"
-      ]
+      ],
+      "loot_roll_v1": {
+        "profile": "basic",
+        "ammunition": [
+          "ammo_5.56x45_ss190"
+        ]
+      }
     },
     {
       "id": 28051106,
@@ -95,7 +123,13 @@
         "bandage",
         "medkit",
         "ammo_7.62x39_fmj"
-      ]
+      ],
+      "loot_roll_v1": {
+        "profile": "basic",
+        "ammunition": [
+          "ammo_7.62x39_fmj"
+        ]
+      }
     },
     {
       "id": 28051107,
@@ -108,7 +142,13 @@
         "bandage",
         "medkit",
         "ammo_7.62x51_fmj"
-      ]
+      ],
+      "loot_roll_v1": {
+        "profile": "basic",
+        "ammunition": [
+          "ammo_7.62x51_fmj"
+        ]
+      }
     },
     {
       "id": 28051108,
@@ -121,7 +161,13 @@
         "bandage",
         "medkit",
         "ammo_7.62x54_7h1"
-      ]
+      ],
+      "loot_roll_v1": {
+        "profile": "basic",
+        "ammunition": [
+          "ammo_7.62x54_7h1"
+        ]
+      }
     },
     {
       "id": 28051109,
@@ -134,7 +180,13 @@
         "bandage",
         "medkit",
         "ammo_12x70_buck"
-      ]
+      ],
+      "loot_roll_v1": {
+        "profile": "basic",
+        "ammunition": [
+          "ammo_12x70_buck"
+        ]
+      }
     },
     {
       "id": 28051110,
@@ -148,7 +200,11 @@
         "bandage",
         "medkit_army",
         "antirad"
-      ]
+      ],
+      "loot_roll_v1": {
+        "profile": "field",
+        "ammunition": []
+      }
     },
     {
       "id": 28051111,
@@ -164,7 +220,14 @@
         "antirad",
         "ammo_9x18_fmj",
         "ammo_9x18_fmj"
-      ]
+      ],
+      "loot_roll_v1": {
+        "profile": "field",
+        "ammunition": [
+          "ammo_9x18_fmj",
+          "ammo_9x18_pmm"
+        ]
+      }
     },
     {
       "id": 28051112,
@@ -180,7 +243,14 @@
         "antirad",
         "ammo_9x19_fmj",
         "ammo_9x19_fmj"
-      ]
+      ],
+      "loot_roll_v1": {
+        "profile": "field",
+        "ammunition": [
+          "ammo_9x19_fmj",
+          "ammo_9x19_pbp"
+        ]
+      }
     },
     {
       "id": 28051113,
@@ -196,7 +266,14 @@
         "antirad",
         "ammo_5.45x39_fmj",
         "ammo_5.45x39_fmj"
-      ]
+      ],
+      "loot_roll_v1": {
+        "profile": "field",
+        "ammunition": [
+          "ammo_5.45x39_fmj",
+          "ammo_5.45x39_ap"
+        ]
+      }
     },
     {
       "id": 28051114,
@@ -212,7 +289,14 @@
         "antirad",
         "ammo_5.56x45_ss190",
         "ammo_5.56x45_ss190"
-      ]
+      ],
+      "loot_roll_v1": {
+        "profile": "field",
+        "ammunition": [
+          "ammo_5.56x45_ss190",
+          "ammo_5.56x45_ap"
+        ]
+      }
     },
     {
       "id": 28051115,
@@ -228,7 +312,14 @@
         "antirad",
         "ammo_7.62x39_fmj",
         "ammo_7.62x39_fmj"
-      ]
+      ],
+      "loot_roll_v1": {
+        "profile": "field",
+        "ammunition": [
+          "ammo_7.62x39_fmj",
+          "ammo_7.62x39_ap"
+        ]
+      }
     },
     {
       "id": 28051116,
@@ -244,7 +335,14 @@
         "antirad",
         "ammo_7.62x51_fmj",
         "ammo_7.62x51_fmj"
-      ]
+      ],
+      "loot_roll_v1": {
+        "profile": "field",
+        "ammunition": [
+          "ammo_7.62x51_fmj",
+          "ammo_7.62x51_ap"
+        ]
+      }
     },
     {
       "id": 28051117,
@@ -260,7 +358,14 @@
         "antirad",
         "ammo_7.62x54_7h1",
         "ammo_7.62x54_7h1"
-      ]
+      ],
+      "loot_roll_v1": {
+        "profile": "field",
+        "ammunition": [
+          "ammo_7.62x54_7h1",
+          "ammo_7.62x54_7h14"
+        ]
+      }
     },
     {
       "id": 28051118,
@@ -276,7 +381,14 @@
         "antirad",
         "ammo_12x70_buck",
         "ammo_12x70_buck"
-      ]
+      ],
+      "loot_roll_v1": {
+        "profile": "field",
+        "ammunition": [
+          "ammo_12x70_buck",
+          "ammo_12x76_zhekan"
+        ]
+      }
     },
     {
       "id": 28051119,
@@ -291,7 +403,11 @@
         "medkit_scientic",
         "stimpack",
         "drug_psy_blockade"
-      ]
+      ],
+      "loot_roll_v1": {
+        "profile": "advanced",
+        "ammunition": []
+      }
     },
     {
       "id": 28051120,
@@ -309,7 +425,14 @@
         "ammo_9x18_fmj",
         "ammo_9x18_fmj",
         "ammo_9x18_fmj"
-      ]
+      ],
+      "loot_roll_v1": {
+        "profile": "advanced",
+        "ammunition": [
+          "ammo_9x18_fmj",
+          "ammo_9x18_pmm"
+        ]
+      }
     },
     {
       "id": 28051121,
@@ -327,7 +450,14 @@
         "ammo_9x19_fmj",
         "ammo_9x19_fmj",
         "ammo_9x19_fmj"
-      ]
+      ],
+      "loot_roll_v1": {
+        "profile": "advanced",
+        "ammunition": [
+          "ammo_9x19_fmj",
+          "ammo_9x19_pbp"
+        ]
+      }
     },
     {
       "id": 28051122,
@@ -345,7 +475,14 @@
         "ammo_5.45x39_fmj",
         "ammo_5.45x39_fmj",
         "ammo_5.45x39_fmj"
-      ]
+      ],
+      "loot_roll_v1": {
+        "profile": "advanced",
+        "ammunition": [
+          "ammo_5.45x39_fmj",
+          "ammo_5.45x39_ap"
+        ]
+      }
     },
     {
       "id": 28051123,
@@ -363,7 +500,14 @@
         "ammo_5.56x45_ss190",
         "ammo_5.56x45_ss190",
         "ammo_5.56x45_ss190"
-      ]
+      ],
+      "loot_roll_v1": {
+        "profile": "advanced",
+        "ammunition": [
+          "ammo_5.56x45_ss190",
+          "ammo_5.56x45_ap"
+        ]
+      }
     },
     {
       "id": 28051124,
@@ -381,7 +525,14 @@
         "ammo_7.62x39_fmj",
         "ammo_7.62x39_fmj",
         "ammo_7.62x39_fmj"
-      ]
+      ],
+      "loot_roll_v1": {
+        "profile": "advanced",
+        "ammunition": [
+          "ammo_7.62x39_fmj",
+          "ammo_7.62x39_ap"
+        ]
+      }
     },
     {
       "id": 28051125,
@@ -399,7 +550,14 @@
         "ammo_7.62x51_fmj",
         "ammo_7.62x51_fmj",
         "ammo_7.62x51_fmj"
-      ]
+      ],
+      "loot_roll_v1": {
+        "profile": "advanced",
+        "ammunition": [
+          "ammo_7.62x51_fmj",
+          "ammo_7.62x51_ap"
+        ]
+      }
     },
     {
       "id": 28051126,
@@ -417,7 +575,14 @@
         "ammo_7.62x54_7h1",
         "ammo_7.62x54_7h1",
         "ammo_7.62x54_7h1"
-      ]
+      ],
+      "loot_roll_v1": {
+        "profile": "advanced",
+        "ammunition": [
+          "ammo_7.62x54_7h1",
+          "ammo_7.62x54_7h14"
+        ]
+      }
     },
     {
       "id": 28051127,
@@ -435,7 +600,14 @@
         "ammo_12x70_buck",
         "ammo_12x70_buck",
         "ammo_12x70_buck"
-      ]
+      ],
+      "loot_roll_v1": {
+        "profile": "advanced",
+        "ammunition": [
+          "ammo_12x70_buck",
+          "ammo_12x76_zhekan"
+        ]
+      }
     },
     {
       "id": 28051201,
@@ -9785,5 +9957,78 @@
     "l13u_warlab",
     "pripyat",
     "zaton"
-  ]
+  ],
+  "stash_loot_profiles_v1": {
+    "basic": {
+      "minimum": 3,
+      "maximum": 6,
+      "ammo_minimum": 1,
+      "ammo_maximum": 3,
+      "quality": [
+        "medkit",
+        "antirad",
+        "gun_oil",
+        "glue_b"
+      ],
+      "supplies": [
+        "bandage",
+        "medkit",
+        "antirad",
+        "gun_oil",
+        "glue_b",
+        "duct_tape",
+        "bread",
+        "water_drink"
+      ]
+    },
+    "field": {
+      "minimum": 5,
+      "maximum": 8,
+      "ammo_minimum": 2,
+      "ammo_maximum": 5,
+      "quality": [
+        "medkit_army",
+        "stimpack",
+        "drug_antidot",
+        "sewing_kit_a"
+      ],
+      "supplies": [
+        "medkit_army",
+        "stimpack",
+        "antirad",
+        "drug_coagulant",
+        "drug_antidot",
+        "gun_oil_ru",
+        "glue_a",
+        "duct_tape",
+        "morphine",
+        "adrenalin"
+      ]
+    },
+    "advanced": {
+      "minimum": 7,
+      "maximum": 11,
+      "ammo_minimum": 3,
+      "ammo_maximum": 7,
+      "quality": [
+        "medkit_scientic",
+        "stimpack_army",
+        "stimpack_scientic",
+        "drug_psy_blockade",
+        "glue_e",
+        "sewing_kit_h"
+      ],
+      "supplies": [
+        "medkit_scientic",
+        "stimpack_army",
+        "drug_psy_blockade",
+        "drug_antidot",
+        "drug_radioprotector",
+        "morphine",
+        "adrenalin",
+        "glue_e",
+        "sewing_kit_h"
+      ]
+    }
+  }
 }

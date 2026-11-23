@@ -1,0 +1,34 @@
+-- Versioned, local deterministic rolls; never consume the game's global RNG.
+local function generator(key,item,receipt)
+    local seed=(item+receipt*31)%2147483647
+    for offset=1,64,8 do
+        seed=(seed*16807+tonumber(key:sub(offset,offset+7),16))%2147483647
+    end
+    if seed == 0 then seed=1 end
+    return function(maximum)
+        seed=(seed*48271)%2147483647
+        return seed%maximum+1
+    end
+end
+
+function sections(key,item,receipt,version)
+    if version == nil then return gamma_ap_catalog.stash_contents[item] end
+    local roll=gamma_ap_catalog.stash_loot_rolls_v1[item]
+    if version ~= 1 or not roll or type(key) ~= "string" or #key ~= 64
+        or key:find("[^0-9a-f]") then return nil end
+    local profile=gamma_ap_catalog.stash_loot_profiles_v1[roll.profile]
+    local random=generator(key,item,receipt)
+    local result={profile.quality[random(#profile.quality)]}
+    local count=profile.minimum+random(profile.maximum-profile.minimum+1)-1
+    for _=2,count do result[#result+1]=profile.supplies[random(#profile.supplies)] end
+    if #roll.ammunition > 0 then
+        count=profile.ammo_minimum+random(profile.ammo_maximum-profile.ammo_minimum+1)-1
+        for _=1,count do result[#result+1]=roll.ammunition[random(#roll.ammunition)] end
+    end
+    -- Ordering is frozen with quantities; the engine still controls inventory layout.
+    for index=#result,2,-1 do
+        local other=random(index)
+        result[index],result[other]=result[other],result[index]
+    end
+    return result
+end

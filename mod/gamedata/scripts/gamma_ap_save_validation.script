@@ -30,7 +30,7 @@ local function valid_check(id)
             gamma_ap_catalog.side_task_milestone_base+gamma_ap_catalog.side_task_milestone_maximum)
 end
 
-local function valid_stashes(stashes, received)
+local function valid_stashes(stashes, received, key)
     if stashes == nil then return true end
     if type(stashes) ~= "table" then return false end
     if type(stashes.order) ~= "table" or type(stashes.records) ~= "table" then return false end
@@ -39,7 +39,7 @@ local function valid_stashes(stashes, received)
         local record = stashes.records[receipt]
         if not integer(receipt, 1, math.min(4000, received+1)) or seen[receipt] or type(record) ~= "table" then return false end
         seen[receipt] = true
-        local sections = gamma_ap_catalog.stash_contents[record.item_id]
+        local sections = gamma_ap_stash_loot.sections(key,record.item_id,receipt,record.loot_version)
         local expected_level = gamma_ap_catalog.stash_containers[record.cache_name]
         if not sections or not integer(record.cache_id, 1, 65534)
             or not expected_level or expected_level ~= record.level
@@ -106,6 +106,6 @@ function validate(state)
         end
         if key == nil and next(state.unlocks) then return false, "AP save permissions are missing their session identity" end
     end
-    if not valid_stashes(state.stashes, state.received_count) then return false, "AP save stash plans are invalid" end
+    if not valid_stashes(state.stashes, state.received_count, key) then return false, "AP save stash plans are invalid" end
     return true
 end
