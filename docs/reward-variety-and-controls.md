@@ -8,8 +8,8 @@ normal installation remain untouched unless deployment is separately authorized.
 |---|---|---|
 | Varied stash contents | Tier/calibre-aware supplies, ammo variants and quantities; saved once | [PR #89](https://github.com/Lolager23/gamma-archipelago/pull/89); local and Windows/Linux checks passed; native acceptance not run |
 | Practical Cordon faction budget | Two dependable faction opportunities; no opening Military assumption | [PR #90](https://github.com/Lolager23/gamma-archipelago/pull/90); local and Windows/Linux checks passed; native acceptance not run |
-| Useful randomized rewards | Varied supplies/ammo rather than alternating Bandage/Medkit filler | Implemented; verification and native acceptance tracked in the stacked PR |
-| Generator controls | Clear reward controls with sliders and exact manual counts, enabled-state and pool feedback | Implemented; verification and native acceptance tracked in the stacked PR |
+| Useful randomized rewards | Varied supplies/ammo rather than alternating Bandage/Medkit filler | [PR #91](https://github.com/Lolager23/gamma-archipelago/pull/91); local checks passed; CI/native status in PR |
+| Generator controls | Clear reward controls with sliders and exact manual counts, enabled-state and pool feedback | Implemented; local checks passed; CI/visual status in PR |
 
 ## White stash rolls
 
