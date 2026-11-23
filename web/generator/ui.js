@@ -91,7 +91,9 @@ export function loadoutOptions(metadata, options, change) {
 
 export function advancedOptions(metadata, options, change) {
   $("advanced-options").replaceChildren(
-    ...metadata.advanced.filter(({key}) => !options.equipment_class_progression || !/^initial_.*_class$/.test(key)).map(({ key, label, maximum, choices }) => {
+    ...metadata.advanced.filter(({key}) =>
+      !["reward_quantities", "varied_filler", "randomized_stash_loot"].includes(key) &&
+      (!options.equipment_class_progression || !/^initial_.*_class$/.test(key))).map(({ key, label, maximum, choices }) => {
       const row = element("label", label);
       const input = document.createElement(choices ? "select" : "input");
       input.setAttribute("aria-label", label);
@@ -269,40 +271,12 @@ export function showSummary(result, metadata, options) {
     const definition = [...metadata.checks, ...metadata.rewards].find(
       (row) => row.key === key,
     );
-    node.textContent =
-      result?.check_counts[key] ??
-      result?.reward_counts[key] ??
-      definition.count;
+    node.textContent = result
+      ? (result.check_counts[key] ?? result.reward_counts[key] ?? 0)
+      : options[key] === 1 ? definition.count : 0;
   });
 }
 
-
-export function rewardQuantityOptions(metadata, options, change) {
-  $("reward-quantities").replaceChildren(...metadata.reward_quantities.map(
-    ({key, label, suggested_max}) => {
-      const row = element("label", "", "assumption-field");
-      row.append(element("span", `${label} - suggested 0-${suggested_max}`));
-      const slider = document.createElement("input");
-      const number = document.createElement("input");
-      slider.type = "range"; number.type = "number";
-      slider.min = number.min = 0;
-      slider.step = number.step = 1;
-      slider.max = Math.max(suggested_max, options[key]);
-      slider.value = number.value = options[key];
-      slider.setAttribute("aria-label", label + " slider");
-      number.setAttribute("aria-label", label + " exact count");
-      const update = (value) => {
-        slider.max = Math.max(suggested_max, value ?? 0);
-        if (value !== null && Number.isFinite(value)) slider.value = value;
-        number.value = value ?? "";
-        change(key, value);
-      };
-      slider.addEventListener("input", () => update(Number(slider.value)));
-      number.addEventListener("input", () => update(number.value === "" ? null : Number(number.value)));
-      row.append(slider, number);
-      return row;
-    }));
-}
 
 export function showStepReport(report) {
   if (report?.kind !== "actual_generated_seed" || !report.paced_steps || !report.logical_spheres)

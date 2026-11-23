@@ -31,6 +31,30 @@ def test_quick_pilot_estimates_goal_separately_from_optional_map_completion():
     assert result["estimates"]["completion_hours"][0] > 1
 
 
+def test_reward_controls_publish_categories_real_limits_and_actual_spare_slot_choices():
+    from gamma_archipelago.expansion_settings import EXPANSION_LIMITS
+    from gamma_archipelago.filler_rewards import candidates
+
+    data = metadata()
+    categories = {row["key"] for row in data["rewards"]}
+    for row in data["reward_quantities"]:
+        assert row["category"] is None or row["category"] in categories
+        assert (
+            row["default"] <= row["suggested_max"] < row["maximum"] == EXPANSION_LIMITS[row["key"]]
+        )
+    values = presets()["living_legend"]
+    result = preview(values, {})
+    assert [(row["name"], row["weight"]) for row in result["filler_choices"]] == list(
+        candidates(build_configuration(values))
+    )
+    assert not {"Bandage", "Medkit"} & {row["name"] for row in result["filler_choices"]}
+    plan = result["pool_budget"]
+    assert (
+        plan["required_copies"] + sum(plan["guaranteed_useful"].values()) + plan["filler_slots"]
+        == plan["network_checks"]
+    )
+
+
 def test_new_seed_exports_require_ap_start_and_random_preview_does_not_roll():
     values = {**defaults(), "starting_location": 3}
     result = preview(values, {})
