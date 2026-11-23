@@ -1,5 +1,28 @@
 # Verification record
 
+## 23 November 2026 — two dependable Cordon faction opportunities
+
+The catalogue no longer counts Cordon's Military checkpoint as a dependable
+opening source. The named Military check uses the inspected Agroprom army spawn
+source, so generic quotas project two types in Cordon: Free Stalkers and Bandits.
+AP rules and the PDA derive this from the same catalogue; actual bonus kills
+still record normally. Other sources and configured exclusions remain effective.
+
+The corrected opening also exposed a slow two-slot Brain Scorcher pacing repair.
+Equal collision totals could hide a useful move of the earliest clash to a later
+sphere. Repair now compares collision count, then the ordered collision waves,
+allowing that strictly improving intermediate move. Access, recipe deadlines and
+final sphere constraints remain unchanged. A deterministic 200-trace regression
+reproduces the previous plateau and guards the corrected real generator/server case.
+
+Regressions reproduce the old three-type assumption in Python and Lua, exercise
+real AP reachability before/after the Great Swamps key, and confirm an actual
+mocked Cordon Military kill still credits its generic discovery. Affected
+verification and current-head CI evidence are retained with the PR when available.
+Native acceptance is **not run**, reserved for Owen. This increment stacks on
+varied stashes; no IDs/settings/save formats change. Existing seed placements,
+the running session, developer panel and normal installation are unchanged.
+
 ## 23 November 2026 — varied white stash contents
 
 Versioned catalogue profiles now vary supply/ammunition mixes and quantities for

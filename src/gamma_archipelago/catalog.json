@@ -3246,7 +3246,7 @@
       "key": "army",
       "logic": {
         "any_regions": [
-          "l01_escape"
+          "l03_agroprom"
         ],
         "all_regions": [],
         "reliable": true

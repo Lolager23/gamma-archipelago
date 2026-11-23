@@ -53,8 +53,20 @@ def write_snapshot(client, *, received=0):
     ],
 )
 def test_two_gamma_slots_and_foreign_game_transfer_restart_and_each_goal(
-    tmp_path, preset, goal, seed
+    tmp_path, monkeypatch, preset, goal, seed
 ):
+    if (preset, goal, seed) == ("full_story", 2, 20261202):
+        from worlds.gamma import sphere_pacing
+
+        trace = sphere_pacing._trace
+        attempts = []
+
+        def bounded_trace(*arguments):
+            attempts.append(1)
+            assert len(attempts) <= 200, "Pacing repair is repeatedly retracing a collision plateau"
+            return trace(*arguments)
+
+        monkeypatch.setattr(sphere_pacing, "_trace", bounded_trace)
     players, output = tmp_path / "players", tmp_path / "output"
     players.mkdir()
     values = {**presets()[preset], "goal": goal}

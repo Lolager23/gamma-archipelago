@@ -7,7 +7,7 @@ normal installation remain untouched unless deployment is separately authorized.
 | Increment | Intended behaviour | Status |
 |---|---|---|
 | Varied stash contents | Tier/calibre-aware supplies, ammo variants and quantities; saved once | Implemented; affected verification pending |
-| Practical Cordon faction budget | Two dependable faction opportunities; no opening Military assumption | Planned |
+| Practical Cordon faction budget | Two dependable faction opportunities; no opening Military assumption | Implemented; affected verification pending |
 | Useful randomized rewards | Varied supplies/ammo rather than alternating Bandage/Medkit filler | Planned |
 | Generator controls | Clear reward controls with sliders and exact manual counts, enabled-state and pool feedback | Planned |
 
@@ -38,6 +38,28 @@ including already opened or partially created packages. New records include
 `loot_version = 1`; older adapters reject those unsupported plans. Keep the
 pre-upgrade backup for downgrading. Spawning and saving are not atomic: uncertain
 creation still blocks automatic replay, rather than promising crash-proof delivery.
+
+## Dependable faction opportunities
+
+Cordon contributes two supported faction types, Free Stalkers and Bandits, to
+generation and the PDA regional projection. Military's curated source is now
+Agroprom, supported by the enabled NPC Spawns configuration's
+`agr_smart_terrain_1_6` / `agr_smart_terrain_1_6_near_1` novice/advanced army squads
+before Brain Scorcher shutdown. Cordon's checkpoint is not treated as a practical
+opening requirement. Opening Great Swamps adds Clear Sky and Renegade opportunities.
+Configured source exclusions continue to reduce quota capacity.
+
+This is a solver assumption, not an engine kill restriction. An actual qualifying
+Military kill in Cordon still records its discovery and can complete the next
+generic quota. Named Military checks also use the Agroprom source requirement.
+Fresh worlds fill with the corrected requirements; existing archived placements
+and completed observations are never rewritten. Native spawn/pacing acceptance
+remains Owen's. The five-type starting mutant budget is unchanged by this increment.
+
+Pacing repair also accepts equal-count swaps that move the earliest collision
+later, before attempting another separation. It still requires every check and
+goal reachable, early recipes preserved and zero final tier collisions. This
+avoids the slow repair plateau exposed by the two-faction opening; it adds no gates.
 
 ## Follow-up boundaries
 
