@@ -1319,7 +1319,7 @@ Windows/Linux CI are recorded in PR #85 before merge. No installed files or
 active sessions are changed by this correction.
 
 
-### Useful-reward final-sphere regression — 23 November 2026
+### Useful-reward final-sphere regression - 23 November 2026
 
 The actual two-GAMMA/APQuest Full Story seed 20261302 (Great Swamps start)
 reproduced a final-sphere Progressive Backpack collision. Later-only repair had
