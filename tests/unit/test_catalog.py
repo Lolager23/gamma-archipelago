@@ -12,7 +12,7 @@ from gamma_archipelago.catalog import (
 
 def test_pilot_catalogue_has_unique_stable_ids_and_explicit_item_sections():
     catalogue = json.loads(files("gamma_archipelago").joinpath("catalog.json").read_text())
-    assert len(ITEM_NAMES) == len(catalogue["items"]) == 174
+    assert len(ITEM_NAMES) == len(catalogue["items"]) == 191
     assert len(ITEM_SECTIONS) == 3
     assert len(LOCATION_NAMES) == len(ALL_LOCATION_IDS) == 20375
     assert len(catalogue["locations"]) == 375

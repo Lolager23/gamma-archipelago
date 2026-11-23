@@ -40,6 +40,8 @@ def configured_item_ids(configuration: "SeedConfiguration") -> frozenset[int]:
     if classes_enabled(configuration):
         ids |= CLASS_ITEM_IDS
     ids &= frozenset(row["id"] for row in _data["items"] if class_item_enabled(configuration, row))
+    if not configuration.option("varied_filler"):
+        ids -= frozenset(row["id"] for row in _data["items"] if row.get("filler_family"))
     if enabled(configuration):
         if generic_tools(configuration):
             return (

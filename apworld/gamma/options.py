@@ -116,6 +116,16 @@ class RandomizedStashLoot(DefaultOnToggle):
     display_name = "Randomized loot stash contents"
 
 
+class VariedFiller(DefaultOnToggle):
+    """Fill spare slots with enabled medicine, repair supplies, ammo, food and stashes.
+
+    Requested packages and mandatory progression are reserved first. Basic
+    Bandage/Medkit filler is a fallback only when all alternatives are disabled.
+    """
+
+    display_name = "Varied supply filler"
+
+
 class ArtefactExtraCeiling(Range):
     """Maximum distinct artefact check number; 41–60 appear only for non-filler demand."""
 
@@ -719,6 +729,7 @@ class GammaOptions(PerGameCommonOptions):
     basic_toolkits: BasicToolkits
     reward_quantities: RewardQuantities
     randomized_stash_loot: RandomizedStashLoot
+    varied_filler: VariedFiller
     artefact_extra_ceiling: ArtefactExtraCeiling
     artefact_overflow_count: ArtefactOverflowCount
     medical_packages: MedicalPackages

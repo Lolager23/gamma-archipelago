@@ -1,5 +1,25 @@
 # Verification record
 
+## 23 November 2026 — varied non-progression supply rewards
+
+Fresh `varied_filler` generation replaces alternating Bandage/Medkit spare slots
+with weighted enabled supplies/stashes after required and requested copies are
+reserved. Seventeen new IDs 28051920–28051936 reuse native single-supply delivery
+plans. Source configuration confirms each supplied section exists in the pinned
+base. The native manifest rejects the new IDs when their category or mode is off.
+Original configurable ammo packages retain calibre selection; named ammo drops
+deliver their advertised section regardless of that separate setting.
+
+Focused Python/native/real AP tests cover randomized deterministic-seed selection,
+disabled categories, filler-only classifications, unchanged progression minima
+and guaranteed package counts, legacy manifest/digest/wire behaviour, delivery
+and save/load. Affected verification and current-head CI results are retained
+with the PR when available. Native acceptance is **not run**, reserved for Owen.
+This increment stacks on the two-faction Cordon correction. No live deployment,
+session reset, developer-panel change or normal-game write is included. Existing
+IDs/settings digests/save formats remain valid; fresh new-item seeds require a
+coordinated bundle update.
+
 ## 23 November 2026 — two dependable Cordon faction opportunities
 
 The catalogue no longer counts Cordon's Military checkpoint as a dependable

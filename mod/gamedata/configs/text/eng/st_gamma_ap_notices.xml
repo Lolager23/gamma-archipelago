@@ -1560,6 +1560,57 @@
     <string id="gamma_ap_reward_28051911">
         <text>Carry Capacity +5 kg</text>
     </string>
+    <string id="gamma_ap_reward_28051920">
+        <text>Army Medkit</text>
+    </string>
+    <string id="gamma_ap_reward_28051921">
+        <text>Scientific Medkit</text>
+    </string>
+    <string id="gamma_ap_reward_28051922">
+        <text>Army Stimpack</text>
+    </string>
+    <string id="gamma_ap_reward_28051923">
+        <text>Psi-block Medication</text>
+    </string>
+    <string id="gamma_ap_reward_28051924">
+        <text>Antidote</text>
+    </string>
+    <string id="gamma_ap_reward_28051925">
+        <text>Morphine</text>
+    </string>
+    <string id="gamma_ap_reward_28051926">
+        <text>Gun Oil</text>
+    </string>
+    <string id="gamma_ap_reward_28051927">
+        <text>Advanced Adhesive</text>
+    </string>
+    <string id="gamma_ap_reward_28051928">
+        <text>Heavy Sewing Kit</text>
+    </string>
+    <string id="gamma_ap_reward_28051929">
+        <text>5.45x39 AP Ammunition</text>
+    </string>
+    <string id="gamma_ap_reward_28051930">
+        <text>5.56x45 AP Ammunition</text>
+    </string>
+    <string id="gamma_ap_reward_28051931">
+        <text>7.62x39 AP Ammunition</text>
+    </string>
+    <string id="gamma_ap_reward_28051932">
+        <text>9x19 PBP Ammunition</text>
+    </string>
+    <string id="gamma_ap_reward_28051933">
+        <text>12 Gauge Slug Ammunition</text>
+    </string>
+    <string id="gamma_ap_reward_28051934">
+        <text>Field Ration</text>
+    </string>
+    <string id="gamma_ap_reward_28051935">
+        <text>Drinking Water</text>
+    </string>
+    <string id="gamma_ap_reward_28051936">
+        <text>Energy Drink</text>
+    </string>
     <string id="gamma_ap_reward_28053001">
         <text>Progressive Firearm Class</text>
     </string>

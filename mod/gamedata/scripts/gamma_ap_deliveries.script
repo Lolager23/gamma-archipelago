@@ -9,7 +9,7 @@ local function sections_for(state, id, receipt)
     local tiers = gamma_ap_catalog.delivery_contents[id]
     if not tiers then return nil end
     if gamma_ap_catalog.item_effects[id] == "supply_package" or gamma_ap_catalog.item_effects[id] == "artefact_reward" then
-        local index = gamma_ap_catalog.item_categories[id] == "rewards_supply_ammunition"
+        local index = gamma_ap_catalog.delivery_ammo_choices[id]
             and (state.configuration.options.supply_ammo_calibre or 0)+1 or 1
         return tiers[index]
     end

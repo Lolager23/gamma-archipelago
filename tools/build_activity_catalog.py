@@ -34,6 +34,12 @@ def activity_lines(catalog: dict[str, Any]) -> list[str]:
     lines.append("rank_goodwill_proxy = " + encoded({str(k): v for k, v in RANK_PROXY.items()}))
     lines.append("northern_equipment_regions = " + encoded(list(NORTH)))
     projections = {
+        "filler_reward_items": {
+            row["id"]: True for row in catalog["items"] if row.get("filler_family")
+        },
+        "delivery_ammo_choices": {
+            row["id"]: True for row in catalog["items"] if "calibre_supplies" in row
+        },
         "stash_loot_profiles_v1": catalog["stash_loot_profiles_v1"],
         "stash_loot_rolls_v1": {
             row["id"]: row["loot_roll_v1"] for row in catalog["items"] if "loot_roll_v1" in row

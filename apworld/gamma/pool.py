@@ -55,7 +55,13 @@ def build_pool(world: "GammaWorld", catalog: dict[str, Any]) -> None:
     )
     if world.configuration.option("reward_quantities"):
         world.multiworld.itempool.extend(
-            world.create_item("Bandage" if index % 2 else "Medkit")
+            world.create_item(
+                world.get_filler_item_name()
+                if world.configuration.option("varied_filler")
+                else "Bandage"
+                if index % 2
+                else "Medkit"
+            )
             for index in range(plan.filler_slots)
         )
         return
@@ -70,6 +76,7 @@ def build_pool(world: "GammaWorld", catalog: dict[str, Any]) -> None:
         and row["category"] in world.configuration.rewards
         and row["name"] not in neutrality
         and row["name"] not in plan.required
+        and (not row.get("filler_family") or world.configuration.option("varied_filler"))
     ]
     # Excluded locations accept filler only, including after upstream pool depletion.
     useful_capacity = plan.eligible_checks - (

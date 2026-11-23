@@ -21,7 +21,8 @@ function enabled_items(configuration)
             if (not gear or (configuration and configuration.options["starting_" .. gear.group] == 2))
                 and gamma_ap_tool_permissions.item_enabled(configuration,id)
                 and gamma_ap_equipment_classes.item_enabled(configuration,id)
-                and (not gamma_ap_catalog.tool_stash_levels[id] or (configuration and configuration.options.content_progression == 1)) then result[id] = true end
+                and (not gamma_ap_catalog.tool_stash_levels[id] or (configuration and configuration.options.content_progression == 1))
+                and (not gamma_ap_catalog.filler_reward_items[id] or (configuration and configuration.options.varied_filler == 1)) then result[id] = true end
         end
     end
     return result

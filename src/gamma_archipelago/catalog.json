@@ -2202,6 +2202,210 @@
       "supplies": [
         "af_zhelch"
       ]
+    },
+    {
+      "id": 28051920,
+      "name": "Army Medkit",
+      "category": "rewards_supply_medical",
+      "classification": "filler",
+      "effect": "supply_package",
+      "filler_family": "medical",
+      "filler_weight": 3,
+      "supplies": [
+        "medkit_army"
+      ]
+    },
+    {
+      "id": 28051921,
+      "name": "Scientific Medkit",
+      "category": "rewards_supply_medical",
+      "classification": "filler",
+      "effect": "supply_package",
+      "filler_family": "medical",
+      "filler_weight": 2,
+      "supplies": [
+        "medkit_scientic"
+      ]
+    },
+    {
+      "id": 28051922,
+      "name": "Army Stimpack",
+      "category": "rewards_supply_medical",
+      "classification": "filler",
+      "effect": "supply_package",
+      "filler_family": "medical",
+      "filler_weight": 2,
+      "supplies": [
+        "stimpack_army"
+      ]
+    },
+    {
+      "id": 28051923,
+      "name": "Psi-block Medication",
+      "category": "rewards_supply_medical",
+      "classification": "filler",
+      "effect": "supply_package",
+      "filler_family": "medical",
+      "filler_weight": 2,
+      "supplies": [
+        "drug_psy_blockade"
+      ]
+    },
+    {
+      "id": 28051924,
+      "name": "Antidote",
+      "category": "rewards_supply_medical",
+      "classification": "filler",
+      "effect": "supply_package",
+      "filler_family": "medical",
+      "filler_weight": 3,
+      "supplies": [
+        "drug_antidot"
+      ]
+    },
+    {
+      "id": 28051925,
+      "name": "Morphine",
+      "category": "rewards_supply_medical",
+      "classification": "filler",
+      "effect": "supply_package",
+      "filler_family": "medical",
+      "filler_weight": 3,
+      "supplies": [
+        "morphine"
+      ]
+    },
+    {
+      "id": 28051926,
+      "name": "Gun Oil",
+      "category": "rewards_supply_maintenance",
+      "classification": "filler",
+      "effect": "supply_package",
+      "filler_family": "maintenance",
+      "filler_weight": 3,
+      "supplies": [
+        "gun_oil_ru"
+      ]
+    },
+    {
+      "id": 28051927,
+      "name": "Advanced Adhesive",
+      "category": "rewards_supply_maintenance",
+      "classification": "filler",
+      "effect": "supply_package",
+      "filler_family": "maintenance",
+      "filler_weight": 3,
+      "supplies": [
+        "glue_a"
+      ]
+    },
+    {
+      "id": 28051928,
+      "name": "Heavy Sewing Kit",
+      "category": "rewards_supply_maintenance",
+      "classification": "filler",
+      "effect": "supply_package",
+      "filler_family": "maintenance",
+      "filler_weight": 2,
+      "supplies": [
+        "sewing_kit_h"
+      ]
+    },
+    {
+      "id": 28051929,
+      "name": "5.45x39 AP Ammunition",
+      "category": "rewards_supply_ammunition",
+      "classification": "filler",
+      "effect": "supply_package",
+      "filler_family": "ammunition",
+      "filler_weight": 3,
+      "supplies": [
+        "ammo_5.45x39_ap"
+      ]
+    },
+    {
+      "id": 28051930,
+      "name": "5.56x45 AP Ammunition",
+      "category": "rewards_supply_ammunition",
+      "classification": "filler",
+      "effect": "supply_package",
+      "filler_family": "ammunition",
+      "filler_weight": 3,
+      "supplies": [
+        "ammo_5.56x45_ap"
+      ]
+    },
+    {
+      "id": 28051931,
+      "name": "7.62x39 AP Ammunition",
+      "category": "rewards_supply_ammunition",
+      "classification": "filler",
+      "effect": "supply_package",
+      "filler_family": "ammunition",
+      "filler_weight": 3,
+      "supplies": [
+        "ammo_7.62x39_ap"
+      ]
+    },
+    {
+      "id": 28051932,
+      "name": "9x19 PBP Ammunition",
+      "category": "rewards_supply_ammunition",
+      "classification": "filler",
+      "effect": "supply_package",
+      "filler_family": "ammunition",
+      "filler_weight": 3,
+      "supplies": [
+        "ammo_9x19_pbp"
+      ]
+    },
+    {
+      "id": 28051933,
+      "name": "12 Gauge Slug Ammunition",
+      "category": "rewards_supply_ammunition",
+      "classification": "filler",
+      "effect": "supply_package",
+      "filler_family": "ammunition",
+      "filler_weight": 3,
+      "supplies": [
+        "ammo_12x76_zhekan"
+      ]
+    },
+    {
+      "id": 28051934,
+      "name": "Field Ration",
+      "category": "rewards_supply_expedition",
+      "classification": "filler",
+      "effect": "supply_package",
+      "filler_family": "expedition",
+      "filler_weight": 3,
+      "supplies": [
+        "ration_ru"
+      ]
+    },
+    {
+      "id": 28051935,
+      "name": "Drinking Water",
+      "category": "rewards_supply_expedition",
+      "classification": "filler",
+      "effect": "supply_package",
+      "filler_family": "expedition",
+      "filler_weight": 3,
+      "supplies": [
+        "water_drink"
+      ]
+    },
+    {
+      "id": 28051936,
+      "name": "Energy Drink",
+      "category": "rewards_supply_expedition",
+      "classification": "filler",
+      "effect": "supply_package",
+      "filler_family": "expedition",
+      "filler_weight": 2,
+      "supplies": [
+        "energy_drink"
+      ]
     }
   ],
   "locations": [
