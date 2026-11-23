@@ -32,7 +32,7 @@ activity_rules = {
     [28052305]={["any_regions"]={"k00_marsh"},["all_regions"]={},["reliable"]=true},
     [28052306]={["any_regions"]={"l08_yantar"},["all_regions"]={},["reliable"]=true},
     [28052307]={["any_regions"]={"l09_deadcity"},["all_regions"]={},["reliable"]=true},
-    [28052308]={["any_regions"]={"l01_escape"},["all_regions"]={},["reliable"]=true},
+    [28052308]={["any_regions"]={"l03_agroprom"},["all_regions"]={},["reliable"]=true},
     [28052309]={["any_regions"]={"l10_radar","l11_pripyat","l12_stancia"},["all_regions"]={},["reliable"]=true},
     [28052310]={["any_regions"]={"k00_marsh"},["all_regions"]={},["reliable"]=true},
     [28052311]={["any_regions"]={"l10_red_forest"},["all_regions"]={},["reliable"]=false},
