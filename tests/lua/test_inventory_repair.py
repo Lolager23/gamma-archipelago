@@ -110,3 +110,15 @@ def test_a_weapon_with_a_repair_action_keeps_its_equipment_restriction(lua):
     state = state_of(lua, game)
     assert lua.globals().gamma_ap_tool_permissions.inventory_repair("wpn_knife")
     assert lua.globals().gamma_ap_gear_locks.locked(state, item)
+
+
+def test_a_repair_item_label_cannot_bypass_the_separate_psi_protection_reward(lua):
+    from .test_tracker import state_for
+
+    kit_game(lua)
+    item = repair_item(lua, "good_psy_helmet")
+    state = state_for(lua, rewards_progression_stashes=1)
+    module = lua.globals().gamma_ap_gear_locks
+    assert module.locked(state, item)
+    state.unlocks.calibrated_psi = True
+    assert module.locked(state, item) is False

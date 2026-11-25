@@ -1387,8 +1387,8 @@ repair registry, including `repair_only` tables. Six AP toolkits remain excluded
 workshop/technician actions retain their permissions. Native delegates still own
 repair effects, targets, supporting supplies and consumption.
 
-Affected verification against the equipment-check PR parent passed 1,202 Lua
-regressions, including 14 new inventory-repair cases. Static checks and deterministic
+Affected verification against the equipment-check PR parent passed 1,203 Lua
+regressions, including 15 new inventory-repair cases. Static checks and deterministic
 package building passed. Changed Lua executable-line coverage is 99.01% for gear
 locks and 100% for both tool permissions and workshop guards; Lua branch coverage
 is not measured. Current-head Windows/Linux evidence is tracked on the stacked PR.
