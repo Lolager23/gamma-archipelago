@@ -81,17 +81,3 @@ def check_classes(configuration: "SeedConfiguration", row: Mapping[str, Any]) ->
         )
         return {"firearms": tier}
     return {}
-
-
-def repair_tier(configuration: "SeedConfiguration", row: Mapping[str, Any]) -> int:
-    if not contract(configuration) or "rewards_progressive_tools" not in configuration.rewards:
-        return 0
-    category = row.get("category")
-    if category == "checks_weapon_tiers":
-        tier = check_classes(configuration, row)["firearms"]
-        return ((0, 1, 2, 3) if row.get("weapon_grade") else (1, 1, 2, 3))[tier - 1]
-    if category == "checks_armour_tiers":
-        return int(_catalog["equipment_classes"]["armour_tools"][row["key"]])
-    if category == "checks_knife_tiers":
-        return int(_catalog["equipment_classes"]["knife_tools"][row["key"]])
-    return 0

@@ -36,13 +36,15 @@ same permanent permission never delivers another free kit.
 
 ## Repair-grade checks and crafting
 
-The AP solver, PDA blocked reason and game check observer require Basic for
-firearm repair grade B, Advanced for C, and Expert for D when progressive
-permissions are enabled. These are check requirements; a rifle remains usable
-under its permitted equipment class. Fresh class checks also use the configurable
-condition threshold and toolkit requirements described in equipment classes. Existing grade D northern/psi or AP-goodwill
-requirements also remain in effect. An Advanced permission cannot be placed
-behind a grade C check that requires it.
+The AP solver, PDA blocked reasons and game observer do not require repair tools
+for firearm repair-grade, weapon-role, armour-tier or knife-tier checks. These
+observe qualifying equipment, which can be acquired in good condition without
+using a kit. A starting pistol or SMG and a purchased knife can count before the
+first tool reward. Configured condition, cumulative class permissions and the
+independent late-equipment regional/psi or AP-goodwill requirements still apply.
+Tool rewards can therefore be placed on these checks when their other access
+requirements are met. Repair actions and newly installed upgrade checks retain
+their existing tool and workshop permissions.
 
 The active recipe's input toolkit index determines crafting permission. The
 output item does not: crafting a locked kit is allowed when its actual recipe's
@@ -84,6 +86,8 @@ repair and upgrades, actual grade C check/PDA state, one free kit per reward,
 save/load, and late wrappers from other enabled mods. No deployment, game launch,
 save write, developer-panel change or normal-game modification is part of this PR.
 
-Class A firearm condition/use checks can complete before Basic Tools. They still
-require the configured condition and usable firearm class; this does not grant
-permission to use a repair kit or change native repair/crafting requirements.
+All firearm condition/use, armour-tier and knife-tier checks can complete without
+repair-tool rewards. They still require their configured condition and usable
+equipment class; this does not grant permission to use a repair kit or change
+native repair/crafting requirements. Story and mutant-diversity readiness retain
+their explicit tool requirements.

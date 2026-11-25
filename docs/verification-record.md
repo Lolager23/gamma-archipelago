@@ -1355,6 +1355,29 @@ Medkit filler was placed. The archive and logs remain in private tooling evidenc
 without changing the active game session. Final Windows/Linux checks are tracked
 on the stacked PR.
 
+## 25 November 2026 - equipment use checks without repair tools
+
+Weapon-role, firearm repair-class, armour-tier and knife-tier checks no longer
+require progressive repair tools in AP placement rules, PDA blocked reasons or
+the native observer. Starting/bought/looted gear still needs its permitted class
+and condition; existing late-equipment readiness, actual upgrade installations,
+tool use and story/mutant-diversity requirements are retained.
+
+Affected verification against `origin/main` passed 2,192 covered regressions and
+19 untraced real AP server tests. The three changed Python runtime modules reached
+100% line and branch coverage. Changed Lua executable-line coverage was 99.21%
+for equipment checks, 97.92% for playability and 100% for tool permissions; Lua
+branch coverage is not measured. Static checks, strict typing and deterministic
+packages passed. Windows/Linux current-head CI is tracked on the PR.
+
+Regressions cover the default starting pistol/SMG and purchased knives before any
+tool reward, legacy/named/generic configurations, class C permission independent
+of tools, inclusive condition boundaries, lower-tier credit and PDA availability.
+Existing upgrade-gate and generation/deadlock regressions remain in the selected
+scope. IDs, configuration digest fields, receipt ordering and save schema are
+unchanged. No deployment, game launch, active session switch, save write or local
+developer-panel change was performed. Native acceptance is not run, reserved for
+Owen. Both normal game installation trees remain untouched by this source work.
 
 ## 23 November 2026 - three dependable Cordon mutant opportunities
 

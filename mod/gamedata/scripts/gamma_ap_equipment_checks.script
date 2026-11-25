@@ -64,7 +64,6 @@ end
 local function eligible(state, id)
     local row = gamma_ap_catalog.tracker_checks[id]
     if gamma_ap_equipment_classes.check_reason(state,row) then return false end
-    if gamma_ap_tool_permissions.grade_reason(state,row) then return false end
     local practical=state.configuration.options.playability_logic == 1
         and (row.category == "checks_armour_tiers" and tonumber(row.key) >= 3 or row.weapon_grade == "D")
     local readiness=state.configuration.options.regional_progression == 1 and gamma_ap_catalog.northern_readiness_checks[id]

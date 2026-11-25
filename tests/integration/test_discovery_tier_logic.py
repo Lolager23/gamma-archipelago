@@ -27,7 +27,7 @@ def test_firearm_repair_class_a_is_available_without_basic_tools(classes):
     state = maximum_without_tools(multi.worlds[1])
     assert not state.has("Progressive Tools", 1)
     assert multi.get_location("Use Firearm Repair Class: A", 1).can_reach(state)
-    assert not multi.get_location("Use Firearm Repair Class: B", 1).can_reach(state)
+    assert multi.get_location("Use Firearm Repair Class: B", 1).can_reach(state)
 
 
 @pytest.mark.parametrize("minimum,tier", [(10, 0), (11, 2), (15, 2), (16, 3), (25, 3)])

@@ -1,7 +1,5 @@
 from collections import Counter
 
-import pytest
-
 from gamma_archipelago.configuration import build_configuration, defaults, encode_configuration
 from gamma_archipelago.content_progression import configured_item_ids, required_copy, tool_level
 from gamma_archipelago.tool_permissions import (
@@ -10,7 +8,6 @@ from gamma_archipelago.tool_permissions import (
     TOOL_ITEMS,
     enabled,
     melter_item,
-    required_tier,
 )
 
 
@@ -45,17 +42,6 @@ def test_contiguous_capabilities_do_not_follow_physical_item_names():
     assert tool_level(count.__getitem__) == 1
     count[TOOL_CAPABILITIES[1]] = 1
     assert tool_level(count.__getitem__) == 3
-
-
-@pytest.mark.parametrize("grade,tier", [("A", 0), ("B", 1), ("C", 2), ("D", 3), ("", 0)])
-def test_repair_grade_tool_requirement_is_optional_and_matches_native_crafting(grade, tier):
-    row = {"weapon_grade": grade}
-    assert required_tier(configuration(rewards_progressive_tools=1), row) == tier
-    assert required_tier(configuration(rewards_progressive_tools=0), row) == 0
-    assert (
-        required_tier(configuration(rewards_progressive_tools=1, tool_use_permissions=0), row) == 0
-    )
-    assert required_tier(configuration(content_progression=0), row) == 0
 
 
 def test_melter_name_and_mandatory_free_kit_permissions_follow_the_contract():

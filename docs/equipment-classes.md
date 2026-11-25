@@ -48,11 +48,12 @@ default grants. Later earned inventory is never stripped by the initial plan.
 condition, not the proportion of installed upgrade attachments. A small numerical
 tolerance accepts an exact threshold after native floating-point rounding. Broken or invalid
 items never count. Equipped armour, active weapon/knife tiers and newly observed
-upgrade installations use this threshold. Checks also require the corresponding
-repair tools in AP logic: A/B and Light use Basic, C and Medium use Advanced,
-D and Heavy/Exoskeleton use Expert. Knife tiers 2, 3 and 4/5 use Basic, Advanced
-and Expert respectively. Attachment installation totals retain the existing
-conservative Expert-tool requirement.
+upgrade installations use this threshold. Weapon roles, firearm repair classes,
+armour tiers and knife tiers do not require Basic, Advanced or Expert tools to
+earn their checks. Starting, bought or looted equipment can already qualify
+without repair. Class permissions, condition and independent regional readiness
+requirements still apply. Attachment installation totals retain the existing
+conservative Expert-tool requirement because they observe a new upgrade action.
 
 GAMMA's "Guns Have No Condition" add-on forces firearm engine condition to 83%,
 so class-based sessions use the arithmetic mean of the weapon's required native

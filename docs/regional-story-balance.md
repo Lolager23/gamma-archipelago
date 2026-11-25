@@ -16,7 +16,8 @@ it does not repair an existing archive or switch a running session.
 
 The northern-region set includes Limansk. AP goodwill cannot replace the new
 Scorcher/Red Forest requirement for machinegun or exoskeleton checks. Their own
-class and repair-tool requirements also apply. World events and terminal goals use
+class and condition requirements also apply; equipment-use checks have no
+repair-tool prerequisite. World events and terminal goals use
 the same story definitions, preventing a goal from silently bypassing Path Pripyat.
 Categories switched off impose no AP permission requirement for that category;
 ordinary GAMMA acquisition and native requirements remain. These are conservative
