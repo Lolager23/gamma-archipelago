@@ -1,5 +1,5 @@
 <w>
-    <button x="14" y="80" width="114" height="22" stretch="1">
+    <button x="14" y="60" width="114" height="18" stretch="1">
         <texture>ui_inGame2_big_inventory_button</texture>
         <text font="letterica16" align="c">gamma_ap_shop_open</text>
     </button>

@@ -1421,3 +1421,18 @@ confirmed them. Paid AP contract check sets were unchanged for both players.
 Private recovery reports/backups remain outside Git. The seed and previous checks
 were retained. No mod deployment, game launch, developer-panel alteration or normal
 installation write occurred. No IDs, configuration, protocol or save schema changed.
+
+## 25 November 2026 - shop button above trader supply rank
+
+The AP shop button previously shared y=80 with GAMMA's supply-rank text. Read-only
+inspection of the active trader UI and `ui_haruka_trade_stats_16.xml` identified
+the identity footer gap at y=60–80. The AP-owned button now starts at y=60 with
+height 18, above the rank/money row and left of the native money column. Native
+GAMMA XML, shop contracts and purchase behaviour are unchanged.
+
+Affected verification against the ordinary-purchase callback PR parent passed
+1,231 Lua regressions, including a geometry regression for the identity/rank/money
+boundaries. Static checks, package building and existing Lua coverage gates passed.
+Windows/Linux current-head CI is tracked on the stacked PR. Native visual
+acceptance is not run, reserved for Owen. No deployment, game launch, session/save
+change, developer-panel alteration or normal-installation write occurred.
