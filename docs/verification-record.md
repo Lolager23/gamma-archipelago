@@ -1378,3 +1378,22 @@ scope. IDs, configuration digest fields, receipt ordering and save schema are
 unchanged. No deployment, game launch, active session switch, save write or local
 developer-panel change was performed. Native acceptance is not run, reserved for
 Owen. Both normal game installation trees remain untouched by this source work.
+
+## 25 November 2026 - inventory repair consumables
+
+Native inventory repair items are exempt from Basic Tools/workshop permissions
+and the legacy generic Tools use lock. Classification follows Anomaly's native
+repair registry, including `repair_only` tables. Six AP toolkits remain excluded;
+workshop/technician actions retain their permissions. Native delegates still own
+repair effects, targets, supporting supplies and consumption.
+
+Affected verification against the equipment-check PR parent passed 1,202 Lua
+regressions, including 14 new inventory-repair cases. Static checks and deterministic
+package building passed. Changed Lua executable-line coverage is 99.01% for gear
+locks and 100% for both tool permissions and workshop guards; Lua branch coverage
+is not measured. Current-head Windows/Linux evidence is tracked on the stacked PR.
+The native engine was not run; acceptance remains Owen's.
+
+No IDs, configuration fields, receipt history, save schema or seed placements
+changed. This is source work only: no game deployment/launch, active-session reset,
+save write, developer-panel alteration or normal-installation write was performed.

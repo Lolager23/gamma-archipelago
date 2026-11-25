@@ -43,6 +43,8 @@ function pickup_locked(state, item)
 end
 
 function locked(state, item)
+    if item and gamma_ap_equipment.group(item:section()) == "tools"
+        and gamma_ap_tool_permissions.inventory_repair(item:section()) then return false end
     if gamma_ap_equipment_classes.contract(state.configuration) then
         return item and (pickup_locked(state,item)
             or not gamma_ap_equipment_classes.section_allowed(state,item:section()))

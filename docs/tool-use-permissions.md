@@ -53,6 +53,12 @@ input kit is usable. Inventory custom-use and the six native
 Existing repair, upgrade and crafting mutation guards remain in place. Wrappers
 read the central save through the coordinator; they own no progression state.
 
+Ordinary inventory repair consumables are exempt from AP tool/workshop access,
+including the legacy generic Tools restriction. Native `IsItem("repair", section)`
+recognition controls the exemption; it is not a fixed list of oils or sewing kits.
+The six AP toolkits remain permission-gated even if another mod marks them as
+repair items. See [inventory repair](inventory-repair-permissions.md).
+
 ## Delivery and compatibility
 
 New published item IDs 28051831–28051836 carry these permissions. Existing IDs
