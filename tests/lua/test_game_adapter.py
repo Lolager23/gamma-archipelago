@@ -101,6 +101,7 @@ def test_callbacks_polling_save_restore_and_initial_inventory(lua):
         "on_before_key_press",
         "on_before_key_hold",
         "actor_on_trade",
+        "actor_on_item_buy",
     }
     set_incoming(engine)
     module.actor_on_update()

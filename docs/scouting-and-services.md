@@ -10,6 +10,13 @@ Stack base: Step 31 / PDA tracker PR #40. New APWorld options:
 | `checks_shop_purchases` | Off | Nine dedicated buyable AP contracts in the trader UI. Three prices per trader: 2,500/7,500/15,000 RU. Independent of ordinary purchases; see [shop contracts](shop-purchases.md). |
 | `checks_faction_standing` | Off | Four permanent checks when any supported non-hostile faction reaches 500/1,000/2,000/3,000 personal goodwill. These are goodwill milestones, not claims about a particular trader's stock tier. |
 
+Ordinary purchases use the installed Monolith `actor_on_item_buy(item, price,
+trader)` callback emitted by GAMMA's custom inventory UI. The callback supplies
+the actual shop partner; a talking NPC is not required. Unrounded native prices
+are accepted when their whole-ruble part is positive. The engine `actor_on_trade`
+callback remains a compatibility fallback. Both routes share one saved check.
+See [ordinary shop purchase detection](ordinary-shop-purchases.md).
+
 The PDA uses four-row pages to leave room for reward details. Its Select/Scout
 controls act on the highlighted row. A revealed reward
 always names its recipient; it may belong to another game/player. Unknown data

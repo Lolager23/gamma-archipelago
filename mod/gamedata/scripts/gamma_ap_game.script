@@ -380,6 +380,7 @@ function on_game_start()
     RegisterScriptCallback("on_before_key_press", on_before_key)
     RegisterScriptCallback("on_before_key_hold", on_before_key)
     RegisterScriptCallback("actor_on_trade", actor_on_trade)
+    RegisterScriptCallback("actor_on_item_buy", actor_on_item_buy)
     RegisterScriptCallback("physic_object_on_use_callback", physic_object_on_use_callback)
     register_task_hook()
     printf("[GAMMA AP] Pilot loaded; multiplayer roots are forbidden")
@@ -417,6 +418,11 @@ end
 
 function actor_on_trade(item, sold, money)
     local ok,reason = gamma_ap_services.traded(state,item,sold,money)
+    if not ok then report_error(reason) end
+end
+
+function actor_on_item_buy(item, price, trader)
+    local ok,reason = gamma_ap_services.bought(state,item,price,trader)
     if not ok then report_error(reason) end
 end
 

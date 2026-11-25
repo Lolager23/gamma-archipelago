@@ -1,16 +1,24 @@
 -- Finite purchases/standing milestones; no repeatable AP item farming.
-function traded(state, item, sold, money)
-    if not state.session_key or not state.expanded or state.configuration.options.checks_shops ~= 1 then return true end
+function traded(state, item, sold, money, trader)
+    if not state.session_key or not state.expanded or state.refused_save
+        or not state.configuration or not state.configuration.expanded
+        or state.configuration.options.checks_shops ~= 1 then return true end
     if not item or sold ~= false or type(money) ~= "number" or money ~= math.floor(money)
         or money <= 0 or money > 2147483647 then return true end
     local ok, name = pcall(function()
-        local npc = mob_trade.GetTalkingNpc()
+        local npc = trader or mob_trade.GetTalkingNpc()
         return npc and get_object_story_id(npc:id())
     end)
     if not ok then return false,"Cannot resolve the current named trader" end
     local id = name and gamma_ap_catalog.shop_locations[name]
     if id and state.enabled_checks[id] then state.checks[id] = true end
     return true
+end
+
+function bought(state, item, price, trader)
+    -- Monolith's custom-UI callback supplies the real partner and a float price.
+    if not trader or type(price)~="number" or price~=price or price<1 or price>2147483647 then return true end
+    return traded(state,item,false,math.floor(price),trader)
 end
 
 function poll(state)
