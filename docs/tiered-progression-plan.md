@@ -18,16 +18,18 @@ unchanged. Native acceptance belongs to Owen; agents do not launch the game.
    native creation inventory to AP-selected permissions. Convert tools to generic
    Basic-to-Expert receipts. Add configurable equipment condition thresholds,
    default 65%, and corresponding repair-tool requirements in logic.
-3. Activity and reward balance: cap generic mutant logic at five opening types
-   and at most two additional supported types per region. Require Advanced tools,
-   Medium armour and Class C for Scorcher; Expert, Heavy and Class D for Path
+3. Activity and reward balance: cap generic mutant logic at three Cordon opening
+   types (boar, flesh and dog), five for other starting regions, and at most two
+   additional supported types per region (Cordon amended 23 November 2026). Require
+   Advanced tools, Medium armour and Class C for Scorcher; Expert, Heavy and Class D for Path
    Pripyat. Require Scorcher and a region beyond Red Forest for machineguns and
    exoskeleton checks. Require artefact recipes for discoveries 21–40. Add an
    optional artefact reward category. Update generator controls and step reports.
 
-Each increment needs meaningful regressions, the complete verifier, the unchanged
-9,000-seed matrix, real AP generation/server passes, current-head Windows/Linux
-CI and retained package hashes. PRs remain draft while native acceptance is open.
+Each increment needs meaningful regressions, affected-component verification,
+focused real AP generation/server passes, current-head Windows/Linux CI and retained
+package hashes. The complete suite and exhaustive seed matrix are release checks
+under the [testing policy](testing-policy.md). PRs remain draft while native acceptance is open.
 
 ## Placement model
 

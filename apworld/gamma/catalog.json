@@ -2808,7 +2808,6 @@
           "k00_marsh",
           "k01_darkscape",
           "k02_trucks_cemetery",
-          "l01_escape",
           "l02_garbage",
           "l03_agroprom",
           "l04_darkvalley",
@@ -2883,7 +2882,6 @@
           "k00_marsh",
           "k01_darkscape",
           "k02_trucks_cemetery",
-          "l01_escape",
           "l02_garbage",
           "l03_agroprom",
           "l04_darkvalley",
@@ -3004,7 +3002,6 @@
           "k00_marsh",
           "k01_darkscape",
           "k02_trucks_cemetery",
-          "l01_escape",
           "l02_garbage",
           "l03_agroprom",
           "l04_darkvalley",
@@ -3050,7 +3047,6 @@
           "k00_marsh",
           "k01_darkscape",
           "k02_trucks_cemetery",
-          "l01_escape",
           "l02_garbage",
           "l03_agroprom",
           "l04_darkvalley",
@@ -3116,7 +3112,6 @@
           "k00_marsh",
           "k01_darkscape",
           "k02_trucks_cemetery",
-          "l01_escape",
           "l02_garbage",
           "l03_agroprom",
           "l04_darkvalley",
@@ -3143,7 +3138,6 @@
           "k00_marsh",
           "k01_darkscape",
           "k02_trucks_cemetery",
-          "l01_escape",
           "l02_garbage",
           "l03_agroprom",
           "l04_darkvalley",
@@ -3203,7 +3197,6 @@
           "k00_marsh",
           "k01_darkscape",
           "k02_trucks_cemetery",
-          "l01_escape",
           "l02_garbage",
           "l03_agroprom",
           "l04_darkvalley",
@@ -3230,7 +3223,6 @@
           "k00_marsh",
           "k01_darkscape",
           "k02_trucks_cemetery",
-          "l01_escape",
           "l02_garbage",
           "l03_agroprom",
           "l04_darkvalley",
@@ -10233,6 +10225,13 @@
         "glue_e",
         "sewing_kit_h"
       ]
+    }
+  },
+  "mutant_diversity": {
+    "starting_region_slots": 5,
+    "additional_region_slots": 2,
+    "starting_region_overrides": {
+      "l01_escape": 3
     }
   }
 }
