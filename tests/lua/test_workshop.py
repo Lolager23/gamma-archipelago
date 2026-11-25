@@ -46,6 +46,20 @@ def craft_dialog(lua, tier):
     return lua.table(last_type=1, last_index=1, recipes=lua.table(lua.table(lua.table(tool=tier))))
 
 
+def upgrade_dialog(lua, tier=1, *, technician=False, installed=()):
+    column = tier * 2 - 1
+    info = lua.table(section="selected", tier=tier)
+    tree = lua.table_from({1: lua.table_from({column: info})})
+    if technician:
+        return lua.table(upgr_tree=tree, upgr_last_row=1, upgr_last_col=column)
+    object_ = lua.table()
+    object_.iterate_installed_upgrades = lambda _, callback: [callback(s) for s in installed]
+    factory = lua.eval(
+        "function(object) return {GetCell_Selected=function() return object end} end"
+    )
+    return lua.table(CC=factory(object_), inst_upgr=lua.table(selected=True), upgr=tree)
+
+
 def poll(game, engine):
     engine.now += 1000
     game.actor_on_update()
@@ -59,28 +73,33 @@ def test_three_receipts_unlock_tiers_and_reload_derives_permissions_without_spaw
     assert api.UIWorkshopRepair.Repair(lua.table()) == "native"
     assert api.UIWorkshopCraft.Craft(craft_dialog(lua, 1)) == "native"
     assert api.UIWorkshopCraft.Craft(craft_dialog(lua, 2)) is False
-    assert api.UIWorkshopUpgrade.Upgrade(lua.table()) is False
+    assert api.UIWorkshopUpgrade.Upgrade(upgrade_dialog(lua, 3)) is False
     before = saved_state(lua, game)
     poll(game, engine)
     assert module.tools_level(state_of(lua, game)) == 2
     assert api.UIWorkshopCraft.Craft(craft_dialog(lua, 2)) == "native"
     poll(game, engine)
-    assert api.UIWorkshopUpgrade.Upgrade(lua.table()) == "native"
-    assert lua.globals().ui_inventory.UIInventory.RMode_UpgradeYes(lua.table()) == "native"
+    assert api.UIWorkshopUpgrade.Upgrade(upgrade_dialog(lua, 3)) == "native"
+    assert (
+        lua.globals().ui_inventory.UIInventory.RMode_UpgradeYes(
+            upgrade_dialog(lua, 3, technician=True)
+        )
+        == "native"
+    )
     assert lua.globals().item_repair.UIRepair.OnRepair(lua.table()) == "native"
     assert lua.globals().ui_inventory.UIInventory.RMode_RepairYes(lua.table()) == "native"
     poll(game, engine)
     assert module.tools_level(state_of(lua, game)) == 3
     game.load_state(before)
     assert module.tools_level(state_of(lua, game)) == 1
-    assert api.UIWorkshopUpgrade.Upgrade(lua.table()) is False
+    assert api.UIWorkshopUpgrade.Upgrade(upgrade_dialog(lua, 3)) is False
     poll(game, engine)
     assert module.tools_level(state_of(lua, game)) == 2
     assert not list(engine.created.values())
     upgrades = [
         row for row in game.tracker_view().rows.values() if row.category == "checks_gear_upgrades"
     ]
-    assert upgrades and all(row.status == "blocked" for row in upgrades)
+    assert upgrades and all(row.status == "available" for row in upgrades)
     assert (
         sum(row == "Progressive tools: 2/3" for row in game.tracker_view().progression.values())
         == 1

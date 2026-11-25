@@ -31,6 +31,7 @@ def lua():
         "starting_supplies",
         "convenience",
         "deliveries",
+        "upgrade_tools",
         "workshop",
         "discovery",
         "activity",

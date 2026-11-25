@@ -1,0 +1,38 @@
+-- Native utils_item.extract_upgrade assigns tier 1/2/3 to the chevron groups.
+local function difficulty(info)
+    local tier = type(info) == "table" and info.tier
+    if type(tier) == "number" and tier == math.floor(tier) and tier >= 1 and tier <= 3 then return tier end
+end
+
+local function technician_tier(dialog)
+    local row = dialog.upgr_tree[dialog.upgr_last_row]
+    return difficulty(row and row[dialog.upgr_last_col])
+end
+
+local function workshop_tier(dialog)
+    local object = dialog.CC:GetCell_Selected(true)
+    local installed,pending = {},{}
+    object:iterate_installed_upgrades(function(section) installed[section] = true end)
+    for section,selected in pairs(dialog.inst_upgr) do
+        if type(section) ~= "string" or selected ~= true then return end
+        if not installed[section] then pending[section] = true end
+    end
+    local required = 0
+    for _,row in pairs(dialog.upgr) do
+        for _,info in pairs(row) do
+            if pending[info.section] then
+                local tier = difficulty(info)
+                if not tier then return end
+                required = math.max(required,tier)
+                pending[info.section] = nil
+            end
+        end
+    end
+    if next(pending) then return end -- A selected entry absent from the tree is unsafe.
+    return required
+end
+
+function required(dialog, technician)
+    local ok,tier = pcall(technician and technician_tier or workshop_tier,dialog)
+    if ok then return tier end
+end

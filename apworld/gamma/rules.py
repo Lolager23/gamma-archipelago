@@ -119,7 +119,8 @@ def apply_access_rules(world: "GammaWorld", catalog: dict[str, Any]) -> None:
             "rewards_progressive_tools" in world.configuration.rewards
             and category == "checks_gear_upgrades"
         ):
-            tool_tier = 3
+            # Multiple one-chevron installations can satisfy every aggregate count.
+            tool_tier = 1
         if (
             category == "checks_gear_upgrades"
             and "rewards_workshop_access" in world.configuration.rewards

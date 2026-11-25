@@ -62,3 +62,34 @@ Lua reached 100% measured executable lines. Lua branch coverage is not measured.
 One earlier covered run failed an existing pickup-guard case once. The focused
 suite, 32 repeated fresh-session transitions and the final complete suite passed;
 the case remains enabled with failure diagnostics. No root cause is claimed.
+
+## Upgrade difficulty
+
+The supported native upgrade tree supplies `tier` 1-3. One chevron requires Basic
+Tools, two Advanced and three Expert, in both workshop and technician entry
+points. Workshop batches require the highest tier among newly selected upgrades;
+already installed upgrades do not raise that requirement. Missing or invalid
+selected metadata refuses before the native installation/payment/tool-consumption
+method runs. Disabling AP tool permissions retains native behavior and does not
+require this metadata. Workshop access, physical upgrade kits, native prerequisites,
+condition and payment checks remain independent.
+
+The aggregate AP checks count installations rather than difficulty. Basic is
+therefore sufficient in solver/PDA/observer logic: repeatable one-chevron
+installations across items can meet every existing count. No new IDs, receipt
+state, settings digest fields or save format are introduced. Existing seed
+placements remain unchanged; source work does not deploy or switch a session.
+
+Read-only source inspection used the active `Serious Workshop optimization`
+`ui_workshop.script` and `G.A.M.M.A. Accurate Defense Values` `ui_inventory.script`,
+resolved from the enabled Dev mod list. Their selected batch (`inst_upgr`, `upgr`,
+`CC`) and technician (`upgr_tree`, `upgr_last_row`, `upgr_last_col`) contracts match
+Anomaly's extracted `utils_item.extract_upgrade` and the enabled GAMMA Upgrades
+Overhaul `aaaa_streamlined_mp.script`. The base tree assigns columns 1-2 to tier
+1, 3-4 to tier 2 and 5-6 to tier 3. GAMMA remaps these groups using repair type:
+Novice/Light outfits use `{1,1,1}`, Medium `{1,2,2}`, Heavy `{2,2,3}`, Exoskeletons
+`{3,3,3}`, pistols `{1,1,2}`, shotguns `{1,2,2}`, class-C rifles `{1,2,3}` and
+class-D rifles `{2,3,3}`. Helmets have an explicit repair-type mapping.
+That resolved `tier` also chooses the native upgrade-kit section; AP reads it
+without maintaining a duplicate weapon/outfit-class mapping.
+These are source checks; native in-game acceptance remains Owen's.

@@ -14,8 +14,10 @@ independent option, not an implicit toolkit grant here.
 
 The add-on guards mutation entry points for workshop repair, workshop upgrades,
 crafting, toolkit repair and technician repair/upgrades. Workshop repair requires Basic;
-upgrades conservatively require Expert; recipes using the first three workshop
-toolkit tiers require their corresponding permission. Drug, ammunition and
+one-chevron upgrades require Basic, two require Advanced, and three require Expert.
+The selected native upgrade metadata determines difficulty, including GAMMA's
+class-based remapping. Recipes using the first three workshop toolkit tiers
+require their corresponding permission. Drug, ammunition and
 artefact kits remain separate native systems in this step. No inventory is
 stripped. Disabling the option leaves ordinary native actions unrestricted.
 
@@ -24,10 +26,12 @@ are exempt from tool/workshop permissions. Gun oil, cleaning and sewing kits
 therefore retain ordinary native use without Basic Tools. The six AP toolkits are
 never exempt. See [inventory repair](inventory-repair-permissions.md).
 
-The AP solver and PDA require all three permissions before upgrade checks. This
-is intentionally conservative for differences between technicians and upgrade
-trees. Permissions are placed as progression and three copies are budgeted before
-filler. A pool too small for those copies rejects generation instead of truncating
+The AP solver and PDA require Basic before aggregate installation-count checks:
+several one-chevron upgrades, including upgrades on different items, can satisfy
+them. The native observer uses the same minimum and retains the configured item
+condition threshold. Higher difficulty still requires the corresponding applied
+permission before the action. Permissions are placed as progression and three
+copies are budgeted before filler. A pool too small for those copies rejects generation instead of truncating
 them. All other gates and starting-equipment options continue to apply.
 
 ## Ownership and compatibility

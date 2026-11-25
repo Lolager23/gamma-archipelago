@@ -41,11 +41,17 @@ function allowed(state, action, dialog)
     local configuration = state.configuration
     if not active(configuration) then return true end
     if state.refused_save or not state.session_key then return false,"Restore a valid AP session before using the workshop" end
+    local technician = action == "technician_upgrade"
+    if technician then action = "upgrade" end
     if action ~= "repair" and action ~= "upgrade" and action ~= "craft" then return false,"Unknown workshop action" end
     if configuration.options.rewards_workshop_access == 1 and not state.unlocks["workshop_"..action] then
         return false,"Archipelago workshop permission required: "..action
     end
-    local required = action == "upgrade" and 3 or 1
+    local required = 1
+    if action == "upgrade" and configuration.options.rewards_progressive_tools == 1 then
+        required = gamma_ap_upgrade_tools.required(dialog,technician)
+        if not required then return false,"Cannot identify the selected upgrade difficulty" end
+    end
     if action == "craft" then
         local tier = recipe_tier(dialog)
         if not tier then return false,"Cannot identify this workshop recipe's tool requirement" end
@@ -83,7 +89,7 @@ function install(configuration, current_state)
         {ui_workshop.UIWorkshopCraft,"Craft","craft"},
         {item_repair.UIRepair,"OnRepair","inventory_repair"},
         {ui_inventory.UIInventory,"RMode_RepairYes","repair"},
-        {ui_inventory.UIInventory,"RMode_UpgradeYes","upgrade"},
+        {ui_inventory.UIInventory,"RMode_UpgradeYes","technician_upgrade"},
     } end)
     if not ok then return false,"AP workshop permissions require supported workshop, repair and inventory APIs" end
     for _,target in ipairs(targets) do
