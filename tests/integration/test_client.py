@@ -393,7 +393,7 @@ def test_client_lifecycle_cleans_up_background_tasks(monkeypatch):
     contexts = []
 
     class Context:
-        def __init__(self, address, password):
+        def __init__(self, address, password, *, bridge=None):
             self.exit_event = asyncio.Event()
             self.exit_event.set()
             self.shutdown = AsyncMock()

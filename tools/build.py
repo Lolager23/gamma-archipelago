@@ -311,6 +311,7 @@ def main() -> None:
         "gamma_archipelago/",
         extras={
             "GammaArchipelagoClient.py": ROOT / "tools/packaged_client.py",
+            "GammaArchipelagoConnect.py": ROOT / "tools/packaged_connect.py",
             "GAMMA-README.md": ROOT / "docs/portable-client.md",
             "GAMMA-requirements-ap.txt": ROOT / "requirements-ap.txt",
         },
