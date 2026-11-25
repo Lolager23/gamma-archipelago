@@ -15,7 +15,10 @@ local function transitions()
         local object = entry.object
         if object then
             if is_changer(object) then
-                result[#result+1] = {object=object}
+                -- Native level changers reject inside(). The full ALife shape
+                -- roster below remains authoritative; add a conservative local
+                -- clearance around online changers as a second safeguard.
+                result[#result+1] = {position=object:position(),radius=30}
             elseif lc_extra_transitions and lc_extra_transitions.lc_pool then
                 local data = lc_extra_transitions.lc_pool[object:section()]
                 if data then
@@ -30,9 +33,7 @@ end
 
 local function outside(position, changers)
     for _,changer in ipairs(changers) do
-        if changer.object then
-            if changer.object:inside(position, 10) then return false end
-        elseif distance_squared(position, changer.position) <= changer.radius^2 then
+        if distance_squared(position, changer.position) <= changer.radius^2 then
             return false
         end
     end

@@ -75,8 +75,12 @@ function guard_changer(state, object, id)
     if not ok or not data then return false, "Cannot inspect native transition destination" end
     local target = destination(data.dest_game_vertex_id)
     local permitted = allowed(state,target)
-    if not permitted and db.actor and type(object.inside) == "function"
-        and object:inside(db.actor:position(),2) then warning(target) end
+    -- Level changers expose position(), but their inherited inside() binding
+    -- logs a native class error. Proximity only controls the warning, not access.
+    if not permitted and db.actor and type(object.position) == "function" then
+        local point,actor = object:position(),db.actor:position()
+        if (point.x-actor.x)^2+(point.y-actor.y)^2+(point.z-actor.z)^2 <= 100 then warning(target) end
+    end
     if state.zone_disabled[id] and state.zone_disabled[id] ~= object:name() then state.zone_disabled[id] = nil end
     if not permitted and object:is_level_changer_enabled() then
         object:enable_level_changer(false)
