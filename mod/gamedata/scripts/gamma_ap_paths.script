@@ -1,9 +1,11 @@
 -- Engine aliases can contain bin/.. even when they refer to the same directory.
 
-function appdata_root(root)
-    if type(root) ~= "string" then return nil end
-    local path = root:gsub("\\", "/"):lower()
-    if not path:match("^d:/") then return nil end
+PORTABLE_MARKER = "GAMMA_AP_INSTALLATION|1\n"
+
+function appdata_root(root, portable)
+    if type(root) ~= "string" or #root > 4096 then return nil end
+    local path = root:gsub("\\", "/")
+    if not path:match("^%a:/") then return nil end
     local parts = {}
     for part in path:sub(4):gmatch("[^/]+") do
         if part == ".." then
@@ -14,6 +16,23 @@ function appdata_root(root)
             parts[#parts + 1] = part
         end
     end
-    if "d:/" .. table.concat(parts, "/") ~= "d:/anomalyap/appdata" then return nil end
-    return "D:/AnomalyAP/appdata/"
+    if #parts == 0 then return nil end
+    local normalized = path:sub(1,1):upper() .. ":/" .. table.concat(parts, "/")
+    if normalized:lower() == "d:/anomalyap/appdata" then return "D:/AnomalyAP/appdata/" end
+    if portable == true then return normalized .. "/" end
+    return nil
+end
+
+-- Non-DEV directories require explicit enrollment by the player's setup launcher.
+function bridge_root(root, open_file)
+    local legacy = appdata_root(root)
+    if legacy then return legacy end
+    local candidate = appdata_root(root, true)
+    if not candidate then return nil end
+    local marker = open_file(candidate .. "archipelago\\installation.txt", "rb")
+    if not marker then return nil end
+    local content = marker:read(64)
+    local closed = marker:close()
+    if content ~= PORTABLE_MARKER or not closed then return nil end
+    return candidate
 end

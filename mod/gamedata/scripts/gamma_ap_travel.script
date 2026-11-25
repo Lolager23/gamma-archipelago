@@ -27,7 +27,7 @@ end
 local function ready(state)
     return state.session_key and state.configuration and state.configuration.expanded
         and state.configuration.options.zone_unlock_travel == 1 and db.actor and db.actor:alive()
-        and gamma_ap_paths.appdata_root(getFS():update_path("$app_data_root$", "")) ~= nil
+        and gamma_ap_paths.bridge_root(getFS():update_path("$app_data_root$", ""), io.open) ~= nil
         and gamma_ap_loadout.pda_available(state)
 end
 

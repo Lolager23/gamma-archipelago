@@ -52,6 +52,9 @@ def load_game(lua):
     lua.globals().gamma_ap_notifications.io = lua.globals().mock_io
     lua.globals().gamma_ap_presence.io = lua.globals().mock_io
     lua.globals().gamma_ap_scouting.io = lua.globals().mock_io
+    if lua.globals().gamma_ap_actions is not None:
+        lua.globals().gamma_ap_actions.io = lua.globals().mock_io
+    lua.globals().gamma_ap_travel.io = lua.globals().mock_io
     module.on_game_start()
     enter_world(lua.globals().engine)
     return module, lua.globals().engine

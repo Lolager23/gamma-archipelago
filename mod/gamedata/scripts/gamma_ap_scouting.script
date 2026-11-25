@@ -6,7 +6,7 @@ local function enabled(state)
 end
 
 local function path(name)
-    local root = gamma_ap_paths.appdata_root(getFS():update_path("$app_data_root$", ""))
+    local root = gamma_ap_paths.bridge_root(getFS():update_path("$app_data_root$", ""), io.open)
     return root and root.."archipelago\\"..name or nil
 end
 

@@ -13,7 +13,7 @@ There are three required components, each with one owner:
    reward sections and save the game's receipt state. They never use the network.
 
 Communication is a versioned pair of plain-data snapshots under the isolated
-game's `appdata/archipelago`. The client writes the incoming snapshot atomically.
+game's selected appdata `archipelago` directory. The client writes the incoming snapshot atomically.
 The game writes its own outgoing snapshot. Each file has one writer. A central
 coordinator handles validation and reconciliation; no event bus or distributed
 service layer is needed.
@@ -208,3 +208,20 @@ MO2 folders are read-only references for this task. Neither installation shares
 mods, `overwrite`, appdata, downloads, engine files or an AP state folder. No
 hardlinks, symbolic links or junctions join them. Game processes are tested one at
 a time. Source files may be edited while the normal multiplayer game is running.
+
+## Player-selected installation paths
+
+The packaged connection launcher accepts the Anomaly folder or portable MO2 folder,
+resolves the installed appdata alias and stores the explicit local choice in
+`installation.json`. Setup confirms that choice before writing a small enrollment
+marker. The client receives explicit game/appdata arguments; the adapter uses the
+engine's active `$app_data_root$` and requires that marker outside the legacy DEV
+root. No running-game directory is guessed from processes. Process inspection
+only prevents overlapping companion writers and configuring a live game.
+
+Enrollment is static installation metadata, not AP check/receipt state. The
+existing coordinator and file bridge still own protocol validation and progression.
+Published IDs, seed/slot identity and save schemas are unchanged. Both Python and
+Lua validate their selected paths; Python refuses links, aliases/escapes and
+hardlinked bridge files. Owen's DEV defaults and protected normal installation
+remain unchanged. See [portable installations](portable-installations.md).
