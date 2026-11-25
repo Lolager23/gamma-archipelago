@@ -1,10 +1,14 @@
 -- Maximum matching avoids double-counting source types or spending rare-source slots greedily.
 function capacity(sources,regions,starting)
     local held={}
+    local rules=gamma_ap_catalog.mutant_diversity
     local function assign(source,seen)
         for _,where in ipairs(sources[source]) do
             if regions[where] then
-                for position=1,(where == starting and 5 or 2) do
+                local slots=where == starting
+                    and (rules.starting_region_overrides[where] or rules.starting_region_slots)
+                    or rules.additional_region_slots
+                for position=1,slots do
                     local slot=where..":"..position
                     if not seen[slot] then
                         seen[slot]=true
