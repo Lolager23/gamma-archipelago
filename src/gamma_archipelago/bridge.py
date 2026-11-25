@@ -26,13 +26,24 @@ from .scouting import MAX_SCOUT_BYTES, ScoutedReward, decode_requests, encode_sc
 
 
 class FileBridge:
-    def __init__(self, game_root: Path, *, allowed_root: Path) -> None:
+    def __init__(
+        self, game_root: Path, *, allowed_root: Path, appdata_root: Path | None = None
+    ) -> None:
         self.game_root = require_isolated_root(game_root, allowed_root)
-        self.directory = require_safe_child(self.game_root, "appdata/archipelago")
+        self.appdata_root = (
+            require_isolated_root(appdata_root, appdata_root)
+            if appdata_root is not None
+            else require_safe_child(self.game_root, "appdata")
+        )
+        self.directory = require_safe_child(self.appdata_root, "archipelago")
         self.directory.mkdir(parents=True, exist_ok=True)
         self.allowed_locations = LOCATION_IDS
         self.pilot_goal = True
         self.configuration_key: str | None = None
+
+    def _file(self, name: str) -> Path:
+        root = require_isolated_root(self.appdata_root, self.appdata_root)
+        return require_safe_child(root, "archipelago/" + name)
 
     def write_history(
         self, session_key: str, item_ids: tuple[int, ...], configuration_key: str | None = None
@@ -43,7 +54,7 @@ class FileBridge:
     def read_scout_requests(
         self, key: str, configuration: str, allowed: frozenset[int]
     ) -> frozenset[int]:
-        source = require_safe_child(self.game_root, "appdata/archipelago/scout_requests.txt")
+        source = self._file("scout_requests.txt")
         try:
             with source.open("r", encoding="ascii") as stream:
                 content = stream.read(MAX_SCOUT_BYTES + 1)
@@ -71,8 +82,8 @@ class FileBridge:
         self._write_atomic("presence", encode_presence(key, configuration, epoch, sequence, player))
 
     def _write_atomic(self, name: str, content: str) -> None:
-        destination = require_safe_child(self.game_root, f"appdata/archipelago/{name}.txt")
-        temporary = require_safe_child(self.game_root, f"appdata/archipelago/{name}.tmp")
+        destination = self._file(f"{name}.txt")
+        temporary = self._file(f"{name}.tmp")
         with temporary.open("w", encoding="ascii", newline="\n") as stream:
             stream.write(content)
             stream.flush()
@@ -84,7 +95,7 @@ class FileBridge:
         self._write_atomic("notices", encode_notices(session_key, ()))
 
     def write_notices(self, session_key: str, notices: tuple[Notice, ...]) -> None:
-        source = require_safe_child(self.game_root, "appdata/archipelago/notices_ack.txt")
+        source = self._file("notices_ack.txt")
         try:
             with source.open("r", encoding="ascii") as stream:
                 seen = decode_acknowledgements(stream.read(MAX_ACK_BYTES + 1), session_key)
@@ -105,7 +116,7 @@ class FileBridge:
         )
 
     def read_game(self, session_key: str) -> GameSnapshot | None:
-        source = require_safe_child(self.game_root, "appdata/archipelago/outgoing.txt")
+        source = self._file("outgoing.txt")
         try:
             with source.open("r", encoding="ascii") as stream:
                 content = stream.read(MAX_SNAPSHOT_BYTES + 1)

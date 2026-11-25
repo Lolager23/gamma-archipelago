@@ -52,7 +52,7 @@ end
 function poll(state, now)
     if not gamma_ap_readiness.ready() then return true end
     if not state.session_key then return true end
-    local root = gamma_ap_paths.appdata_root(getFS():update_path("$app_data_root$", ""))
+    local root = gamma_ap_paths.bridge_root(getFS():update_path("$app_data_root$", ""), io.open)
     if not root then return false,"Presence requires isolated development appdata" end
     local file = io.open(root.."archipelago\\presence.txt","rb")
     if not file then return true end -- Older companions have no presence sidecar.
