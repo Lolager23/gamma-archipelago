@@ -56,9 +56,11 @@ uses the same capacity calculation as the APWorld. Starting-region capacity foll
 the resolved AP start; settings-only Random previews remain conservative at Cordon.
 With only Cordon accessible, the raw initial AP sphere and first paced step contain
 at most mutant discoveries 1, 2 and 3 (fewer when excluded or disabled). This
-changes newly generated placements only; do not replace an active archive or its
-installed catalogue to retrofit the new opening. Existing checks stay completed,
-and a rare fourth native discovery still receives credit.
+changes newly generated placements only; never regenerate or replace an active
+archive to retrofit the opening. A coordinated mod/client update can refine PDA
+availability while retaining the existing configuration digest and ID manifests;
+validate those against the saved slot data before deployment. Existing checks
+stay completed, and a rare fourth native discovery still receives credit.
 
 ## Artefact rewards
 
