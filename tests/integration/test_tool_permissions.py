@@ -16,7 +16,7 @@ def settings(**options):
     )
 
 
-def test_class_c_cannot_hold_its_advanced_tool_permission_behind_itself():
+def test_usable_class_c_does_not_require_an_advanced_tool_permission():
     multi = setup_multiworld(GammaWorld, options=settings())
     world = multi.worlds[1]
     state = CollectionState(multi)
@@ -26,7 +26,8 @@ def test_class_c_cannot_hold_its_advanced_tool_permission_behind_itself():
     state.sweep_for_advancements()
     check = multi.get_location("Use Firearm Repair Class: C", 1)
     assert state.has(TOOL_CAPABILITIES[0], 1)
-    assert not check.can_reach(state)
+    assert check.can_reach(state)
+    assert not state.has(TOOL_CAPABILITIES[1], 1)
     state.collect(world.create_item(TOOL_ITEMS["advanced"]), True)
     state.sweep_for_advancements()
     assert check.can_reach(state)

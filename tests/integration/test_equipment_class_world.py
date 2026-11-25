@@ -29,7 +29,7 @@ def test_class_receipts_and_generic_tools_fill_without_self_locks(seed):
     assert report["goal_reachable"] and report["unreachable_checks"] == 0
 
 
-def test_class_c_requires_two_receipts_from_level_one_and_advanced_tools():
+def test_class_c_requires_two_class_receipts_but_no_tool_receipts():
     multi = setup_multiworld(GammaWorld, options=presets()["full_story"])
     world = multi.worlds[1]
     state = CollectionState(multi)
@@ -41,14 +41,12 @@ def test_class_c_requires_two_receipts_from_level_one_and_advanced_tools():
     check = multi.get_location("Use Firearm Repair Class: C", 1)
     assert not check.can_reach(state)
     state.collect(world.create_item("Progressive Firearm Class"), True)
-    state.collect(world.create_item("Progressive Tools"), True)
     state.sweep_for_advancements()
     assert not check.can_reach(state)
     state.collect(world.create_item("Progressive Firearm Class"), True)
-    assert not check.can_reach(state)
-    state.collect(world.create_item("Progressive Tools"), True)
     state.sweep_for_advancements()
     assert check.can_reach(state)
+    assert not state.has("Progressive Tools", 1)
 
 
 def test_zero_start_reserves_baseline_classes_without_forcing_all_higher_classes_early():

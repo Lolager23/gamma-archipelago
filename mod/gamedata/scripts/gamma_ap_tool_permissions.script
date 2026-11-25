@@ -1,7 +1,6 @@
 -- Pure use permissions. Inventory copies never become an independent unlock owner.
 local tier_keys = {"basic","advanced","expert"}
 local recipe_keys = {"basic","advanced","expert","medical","ammo","artefact"}
-local grades = {A=0,B=1,C=2,D=3}
 
 function enabled(configuration)
     return configuration and configuration.expanded
@@ -88,21 +87,6 @@ end
 
 function recipe_reason(state,tier)
     return reason(state,recipe_keys[tier])
-end
-
-function grade_reason(state,row)
-    local tier = grades[row.weapon_grade]
-    local config=state.configuration
-    if gamma_ap_equipment_classes.contract(config) then
-        local mapping = row.category == "checks_armour_tiers" and gamma_ap_catalog.equipment_classes.armour_tools
-            or row.category == "checks_knife_tiers" and gamma_ap_catalog.equipment_classes.knife_tools
-        tier = tier or (mapping and mapping[row.key])
-        if row.category == "checks_weapon_tiers" and not tier then
-            local role=gamma_ap_catalog.equipment_classes.weapon_role_minimum[row.key]
-            tier=({1,1,2,3})[role]
-        end
-    end
-    if enabled(state.configuration) and tier and tier > 0 then return reason(state,tier_keys[tier]) end
 end
 
 function melter_received(state)

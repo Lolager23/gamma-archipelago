@@ -48,15 +48,6 @@ def test_pda_mutant_readiness_matches_exact_gear_and_tool_boundaries(
     assert reason(state, row, regions, identity) is None
 
 
-def test_class_a_check_is_not_a_basic_tool_use_permission(lua):
-    state = state_for(lua, rewards_progressive_tools=1, equipment_class_progression=1)
-    reason = lua.globals().gamma_ap_tool_permissions.grade_reason
-    assert reason(state, lua.table(category="checks_weapon_tiers", weapon_grade="A")) is None
-    assert reason(state, lua.table(category="checks_weapon_tiers", weapon_grade="B"))
-    state.unlocks.tool_basic = True
-    assert reason(state, lua.table(category="checks_weapon_tiers", weapon_grade="B")) is None
-
-
 def test_using_a_class_a_firearm_can_report_the_check_before_any_tool_receipt(lua):
     from .test_tool_permissions import kit_game
     from .test_workshop import poll, state_of

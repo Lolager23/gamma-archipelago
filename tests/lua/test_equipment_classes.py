@@ -271,6 +271,63 @@ def test_skipped_knife_and_repair_grades_credit_lower_checks_at_condition_thresh
     assert all(state.checks[x] for x in range(28052751, 28052755))
 
 
+@pytest.mark.parametrize(
+    "section,kind,repair,check,outfit",
+    [
+        ("pistol", "w_pistol", "pistol", 28052711, False),
+        ("smg", "w_smg", "pistol", 28052713, False),
+        ("shotgun", "w_shotgun", "shotgun", 28052752, False),
+        ("rifle", "w_rifle", "rifle_5", 28052753, False),
+        ("sniper", "w_sniper", "rifle_7", 28052754, False),
+        ("wpn_knife2", "w_melee", "", 28052721, False),
+        ("wpn_knife3", "w_melee", "", 28052722, False),
+        ("wpn_knife4", "w_melee", "", 28052723, False),
+        ("wpn_knife5", "w_melee", "", 28052724, False),
+        ("light", "o_light", "outfit_light", 28052701, True),
+        ("medium", "o_medium", "outfit_medium", 28052702, True),
+        ("heavy", "o_heavy", "outfit_heavy", 28052703, True),
+        ("exo", "o_exo", "outfit_exo", 28052704, True),
+    ],
+)
+def test_qualifying_equipment_checks_count_without_tools_but_keep_condition_threshold(
+    lua, section, kind, repair, check, outfit
+):
+    state = fresh(
+        lua,
+        checks_weapon_tiers=1,
+        checks_knife_tiers=1,
+        checks_armour_tiers=1,
+        rewards_progressive_tools=1,
+        tool_use_permissions=1,
+        progressive_tool_receipts=1,
+        equipment_class_progression=1,
+        initial_firearm_class=4,
+        initial_outfit_class=5,
+        regional_progression=0,
+        playability_logic=0,
+    )
+    native(lua)
+    lua.globals().metadata[section] = lua.table(kind=kind, repair_type=repair)
+    lua.execute("""
+        equipped={health=.649,condition=function(self) return self.health end}
+        db={actor={item_in_slot=function(self,slot) return slot==7 and outfit or nil end,
+            active_item=function() return active end}}
+    """)
+    item = lua.globals().equipped
+    item.section = lua.eval("function(section) return function() return section end end")(section)
+    if outfit:
+        lua.globals().outfit = item
+    else:
+        lua.globals().active = item
+    module = lua.globals().gamma_ap_equipment_checks
+    assert module.poll(state, state.configuration)
+    assert not state.checks[check]
+    item.health = 0.65
+    assert module.poll(state, state.configuration)
+    assert state.checks[check]
+    assert lua.globals().gamma_ap_workshop.tools_level(state) == 0
+
+
 def test_loadout_filter_preserves_price_pairs_and_native_wrappers_on_failure(lua):
     window, engine = menu(
         lua, equipment_class_progression=1, rewards_starting_gear_unlocks=1, starting_pda=2
@@ -387,7 +444,7 @@ def test_uncertain_initial_item_identity_never_retries_automatically(lua, identi
     assert module.apply(state, grants)[0] is False
 
 
-def test_medium_outfit_credits_lower_tier_only_with_condition_and_advanced_tools(lua):
+def test_medium_outfit_credits_lower_tier_without_advanced_tools(lua):
     state = fresh(
         lua,
         checks_armour_tiers=1,
@@ -404,10 +461,6 @@ def test_medium_outfit_credits_lower_tier_only_with_condition_and_advanced_tools
     """)
     module = lua.globals().gamma_ap_equipment_checks
     assert module.poll(state, state.configuration)
-    assert not state.checks[28052701] and not state.checks[28052702]
-    state.applied_items[1] = 28051801
-    assert module.poll(state, state.configuration)
-    assert state.checks[28052701] and not state.checks[28052702]
-    state.applied_items[2] = 28051801
-    assert module.poll(state, state.configuration)
-    assert state.checks[28052702] and not state.checks[28052703]
+    assert state.checks[28052701] and state.checks[28052702]
+    assert not state.checks[28052703]
+    assert lua.globals().gamma_ap_workshop.tools_level(state) == 0

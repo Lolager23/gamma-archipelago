@@ -11,7 +11,6 @@ from gamma_archipelago.equipment_classes import (
     count_with_aliases,
     enabled,
     level,
-    repair_tier,
 )
 from gamma_archipelago.starting_unlock import unlock_candidates
 
@@ -54,14 +53,14 @@ def test_fresh_manifest_retires_generic_permissions_but_legacy_wire_and_unlocks_
     assert level(legacy, "firearms", Counter({"Equipment Unlock: Firearms": 1}).__getitem__) == 4
     assert level(legacy, "outfit", Counter().__getitem__) == 5
     assert count_with_aliases(legacy, Counter().__getitem__)("Equipment Unlock: Melee") == 0
-    assert check_classes(legacy, {}) == {} and repair_tier(legacy, {}) == 0
+    assert check_classes(legacy, {}) == {}
     values = legacy.to_values()
     values.pop("equipment_class_progression")
     assert build_configuration(values).digest == legacy.digest
     assert "option|equipment_class_progression" not in encode_configuration("a" * 64, legacy)
 
 
-def test_class_requirements_and_repair_capabilities_follow_each_tier():
+def test_class_requirements_follow_each_tier():
     config = configuration(rewards_progressive_tools=1)
     assert check_classes(config, {"category": "checks_armour_tiers", "key": "4"}) == {"outfit": 5}
     assert check_classes(config, {"category": "checks_weapon_tiers", "key": "rifle"}) == {
@@ -71,27 +70,6 @@ def test_class_requirements_and_repair_capabilities_follow_each_tier():
         "firearms": 4
     }
     assert check_classes(config, {"category": "checks_maps"}) == {}
-    for category, key, expected in (
-        ("checks_armour_tiers", "1", 1),
-        ("checks_armour_tiers", "2", 2),
-        ("checks_armour_tiers", "4", 3),
-        ("checks_knife_tiers", "2", 1),
-        ("checks_knife_tiers", "3", 2),
-        ("checks_knife_tiers", "5", 3),
-        ("checks_weapon_tiers", "pistol", 1),
-        ("checks_weapon_tiers", "shotgun", 1),
-        ("checks_weapon_tiers", "rifle", 2),
-        ("checks_weapon_tiers", "machinegun", 3),
-    ):
-        row = {"category": category, "key": key}
-        assert repair_tier(config, row) == expected
-        assert repair_tier(configuration(), row) == 0
-    assert repair_tier(config, {"category": "checks_maps"}) == 0
-    for grade, expected in zip("ABCD", (0, 1, 2, 3), strict=True):
-        assert (
-            repair_tier(config, {"category": "checks_weapon_tiers", "weapon_grade": grade})
-            == expected
-        )
 
 
 def test_random_start_only_offers_equipment_that_is_actually_locked():

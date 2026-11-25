@@ -15,7 +15,7 @@ from gamma_archipelago.quest_routes import allowed as quest_allowed
 from gamma_archipelago.settlement_access import requirement
 from gamma_archipelago.starting import starting_level
 from gamma_archipelago.tool_permissions import enabled as tool_permissions_enabled
-from gamma_archipelago.tool_permissions import melter_item, required_tier
+from gamma_archipelago.tool_permissions import melter_item
 
 if TYPE_CHECKING:
     from . import GammaWorld
@@ -109,7 +109,8 @@ def apply_access_rules(world: "GammaWorld", catalog: dict[str, Any]) -> None:
                 names.extend(
                     row["name"] for row in catalog["items"] if row.get("permission") in permissions
                 )
-        tool_tier = required_tier(world.configuration, definition)
+        # Acquired equipment can already meet its condition check without repair.
+        tool_tier = 0
         if "rewards_progressive_tools" in world.configuration.rewards:
             tool_tier = max(
                 tool_tier, readiness_requirements(world.configuration, definition).get("tools", 0)

@@ -153,7 +153,7 @@ def test_six_native_shortcuts_compose_reinstall_and_preserve_arguments(lua):
     assert lua.globals().workshop_tool.start_workshop_basic(8) == ("native", None, 8)
 
 
-def test_class_c_check_and_tracker_wait_for_advanced_even_when_firearm_is_usable(lua):
+def test_usable_class_c_earns_its_check_without_advanced_tools(lua):
     game, engine, _ = kit_game(
         lua, (28051831,), checks_weapon_tiers=1, playability_logic=0, checks_gear_upgrades=0
     )
@@ -168,14 +168,8 @@ def test_class_c_check_and_tracker_wait_for_advanced_even_when_firearm_is_usable
     poll(game, engine)
     catalog = lua.globals().gamma_ap_catalog
     id_ = catalog.weapon_grade_locations.rifle_5
-    assert not state_of(lua, game).checks[id_]
-    row = catalog.tracker_checks[id_]
-    module = lua.globals().gamma_ap_tool_permissions
-    assert module.grade_reason(state_of(lua, game), row)
-    restore(lua, game, tool_advanced=True)
-    poll(game, engine)
     assert state_of(lua, game).checks[id_]
-    assert module.grade_reason(state_of(lua, game), row) is None
+    assert not state_of(lua, game).unlocks.tool_advanced
 
 
 @pytest.mark.parametrize("mode", [0, 1])
@@ -198,7 +192,6 @@ def test_python_and_lua_item_manifests_match_for_old_and_new_seeds(lua, mode):
     module = lua.globals().gamma_ap_tool_permissions
     assert module.reason(state, "unknown") is None
     assert module.section_reason(state, "not_a_kit") is None
-    assert module.grade_reason(state, lua.table()) is None
     if mode:
         state.unlocks.tool_expert = True
         assert module.level(state) == 0

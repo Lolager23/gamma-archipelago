@@ -41,6 +41,34 @@ def rows(view):
     return list(view.rows.values())
 
 
+@pytest.mark.parametrize("classes", [0, 1])
+@pytest.mark.parametrize("permissions", [0, 1])
+def test_equipment_use_tracker_does_not_report_missing_tools_as_a_block(lua, classes, permissions):
+    state = state_for(
+        lua,
+        checks_weapon_tiers=1,
+        checks_armour_tiers=1,
+        checks_knife_tiers=1,
+        rewards_progressive_tools=1,
+        tool_use_permissions=permissions,
+        progressive_tool_receipts=permissions,
+        equipment_class_progression=classes,
+        initial_firearm_class=4,
+        initial_outfit_class=5,
+        playability_logic=0,
+        quest_zone_logic=0,
+    )
+    equipment_ids = {
+        *range(28052701, 28052705),
+        *range(28052711, 28052717),
+        *range(28052721, 28052725),
+        *range(28052751, 28052755),
+    }
+    projected = {row.id: row for row in rows(view(lua, state))}
+    assert all(projected[id_].status == "available" for id_ in equipment_ids)
+    assert lua.globals().gamma_ap_workshop.tools_level(state) == 0
+
+
 @pytest.mark.parametrize("outfit,helmet", [(0, 2), (1, 2), (2, 0), (2, 1), (2, 2)])
 @pytest.mark.parametrize("unlock", ["outfit", "helmet"])
 def test_upgrade_tracker_allows_carried_equipment_before_equip_unlock(lua, outfit, helmet, unlock):
