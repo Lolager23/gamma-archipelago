@@ -61,7 +61,8 @@ def test_denied_zone_shows_area_key_warning_with_a_bounded_repeat_rate(lua):
     lua.execute("""
         alife_object=function() return {} end
         utils_stpk={get_level_changer_data=function() return {dest_game_vertex_id=2} end}
-        warning_changer={inside=function() return true end,name=function() return 'gate' end,
+        warning_changer={inside=function() error('native level changer rejects inside') end,
+            position=function() return {x=1,y=2,z=3} end,name=function() return 'gate' end,
             is_level_changer_enabled=function() return true end,
             enable_level_changer=function(self,enabled) engine.gate_enabled=enabled end}
     """)
@@ -72,6 +73,15 @@ def test_denied_zone_shows_area_key_warning_with_a_bounded_repeat_rate(lua):
         is True
     )
     assert len(engine.news) == 3 and engine.gate_enabled is False
+    engine.now += 6000
+    lua.execute("warning_changer.position=function() return {x=100,y=2,z=3} end")
+    assert (
+        lua.globals().gamma_ap_zone_keys.guard_changer(
+            lua.globals().state, lua.globals().warning_changer, 55
+        )
+        is True
+    )
+    assert len(engine.news) == 3  # A remote locked gate stays silent.
 
 
 def test_locked_destination_is_stopped_in_scripts_and_redirected_before_native_packet_cleanup(lua):

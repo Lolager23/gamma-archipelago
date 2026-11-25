@@ -13,9 +13,10 @@ def test_silent_native_trigger_recovers_once_instead_of_reloading_inside_it(lua)
         db.actor.position=function() return engine.actor_position end
         -- Silent native changers ignore enable_level_changer(false).
         db.storage={[50]={object={clsid=function() return 95 end,
-            inside=function(self,pos,radius) return pos.x<40+radius end}}}
+            position=function() return {x=20,y=2,z=3} end,
+            inside=function() error('native level changer rejects inside') end}}}
         native_touch=function()
-            if db.storage[50].object:inside(db.actor:position(),0) then
+            if db.actor:position().x<40 then
                 local packet=make_packet(3)
                 CALifeUpdateManager__on_before_change_level(packet)
                 engine.actor_position=packet.position
@@ -43,7 +44,8 @@ def test_recovery_rejects_nearby_trigger_volumes_and_extra_transition_radii(lua)
         lc_extra_transitions={lc_pool={extra={trigger_radius='12'}}}
         db.storage={
             [1]={object={clsid=function() return 94 end,
-                inside=function(self,pos,radius) return pos.x==100 and radius==10 end}},
+                position=function() return {x=100,y=2,z=3} end,
+                inside=function() error('native level changer rejects inside') end}},
             [2]={object={clsid=function() return 139 end,section=function() return 'extra' end,
                 position=function() return {x=200,y=2,z=3} end}},
             [3]={object={clsid=function() return 139 end,
