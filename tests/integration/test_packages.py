@@ -162,3 +162,13 @@ assert str(gamma_archipelago.__file__).startswith(sys.argv[1]), gamma_archipelag
     )
     assert help_result.returncode == 0, help_result.stderr
     assert "--name" in help_result.stdout
+    portable_help = subprocess.run(
+        [sys.executable, str(isolated / "GammaArchipelagoConnect.py"), "--help"],
+        cwd=isolated,
+        env={**os.environ, "PYTHONPATH": ""},
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    assert portable_help.returncode == 0, portable_help.stderr
+    assert "--settings" in portable_help.stdout and "--configure" in portable_help.stdout

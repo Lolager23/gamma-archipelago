@@ -8,8 +8,9 @@ same definitions. Disabled AP tool/equipment rewards retain their existing norma
 acquisition assumptions. Native kills continue to record completed facts even if
 a player exceeds the solver's conservative requirements.
 
-Fresh regional progression adds a maximum of five supported mutant types in the
-starting region and two per additional supported reachable region. This bounds
+Fresh regional progression allows three supported starting types in Cordon:
+boar, flesh and dog. Other starting regions retain a maximum of five, and each
+additional supported reachable region contributes at most two. This bounds
 generic logical availability without choosing particular rare species or rejecting
 an actual early discovery. Later artefact quotas also require recipes. See
 [regional story balance](regional-story-balance.md) for the current contract;

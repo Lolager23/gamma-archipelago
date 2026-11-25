@@ -22,9 +22,9 @@ local function report_error(message)
 end
 
 local function bridge_path(filename)
-    local root = gamma_ap_paths.appdata_root(getFS():update_path("$app_data_root$", ""))
+    local root = gamma_ap_paths.bridge_root(getFS():update_path("$app_data_root$", ""), io.open)
     if not root then
-        return nil, "AP add-on is allowed only in D:/AnomalyAP/appdata"
+        return nil, "AP add-on is allowed only in the DEV installation or an explicitly configured installation"
     end
     return root .. "archipelago\\" .. filename
 end

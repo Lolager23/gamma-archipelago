@@ -4,7 +4,7 @@ local TOOLKIT_SECTION = "itm_basickit"
 local DROP_HEIGHT_METRES = 0.2 -- Clear ground collision before the item settles.
 
 function can_spawn()
-    local root = gamma_ap_paths.appdata_root(getFS():update_path("$app_data_root$", ""))
+    local root = gamma_ap_paths.bridge_root(getFS():update_path("$app_data_root$", ""), io.open)
     if not root then
         return false
     end

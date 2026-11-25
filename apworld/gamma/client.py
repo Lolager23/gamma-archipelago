@@ -5,6 +5,7 @@ import logging
 import secrets
 from argparse import Namespace
 from contextlib import suppress
+from pathlib import Path
 from typing import Any
 
 from CommonClient import CommonContext, get_base_parser, server_loop
@@ -251,7 +252,10 @@ async def watch_game(context: GammaContext) -> None:
 
 
 async def run(arguments: Namespace) -> None:
-    context = GammaContext(arguments.connect, arguments.password)
+    bridge = configured_bridge(
+        getattr(arguments, "game_root", None), getattr(arguments, "appdata_root", None)
+    )
+    context = GammaContext(arguments.connect, arguments.password, bridge=bridge)
     context.auth = arguments.name
     context.server_task = asyncio.create_task(server_loop(context), name="AP server")
     watcher = asyncio.create_task(watch_game(context), name="GAMMA bridge")
@@ -264,8 +268,26 @@ async def run(arguments: Namespace) -> None:
         await context.shutdown()
 
 
+def configured_bridge(game_root: Path | None, appdata_root: Path | None) -> FileBridge | None:
+    if game_root is None:
+        if appdata_root is not None:
+            raise ValueError("--appdata-root requires --game-root")
+        return None
+    from gamma_archipelago.installation import inspect_installation, require_enrolled
+
+    installation = inspect_installation(game_root, appdata_root=appdata_root)
+    require_enrolled(installation)
+    return FileBridge(
+        installation.game_root,
+        allowed_root=installation.game_root,
+        appdata_root=installation.appdata_root,
+    )
+
+
 def launch(*arguments: str) -> None:
     logging.basicConfig(level=logging.INFO)
     parser = get_base_parser(description="GAMMA Archipelago companion")
     parser.add_argument("--name", required=True, help="Archipelago slot name")
+    parser.add_argument("--game-root", type=Path, help="Explicitly enrolled Anomaly installation")
+    parser.add_argument("--appdata-root", type=Path, help="Explicit active appdata override")
     asyncio.run(run(parser.parse_args(arguments)))

@@ -1,11 +1,17 @@
 """Maximum distinct opportunities under finite per-region encounter budgets."""
 
+import json
 from functools import lru_cache
+from importlib.resources import files
+
+_RULES = json.loads(files(__package__).joinpath("catalog.json").read_text(encoding="utf-8"))[
+    "mutant_diversity"
+]
 
 
 @lru_cache(maxsize=256)
 def capacity(sources: tuple[tuple[str, ...], ...], regions: frozenset[str], starting: str) -> int:
-    """Match each supported type once to five starting or two additional slots.
+    """Match distinct types to catalogue-owned starting and additional region slots.
 
     Reassignment is essential: greedy counting can spend a unique source's only
     region on a common type. A maximum matching stays monotonic as routes open.
@@ -16,7 +22,12 @@ def capacity(sources: tuple[tuple[str, ...], ...], regions: frozenset[str], star
         for region in sources[source]:
             if region not in regions:
                 continue
-            for position in range(5 if region == starting else 2):
+            slots = (
+                _RULES["starting_region_overrides"].get(region, _RULES["starting_region_slots"])
+                if region == starting
+                else _RULES["additional_region_slots"]
+            )
+            for position in range(slots):
                 slot = region, position
                 if slot in seen:
                     continue
