@@ -37,19 +37,28 @@ These catalogue-backed requirements augment the regional type cap below. They
 apply to generic mutant quotas, not the optional named-mutant roster. They are
 solver/PDA availability assumptions, not a veto on credit for a real kill.
 
-The starting region contributes at most five distinct supported mutant types.
+A Cordon start contributes at most three distinct supported mutant types: boar,
+flesh and dog. These are its only named source opportunities in the catalogue.
+Other starting regions contribute at most five. The catalogue owns the regional
+slot settings; Python and the generated Lua projection use the same values.
 Each additional reachable region contributes at most two, and only when the
 catalogue documents distinct source types there. Visiting a region repeatedly,
 adding a region without a supported source, or killing repeated copies of one
 type adds no diversity. The solver uses maximum matching between source types and
 regional capacity: one type cannot occupy several regions, and a common type can
 be reassigned to preserve a limited source's only region. Exclusions and the
-existing progression ceiling/filler tail still apply. Named-type mode is unchanged.
+existing progression ceiling/filler tail still apply. Named-type mode uses the
+same three Cordon source types but does not use the generic slot calculation.
 
 This is an upper bound for logical availability, not a spawn guarantee or a runtime
 limit on credited kills. Finding an unusual mutant early still counts. The PDA
 uses the same capacity calculation as the APWorld. Starting-region capacity follows
 the resolved AP start; settings-only Random previews remain conservative at Cordon.
+With only Cordon accessible, the raw initial AP sphere and first paced step contain
+at most mutant discoveries 1, 2 and 3 (fewer when excluded or disabled). This
+changes newly generated placements only; do not replace an active archive or its
+installed catalogue to retrofit the new opening. Existing checks stay completed,
+and a rare fourth native discovery still receives credit.
 
 ## Artefact rewards
 

@@ -28,3 +28,18 @@ Keep original appdata/profile backups and the old seed/client/add-on versions
 together for rollback. Do not transplant saves between seeds or installations.
 Uninstall from a clean non-AP save or restore the full pre-AP backup; removing
 the add-on from an active keyed campaign is not a supported way to remove locks.
+
+## Portable player installations
+
+The development defaults above remain valid on Owen's machine. A distributed
+player does not need to move the game into Owen's D: folders. Use
+`GammaArchipelagoConnect.py --settings <local-connection.json>` to choose the
+actual Anomaly folder or portable MO2 folder, confirm its appdata location and
+connect. `--configure` changes only that installation choice; `--slot` and
+`--server` provide explicit connection overrides. The chosen directories are
+stored locally and are not part of the shared seed.
+
+The direct companion also accepts `--game-root` and `--appdata-root` for an
+already enrolled installation. These do not alter the server's item pool, goal,
+slot identity or receipt ordering. Use a fresh character for a different seed.
+See [player-selected installations](portable-installations.md) for setup and tests.

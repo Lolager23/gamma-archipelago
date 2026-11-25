@@ -1421,3 +1421,26 @@ confirmed them. Paid AP contract check sets were unchanged for both players.
 Private recovery reports/backups remain outside Git. The seed and previous checks
 were retained. No mod deployment, game launch, developer-panel alteration or normal
 installation write occurred. No IDs, configuration, protocol or save schema changed.
+## 23 November 2026 - three dependable Cordon mutant opportunities
+
+The previous catalogue listed eleven Cordon species and the generic matcher
+allowed five opening types. The reproducer observed capacity five before the
+change and three afterward. Cordon now lists only boar, flesh and dog; a shared
+catalogue override supplies three starting slots to Python and generated Lua.
+Other starts retain five slots and additional supported regions retain two.
+Exclusions reduce availability, matching remains monotonic, and an actual unusual
+fourth kill still receives native callback credit.
+
+Affected verification passed 2,178 regressions, 19 untraced real-server tests and
+13 Node tests. The changed Python runtime module reached 100% lines and branches;
+the Lua capacity module reached 100% executable lines. Lua branch coverage is not
+measured. The actual filled Living Legend regression has only mutant discoveries
+1-3 in both its initial logical sphere and first paced step; discoveries 4-5
+require another supported region. The generated goal and every check are reachable.
+Catalogue parity, archive loading and deterministic packaging passed. Current-head
+Windows/Linux CI and package checksums are tracked on the PR.
+
+No installation, active archive, current session, save or local developer panel
+was changed. This is a future-generation change; existing placements are retained.
+Native in-game acceptance is not run and remains Owen's responsibility. Full
+release sweeps were not run under the affected-area testing policy.

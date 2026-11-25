@@ -43,12 +43,16 @@ below to perform a live game run before progressing to the next implementation P
 
 - `D:/Anomaly` and `D:/GAMMA` are protected multiplayer installations. Never write
   there, run their installers, alter their profiles or load their saves for tests.
-- Game deployment, launch and installer targets are restricted to `D:/AnomalyAP`
+- On Owen's machine, agent deployment, launch and installer targets remain restricted to `D:/AnomalyAP`
   and `D:/GAMMAAP`. Validate resolved paths, working directories, appdata, profiles,
   mods, downloads and overwrite destinations before use. Reject crossover paths.
 - Keep source separate from installed files. Deploy copies, never hardlinks,
   symlinks or junctions. Do not copy the multiplayer engine or patched gamedata.
-- Runtime bridge files belong only in `D:/AnomalyAP/appdata/archipelago`. Tooling,
+- Owen's runtime bridge remains `D:/AnomalyAP/appdata/archipelago`. Distributed
+  players may explicitly enroll their own Anomaly/MO2 installation and active
+  appdata directory as described in `docs/portable-installations.md`; the bridge
+  is its `archipelago` child. Never enroll or write Owen's protected normal roots
+  through the portable interface. Tooling,
   the pinned upstream checkout and the separate AP runtime use `D:/GAMMAAPTools`.
   Do not modify the shared Archipelago installation or the upstream checkout.
 - Before installation or changes affecting save storage, follow the documented
