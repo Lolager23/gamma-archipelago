@@ -1397,3 +1397,27 @@ The native engine was not run; acceptance remains Owen's.
 No IDs, configuration fields, receipt history, save schema or seed placements
 changed. This is source work only: no game deployment/launch, active-session reset,
 save write, developer-panel alteration or normal-installation write was performed.
+
+## 25 November 2026 - ordinary shop purchase callback
+
+GAMMA custom-UI purchase checks were registered only against the engine trade
+event. Inspection of the installed Monolith callback extension confirmed its
+dedicated `actor_on_item_buy(item, price, trader)` event. The game now registers
+that event, uses its explicit trader and accepts the whole-ruble part of valid
+fractional prices. The engine trade callback remains a compatibility fallback;
+both routes share the same monotonic saved check.
+
+Affected verification against the inventory-repair PR parent passed 1,230 Lua
+regressions, including 27 new purchase regressions. Static checks and deterministic
+package building passed. Both changed Lua scripts reached 100% measured executable
+lines; branch coverage is not measured. Current-head Windows/Linux evidence is
+tracked on the stacked PR. Native acceptance is not run, reserved for Owen.
+
+Separately, Owen explicitly requested completion of all three ordinary shop
+locations for both active players. Native AP server per-location commands completed
+exactly those three IDs for Owen and exactly those three for Mini, after verified
+server-save backups. Server saves confirmed the changes; Owen's companion also
+confirmed them. Paid AP contract check sets were unchanged for both players.
+Private recovery reports/backups remain outside Git. The seed and previous checks
+were retained. No mod deployment, game launch, developer-panel alteration or normal
+installation write occurred. No IDs, configuration, protocol or save schema changed.
