@@ -6,7 +6,9 @@ Each trader charges 2,500, 7,500 and 15,000 RU: 25,000 RU per trader and 75,000 
 for all nine. Prices are fixed service prices, independent of native stock prices.
 The catalogue owns each contract's ID, name, description, trader and price.
 
-The **AP shop** button sits in the trader header, left of the money display.
+The **AP shop** button sits at the bottom of the trader identity section, above
+the supply-rank and money row. Its 18-unit height fits the supported header gap
+from y=60 to y=80, leaving the rank visible and staying left of the money display.
 It switches the NPC pane between native goods and three contract cards. Cards
 show the official Archipelago icon, the actual check name/description, its price
 and a Buy/Purchased/payment-review status. Long descriptions and scouted rewards

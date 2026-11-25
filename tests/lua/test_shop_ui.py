@@ -67,6 +67,16 @@ def test_docked_shop_button_opens_descriptive_offers_and_restores_native_goods(l
     assert window.CC.npc_trade_bag.IsShown(window.CC.npc_trade_bag)
 
 
+def test_shop_button_fits_identity_footer_without_covering_supply_rank_or_money(lua):
+    _, _, _, window = trader_ui(lua)
+    button = window.gamma_ap_shop.button
+    # Supported GAMMA identity text ends at 60; supply rank and money start at 80.
+    assert button.y >= 60
+    assert button.y + button.height <= 80
+    assert button.height >= 16  # Keep the letterica16 label within the hit target.
+    assert button.x + button.width < 140  # Native money column.
+
+
 def test_row_purchase_uses_its_own_check_id_and_immediately_updates_money_and_status(lua):
     game, engine, _, window = trader_ui(lua)
     toggle(window)
