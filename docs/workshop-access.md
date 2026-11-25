@@ -5,7 +5,7 @@ default, add the following permissions:
 
 | Option | Required pool entries | Native actions |
 |---|---|---|
-| `rewards_workshop_access` | Repair, Upgrades, Crafting | The corresponding workshop, field-repair and technician mutation entry points |
+| `rewards_workshop_access` | Repair, Upgrades, Crafting | The corresponding workshop, toolkit and technician mutation entry points |
 | `rewards_recipe_access` | General, Medical, Ammunition, Artefacts | Crafting recipes using native toolkit indices 1–3, 4, 5 and 6 respectively |
 
 These permissions unlock access to known recipes/actions. They do not grant all
@@ -13,6 +13,10 @@ encyclopedia recipe knowledge or waive ordinary parts, toolkits, money and nativ
 requirements. In particular, a recipe book does not bypass an AP recipe-group
 permission. Progressive Tools remains independent: when both systems are on,
 both the action/group permission and its relevant tool tier are required.
+
+Ordinary [inventory repair consumables](inventory-repair-permissions.md) are
+exempt: their native dialog needs neither Workshop Access: Repair nor Basic Tools.
+The native item/condition/supply checks and consumption remain authoritative.
 
 For fresh content/playability activity pools, all three workshop permissions now
 use the [early equipment allocation](early-equipment.md). Local rewards arrive

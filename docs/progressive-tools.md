@@ -13,11 +13,16 @@ acquisition cannot substitute for an AP permission. Attached supplies are a late
 independent option, not an implicit toolkit grant here.
 
 The add-on guards mutation entry points for workshop repair, workshop upgrades,
-crafting, field repair and technician repair/upgrades. Repair requires Basic;
+crafting, toolkit repair and technician repair/upgrades. Workshop repair requires Basic;
 upgrades conservatively require Expert; recipes using the first three workshop
 toolkit tiers require their corresponding permission. Drug, ammunition and
 artefact kits remain separate native systems in this step. No inventory is
 stripped. Disabling the option leaves ordinary native actions unrestricted.
+
+Inventory maintenance items recognised by Anomaly's native repair-item registry
+are exempt from tool/workshop permissions. Gun oil, cleaning and sewing kits
+therefore retain ordinary native use without Basic Tools. The six AP toolkits are
+never exempt. See [inventory repair](inventory-repair-permissions.md).
 
 The AP solver and PDA require all three permissions before upgrade checks. This
 is intentionally conservative for differences between technicians and upgrade

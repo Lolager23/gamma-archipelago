@@ -22,6 +22,16 @@ local function definition(key)
     end
 end
 
+function inventory_repair(section)
+    for _,row in pairs(gamma_ap_catalog.tool_use_items) do
+        if row.tool_section == section then return false end
+    end
+    if type(IsItem) ~= "function" then return false end
+    local ok,repair = pcall(IsItem,"repair",section)
+    -- Native Parse_ITM stores either true or the repair_only target table.
+    return ok and (repair == true or type(repair) == "table")
+end
+
 local function translated(key,fallback)
     local ok,text = pcall(function() return game.translate_string(key) end)
     return ok and type(text) == "string" and text ~= "" and text ~= key and text or fallback

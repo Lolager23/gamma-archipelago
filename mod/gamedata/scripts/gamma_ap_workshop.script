@@ -31,6 +31,13 @@ function tools_level(state)
 end
 
 function allowed(state, action, dialog)
+    if action == "inventory_repair" then
+        local ok,section = pcall(function() return dialog.obj:section() end)
+        if ok and gamma_ap_tool_permissions.inventory_repair(section) then return true end
+        local problem = ok and gamma_ap_tool_permissions.section_reason(state,section)
+        if problem then return false,problem end
+        action = "repair"
+    end
     local configuration = state.configuration
     if not active(configuration) then return true end
     if state.refused_save or not state.session_key then return false,"Restore a valid AP session before using the workshop" end
@@ -74,7 +81,7 @@ function install(configuration, current_state)
         {ui_workshop.UIWorkshopRepair,"Repair","repair"},
         {ui_workshop.UIWorkshopUpgrade,"Upgrade","upgrade"},
         {ui_workshop.UIWorkshopCraft,"Craft","craft"},
-        {item_repair.UIRepair,"OnRepair","repair"},
+        {item_repair.UIRepair,"OnRepair","inventory_repair"},
         {ui_inventory.UIInventory,"RMode_RepairYes","repair"},
         {ui_inventory.UIInventory,"RMode_UpgradeYes","upgrade"},
     } end)
