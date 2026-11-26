@@ -32,3 +32,9 @@ psi effects are not run; Owen will verify after merge. No game was launched.
 Physical interaction and the local AP claim require no PDA. A player who knows
 where the recorded cache is can claim the received coordinates directly; PDA
 information access remains separate. Existing pending plans resume without a reset.
+
+Successful direct inventory delivery now queues an explicit local PDA message,
+so an empty container and cleared progression marker do not imply lost loot.
+The notice waits for a ready world frame, survives save/load while pending and
+retries display independently of item creation. Older claimed stashes are not
+announced retroactively. See [PDA messages](pda-reward-messages.md#direct-inventory-delivery-from-a-stash).

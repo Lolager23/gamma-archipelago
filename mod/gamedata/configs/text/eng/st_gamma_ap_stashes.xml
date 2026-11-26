@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<string_table>
+    <string id="gamma_ap_stash_inventory_delivery">
+        <text>Archipelago stash: "{item}" was delivered directly to your inventory.</text>
+    </string>
+</string_table>

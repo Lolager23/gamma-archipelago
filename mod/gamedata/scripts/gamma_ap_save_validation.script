@@ -45,6 +45,10 @@ local function valid_stashes(stashes, received, key)
             or not expected_level or expected_level ~= record.level
             or type(record.actions) ~= "table" or #record.actions ~= #sections
             or not integer(record.next_action, 1, #sections+1) then return false end
+        local pending = record.inventory_notice_pending
+        if pending ~= nil and type(pending) ~= "boolean" then return false end
+        if pending and (not gamma_ap_catalog.protected_stash_items[record.item_id]
+            or record.claimed ~= true or record.next_action ~= #record.actions+1) then return false end
         for index,section in ipairs(sections) do
             if type(record.actions[index]) ~= "table" or record.actions[index].section ~= section then return false end
         end
