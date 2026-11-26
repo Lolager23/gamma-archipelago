@@ -195,10 +195,12 @@ function actor_on_update()
     local notified, notice_error = gamma_ap_notifications.poll(state)
     if not notified then report_error(notice_error); return end
     local joined, join_error = gamma_ap_presence.poll(state,now)
+    local room_ready,room_error = gamma_ap_room.poll(state,now)
     local scouted, scout_error = gamma_ap_scouting.write_requests(state)
     if not scouted then report_error(scout_error); return end
     if not success then report_error(delivery_error)
     elseif not joined then report_error(join_error)
+    elseif not room_ready then report_error(room_error)
     elseif not permitted then report_error(permission_error)
     elseif not zones then report_error(zone_problem)
     elseif not stashed then report_error(stash_error)

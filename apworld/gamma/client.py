@@ -33,6 +33,7 @@ from gamma_archipelago.session import SessionCoordinator, make_session_key
 
 from .notices import received as received_notices
 from .notices import sent as sent_notice
+from .room import RoomFeed
 from .scouting import poll as poll_scouting
 
 logger = logging.getLogger("Client")
@@ -63,6 +64,7 @@ class GammaContext(CommonContext):
         self.scouting_sequence = 0
         self.presence_sequence = 0
         self.last_presence_error: str | None = None
+        self.room = RoomFeed()
 
     async def server_auth(self, password_requested: bool = False) -> None:
         if password_requested and not self.password:
@@ -172,6 +174,8 @@ class GammaContext(CommonContext):
             self.bridge.write_history(
                 self.session.session_key, self.session.item_ids, required_config
             )
+        if self.session:
+            self.room.receive(self, command, arguments)
         if command == "PrintJSON" and self.session:
             item = arguments.get("item")
             recipient = arguments.get("receiving")
@@ -218,6 +222,7 @@ class GammaContext(CommonContext):
         if not self.session or not self.server or not self.slot:
             return
         self.publish_presence()
+        self.room.publish(self)
         missing = sorted(self.checked_locations - self.scout_requested)[:64]
         if missing:
             await self.send_msgs(

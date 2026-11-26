@@ -34,6 +34,7 @@ def connected_context(slot_data=None):
         read_scout_requests=lambda *_: frozenset(),
         write_scouted=lambda *_: None,
         write_presence=lambda *_: None,
+        write_room_feed=lambda *_: None,
     )
     context = adapter.GammaContext(bridge=bridge)
     context.server_seed_name = "pilot-seed"
