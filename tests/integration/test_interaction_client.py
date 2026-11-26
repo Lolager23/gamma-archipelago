@@ -39,7 +39,7 @@ async def test_chat_offline_acknowledgements_gaps_and_companion_restart_resume()
     await context.poll_game_once()
     assert context.bridge.write_connection_status.call_args.kwargs["connected"] is False
     assert not context.bridge.read_commands.called
-    context.server = object()
+    context.server = SimpleNamespace(socket=SimpleNamespace(open=True, closed=False))
     await context.poll_game_once()
     assert context.send_msgs.call_args.args[0] == [{"cmd": "Say", "text": "!hint"}]
     context.bridge.read_commands.return_value = ("a" * 16, (GameRequest(10, "say", "gap"),))
@@ -83,4 +83,6 @@ def test_address_status_never_exposes_credentials_and_checks_real_socket_state()
     )
     assert connected(context)
     context.server.socket.closed = True
+    assert not connected(context)
+    context.server.socket = None
     assert not connected(context)

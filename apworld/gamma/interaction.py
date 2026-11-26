@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 def connected(context: "GammaContext") -> bool:
     socket = getattr(context.server, "socket", None)
     return bool(
-        context.server and context.slot and (socket is None or (socket.open and not socket.closed))
+        context.server and context.slot and socket and socket.open and not socket.closed
     )
 
 
