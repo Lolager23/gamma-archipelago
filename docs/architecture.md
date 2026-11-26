@@ -27,13 +27,20 @@ checks; the CommonClient notice adapter resolves the finder slot's game and
 data-package metadata. The game translates the sentence, cause and owned value.
 See [PDA messages](pda-reward-messages.md) for coordinated bundle upgrades.
 
-An optional live-presence sidecar supplies the authenticated slot name and an
-advancing connection heartbeat for startup/reconnect PDA notices. Its transient
-game cache owns only presentation; it never enters save, item or check state.
-Automatic join/transfer display also shares one transient loading-readiness gate:
-native screen dismissal followed by a later unpaused, non-precaching world frame.
-The same gate protects weather observations and optional stamina restoration.
-It does not acknowledge items or delay receipt application.
+Optional room news and connection diagnostics are transient presentation channels.
+The companion writes bounded session/configuration-bound room/status snapshots;
+the game writes a bounded challenge-bound request queue for chat and hints.
+A first ready-world entry requests room chat once per game process, with request
+submission deduplication across companion reconnects. Level/save loading never
+resets that queue. Upstream Join/Part retains its real connection meaning.
+The legacy presence heartbeat remains available to older bundles; the current
+add-on no longer emits a local join popup from it. None of these caches owns
+checks, received history or applied receipt state. See [PDA messages](pda-reward-messages.md).
+Automatic room/transfer display and world-entry requests share one transient
+loading-readiness gate: native screen dismissal followed by a later unpaused,
+non-precaching world frame. The same gate protects weather observations and
+optional stamina restoration. It does not acknowledge items or delay receipt
+application. A user-requested MCM diagnostic can print while the menu is paused.
 
 The [PDA tracker](pda-tracker.md) reads a detached view from the game-state owner.
 Settlement diplomacy uses catalogue-backed solver requirements and a read-only
