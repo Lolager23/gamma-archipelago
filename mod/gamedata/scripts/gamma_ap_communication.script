@@ -2,6 +2,14 @@
 local game_epoch = string.format("%08x%08x",os.time()%4294967296,math.floor(os.clock()*1000000)%4294967296)
 local bound,epoch,heartbeat,changed_at,live = nil,nil,nil,nil,false
 local requests,next_sequence,entered = {},0,false
+local request_key = nil
+
+local function bind(key)
+    if request_key and request_key ~= key then
+        requests,next_sequence,entered = {},0,false
+    end
+    request_key = key
+end
 
 local function plain(text, maximum)
     return type(text) == "string" and #text <= maximum and not text:find("[%z\1-\31\127%%<>|%[%]]")
@@ -90,17 +98,18 @@ end
 
 function say(state,text)
     if not state.session_key then return false,"Load an Archipelago game first" end
+    bind(state.session_key)
     if not plain(text,512) or text == "" then return false,"AP message must contain 1-512 safe text bytes" end
     return enqueue("say",text)
 end
 
 function poll(state, now)
     if not state.session_key or not gamma_ap_readiness.ready() then return true end
+    bind(state.session_key)
     local frame = view(state,now)
     if not frame.fresh then return true end
-    if not entered then
-        local queued,reason = enqueue("loaded","")
-        if not queued then return false,reason end
+    if not entered and #requests < 32 then
+        enqueue("loaded","")
         entered = true
     end
     if #requests == 0 then return true end
