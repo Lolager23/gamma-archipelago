@@ -8,7 +8,7 @@ including when the starting PDA is omitted or AP-locked. English examples:
 - `Friend unlocked your "Zone Access".`
 - `You sent "100 Rupees" to James.`
 - `You unlocked "Zone Access" for James.`
-- `GammaPilot joined the Archipelago.`
+- `GammaPilot loaded GAMMA and entered the Zone.`
 
 ## Why a reward was earned
 
@@ -82,9 +82,9 @@ matches an owned label. Each template layer substitutes once; braces inside
 names/labels are never interpreted as another placeholder. Invalid or missing
 translations fall back independently to the English sentence, cause or value.
 
-The join sentence uses exactly one `{player}` placeholder and no `{item}`. It
-names this game's authenticated AP slot/alias, not its generated STALKER character.
-It does not broadcast other players' joins into this game's PDA.
+The old join string remains generated for older matching bundles. Current world-entry
+news is ordinary AP room chat and identifies the authenticated slot. Real upstream
+Join/Part messages retain their network-connection meaning.
 
 ## Startup and reconnect notices
 
@@ -100,8 +100,8 @@ New-game initialization, save loading, actor destruction and the loading-screen
 key prompt close the gate again. This transient flag is not saved. Deferred
 transfer notices remain unacknowledged and unseen until actual display; normal
 receipt application, loadout preparation and check synchronization continue.
-Presence starts observing live heartbeat advances after the gate opens, so a
-cached file still cannot announce a join. Already displayed transfer identities
+World-entry requests wait for a fresh authenticated companion status after the gate
+opens, so a cached file cannot announce entry. Already displayed transfer identities
 retain their existing save/load deduplication.
 
 Source basis: the installed development `callbacks_gameobject.script` forwards
@@ -114,25 +114,17 @@ Anomaly `lua_help.script` documents `device().frame`, `precache_frame` and
 `is_paused`. Saved-profile loose-file inspection is source evidence; native
 timing and the engine's loaded winner still require Owen's verification.
 
-The connected companion atomically publishes optional `presence.txt` version 1:
-header `GAMMA_AP_PRESENCE|1`, session key, configuration digest (or `-` for an
-unconfigured legacy pilot), a 16-hex connection epoch and monotonic sequence,
-UTF-8-hex player label, then `end|1`. The entire snapshot is at most 2,048 bytes.
-This presentation-only channel has no item/check acknowledgement fields.
-
-The game waits to observe an advancing heartbeat before showing the join message.
-A static file left by a stopped companion cannot announce a new connection.
-The notice appears once per game load and per observed reconnect, including a
-new companion epoch or a heartbeat resuming after more than five seconds. Clock
-rollback resets this transient presentation cache. PDA ownership does not gate
-the broadcast. Failed display retries on a later heartbeat.
-Wrong-session/configuration, partial, malformed and
-unsafe snapshots are refused. Old companions simply show no join message.
+The companion still publishes `presence.txt` version 1 for older matching bundles.
+The current add-on uses `connection_status.txt` and its challenge-bound game request
+queue instead; it does not translate heartbeat advances into local join messages.
+A first ready-world entry sends one room announcement. Level switching, save/load
+and heartbeat reconnects do not generate another entry request in that game process.
+See the world-entry correction below for queue ownership and delivery limits.
 
 No save schema, published IDs, receipt handling or generation logic changes.
-Translation fallback is English. The normal installation and private developer
-panel are outside this source change. Deploy the companion and game module
-together; an APWorld-only settings regeneration is not required for this feature.
+Deploy the companion and game module together; an APWorld-only settings
+regeneration is not required. The normal installation and private developer
+panel are outside this source change.
 
 No translated language pack is claimed. Font coverage, language selection and
 native PDA rendering remain in-game acceptance for the user.
@@ -271,3 +263,33 @@ acknowledgement; sufficiently long absences can exceed the 64-message window.
 English room transfer prose uses upstream labels and the existing check-cause
 projection. Local reward localization and receipt/check protocols are unchanged.
 Native acceptance remains not run and belongs to Owen. No live session changed.
+
+
+## World entry and diagnostics correction (26 November 2026)
+
+The old "joined the Archipelago" popup was a local heartbeat notification,
+reset by game load and reconnect. It did not announce a real network join to the
+room. The new bundle removes that local announcement. Real upstream Join/Part
+news retains its actual connection meaning in the room feed.
+
+After the first ready-world load in the game process, a challenge-bound game
+request asks the connected companion to send "<slot> loaded GAMMA and entered the
+Zone." through upstream Say. It is ordinary room chat, visible to other AP
+clients. Loading gates delay the request; level switches and save reloads do not
+reset its transient queue/acknowledgement. The companion deduplicates requests
+across reconnects in that process. A restarted game creates a fresh request epoch.
+Old request files cannot be replayed by a new companion challenge. Requests use
+a separate bounded 32-entry data queue and never alter checks or item receipts.
+Submission acknowledgement means the websocket write completed, not that every
+other client displayed the message; chat has no crash-proof delivery guarantee.
+
+The MCM "Show Archipelago connection status" button prints local news and a
+console line with the authenticated connection status and count of local checks
+absent from the exact server-confirmed snapshot. Stale heartbeat/status is explicit;
+missing or malformed confirmations report an unknown backlog. Server labels
+exclude URL credentials, query strings and paths. Offline status continues to be
+published while the companion retains a bound session. No normal game, active
+session, developer panel, IDs or saved receipt/check state is changed.
+
+This requires matching companion and game packages. Native loading, MCM rendering
+and level-switch acceptance remain not run, reserved for Owen.

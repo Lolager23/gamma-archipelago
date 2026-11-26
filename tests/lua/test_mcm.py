@@ -51,7 +51,7 @@ def test_menu_discovery_has_no_side_effect_and_localizes_its_controls(lua):
     menu, _, engine = load_menu(lua)
     definition = menu.on_mcm_load()
     assert definition.id == "gamma_archipelago" and definition.sh is True
-    assert len(definition.gr) == 6
+    assert len(definition.gr) == 7
     title, description, button = definition.gr[1], definition.gr[2], definition.gr[3]
     assert title.type == "title" and description.type == "desc"
     assert button.type == "button" and button.id == "spawn_basic_tools"
@@ -68,6 +68,14 @@ def test_menu_discovery_has_no_side_effect_and_localizes_its_controls(lua):
         "gamma_ap_tools_spawn_failed",
     } <= set(ids)
     assert all(entry.findtext("text") for entry in strings.getroot())
+
+
+def test_connection_status_button_calls_the_game_state_owner(lua):
+    menu, _, _ = load_menu(lua)
+    lua.execute("gamma_ap_game={print_connection_status=function() return true end}")
+    button = menu.on_mcm_load().gr[6]
+    assert button.id == "connection_status"
+    assert button.functor[1]() is True
 
 
 def test_button_click_creates_exactly_one_unowned_toolkit_at_the_players_feet(lua):

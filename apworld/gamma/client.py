@@ -10,6 +10,7 @@ from typing import Any
 
 from CommonClient import CommonContext, get_base_parser, server_loop
 from NetUtils import ClientStatus, NetworkItem
+from websockets.exceptions import ConnectionClosed
 
 from gamma_archipelago.bridge import FileBridge
 from gamma_archipelago.catalog import (
@@ -31,6 +32,7 @@ from gamma_archipelago.paths import DEFAULT_GAME_ROOT
 from gamma_archipelago.protocol import ProtocolError, validate_id_manifest, validate_session_key
 from gamma_archipelago.session import SessionCoordinator, make_session_key
 
+from .interaction import GameInteraction
 from .notices import received as received_notices
 from .notices import sent as sent_notice
 from .room import RoomFeed
@@ -65,6 +67,9 @@ class GammaContext(CommonContext):
         self.presence_sequence = 0
         self.last_presence_error: str | None = None
         self.room = RoomFeed()
+        self.interaction = GameInteraction()
+        self.hint_points = 0
+        self.last_communication_error: str | None = None
 
     async def server_auth(self, password_requested: bool = False) -> None:
         if password_requested and not self.password:
@@ -219,7 +224,17 @@ class GammaContext(CommonContext):
             self.last_presence_error = None
 
     async def poll_game_once(self) -> None:
-        if not self.session or not self.server or not self.slot:
+        if not self.session:
+            return
+        try:
+            await self.interaction.poll(self)
+            self.last_communication_error = None
+        except (OSError, ProtocolError, ConnectionClosed) as error:
+            message = str(error)
+            if message != self.last_communication_error:
+                logger.warning("GAMMA communication: %s", message)
+            self.last_communication_error = message
+        if not self.server or not self.slot:
             return
         self.publish_presence()
         self.room.publish(self)
@@ -247,7 +262,7 @@ async def watch_game(context: GammaContext) -> None:
         try:
             await context.poll_game_once()
             context.last_error = None
-        except (OSError, ProtocolError) as error:
+        except (OSError, ProtocolError, ConnectionClosed) as error:
             message = str(error)
             if message != context.last_error:
                 logger.error("GAMMA bridge: %s", message)

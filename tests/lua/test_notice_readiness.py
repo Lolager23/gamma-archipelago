@@ -65,7 +65,7 @@ def test_prompt_and_same_frame_dismissal_wait_then_flush_each_notice_once(lua):
     engine.callbacks.on_loading_screen_dismissed()
     state = saved_state(lua, game).gamma_archipelago_v1
     assert lua.globals().gamma_ap_notifications.poll(state) is True
-    assert lua.globals().gamma_ap_presence.poll(state, engine.now) is True
+    assert lua.globals().gamma_ap_communication.poll(state, engine.now) is True
     assert engine.files[BRIDGE + "notices_ack.txt"] is None
     assert not list(engine.news.values())
     for sequence in range(3, 7):
@@ -73,7 +73,6 @@ def test_prompt_and_same_frame_dismissal_wait_then_flush_each_notice_once(lua):
     assert list(engine.news.values()) == [
         "Friend gave you a Bandage",
         "You unlocked access for Friend",
-        "Player joined the Archipelago.",
     ]
     assert len(engine.created) == 1
 
@@ -99,7 +98,7 @@ def test_readiness_closes_again_on_each_loading_boundary(lua, boundary):
     enter_world(engine)
     for sequence in (3, 4, 5):
         tick(game, engine, sequence)
-    assert len(engine.news) == 3
+    assert len(engine.news) == 2
 
 
 @pytest.mark.parametrize(
@@ -139,7 +138,7 @@ def test_reload_keeps_unshown_notices_pending_and_preserves_displayed_identities
     enter_world(engine)
     for sequence in range(1, 4):
         tick(game, engine, sequence)
-    assert len(engine.news) == 3
+    assert len(engine.news) == 2
     stored = saved_state(lua, game)
     engine.files[BRIDGE + "notices.txt"] = encode_notices(
         KEY,
@@ -151,13 +150,12 @@ def test_reload_keeps_unshown_notices_pending_and_preserves_displayed_identities
     game.load_state(stored)
     for sequence in (4, 5):
         tick(game, engine, sequence)
-    assert len(engine.news) == 3
+    assert len(engine.news) == 2
     assert saved_state(lua, game).gamma_archipelago_v1.notices_seen["s:2:2:42"] is None
     enter_world(engine)
     for sequence in (6, 7, 8):
         tick(game, engine, sequence)
-    assert list(engine.news.values())[3:] == [
+    assert list(engine.news.values())[2:] == [
         "A new outgoing reward",
-        "Player joined the Archipelago.",
     ]
     assert len(engine.created) == 1

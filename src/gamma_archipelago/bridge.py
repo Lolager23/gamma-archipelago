@@ -5,6 +5,15 @@ from pathlib import Path
 
 from .catalog import LOCATION_IDS, MAX_SNAPSHOT_BYTES
 from .configuration import SeedConfiguration, encode_configuration
+from .game_commands import (
+    MAX_COMMAND_BYTES,
+    GameRequest,
+    RequestIdentityMismatch,
+    encode_status,
+)
+from .game_commands import (
+    decode_requests as decode_game_requests,
+)
 from .notifications import (
     MAX_ACK_BYTES,
     Notice,
@@ -81,6 +90,53 @@ class FileBridge:
         self, key: str, configuration: str | None, epoch: str, sequence: int, player: str
     ) -> None:
         self._write_atomic("presence", encode_presence(key, configuration, epoch, sequence, player))
+
+    def read_commands(self, key: str, target: str) -> tuple[str, tuple[GameRequest, ...]] | None:
+        source = self._file("game_requests.txt")
+        try:
+            with source.open("r", encoding="ascii") as stream:
+                content = stream.read(MAX_COMMAND_BYTES + 1)
+        except FileNotFoundError:
+            return None
+        except UnicodeDecodeError as error:
+            raise ProtocolError("Game requests must be ASCII data") from error
+        try:
+            return decode_game_requests(content, key, self.configuration_key, target)
+        except RequestIdentityMismatch:
+            return None  # A stopped/previous companion's challenge cannot send chat.
+
+    def write_connection_status(
+        self,
+        key: str,
+        epoch: str,
+        heartbeat: int,
+        *,
+        connected: bool,
+        address: str,
+        game_epoch: str | None,
+        acknowledged: int,
+        confirmed: int,
+        hint_points: int,
+        hint_cost: int,
+        total: int,
+    ) -> None:
+        self._write_atomic(
+            "connection_status",
+            encode_status(
+                key,
+                self.configuration_key,
+                epoch,
+                heartbeat,
+                connected=connected,
+                address=address,
+                game_epoch=game_epoch,
+                acknowledged=acknowledged,
+                confirmed=confirmed,
+                hint_points=hint_points,
+                hint_cost=hint_cost,
+                total=total,
+            ),
+        )
 
     def write_room_feed(
         self,

@@ -6,6 +6,7 @@ from unittest.mock import AsyncMock
 import pytest
 from CommonClient import CommonContext
 from NetUtils import ClientStatus, NetworkItem, NetworkSlot
+from websockets.exceptions import ConnectionClosedError
 from worlds.gamma import client as adapter
 
 from gamma_archipelago.catalog import ITEM_SECTIONS, LOCATION_IDS
@@ -35,12 +36,14 @@ def connected_context(slot_data=None):
         write_scouted=lambda *_: None,
         write_presence=lambda *_: None,
         write_room_feed=lambda *_: None,
+        read_commands=lambda *_: None,
+        write_connection_status=lambda *args, **kwargs: None,
     )
     context = adapter.GammaContext(bridge=bridge)
     context.server_seed_name = "pilot-seed"
     context.team = 0
     context.slot = 1
-    context.server = object()
+    context.server = SimpleNamespace(socket=SimpleNamespace(open=True, closed=False))
     context.on_package(
         "Connected", {"slot_data": slot_data or {"schema_version": 1, "pilot": True}}
     )
@@ -327,7 +330,7 @@ def test_poll_sends_monotonic_checks_and_goal_only_from_a_complete_game_snapshot
         assert len(context.send_msgs.call_args.args[0]) == 1
         context.server = None
         await context.poll_game_once()
-        context.server = object()
+        context.server = SimpleNamespace(socket=SimpleNamespace(open=True, closed=False))
         context.slot = None
         await context.poll_game_once()
         context.session = None
@@ -365,7 +368,13 @@ async def test_default_client_constructs_only_the_development_bridge(monkeypatch
 @run_async
 async def test_watcher_logs_repeated_failures_once_and_recovers(monkeypatch, caplog):
     context = connected_context()
-    outcomes = [OSError("read failed"), OSError("read failed"), ProtocolError("bad file"), None]
+    outcomes = [
+        OSError("read failed"),
+        OSError("read failed"),
+        ProtocolError("bad file"),
+        ConnectionClosedError(None, None),
+        None,
+    ]
 
     async def poll():
         outcome = outcomes.pop(0)
@@ -385,9 +394,9 @@ async def test_watcher_logs_repeated_failures_once_and_recovers(monkeypatch, cap
 
     monkeypatch.setattr(adapter.asyncio, "wait_for", wait)
     await adapter.watch_game(context)
-    assert len(caplog.records) == 2
+    assert len(caplog.records) == 3
     assert context.last_error is None
-    assert waits == [0.5] * 4
+    assert waits == [0.5] * 5
 
 
 def test_client_lifecycle_cleans_up_background_tasks(monkeypatch):
