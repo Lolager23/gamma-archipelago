@@ -135,6 +135,24 @@ def test_queue_bounds_validation_and_write_failures(lua):
     assert module.print_status(state) is False
 
 
+def test_full_queue_flushes_before_entry_and_a_different_session_drops_old_chat(lua):
+    game, engine, module = setup(lua)
+    tick(game, engine)
+    state = saved_state(lua, game).gamma_archipelago_v1
+    for _ in range(32):
+        assert module.say(state, "Pending")[0] is True
+    tick(game, engine, heartbeat=2)
+    content = engine.files[ROOT + "game_requests.txt"]
+    assert "end|32" in content and "loaded" not in content
+    other = lua.table(session_key="d" * 64)
+    assert module.say(other, "New room")[0] is True
+    # Rebind to the actual game: neither previous room's text may be forwarded.
+    tick(game, engine, heartbeat=3)
+    content = engine.files[ROOT + "game_requests.txt"]
+    assert "loaded" in content and "end|1" in content
+    assert b"Pending".hex() not in content and b"New room".hex() not in content
+
+
 @pytest.mark.parametrize(
     "mutate",
     [

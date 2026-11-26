@@ -82,3 +82,17 @@ async def test_unknown_recipient_and_unknown_item_wait_for_metadata():
     context.item_names.update_game(GAME, {"Future reward": 99})
     context.on_package("DataPackage", {})
     assert len(context.room.messages) == 1
+
+
+@run_async
+async def test_optional_news_failure_does_not_block_checks_and_logs_once(caplog):
+    context = connected_context()
+    context.bridge.write_room_feed = Mock(side_effect=OSError("Room news unavailable"))
+    context.bridge.read_game = Mock(return_value=None)
+    await context.poll_game_once()
+    await context.poll_game_once()
+    assert context.bridge.read_game.call_count == 2
+    assert caplog.text.count("Room news unavailable") == 1
+    context.bridge.write_room_feed = Mock()
+    await context.poll_game_once()
+    assert context.room.last_error is None

@@ -70,6 +70,14 @@ def test_menu_discovery_has_no_side_effect_and_localizes_its_controls(lua):
     assert all(entry.findtext("text") for entry in strings.getroot())
 
 
+def test_connection_status_button_calls_the_game_state_owner(lua):
+    menu, _, _ = load_menu(lua)
+    lua.execute("gamma_ap_game={print_connection_status=function() return true end}")
+    button = menu.on_mcm_load().gr[6]
+    assert button.id == "connection_status"
+    assert button.functor[1]() is True
+
+
 def test_button_click_creates_exactly_one_unowned_toolkit_at_the_players_feet(lua):
     menu, _, engine = load_menu(lua)
     button = menu.on_mcm_load().gr[3]
