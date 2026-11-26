@@ -5,6 +5,7 @@ from .test_tracker import state_for, view
 def tracker(lua):
     module = load_ui(lua)
     current = view(lua, state_for(lua))
+    current.scouting_enabled = True
     requests = []
 
     def scout(identity):

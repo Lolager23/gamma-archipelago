@@ -69,6 +69,7 @@ def lua():
         "readiness",
         "notifications",
         "communication",
+        "hints",
         "room",
         "tracker",
         "scout_protocol",

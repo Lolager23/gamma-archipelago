@@ -184,3 +184,40 @@ at supported aspect ratios, text wrapping and all page controls, real progressio
 changes, no-PDA restoration, save/reload and a failed/pending reward. Confirm other
 tabs after repeated loads and with the active Taskboard/DART stack. No deployment,
 game launch or installed developer-panel change is part of this increment.
+
+
+## Server hints and optional scouting (26 November 2026)
+
+The Hints tab is separate from check scouting. Enter an item name and select
+Request item hint to submit the upstream `!hint <item name>` command. Show my
+hints submits `!hint`, listing existing hints and points. The AP server owns
+fuzzy matching, available hints, costs and payment; the UI never reveals a seed
+placement locally or deducts points itself. Its budget shows the latest received
+points and the pinned server's cost formula, with stale connection state explicit.
+The bounded reply view shows recent room replies including hints, newest first;
+it is a 32-message view of transient room news, not a persistent hint database.
+Buttons only enqueue bounded data requests. No networking runs in native UI code.
+
+Scouting remains disabled by default in every fresh preset and the APWorld.
+Disabled scouting now hides the Scout reward button, selected-check reveal text
+and next-milestone previews; stale callbacks cannot request reveals. AP shop
+contract previews remain independently available under their existing playability
+rules. Existing seed settings are retained, not silently changed.
+
+Native console research found no Lua registration/interception API for arbitrary
+player-typed commands in the pinned Monolith baseline. Anomaly's
+`on_console_execute` is emitted by `_g.exec_console_cmd` after a script executes
+a command, not by the engine's player input path. Do not claim an `!` or `ap_say`
+console hook works from mocked callbacks. The user was offered alternatives;
+no engine replacement or console interception is included here. Standard AP uses
+`!hint` directly in chat; A Hat in Time uses `ap_say !hint` in its supported console.
+
+Source references: [AP commands](https://archipelago.gg/tutorial/Archipelago/commands_en),
+[A Hat in Time setup](https://archipelago.gg/tutorial/A%20Hat%20in%20Time/setup_en),
+[pinned console dispatch](https://github.com/themrdemonized/xray-monolith/blob/7289a03f19a3cc712d9fc4cf6122345984c8c094/src/xrEngine/XR_IOConsole.cpp#L557),
+[Lua console bindings](https://github.com/themrdemonized/xray-monolith/blob/7289a03f19a3cc712d9fc4cf6122345984c8c094/src/xrGame/console_registrator_script.cpp#L107).
+
+English controls have string-table resources. Mocked layout bounds, request and
+reply tests do not establish native edit-box input, focus or visual rendering.
+Those checks remain not run, reserved for Owen. The normal installation,
+developer panel and current session remain untouched.

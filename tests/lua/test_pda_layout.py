@@ -12,6 +12,7 @@ def test_long_check_names_grow_clickable_rows_and_keep_reward_details_in_their_o
     current.rows[1].region = "A long translated settlement name " * 6
     current.rows[1].name = "A long translated quest name " * 30
     current.rows[1].reason = "Requirement with CRLF\r\nand a second line\rand third\nline " * 6
+    current.scouting_enabled = True
     current.scouted = lua.table_from(
         {current.rows[1].id: lua.table(item="Lengthy reward " * 15, player="Player " * 10)}
     )
@@ -137,7 +138,7 @@ def test_xml_viewports_and_buttons_are_bounded_and_do_not_overlap():
 
     # The two pages intentionally share a rectangle and are mutually exclusive.
     common = [node for node in root if node.tag != "main" and not node.tag.endswith("_row")]
-    for page in ("checks_page", "progress_page"):
+    for page in ("checks_page", "progress_page", "hints_page"):
         check(
             [node for node in common if not node.tag.endswith("_page") or node.tag == page],
             float(main.get("width")),

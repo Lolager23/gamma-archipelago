@@ -64,3 +64,11 @@ def test_story_tiers_have_distinct_endings_and_optional_chains():
     old = presets()["full_story"] | {"goal": 4}
     assert build_configuration(old).goal == "living_legend"
     assert old["checks_mortal_sin"] == old["checks_operation_afterglow"] == 1
+
+
+def test_scouting_is_off_in_every_fresh_preset_and_can_be_enabled_explicitly():
+    from gamma_archipelago.configuration import defaults
+
+    assert defaults()["scouting_mode"] == 0
+    assert all(values["scouting_mode"] == 0 for values in presets().values())
+    assert build_configuration(defaults() | {"scouting_mode": 2}).option("scouting_mode") == 2

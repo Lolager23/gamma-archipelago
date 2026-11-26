@@ -58,4 +58,10 @@
     <string id="gamma_ap_pda_offline"><text>Server connectivity not reported by this snapshot</text></string>
     <string id="gamma_ap_pda_goal_7"><text>Finish Mortal Sin</text></string>
     <string id="gamma_ap_pda_goal_8"><text>Finish Operation Afterglow</text></string>
+    <string id="gamma_ap_pda_hints"><text>Hints</text></string>
+    <string id="gamma_ap_pda_hint_instructions"><text>Enter an item name to request an AP hint. The server decides availability and cost. Show my hints refreshes your existing hints and points.</text></string>
+    <string id="gamma_ap_pda_request_hint"><text>Request item hint</text></string>
+    <string id="gamma_ap_pda_refresh_hints"><text>Show my hints</text></string>
+    <string id="gamma_ap_pda_hints_unavailable"><text>Waiting for companion hint information</text></string>
+    <string id="gamma_ap_pda_hints_empty"><text>No server hint replies yet. Select Show my hints.</text></string>
 </string_table>

@@ -126,6 +126,14 @@ def test_real_generation_server_item_delivery_and_reconnect(tmp_path, mixed_game
                     )
                     == 1
                 )
+                hint_request = request.replace(
+                    "request|1|loaded|", "request|2|say|" + b"!hint".hex()
+                )
+                (bridge.directory / "game_requests.txt").write_text(hint_request, encoding="ascii")
+                await client.poll_game_once()
+                await wait_until(
+                    lambda: any("A hint costs" in message.text for message in client.room.messages)
+                )
                 initial_epoch = client.scouting_epoch
                 assert {item.item for item in client.items_received} == set(ITEM_SECTIONS)
                 assert {f"r:{index}" for index in range(3)} <= client.session.notices.keys()

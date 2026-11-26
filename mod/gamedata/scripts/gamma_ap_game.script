@@ -405,6 +405,7 @@ function tracker_view()
     local scouting = gamma_ap_scouting.view(state,time_global())
     view.scouted,view.connection_status = scouting.rewards,scouting.status
     view.previews = gamma_ap_scouting.previews(state)
+    view.hints = gamma_ap_hints.view(state,time_global())
     view.scouting_enabled = state.configuration and (state.configuration.options.scouting_mode or 0) > 0
     return view
 end
@@ -467,4 +468,8 @@ end
 
 function send_ap_message(text)
     return gamma_ap_communication.say(state,text)
+end
+
+function request_hint(item)
+    return gamma_ap_hints.request(state,item)
 end

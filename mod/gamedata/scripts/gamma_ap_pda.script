@@ -36,6 +36,11 @@ function ap_tracker_window:__init() super()
     self.xml:InitWindow("main",0,self)
     self.checks_page = self.xml:InitStatic("checks_page",self)
     self.progress_page = self.xml:InitStatic("progress_page",self)
+    self.hints_page = self.xml:InitStatic("hints_page",self)
+    self.xml:InitTextWnd("hints_page:instructions",self.hints_page)
+    self.hint_input = self.xml:InitEditBox("hints_page:input",self.hints_page)
+    self.hint_budget = self.xml:InitScrollView("hints_page:budget",self.hints_page)
+    self.hints = self.xml:InitScrollView("hints_page:replies",self.hints_page)
     for _,name in ipairs({"summary","notice"}) do self[name] = self.xml:InitScrollView(name,self) end
     for _,name in ipairs({"region_label","status_label","hint","selection_label"}) do
         self.xml:InitTextWnd("checks_page:"..name,self.checks_page)
@@ -48,9 +53,12 @@ function ap_tracker_window:__init() super()
     self:Register(self.details,"check_list")
     self:AddCallback("check_list",ui_events.LIST_ITEM_CLICKED,function() self:select_check() end,self)
     self.buttons = {}
-    for _,name in ipairs({"refresh","checks","progression","region","status","previous","next","scout"}) do
-        local top = name == "refresh" or name == "checks" or name == "progression"
-        local button = self.xml:Init3tButton(top and name or "checks_page:"..name,top and self or self.checks_page)
+    for _,name in ipairs({"refresh","checks","progression","region","status","previous","next","scout","hints","request_hint","refresh_hints"}) do
+        local top = name == "refresh" or name == "checks" or name == "progression" or name == "hints"
+        local hint_action = name == "request_hint" or name == "refresh_hints"
+        local parent = top and self or hint_action and self.hints_page or self.checks_page
+        local path = top and name or (hint_action and "hints_page:" or "checks_page:")..name
+        local button = self.xml:Init3tButton(path,parent)
         self.buttons[name] = button
         self:Register(button,name)
         local action = name
@@ -80,8 +88,11 @@ function ap_tracker_window:change(action,direction)
     elseif action == "status" then self.status_index = (self.status_index-1+direction)%#statuses+1
     elseif action == "next" then self.offset = self.offset+gamma_ap_tracker.PAGE_SIZE
     elseif action == "previous" then self.offset = math.max(1,self.offset-gamma_ap_tracker.PAGE_SIZE)
-    elseif action == "checks" or action == "progression" then self.page_name = action
-    elseif action == "scout" and self.selected_id then
+    elseif action == "checks" or action == "progression" or action == "hints" then self.page_name = action
+    elseif action == "request_hint" or action == "refresh_hints" then
+        local _,reason = gamma_ap_game.request_hint(action == "request_hint" and self.hint_input:GetText() or "")
+        self.feedback = reason
+    elseif action == "scout" and self.selected_id and self.scouting_enabled then
         local _,reason = gamma_ap_game.request_scout(self.selected_id)
         self.feedback = reason
     end
@@ -152,11 +163,12 @@ end
 
 function ap_tracker_window:refresh_selection(view)
     local row = self.visible_rows[self.selected_index]
-    self.buttons.scout:Enable(row ~= nil)
+    self.buttons.scout:Enable(row ~= nil and self.scouting_enabled)
     if not row then self:render_text("selection",{label("empty","No checks match. Change the region or status filter.")}); return end
     local reward = view.scouted and view.scouted[row.id]
     local reason = row.status == "completed" and label("completed_details","This check has been completed.") or row.reason
     local lines = {reason}
+    if not self.scouting_enabled then self:render_text("selection",lines); return end
     lines[#lines+1] = reward and (label("reward","Reward")..": "..reward.item.." | "..label("recipient","Recipient")..": "..reward.player)
         or label("not_scouted","Reward not scouted. Select Scout reward to request a reveal.")
     self:render_text("selection",lines)
@@ -183,7 +195,7 @@ function ap_tracker_window:refresh_progress(view)
     end
     local lines = {label("kills","Kills")..": "..view.kills.."    |    "..label("tasks","Side tasks")..": "..view.tasks
         .."    |    "..label("rank","Highest rank")..": "..rank}
-    for _,preview in ipairs(view.previews or {}) do
+    for _,preview in ipairs(self.scouting_enabled and view.previews or {}) do
         local reward = view.scouted and view.scouted[preview.id]
         lines[#lines+1] = preview.label..": "..(reward and reward.item.." -> "..reward.player
             or label("waiting_scout","Waiting for scouting data"))
@@ -201,15 +213,20 @@ end
 function ap_tracker_window:refresh()
     local view = gamma_ap_game.tracker_view()
     local ready = view.enabled and view.bound
+    self.scouting_enabled = view.scouting_enabled == true
+    self.buttons.scout:Show(self.scouting_enabled)
     self.checks_page:Show(ready and self.page_name == "checks")
     self.progress_page:Show(ready and self.page_name == "progression")
-    for _,name in ipairs({"checks","progression","refresh","region","status"}) do self.buttons[name]:Enable(ready) end
-    for _,name in ipairs({"checks","progression"}) do
+    self.hints_page:Show(ready and self.page_name == "hints")
+    self:render_text("hint_budget",{view.hints and view.hints.budget or label("hints_unavailable","Waiting for companion hint information")})
+    self:render_text("hints",view.hints and view.hints.lines or {label("hints_empty","No server hint replies yet. Select Show my hints.")})
+    for _,name in ipairs({"checks","progression","refresh","region","status","hints","request_hint","refresh_hints"}) do self.buttons[name]:Enable(ready) end
+    for _,name in ipairs({"checks","progression","hints"}) do
         self.buttons[name]:TextControl():SetTextColor(self.page_name==name and 0xffecd39a or 0xffb5b5b5)
     end
     if not ready then
         self:render_text("summary",{view.enabled and label("unbound","Start a matching AP session") or label("disabled","Tracker disabled by this seed")})
-        for _,name in ipairs({"details","selection","progress","notice"}) do self[name]:Clear(); self.drawn[name]=nil end
+        for _,name in ipairs({"details","selection","progress","notice","hints","hint_budget"}) do self[name]:Clear(); self.drawn[name]=nil end
         self.visible_rows,self.selected_id,self.selected_index,self.feedback = {},nil,1,""
         self.buttons.scout:Enable(false); self.page:SetText("")
         return
