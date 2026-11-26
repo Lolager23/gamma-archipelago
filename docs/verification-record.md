@@ -1492,3 +1492,34 @@ No IDs, configuration fields/digest, receipt order, save schema or active seed
 placements change. This source-only increment does not deploy, interrupt the
 running host, alter Owen/Mini progress or the local developer panel, or write to
 the normal installations. Native source hashes and raw evidence remain private.
+
+
+## 26 November 2026 - stash direct-inventory PDA messages
+
+Protected stash delivery, currently the calibrated psi helmet, now queues a
+local PDA news entry explicitly naming the reward and its inventory destination.
+The selected native item name, owned reward translation and catalogue name form
+a bounded fallback chain. The complete sentence has an English resource and a
+validated translation template. Display waits for the existing ready-world gate.
+
+The central stash record gains optional boolean `inventory_notice_pending`, set
+only on completion of a new protected claim and cleared after successful news
+publication. Pending display survives save/load; reopening or loading a save made
+after display does not repeat it. Old claimed records without the field never
+replay historical deliveries. Display failure retries only presentation, does not
+respawn loot and does not hold later receipts. Marker cleanup errors cannot hide
+an already completed delivery. Ordinary box loot gets no direct-inventory notice.
+Normal older-save rollback/crash boundaries retain the existing practical limits.
+
+Affected verification against the upgrade-tier PR parent passed 1,319 regressions,
+including 21 new notification cases and the actual archive/package loader. All
+three changed Lua modules reached 100% executable-line coverage; Lua branch
+coverage is not measured. Static checks, reproducible packages and the explicit
+owned string-resource manifest passed. Current-head Windows/Linux status and
+package parity are tracked on the stacked PR. Full release sweeps and native
+engine acceptance are not run; Owen retains in-game verification.
+
+No AP IDs, configuration digest fields, network notice identities/acknowledgements
+or save schema version change. The new field is optional for old saves. This is
+source work only: the running host, Owen/Mini progress, developer panel, installed
+Dev files and normal installation trees are unchanged. Evidence stays private.

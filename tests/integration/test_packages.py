@@ -106,6 +106,7 @@ def test_packages_are_reproducible_and_load_from_apworld(tmp_path):
             "ARCHIPELAGO-ICON-LICENSE.txt",
             "gamedata/configs/text/eng/st_gamma_ap_shop.xml",
             "gamedata/configs/text/eng/st_gamma_ap_guards.xml",
+            "gamedata/configs/text/eng/st_gamma_ap_stashes.xml",
             "gamedata/configs/ui/gamma_ap_shop.xml",
             "gamedata/configs/ui/textures_descr/ui_gamma_ap_shop.xml",
             "gamedata/textures/ui/gamma_ap_shop.dds",

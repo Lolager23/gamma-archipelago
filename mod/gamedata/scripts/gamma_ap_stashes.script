@@ -14,6 +14,7 @@ function copy(progress)
         local record = progress.records[index]
         local cloned = {item_id=record.item_id, cache_id=record.cache_id, cache_name=record.cache_name,
             level=record.level, opened=record.opened, claimed=record.claimed,
+            inventory_notice_pending=record.inventory_notice_pending,
             next_action=record.next_action, loot_version=record.loot_version, actions={}}
         for _,action in ipairs(record.actions) do
             cloned.actions[#cloned.actions+1] = {section=action.section,
@@ -164,7 +165,20 @@ local function fill_record(state, record, box, budget)
         record.next_action = record.next_action + 1
         budget.remaining = budget.remaining - 1
     end
-    if protected and record.next_action > #record.actions then record.claimed = true end
+    if protected and not record.claimed and record.next_action > #record.actions then
+        record.claimed,record.inventory_notice_pending = true,true
+    end
+    return true
+end
+
+local function inventory_notice(record)
+    if not record or not gamma_ap_readiness.ready() then return true end
+    local ok = pcall(function()
+        db.actor:give_game_news("Archipelago",gamma_ap_notice_text.stash_inventory(record.item_id),
+            "ui_inGame2_D_Svyazist",0,5000)
+    end)
+    if not ok then return false,"AP stash inventory notice failed; the reward is already delivered" end
+    record.inventory_notice_pending = nil
     return true
 end
 
@@ -200,6 +214,7 @@ function poll(state)
         return false, "AP stash DXML marker definitions are not ready; saved stashes remain pending"
     end
     local budget = {remaining=8}
+    local notice = nil
     for _,index in ipairs(progress.order) do
         local record = progress.records[index]
         if record.opened and record.next_action <= #record.actions then
@@ -211,11 +226,15 @@ function poll(state)
                 if not ok then return false, problem end
             end
         end
+        if not notice and record.inventory_notice_pending then notice = record end
         if budget.remaining == 0 then break end
     end
+    local notified,notice_error = inventory_notice(notice)
     progress.marker_cursor = (progress.marker_cursor % #progress.order) + 1
     local record = progress.records[progress.order[progress.marker_cursor]]
     local valid, reason = resolve(record)
     if not valid then return false, reason end
-    return marker(state, record)
+    local marked, problem = marker(state, record)
+    if not marked then return false, problem end
+    return notified,notice_error
 end

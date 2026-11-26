@@ -24,6 +24,11 @@ def stash_game(lua, *, items=(FIRST,), **options):
     lua.execute("""
         engine.servers={}; engine.boxes={}; engine.markers={}; engine.spawns={}
         engine.serial=100; engine.spawn_calls=0
+        engine.stash_news={}
+        db.actor.give_game_news=function(self,title,text)
+            if engine.fail_stash_notice then error('PDA unavailable') end
+            engine.stash_news[#engine.stash_news+1]=text
+        end
         db.actor.id=function() return 0 end
         ini_sys.section_exist=function(self,section) return engine.missing_section~=section end
         treasure_manager={caches={}}

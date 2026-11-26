@@ -221,3 +221,31 @@ confirm pending notices appear once. Repeat after a save reload and a map
 transition, and with the loading keypress option disabled. These native checks
 remain **not run**. Previously displayed history is retained; this fix does not
 erase or replay earlier popups.
+
+
+## Direct inventory delivery from a stash
+
+A protected stash, currently the calibrated psi helmet, delivers its contents
+straight into the actor's inventory. On successful completion it queues a local
+PDA news entry, for example:
+
+`Archipelago stash: "Calibrated Psi Helmet" was delivered directly to your inventory.`
+
+The next ready-world stash poll displays at most one queued entry. Loading,
+precaching and paused frames defer it. The item uses its native translated
+inventory name when available, then the existing owned reward translation or
+catalogue label. The complete sentence is translation-ready in the hand-authored
+`mod/gamedata/configs/text/eng/st_gamma_ap_stashes.xml` resource, under stable ID
+`gamma_ap_stash_inventory_delivery`, with exactly one `{item}` placeholder.
+Missing or unsafe translations fall back to the complete English sentence.
+
+The central saved stash record owns an optional boolean `inventory_notice_pending`.
+It is set only after a protected delivery finishes and is cleared after the news
+API succeeds. A failed notice never reopens the creation plan or blocks later
+reward receipts. Marker cleanup failure does not hide an already delivered reward.
+Saving before display retains the pending notice; saving after display prevents
+reopening/reloading from repeating it. An older claimed stash without the flag
+never replays a historical delivery. Ordinary box loot does not emit this notice.
+Normal older-save rollback or a crash before saving can replay a message; there
+is no new exactly-once engine transaction guarantee. No network notice identity,
+acknowledgement, item/check ID, configuration digest or save schema version changes.

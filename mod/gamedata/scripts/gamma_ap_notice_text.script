@@ -68,3 +68,16 @@ function render(notice)
     -- One pass; a label containing {item} or a pattern character stays literal.
     return render_template(key,fallback,fields)
 end
+
+function stash_inventory(item_id)
+    local item = translated("gamma_ap_reward_"..item_id)
+    if not plain(item,384) then item = gamma_ap_catalog.tracker_item_names[item_id] end
+    local sections = gamma_ap_catalog.stash_contents[item_id]
+    if sections and #sections == 1 then
+        local ok,key = pcall(function() return ini_sys:r_string_ex(sections[1],"inv_name") end)
+        local native = ok and type(key) == "string" and translated(key)
+        if plain(native,384) then item = native end
+    end
+    return render_template("gamma_ap_stash_inventory_delivery",
+        'Archipelago stash: "{item}" was delivered directly to your inventory.',{item=item})
+end
