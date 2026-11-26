@@ -22,6 +22,7 @@ from .protocol import (
     encode_confirmed,
     encode_incoming,
 )
+from .room_feed import RoomMessage, encode_feed
 from .scouting import MAX_SCOUT_BYTES, ScoutedReward, decode_requests, encode_scouted
 
 
@@ -80,6 +81,16 @@ class FileBridge:
         self, key: str, configuration: str | None, epoch: str, sequence: int, player: str
     ) -> None:
         self._write_atomic("presence", encode_presence(key, configuration, epoch, sequence, player))
+
+    def write_room_feed(
+        self,
+        key: str,
+        configuration: str | None,
+        epoch: str,
+        heartbeat: int,
+        messages: tuple[RoomMessage, ...],
+    ) -> None:
+        self._write_atomic("room_feed", encode_feed(key, configuration, epoch, heartbeat, messages))
 
     def _write_atomic(self, name: str, content: str) -> None:
         destination = self._file(f"{name}.txt")

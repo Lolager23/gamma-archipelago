@@ -249,3 +249,25 @@ never replays a historical delivery. Ordinary box loot does not emit this notice
 Normal older-save rollback or a crash before saving can replay a message; there
 is no new exactly-once engine transaction guarantee. No network notice identity,
 acknowledgement, item/check ID, configuration digest or save schema version changes.
+
+
+## Room-wide news (26 November 2026)
+
+The matching companion and add-on also project live room messages, including
+foreign self-awards (Dave finding an item for Dave). The finder and recipient
+names, recipient game's item namespace and finder game's source-check namespace
+remain distinct. Missing metadata defers presentation only. Duplicate live
+ItemSend packets are suppressed by their finder/location/recipient/item identity.
+Local transfers retain their saved notices and incoming receipt boundary; the
+room feed does not duplicate them or claim delivery in someone else's inventory.
+
+`room_feed.txt` is an optional bounded presentation snapshot, tied to the exact
+session/configuration, with a process epoch, advancing heartbeat and the last 64
+messages. The game waits for world readiness and an observed heartbeat advance,
+then displays at most one message per poll. Its cursor survives level/save loads
+within the process. A stopped companion cannot initiate announcements from a
+cached file. Room news is transient, not a durable chat archive or saved item
+acknowledgement; sufficiently long absences can exceed the 64-message window.
+English room transfer prose uses upstream labels and the existing check-cause
+projection. Local reward localization and receipt/check protocols are unchanged.
+Native acceptance remains not run and belongs to Owen. No live session changed.
