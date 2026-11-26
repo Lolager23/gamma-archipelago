@@ -1523,3 +1523,41 @@ No AP IDs, configuration digest fields, network notice identities/acknowledgemen
 or save schema version change. The new field is optional for old saves. This is
 source work only: the running host, Owen/Mini progress, developer panel, installed
 Dev files and normal installation trees are unchanged. Evidence stays private.
+
+
+## Room communication and hints - 26 November 2026
+
+Three source-only increments are stacked after the stash inventory notice work:
+`codex/room-broadcasts`, `codex/game-connection-status`, and `codex/tracker-hints`.
+The first adds unrelated/self-directed room transfers, the second corrects world
+entry announcements and adds local diagnostics, and the third adds server hints
+and hides disabled scouting. No deployment or active session change occurred.
+
+- Room feed affected verifier: passed 2,420 covered tests and 19 untraced server
+  tests. Final optional-error isolation: passed 19 focused tests, with 100% line
+  and branch coverage in the two changed feed modules. Other changed Python
+  runtime modules and the Lua feed met their gates (100% measured).
+- Connection affected verifier: passed 2,442 covered tests and 19 untraced server
+  tests. Every changed Python module measured 100% line/branch coverage; the Lua
+  communication module measured 100% executable-line coverage. Queue bounds,
+  missing/partial/wrong-session requests, reconnect, restart, stale status,
+  exact confirmation differences and cross-session pending chat are covered.
+- Tracker affected verifier: passed 1,340 covered regressions and two real
+  generator/server tests. Hints, PDA UI, communication and room Lua modules
+  measured 100% executable-line coverage. Real mixed-game traffic additionally
+  verified a foreign self-award appears in the GAMMA room feed; real `!hint`
+  replies and first-entry Say messages reach it through upstream networking.
+- Lua branch coverage is not measured. Mocked native tests do not establish
+  engine input, window ownership/rendering or native loading timing.
+- Current-head Windows/Linux CI and package parity are recorded on the draft PRs;
+  these local results are not a release validation or evidence for a later head.
+- Native acceptance: not run, reserved for Owen. Verify first entry versus level
+  switching, no loading-screen popups, status in paused MCM, hint edit-box focus,
+  costs/replies and hidden scouting with the seed option off.
+- Native `!` console shorthand is not implemented: the pinned engine does not
+  expose arbitrary typed-console interception or dynamic Lua command registration.
+  Standard AP and A Hat in Time command conventions were researched; alternatives
+  were presented to Owen. No engine baseline was replaced.
+
+The normal installation, private developer panel, active Owen/Mini seed, backend
+processes and session progress remain outside these source-only increments.

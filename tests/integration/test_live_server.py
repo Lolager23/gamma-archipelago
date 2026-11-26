@@ -87,6 +87,12 @@ def test_real_generation_server_item_delivery_and_reconnect(tmp_path, mixed_game
                     await quest.send_msgs(
                         [{"cmd": "LocationChecks", "locations": list(server.locations[quest.slot])}]
                     )
+                if mixed_game:
+                    await wait_until(
+                        lambda: any(
+                            "to QuestPilot" in message.text for message in client.room.messages
+                        )
+                    )
                 key = client.session.session_key
                 outgoing = [
                     "GAMMA_AP_OUT|3",

@@ -49,6 +49,7 @@ def test_hint_projection_shows_bounded_server_replies_budget_and_cached_state(lu
     assert "room feed" in module.view(state, engine.now).lines[1]
     assert "No server hint replies" in module.view(lua.table(), engine.now).lines[1]
     assert game.tracker_view().hints is not None
+    assert "Connected to AP server" in game.tracker_view().connection_status
 
 
 def test_hint_tab_submits_item_and_refresh_requests_with_scrollable_replies(lua):

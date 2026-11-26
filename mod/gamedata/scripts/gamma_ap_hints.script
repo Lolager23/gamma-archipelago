@@ -22,5 +22,5 @@ function view(state, now)
         local price = status.cost == 0 and 0 or math.max(1,math.floor(status.cost*status.total/100))
         budget = budget..". Hint points: "..status.points.." | Cost per item hint: "..price.."."
     end
-    return {budget=budget,lines=lines}
+    return {budget=budget,lines=lines,status=status.status}
 end
