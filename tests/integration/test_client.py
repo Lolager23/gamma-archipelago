@@ -42,7 +42,7 @@ def connected_context(slot_data=None):
     context.server_seed_name = "pilot-seed"
     context.team = 0
     context.slot = 1
-    context.server = object()
+    context.server = SimpleNamespace(socket=SimpleNamespace(open=True, closed=False))
     context.on_package(
         "Connected", {"slot_data": slot_data or {"schema_version": 1, "pilot": True}}
     )
@@ -329,7 +329,7 @@ def test_poll_sends_monotonic_checks_and_goal_only_from_a_complete_game_snapshot
         assert len(context.send_msgs.call_args.args[0]) == 1
         context.server = None
         await context.poll_game_once()
-        context.server = object()
+        context.server = SimpleNamespace(socket=SimpleNamespace(open=True, closed=False))
         context.slot = None
         await context.poll_game_once()
         context.session = None
