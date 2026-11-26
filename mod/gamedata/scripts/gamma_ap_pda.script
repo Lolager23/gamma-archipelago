@@ -132,7 +132,7 @@ end
 
 function ap_tracker_window:Update()
     CUIScriptWnd.Update(self)
-    local now = time_global()
+    local now = time_continual()
     if not self.next_refresh or now >= self.next_refresh then
         self.next_refresh=now+1000
         if self.hints_page:IsShown() then

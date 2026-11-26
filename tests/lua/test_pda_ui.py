@@ -35,6 +35,7 @@ def load_ui(lua, *, xml_filename="gamma_ap_pda.xml", strings_filename="st_gamma_
     lua.execute(r"""
         super=function() end
         clock=1000; time_global=function() return clock end
+        time_continual=function() return clock end
         local methods={}
         methods.SetWndSize=function(self,size) self.width,self.height=size.x,size.y end
         methods.SetWndPos=function(self,pos) self.x,self.y=pos.x,pos.y end

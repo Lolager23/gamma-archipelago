@@ -255,3 +255,18 @@ This performs file I/O only; upstream networking remains in the companion.
 A failed write leaves the accepted request queued for retry. Manual flushing
 never creates the automatic world-entry request; that still requires the existing
 unpaused loading-readiness gate. Native paused-PDA interaction remains unverified.
+
+
+### Merge review: paused-clock correction
+
+The pinned engine uses a pausable TimerGlobal for `time_global`, while
+`time_continual` advances during timer pauses. Tracker refresh and communication
+heartbeat expiry now use the continual clock consistently. Otherwise a paused
+PDA could stop retrying queued chat and keep a stopped companion's status online.
+Two regressions reproduce those failures with a frozen game clock and advancing
+UI clock. Automatic world-entry readiness still checks native loading/frame/pause
+signals; this clock correction does not release loading-screen announcements.
+
+Primary baseline: [device timers and pause](https://github.com/themrdemonized/xray-monolith/blob/7289a03f19a3cc712d9fc4cf6122345984c8c094/src/xrEngine/device.cpp#L642)
+and [pausable TimerGlobal definition](https://github.com/themrdemonized/xray-monolith/blob/7289a03f19a3cc712d9fc4cf6122345984c8c094/src/xrEngine/device.h#L107).
+Native PDA interaction remains not run, reserved for Owen.

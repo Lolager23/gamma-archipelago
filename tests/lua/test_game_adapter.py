@@ -18,6 +18,7 @@ def load_game(lua):
         db = {actor={alive=function() return engine.alive end,
                      has_info=function() return false end}}
         time_global = function() return engine.now end
+        time_continual = function() return engine.continual_now or engine.now end
         level = {name=function() return engine.level end,
                  present=function() return engine.present end}
         device=function() return {frame=engine.frame,precache_frame=engine.precache,

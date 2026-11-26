@@ -127,6 +127,7 @@ def test_failed_immediate_write_keeps_the_accepted_message_for_retry(lua):
 
 def test_visible_chat_refresh_flushes_pending_requests_once_per_second_and_reports_failure(lua):
     window, _, _ = chat_window(lua)
+    lua.execute("time_global=function() return 1000 end")
     flushed = []
     lua.globals().gamma_ap_game.flush_ap_messages = lambda: (
         flushed.append(True) or False,
@@ -144,3 +145,19 @@ def test_visible_chat_refresh_flushes_pending_requests_once_per_second_and_repor
     lua.globals().clock += 1000
     window.Update(window)
     assert len(flushed) == 2
+
+
+def test_paused_game_clock_does_not_keep_stopped_companion_status_online(lua):
+    game, engine, _ = setup(lua)
+    tick(game, engine)
+    tick(game, engine, heartbeat=2)
+    engine.paused = True
+    engine.continual_now = engine.now + 6000
+    assert "Cached" in game.tracker_view().connection_status
+    from .test_communication import status
+
+    engine.files[ROOT + "connection_status.txt"] = status(heartbeat=3)
+    assert "Connected" in game.tracker_view().connection_status
+    engine.continual_now += 6000
+    assert game.print_connection_status() is True
+    assert "Cached" in engine.news[len(engine.news)]

@@ -194,7 +194,7 @@ function actor_on_update()
     if not written then report_error(write_error); return end
     local notified, notice_error = gamma_ap_notifications.poll(state)
     if not notified then report_error(notice_error); return end
-    local joined, join_error = gamma_ap_communication.poll(state,now)
+    local joined, join_error = gamma_ap_communication.poll(state,time_continual())
     local room_ready,room_error = gamma_ap_room.poll(state,now)
     local scouted, scout_error = gamma_ap_scouting.write_requests(state)
     if not scouted then report_error(scout_error); return end
@@ -405,7 +405,7 @@ function tracker_view()
     local scouting = gamma_ap_scouting.view(state,time_global())
     view.scouted,view.scouting_status = scouting.rewards,scouting.status
     view.previews = gamma_ap_scouting.previews(state)
-    view.hints = gamma_ap_hints.view(state,time_global())
+    view.hints = gamma_ap_hints.view(state,time_continual())
     view.connection_status = view.hints.status
     view.scouting_enabled = state.configuration and (state.configuration.options.scouting_mode or 0) > 0
     return view
@@ -476,5 +476,5 @@ function request_hint(item)
 end
 
 function flush_ap_messages()
-    return gamma_ap_communication.flush(state,time_global())
+    return gamma_ap_communication.flush(state,time_continual())
 end

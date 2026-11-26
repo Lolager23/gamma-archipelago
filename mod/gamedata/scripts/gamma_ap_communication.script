@@ -129,7 +129,7 @@ function say(state,text)
     end
     local queued,reason = enqueue("say",text)
     if not queued then return false,reason end
-    local written,problem = flush(state,time_global())
+    local written,problem = flush(state,time_continual())
     return true,written and reason or "Queued; "..problem
 end
 
@@ -147,7 +147,7 @@ function poll(state, now)
 end
 
 function print_status(state)
-    local frame = view(state,time_global())
+    local frame = view(state,time_continual())
     local text = frame.status..". Checks awaiting server confirmation: "..frame.pending.."."
     printf("[GAMMA AP] %s",text)
     if not db.actor or not db.actor:alive() then return false end
