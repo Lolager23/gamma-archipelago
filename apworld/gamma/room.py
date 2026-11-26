@@ -1,5 +1,6 @@
 """Transient, bounded AP room news. This cache never owns checks or receipts."""
 
+import logging
 import secrets
 from collections import deque
 from copy import deepcopy
@@ -10,6 +11,7 @@ from NetUtils import NetworkItem
 from gamma_archipelago.notice_causes import CAUSE_TEMPLATES
 from gamma_archipelago.notice_text import clean_label
 from gamma_archipelago.notifications import is_unlock
+from gamma_archipelago.protocol import ProtocolError
 from gamma_archipelago.room_feed import MAX_MESSAGES, RoomMessage, safe_text
 
 from .notices import source_cause
@@ -26,6 +28,7 @@ class RoomFeed:
         self.messages: deque[RoomMessage] = deque(maxlen=MAX_MESSAGES)
         self.transfers: dict[tuple[int, int, int, int], tuple[NetworkItem, int]] = {}
         self.seen: deque[tuple[int, int, int, int]] = deque(maxlen=4000)
+        self.last_error: str | None = None
 
     def append(self, text: str) -> None:
         text = safe_text(text)
@@ -80,10 +83,18 @@ class RoomFeed:
 
     def publish(self, context: "GammaContext") -> None:
         self.heartbeat += 1
-        context.bridge.write_room_feed(
-            context.session.session_key,
-            context.bridge.configuration_key,
-            self.epoch,
-            self.heartbeat,
-            tuple(self.messages),
-        )
+        try:
+            context.bridge.write_room_feed(
+                context.session.session_key,
+                context.bridge.configuration_key,
+                self.epoch,
+                self.heartbeat,
+                tuple(self.messages),
+            )
+        except (OSError, ProtocolError) as error:
+            message = str(error)
+            if message != self.last_error:
+                logging.getLogger("Client").warning("GAMMA room news: %s", message)
+            self.last_error = message
+        else:
+            self.last_error = None
