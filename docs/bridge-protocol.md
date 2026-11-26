@@ -75,7 +75,9 @@ a stale heartbeat cannot prove an online server.
 `game|<16 lowercase hex process epoch>`, `target|<current companion room epoch>`,
 at most 32 `request|<counter>|<loaded or say>|<UTF-8 hex text>` records and
 `end|<count>`. It is at most 40000 ASCII bytes. `loaded` has an empty payload;
-`say` has 1-512 safe UTF-8 bytes. Requests are ordered and deduplicated within the
+`say` has 1-512 UTF-8 bytes without ASCII control characters (C0/DEL).
+Spacing and punctuation are preserved as hex-encoded data; incoming PDA news
+retains its separate markup sanitization. Requests are ordered and deduplicated within the
 companion process. A new companion accepts the first pending counter as its
 restart boundary; thereafter gaps cannot advance the acknowledgement. Old target
 challenges are ignored. A different saved session drops the transient game queue.

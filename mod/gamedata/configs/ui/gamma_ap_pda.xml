@@ -33,7 +33,10 @@
         <request_hint x="350" y="50" width="196" height="28"><text font="letterica16">gamma_ap_pda_request_hint</text><texture>ui_inGame2_pda_button</texture></request_hint>
         <refresh_hints x="554" y="50" width="196" height="28"><text font="letterica16">gamma_ap_pda_refresh_hints</text><texture>ui_inGame2_pda_button</texture></refresh_hints>
         <budget x="0" y="88" width="750" height="44" vert_interval="2" always_show_scroll="0"/>
-        <replies x="0" y="142" width="750" height="302" vert_interval="6" always_show_scroll="0"/>
+        <replies x="0" y="142" width="750" height="236" vert_interval="6" always_show_scroll="0"/>
+        <chat_label x="0" y="388" width="750" height="18"><text font="letterica16">gamma_ap_pda_chat_label</text></chat_label>
+        <chat_input x="0" y="410" width="620" height="28" max_symb_count="512"><text font="letterica16"/><texture>ui_inGame2_edit_box_1</texture></chat_input>
+        <send_chat x="630" y="410" width="120" height="28"><text font="letterica16">gamma_ap_pda_send_chat</text><texture>ui_inGame2_pda_button</texture></send_chat>
     </hints_page>
     <hint_budget_row x="0" y="0" width="730" height="16"><text font="letterica16" complex_mode="1" vert_align="t"/></hint_budget_row>
     <hints_row x="0" y="0" width="730" height="16"><text font="letterica16" complex_mode="1" vert_align="t"/></hints_row>

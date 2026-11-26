@@ -221,3 +221,37 @@ English controls have string-table resources. Mocked layout bounds, request and
 reply tests do not establish native edit-box input, focus or visual rendering.
 Those checks remain not run, reserved for Owen. The normal installation,
 developer panel and current session remain untouched.
+
+
+## PDA chat composer (26 November 2026)
+
+Owen selected an in-tracker chat box instead of a native-console extension.
+The Chat & hints page retains the item-hint shortcuts and adds a message field
+with Send and Enter submission. Text is passed unchanged to the existing AP Say
+queue: `!hint` and `!hint <item name>` are server commands, while `Hello everyone`
+is room chat. No escape prefix is added or removed and no command is executed
+locally. Server echoes, other players' chat and command replies appear in the
+existing bounded reply pane; the UI does not fabricate a delivery echo.
+
+Empty/whitespace-only messages are refused. A successfully queued message clears
+the field; an invalid message or full queue retains the draft and displays the
+reason. Hidden/disabled controls cannot submit stale Enter/click events. Drafts
+survive tab changes but are transient UI state, not part of a game save. Outbound spacing and punctuation are preserved; incoming room news retains
+the existing PDA display sanitization. The existing queue's 512 UTF-8 byte validation and reconnect/acknowledgement behavior
+remain authoritative; queued is not proof of server receipt or room-wide display.
+
+The composer uses the same native InitEditBox, Register and EDIT_TEXT_COMMIT
+pattern as the pinned Anomaly ui_debug_launcher console input. XML bounds reserve
+separate space for replies, instructions and the composer. English labels live in
+the existing string table. Native focus, Enter behavior and visual rendering are
+not run and remain Owen's acceptance checks. No engine, protocol, catalogue ID,
+seed or save-schema changes; the installed game and active session are untouched.
+
+
+Manual chat submission flushes the bounded data snapshot immediately when a
+fresh companion challenge is available. The visible Chat & hints page retries
+pending writes at most once per second, including while actor updates are paused.
+This performs file I/O only; upstream networking remains in the companion.
+A failed write leaves the accepted request queued for retry. Manual flushing
+never creates the automatic world-entry request; that still requires the existing
+unpaused loading-readiness gate. Native paused-PDA interaction remains unverified.

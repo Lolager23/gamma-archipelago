@@ -82,7 +82,8 @@ def test_requests_and_status_roundtrip_and_bridge_io(tmp_path):
         lambda s: s.replace("request|1|loaded|", "request|1|say"),
         lambda s: s.replace("loaded|", "say|ff"),
         lambda s: s.replace("loaded|", "say|a"),
-        lambda s: s.replace("loaded|", "say|3c"),
+        lambda s: s.replace("loaded|", "say|00"),
+        lambda s: s.replace("loaded|", "say|7f"),
         lambda s: s.replace("loaded|", "say|" + "61" * 513),
         lambda s: s.replace("loaded|", "loaded|61"),
         lambda s: s.replace("loaded|", "say|"),
@@ -113,3 +114,12 @@ def test_request_validation_refuses_partial_unsafe_or_conflicting_data(mutate):
 def test_invalid_status_fields_are_refused(changes):
     with pytest.raises(ProtocolError):
         status(**changes)
+
+
+@pytest.mark.parametrize(
+    "text",
+    ["  Hello  everyone  ", "100% [ready] <ok> | go", "!hint Progressive Tools", "Unicode: café"],
+)
+def test_chat_is_data_and_preserves_whitespace_punctuation_and_utf8(text):
+    _, messages = decode_requests(request(2, "say", text), KEY, None, EPOCH)
+    assert messages[0].text == text

@@ -474,3 +474,7 @@ end
 function request_hint(item)
     return gamma_ap_hints.request(state,item)
 end
+
+function flush_ap_messages()
+    return gamma_ap_communication.flush(state,time_global())
+end

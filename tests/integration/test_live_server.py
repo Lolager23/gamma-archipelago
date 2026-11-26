@@ -65,6 +65,7 @@ def test_real_generation_server_item_delivery_and_reconnect(tmp_path, mixed_game
         client = GammaContext(bridge=bridge)
         client.auth = "GammaPilot"
         quest = None
+        quest_messages = []
         async with websockets.serve(
             partial(MultiServer.server, ctx=server), "127.0.0.1", 0
         ) as listener:
@@ -77,6 +78,7 @@ def test_real_generation_server_item_delivery_and_reconnect(tmp_path, mixed_game
                     quest.game = "APQuest"
                     quest.auth = "QuestPilot"
                     quest.items_handling = 0b111
+                    quest.on_package = lambda command, args: quest_messages.append((command, args))
 
                     async def authenticate(_password_requested=False):
                         await quest.send_connect()
@@ -140,6 +142,29 @@ def test_real_generation_server_item_delivery_and_reconnect(tmp_path, mixed_game
                 await wait_until(
                     lambda: any("A hint costs" in message.text for message in client.room.messages)
                 )
+                chat_request = request.replace(
+                    "request|1|loaded|", "request|3|say|" + b"Hello everyone from the PDA".hex()
+                )
+                (bridge.directory / "game_requests.txt").write_text(chat_request, encoding="ascii")
+                await client.poll_game_once()
+                await wait_until(
+                    lambda: any(
+                        "Hello everyone from the PDA" in message.text
+                        for message in client.room.messages
+                    )
+                )
+                if mixed_game:
+                    await wait_until(
+                        lambda: any(
+                            command == "PrintJSON"
+                            and packet.get("type") == "Chat"
+                            and any(
+                                "Hello everyone from the PDA" in str(part.get("text", ""))
+                                for part in packet.get("data", [])
+                            )
+                            for command, packet in quest_messages
+                        )
+                    )
                 initial_epoch = client.scouting_epoch
                 assert {item.item for item in client.items_received} == set(ITEM_SECTIONS)
                 assert {f"r:{index}" for index in range(3)} <= client.session.notices.keys()

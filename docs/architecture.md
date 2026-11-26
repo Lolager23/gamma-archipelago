@@ -77,6 +77,15 @@ checks or acknowledge rewards. Its native tab wrapper delegates all other sectio
 and uses DXML to extend the existing profile layout. No network work runs in UI
 refresh or the game update loop.
 
+The PDA Chat & hints composer owns only a transient input draft and feedback.
+It delegates unchanged player text to the existing bounded game request queue;
+the companion submits upstream Say, and server echoes/replies populate the
+existing room feed. Explicit submission and the visible page can flush bounded
+request snapshots without waiting for actor updates; they never create the
+automatic world-entry request. Outbound punctuation is data, while incoming PDA presentation
+retains its separate markup sanitization. Neither chat nor hints owns progression,
+checks, item receipts or an independent connection. No native console hook is used.
+
 Optional [scouting](scouting-and-services.md) uses separate bounded request and
 metadata snapshots. The save owns request IDs; the companion owns server-sourced
 item/recipient metadata and its heartbeat. This channel cannot apply receipts or

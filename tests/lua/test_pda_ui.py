@@ -165,7 +165,7 @@ def load_ui(lua, *, xml_filename="gamma_ap_pda.xml", strings_filename="st_gamma_
                 button.TextControl=function() return text end; return button
             end} end
         game={translate_string=function(key) return translations[key] or key end}
-        ui_events={BUTTON_CLICKED=10,LIST_ITEM_CLICKED=35,WINDOW_RBUTTON_DOWN=1,
+        ui_events={BUTTON_CLICKED=10,LIST_ITEM_CLICKED=35,EDIT_TEXT_COMMIT=28,WINDOW_RBUTTON_DOWN=1,
             WINDOW_RBUTTON_UP=4,WINDOW_LBUTTON_DOWN=0}
         pda={set_active_subdialog=function(section) return 'original:'..section end}
         callbacks={}; RegisterScriptCallback=function(name,callback) callbacks[name]=callback end
