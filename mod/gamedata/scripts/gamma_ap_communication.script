@@ -1,0 +1,129 @@
+-- Process-local chat requests and diagnostics; never persist checks or receipts here.
+local game_epoch = string.format("%08x%08x",os.time()%4294967296,math.floor(os.clock()*1000000)%4294967296)
+local bound,epoch,heartbeat,changed_at,live = nil,nil,nil,nil,false
+local requests,next_sequence,entered = {},0,false
+
+local function plain(text, maximum)
+    return type(text) == "string" and #text <= maximum and not text:find("[%z\1-\31\127%%<>|%[%]]")
+end
+
+local function hex(text)
+    return (text:gsub(".",function(char) return string.format("%02x",char:byte()) end))
+end
+
+function parse(content, key, configuration)
+    if type(content) ~= "string" or #content > 8192 or content:sub(-1) ~= "\n" then
+        return nil,"Incomplete or oversized connection status"
+    end
+    local lines = {}
+    for line in content:gmatch("([^\n]*)\n") do lines[#lines+1] = line end
+    if #lines ~= 9 or lines[1] ~= "GAMMA_AP_STATUS|1" or lines[2] ~= "session|"..key
+        or lines[3] ~= "configuration|"..(configuration or "-") or lines[9] ~= "end|1" then
+        return nil,"Connection status identity mismatch"
+    end
+    local token,count = lines[4]:match("^heartbeat|([0-9a-f]+)|(%d+)$")
+    local online,address = lines[5]:match("^connection|([01])|([0-9a-f]+)$")
+    local game,ack = lines[6]:match("^ack|([0-9a-f%-]+)|(%d+)$")
+    local confirmed = lines[7]:match("^confirmed|(%d+)$")
+    local points,cost,total = lines[8]:match("^hint|(%d+)|(%d+)|(%d+)$")
+    local values = {count,ack,confirmed,points,cost,total}
+    for index=1,6 do
+        values[index] = gamma_ap_protocol.canonical_number(values[index])
+        if not values[index] or values[index] > 999999999 then return nil,"Invalid status counter" end
+    end
+    if not token or #token ~= 16 or not game or (game ~= "-" and #game ~= 16)
+        or not address or #address%2 ~= 0 or #address > 4096 then return nil,"Malformed connection status" end
+    address = address:gsub("%x%x",function(pair) return string.char(tonumber(pair,16)) end)
+    if not plain(address,2048) then return nil,"Unsafe connection label" end
+    return {epoch=token,heartbeat=values[1],connected=online=="1",address=address,
+        game=game,ack=values[2],confirmed=values[3],points=values[4],cost=values[5],total=values[6]}
+end
+
+local function root_path()
+    return gamma_ap_paths.bridge_root(getFS():update_path("$app_data_root$",""),io.open)
+end
+
+local function read(root, name, maximum)
+    local file = io.open(root.."archipelago\\"..name,"rb")
+    if not file then return nil,"Companion connection status unavailable" end
+    local content,closed = file:read(maximum+1),file:close()
+    if not closed then return nil,"Communication snapshot close failed" end
+    return content
+end
+
+function view(state, now)
+    local empty = {status="Companion connection status unavailable",fresh=false,connected=false,pending="unknown"}
+    if not state.session_key then return empty end
+    local root = root_path()
+    if not root then empty.status="Communication requires isolated appdata"; return empty end
+    local content,reason = read(root,"connection_status.txt",8192)
+    if not content then empty.status=reason; return empty end
+    local frame,problem = parse(content,state.session_key,state.configuration_key)
+    if not frame then empty.status=problem; return empty end
+    if bound ~= state.session_key or epoch ~= frame.epoch then
+        bound,epoch,heartbeat,changed_at,live = state.session_key,frame.epoch,frame.heartbeat,now,false
+    elseif frame.heartbeat > heartbeat then heartbeat,changed_at,live=frame.heartbeat,now,true
+    elseif frame.heartbeat < heartbeat then empty.status="Outdated connection status refused"; return empty end
+    if now < changed_at then changed_at,live=now,false end
+    frame.fresh = live and now-changed_at <= 5000
+    frame.status = not frame.fresh and "Cached status; companion heartbeat unavailable"
+        or frame.connected and "Connected to AP server: "..frame.address or "Disconnected from AP server: "..frame.address
+    local confirmed_text = read(root,"confirmed_checks.txt",131072)
+    local confirmed = confirmed_text and gamma_ap_protocol.parse_confirmed(confirmed_text,state.session_key,state.enabled_checks)
+    frame.pending = "unknown"
+    if confirmed then
+        frame.pending = 0
+        for id in pairs(state.checks) do if not confirmed[id] then frame.pending=frame.pending+1 end end
+    end
+    if frame.game == game_epoch then
+        while requests[1] and requests[1].sequence <= frame.ack do table.remove(requests,1) end
+    end
+    return frame
+end
+
+local function enqueue(kind,text)
+    if #requests >= 32 then return false,"AP message queue is full; reconnect before sending more" end
+    next_sequence = next_sequence+1
+    requests[#requests+1] = {sequence=next_sequence,kind=kind,text=text}
+    return true,"Queued for Archipelago; awaiting companion submission"
+end
+
+function say(state,text)
+    if not state.session_key then return false,"Load an Archipelago game first" end
+    if not plain(text,512) or text == "" then return false,"AP message must contain 1-512 safe text bytes" end
+    return enqueue("say",text)
+end
+
+function poll(state, now)
+    if not state.session_key or not gamma_ap_readiness.ready() then return true end
+    local frame = view(state,now)
+    if not frame.fresh then return true end
+    if not entered then
+        local queued,reason = enqueue("loaded","")
+        if not queued then return false,reason end
+        entered = true
+    end
+    if #requests == 0 then return true end
+    local lines = {"GAMMA_AP_COMMANDS|1","session|"..state.session_key,
+        "configuration|"..(state.configuration_key or "-"),"game|"..game_epoch,"target|"..frame.epoch}
+    for _,request in ipairs(requests) do
+        lines[#lines+1] = "request|"..request.sequence.."|"..request.kind.."|"..hex(request.text)
+    end
+    lines[#lines+1] = "end|"..#requests
+    local root = root_path()
+    if not root then return false,"Communication requires isolated appdata" end
+    local file = io.open(root.."archipelago\\game_requests.txt","wb")
+    if not file then return false,"Cannot write AP game requests" end
+    local written,closed = file:write(table.concat(lines,"\n").."\n"),file:close()
+    if not written or not closed then return false,"AP game request write failed" end
+    return true
+end
+
+function print_status(state)
+    local frame = view(state,time_global())
+    local text = frame.status..". Checks awaiting server confirmation: "..frame.pending.."."
+    printf("[GAMMA AP] %s",text)
+    if not db.actor or not db.actor:alive() then return false end
+    local shown = pcall(function() db.actor:give_game_news("Archipelago",text,"ui_inGame2_D_Svyazist",0,5000) end)
+    return shown
+end

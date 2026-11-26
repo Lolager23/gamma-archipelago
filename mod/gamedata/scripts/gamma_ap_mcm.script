@@ -14,6 +14,7 @@ function on_mcm_load()
             },
             {id="preview_unlock_travel", type="button", functor={preview_travel}},
             {id="take_unlock_travel", type="button", functor={take_travel}},
+            {id="connection_status",type="button",functor={connection_status}},
             {id="lab_roster", type="desc", text="ui_mcm_gamma_archipelago_lab_roster"},
         },
     }
@@ -26,4 +27,8 @@ end
 
 function take_travel()
     return gamma_ap_game.take_unlock_travel()
+end
+
+function connection_status()
+    return gamma_ap_game.print_connection_status()
 end

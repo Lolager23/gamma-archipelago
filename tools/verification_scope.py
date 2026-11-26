@@ -7,6 +7,7 @@ NETWORK_TESTS = {
     "test_client.py",
     "test_causal_client.py",
     "test_room_client.py",
+    "test_interaction_client.py",
     "test_presence_client.py",
     "test_scouting_client.py",
     "test_live_server.py",
@@ -59,7 +60,8 @@ def area(path: str) -> str | None:
     if path.startswith("apworld/gamma/"):
         return (
             "client"
-            if Path(path).stem in {"client", "notices", "scouting", "presence", "room"}
+            if Path(path).stem
+            in {"client", "notices", "scouting", "presence", "room", "interaction"}
             else "world"
         )
     if path.startswith(("mod/", "probes/")):

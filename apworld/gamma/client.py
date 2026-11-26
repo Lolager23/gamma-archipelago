@@ -31,6 +31,7 @@ from gamma_archipelago.paths import DEFAULT_GAME_ROOT
 from gamma_archipelago.protocol import ProtocolError, validate_id_manifest, validate_session_key
 from gamma_archipelago.session import SessionCoordinator, make_session_key
 
+from .interaction import GameInteraction
 from .notices import received as received_notices
 from .notices import sent as sent_notice
 from .room import RoomFeed
@@ -65,6 +66,9 @@ class GammaContext(CommonContext):
         self.presence_sequence = 0
         self.last_presence_error: str | None = None
         self.room = RoomFeed()
+        self.interaction = GameInteraction()
+        self.hint_points = 0
+        self.last_communication_error: str | None = None
 
     async def server_auth(self, password_requested: bool = False) -> None:
         if password_requested and not self.password:
@@ -219,7 +223,17 @@ class GammaContext(CommonContext):
             self.last_presence_error = None
 
     async def poll_game_once(self) -> None:
-        if not self.session or not self.server or not self.slot:
+        if not self.session:
+            return
+        try:
+            await self.interaction.poll(self)
+            self.last_communication_error = None
+        except (OSError, ProtocolError) as error:
+            message = str(error)
+            if message != self.last_communication_error:
+                logger.warning("GAMMA communication: %s", message)
+            self.last_communication_error = message
+        if not self.server or not self.slot:
             return
         self.publish_presence()
         self.room.publish(self)

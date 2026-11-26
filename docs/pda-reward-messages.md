@@ -271,3 +271,33 @@ acknowledgement; sufficiently long absences can exceed the 64-message window.
 English room transfer prose uses upstream labels and the existing check-cause
 projection. Local reward localization and receipt/check protocols are unchanged.
 Native acceptance remains not run and belongs to Owen. No live session changed.
+
+
+## World entry and diagnostics correction (26 November 2026)
+
+The old "joined the Archipelago" popup was a local heartbeat notification,
+reset by game load and reconnect. It did not announce a real network join to the
+room. The new bundle removes that local announcement. Real upstream Join/Part
+news retains its actual connection meaning in the room feed.
+
+After the first ready-world load in the game process, a challenge-bound game
+request asks the connected companion to send "<slot> loaded GAMMA and entered the
+Zone." through upstream Say. It is ordinary room chat, visible to other AP
+clients. Loading gates delay the request; level switches and save reloads do not
+reset its transient queue/acknowledgement. The companion deduplicates requests
+across reconnects in that process. A restarted game creates a fresh request epoch.
+Old request files cannot be replayed by a new companion challenge. Requests use
+a separate bounded 32-entry data queue and never alter checks or item receipts.
+Submission acknowledgement means the websocket write completed, not that every
+other client displayed the message; chat has no crash-proof delivery guarantee.
+
+The MCM "Show Archipelago connection status" button prints local news and a
+console line with the authenticated connection status and count of local checks
+absent from the exact server-confirmed snapshot. Stale heartbeat/status is explicit;
+missing or malformed confirmations report an unknown backlog. Server labels
+exclude URL credentials, query strings and paths. Offline status continues to be
+published while the companion retains a bound session. No normal game, active
+session, developer panel, IDs or saved receipt/check state is changed.
+
+This requires matching companion and game packages. Native loading, MCM rendering
+and level-switch acceptance remain not run, reserved for Owen.

@@ -35,6 +35,8 @@ def connected_context(slot_data=None):
         write_scouted=lambda *_: None,
         write_presence=lambda *_: None,
         write_room_feed=lambda *_: None,
+        read_commands=lambda *_: None,
+        write_connection_status=lambda *args, **kwargs: None,
     )
     context = adapter.GammaContext(bridge=bridge)
     context.server_seed_name = "pilot-seed"

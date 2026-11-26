@@ -21,4 +21,6 @@
     <string id="ui_mcm_gamma_archipelago_preview_unlock_travel"><text>Preview next unlocked-zone trip</text></string>
     <string id="ui_mcm_gamma_archipelago_take_unlock_travel"><text>Travel to the shown settlement</text></string>
     <string id="ui_mcm_gamma_archipelago_lab_roster"><text>All Labs goal: enter X18, X16, X19, X8 and War Lab. Ordinary underground areas do not count.</text></string>
+    <string id="ui_mcm_gamma_archipelago_connection_status"><text>Show Archipelago connection status</text></string>
+    <string id="ui_mcm_gamma_archipelago_connection_status_desc"><text>Prints the server connection and local checks still awaiting server confirmation.</text></string>
 </string_table>

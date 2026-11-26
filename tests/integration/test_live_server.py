@@ -104,6 +104,28 @@ def test_real_generation_server_item_delivery_and_reconnect(tmp_path, mixed_game
                 presence = (bridge.directory / "presence.txt").read_text()
                 assert f"session|{key}\n" in presence
                 assert "player|" + b"GammaPilot".hex() in presence
+                request = (
+                    f"GAMMA_AP_COMMANDS|1\nsession|{key}\n"
+                    f"configuration|{client.configuration.digest}\n"
+                    f"game|{'a' * 16}\ntarget|{client.room.epoch}\n"
+                    "request|1|loaded|\nend|1\n"
+                )
+                (bridge.directory / "game_requests.txt").write_text(request, encoding="ascii")
+                await client.poll_game_once()
+                await wait_until(
+                    lambda: any(
+                        "GammaPilot loaded GAMMA and entered the Zone." in message.text
+                        for message in client.room.messages
+                    )
+                )
+                await client.poll_game_once()
+                assert (
+                    sum(
+                        "GammaPilot loaded GAMMA and entered the Zone." in message.text
+                        for message in client.room.messages
+                    )
+                    == 1
+                )
                 initial_epoch = client.scouting_epoch
                 assert {item.item for item in client.items_received} == set(ITEM_SECTIONS)
                 assert {f"r:{index}" for index in range(3)} <= client.session.notices.keys()

@@ -51,7 +51,7 @@ def test_menu_discovery_has_no_side_effect_and_localizes_its_controls(lua):
     menu, _, engine = load_menu(lua)
     definition = menu.on_mcm_load()
     assert definition.id == "gamma_archipelago" and definition.sh is True
-    assert len(definition.gr) == 6
+    assert len(definition.gr) == 7
     title, description, button = definition.gr[1], definition.gr[2], definition.gr[3]
     assert title.type == "title" and description.type == "desc"
     assert button.type == "button" and button.id == "spawn_basic_tools"
