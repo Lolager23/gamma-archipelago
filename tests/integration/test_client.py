@@ -6,6 +6,7 @@ from unittest.mock import AsyncMock
 import pytest
 from CommonClient import CommonContext
 from NetUtils import ClientStatus, NetworkItem, NetworkSlot
+from websockets.exceptions import ConnectionClosedError
 from worlds.gamma import client as adapter
 
 from gamma_archipelago.catalog import ITEM_SECTIONS, LOCATION_IDS
@@ -367,7 +368,13 @@ async def test_default_client_constructs_only_the_development_bridge(monkeypatch
 @run_async
 async def test_watcher_logs_repeated_failures_once_and_recovers(monkeypatch, caplog):
     context = connected_context()
-    outcomes = [OSError("read failed"), OSError("read failed"), ProtocolError("bad file"), None]
+    outcomes = [
+        OSError("read failed"),
+        OSError("read failed"),
+        ProtocolError("bad file"),
+        ConnectionClosedError(None, None),
+        None,
+    ]
 
     async def poll():
         outcome = outcomes.pop(0)
@@ -387,9 +394,9 @@ async def test_watcher_logs_repeated_failures_once_and_recovers(monkeypatch, cap
 
     monkeypatch.setattr(adapter.asyncio, "wait_for", wait)
     await adapter.watch_game(context)
-    assert len(caplog.records) == 2
+    assert len(caplog.records) == 3
     assert context.last_error is None
-    assert waits == [0.5] * 4
+    assert waits == [0.5] * 5
 
 
 def test_client_lifecycle_cleans_up_background_tasks(monkeypatch):

@@ -10,6 +10,7 @@ from typing import Any
 
 from CommonClient import CommonContext, get_base_parser, server_loop
 from NetUtils import ClientStatus, NetworkItem
+from websockets.exceptions import ConnectionClosed
 
 from gamma_archipelago.bridge import FileBridge
 from gamma_archipelago.catalog import (
@@ -228,7 +229,7 @@ class GammaContext(CommonContext):
         try:
             await self.interaction.poll(self)
             self.last_communication_error = None
-        except (OSError, ProtocolError) as error:
+        except (OSError, ProtocolError, ConnectionClosed) as error:
             message = str(error)
             if message != self.last_communication_error:
                 logger.warning("GAMMA communication: %s", message)
@@ -261,7 +262,7 @@ async def watch_game(context: GammaContext) -> None:
         try:
             await context.poll_game_once()
             context.last_error = None
-        except (OSError, ProtocolError) as error:
+        except (OSError, ProtocolError, ConnectionClosed) as error:
             message = str(error)
             if message != context.last_error:
                 logger.error("GAMMA bridge: %s", message)

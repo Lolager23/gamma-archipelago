@@ -11,9 +11,7 @@ if TYPE_CHECKING:
 
 def connected(context: "GammaContext") -> bool:
     socket = getattr(context.server, "socket", None)
-    return bool(
-        context.server and context.slot and socket and socket.open and not socket.closed
-    )
+    return bool(context.server and context.slot and socket and socket.open and not socket.closed)
 
 
 def address_label(address: str | None) -> str:
@@ -65,6 +63,8 @@ class GameInteraction:
                         continue
                     if command.sequence != previous + 1:
                         break  # A partial/gapped queue cannot advance its acknowledgement.
+                    if not connected(context):
+                        break
                     text = command.text
                     if command.kind == "loaded":
                         player = clean_label(context.player_names.get(context.slot, "Player"))
