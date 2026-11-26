@@ -86,3 +86,38 @@ def test_address_status_never_exposes_credentials_and_checks_real_socket_state()
     assert not connected(context)
     context.server.socket = None
     assert not connected(context)
+
+
+@run_async
+async def test_socket_closing_during_send_keeps_request_pending_until_reconnect():
+    from websockets.exceptions import ConnectionClosedError
+
+    context = connected_context()
+    context.bridge.read_commands = lambda *_: ("a" * 16, (GameRequest(1, "say", "Hello"),))
+    context.send_msgs = AsyncMock(side_effect=ConnectionClosedError(None, None))
+    await context.poll_game_once()
+    assert not context.interaction.acknowledged
+    context.send_msgs = AsyncMock()
+    await context.poll_game_once()
+    assert context.interaction.acknowledged["a" * 16] == 1
+
+
+@run_async
+async def test_disconnect_between_queued_messages_never_acknowledges_the_unsent_tail():
+    context = connected_context()
+    context.bridge.read_commands = lambda *_: (
+        "a" * 16,
+        (GameRequest(1, "say", "First"), GameRequest(2, "say", "Second")),
+    )
+
+    async def send(_):
+        context.server.socket.closed = True
+
+    context.send_msgs = AsyncMock(side_effect=send)
+    await context.poll_game_once()
+    assert context.interaction.acknowledged["a" * 16] == 1
+    context.server.socket.closed = False
+    context.send_msgs = AsyncMock()
+    await context.poll_game_once()
+    assert context.send_msgs.call_args.args[0] == [{"cmd": "Say", "text": "Second"}]
+    assert context.interaction.acknowledged["a" * 16] == 2
