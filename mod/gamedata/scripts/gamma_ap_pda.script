@@ -41,6 +41,10 @@ function ap_tracker_window:__init() super()
     self.hint_input = self.xml:InitEditBox("hints_page:input",self.hints_page)
     self.hint_budget = self.xml:InitScrollView("hints_page:budget",self.hints_page)
     self.hints = self.xml:InitScrollView("hints_page:replies",self.hints_page)
+    self.xml:InitTextWnd("hints_page:chat_label",self.hints_page)
+    self.chat_input = self.xml:InitEditBox("hints_page:chat_input",self.hints_page)
+    self:Register(self.chat_input,"chat_input")
+    self:AddCallback("chat_input",ui_events.EDIT_TEXT_COMMIT,function() self:send_chat() end,self)
     for _,name in ipairs({"summary","notice"}) do self[name] = self.xml:InitScrollView(name,self) end
     for _,name in ipairs({"region_label","status_label","hint","selection_label"}) do
         self.xml:InitTextWnd("checks_page:"..name,self.checks_page)
@@ -53,9 +57,9 @@ function ap_tracker_window:__init() super()
     self:Register(self.details,"check_list")
     self:AddCallback("check_list",ui_events.LIST_ITEM_CLICKED,function() self:select_check() end,self)
     self.buttons = {}
-    for _,name in ipairs({"refresh","checks","progression","region","status","previous","next","scout","hints","request_hint","refresh_hints"}) do
+    for _,name in ipairs({"refresh","checks","progression","region","status","previous","next","scout","hints","request_hint","refresh_hints","send_chat"}) do
         local top = name == "refresh" or name == "checks" or name == "progression" or name == "hints"
-        local hint_action = name == "request_hint" or name == "refresh_hints"
+        local hint_action = name == "request_hint" or name == "refresh_hints" or name == "send_chat"
         local parent = top and self or hint_action and self.hints_page or self.checks_page
         local path = top and name or (hint_action and "hints_page:" or "checks_page:")..name
         local button = self.xml:Init3tButton(path,parent)
@@ -64,6 +68,19 @@ function ap_tracker_window:__init() super()
         local action = name
         self:AddCallback(name,ui_events.BUTTON_CLICKED,function() self:change(action,1) end,self)
     end
+end
+
+function ap_tracker_window:send_chat()
+    if not self.hints_page:IsShown() or not self.buttons.send_chat:IsEnabled() then return end
+    local text = self.chat_input:GetText()
+    if not text:find("%S") then
+        self.feedback = label("chat_empty","Enter a message or an AP command such as !hint.")
+    else
+        local queued,reason = gamma_ap_game.send_ap_message(text)
+        self.feedback = reason
+        if queued then self.chat_input:SetText("") end
+    end
+    self:refresh()
 end
 
 function ap_tracker_window:OnMouse(x,y,event)
@@ -92,6 +109,7 @@ function ap_tracker_window:change(action,direction)
     elseif action == "request_hint" or action == "refresh_hints" then
         local _,reason = gamma_ap_game.request_hint(action == "request_hint" and self.hint_input:GetText() or "")
         self.feedback = reason
+    elseif action == "send_chat" then self:send_chat(); return
     elseif action == "scout" and self.selected_id and self.scouting_enabled then
         local _,reason = gamma_ap_game.request_scout(self.selected_id)
         self.feedback = reason
@@ -114,8 +132,15 @@ end
 
 function ap_tracker_window:Update()
     CUIScriptWnd.Update(self)
-    local now = time_global()
-    if not self.next_refresh or now >= self.next_refresh then self.next_refresh=now+1000; self:refresh() end
+    local now = time_continual()
+    if not self.next_refresh or now >= self.next_refresh then
+        self.next_refresh=now+1000
+        if self.hints_page:IsShown() then
+            local written,reason = gamma_ap_game.flush_ap_messages()
+            if not written then self.feedback = reason end
+        end
+        self:refresh()
+    end
 end
 
 function ap_tracker_window:render_text(name, lines)
@@ -220,7 +245,8 @@ function ap_tracker_window:refresh()
     self.hints_page:Show(ready and self.page_name == "hints")
     self:render_text("hint_budget",{view.hints and view.hints.budget or label("hints_unavailable","Waiting for companion hint information")})
     self:render_text("hints",view.hints and view.hints.lines or {label("hints_empty","No server hint replies yet. Select Show my hints.")})
-    for _,name in ipairs({"checks","progression","refresh","region","status","hints","request_hint","refresh_hints"}) do self.buttons[name]:Enable(ready) end
+    for _,name in ipairs({"checks","progression","refresh","region","status","hints","request_hint","refresh_hints","send_chat"}) do self.buttons[name]:Enable(ready) end
+    self.chat_input:Enable(ready)
     for _,name in ipairs({"checks","progression","hints"}) do
         self.buttons[name]:TextControl():SetTextColor(self.page_name==name and 0xffecd39a or 0xffb5b5b5)
     end

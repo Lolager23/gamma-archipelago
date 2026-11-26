@@ -119,7 +119,7 @@ def test_queue_bounds_validation_and_write_failures(lua):
     tick(game, engine, heartbeat=2)
     state = saved_state(lua, game).gamma_archipelago_v1
     assert module.say(lua.table(), "Hello")[0] is False
-    for text in ("", "<unsafe>", "x" * 513):
+    for text in ("", "bad\ntext", "x" * 513):
         assert module.say(state, text)[0] is False
     assert game.send_ap_message("!hint")[0] is True
     for _ in range(30):

@@ -71,7 +71,10 @@ def decode_requests(
             text = bytes.fromhex(parts[3]).decode("utf-8")
         except (ValueError, UnicodeDecodeError) as error:
             raise ProtocolError("Invalid game request text encoding") from error
-        if len(text.encode("utf-8")) > 512 or safe_text(text) != text:
+        # Outbound chat is hex-encoded data; sanitize PDA markup only on display.
+        if len(text.encode("utf-8")) > 512 or any(
+            ord(char) < 32 or ord(char) == 127 for char in text
+        ):
             raise ProtocolError("Unsafe or oversized game request text")
         if (parts[2] == "loaded") != (text == ""):
             raise ProtocolError("Game request payload does not match its kind")

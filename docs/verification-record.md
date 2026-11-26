@@ -1561,3 +1561,34 @@ and hides disabled scouting. No deployment or active session change occurred.
 
 The normal installation, private developer panel, active Owen/Mini seed, backend
 processes and session progress remain outside these source-only increments.
+
+
+## Tracker room chat - 26 November 2026
+
+`codex/tracker-chat` builds on the tracker hints increment. The Chat & hints page
+has a plain message composer with Send/Enter. Text is forwarded unchanged to AP
+Say, so `!hint` is a server command and ordinary text is room chat. The existing
+hint shortcuts remain. Manual submission and visible-page retries flush bounded
+request snapshots without waiting for actor updates; they never enqueue automatic
+world-entry announcements. Blank/hidden/disabled events cannot send, accepted
+messages clear the field, and rejected submissions retain their draft.
+
+Outbound validation now allows spacing and punctuation as hex-encoded data while
+retaining the 512-byte and ASCII-control limits. Incoming PDA display sanitization
+is unchanged. Matching companion and add-on packages are needed for the expanded
+text contract; published IDs, wire versions, seed and saved progression are unchanged.
+
+Affected verification against the actual parent passed: 2,470 covered regressions
+and 19 untraced real AP server tests. The changed request codec measured 100% line
+and branch coverage. Communication and PDA Lua modules measured 100% executable
+lines; Lua branch coverage is not measured. Regressions cover unchanged commands,
+plain chat, punctuation/spacing, queue rejection, Enter, tab/disabled controls,
+paused actor updates, immediate-write retry, throttling and XML layout bounds.
+The real mixed-game server test confirms ordinary chat reaches another player's
+client and `!hint` returns a server reply. These are disposable local AP sessions.
+
+Current-head Windows/Linux CI and reproducible package checks are attached to the
+draft PR. Native acceptance is not run: edit-box focus, Enter/click behavior,
+paused-PDA interaction and actual rendering remain Owen's checks. No GAMMA was
+launched, deployed or modified; the developer panel, active Owen/Mini session,
+backend processes and normal installation were left untouched.

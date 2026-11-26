@@ -96,25 +96,9 @@ local function enqueue(kind,text)
     return true,"Queued for Archipelago; awaiting companion submission"
 end
 
-function say(state,text)
-    if not state.session_key then return false,"Load an Archipelago game first" end
-    bind(state.session_key)
-    if not plain(text,512) or text == "" then return false,"AP message must contain 1-512 safe text bytes" end
-    return enqueue("say",text)
-end
-
-function poll(state, now)
-    if not state.session_key or not gamma_ap_readiness.ready() then return true end
-    bind(state.session_key)
-    local frame = view(state,now)
-    if not frame.fresh then return true end
-    if not entered and #requests < 32 then
-        enqueue("loaded","")
-        entered = true
-    end
-    if #requests == 0 then return true end
+local function write_requests(state, target)
     local lines = {"GAMMA_AP_COMMANDS|1","session|"..state.session_key,
-        "configuration|"..(state.configuration_key or "-"),"game|"..game_epoch,"target|"..frame.epoch}
+        "configuration|"..(state.configuration_key or "-"),"game|"..game_epoch,"target|"..target}
     for _,request in ipairs(requests) do
         lines[#lines+1] = "request|"..request.sequence.."|"..request.kind.."|"..hex(request.text)
     end
@@ -128,8 +112,42 @@ function poll(state, now)
     return true
 end
 
+function flush(state, now)
+    if not state.session_key then return true end
+    bind(state.session_key)
+    if #requests == 0 then return true end
+    local frame = view(state,now)
+    if not frame.fresh then return true end
+    return write_requests(state,frame.epoch)
+end
+
+function say(state,text)
+    if not state.session_key then return false,"Load an Archipelago game first" end
+    bind(state.session_key)
+    if type(text) ~= "string" or #text == 0 or #text > 512 or text:find("[%z\1-\31\127]") then
+        return false,"AP message is empty, too long, or contains a line break/control character"
+    end
+    local queued,reason = enqueue("say",text)
+    if not queued then return false,reason end
+    local written,problem = flush(state,time_continual())
+    return true,written and reason or "Queued; "..problem
+end
+
+function poll(state, now)
+    if not state.session_key or not gamma_ap_readiness.ready() then return true end
+    bind(state.session_key)
+    local frame = view(state,now)
+    if not frame.fresh then return true end
+    if not entered and #requests < 32 then
+        enqueue("loaded","")
+        entered = true
+    end
+    if #requests == 0 then return true end
+    return write_requests(state,frame.epoch)
+end
+
 function print_status(state)
-    local frame = view(state,time_global())
+    local frame = view(state,time_continual())
     local text = frame.status..". Checks awaiting server confirmation: "..frame.pending.."."
     printf("[GAMMA AP] %s",text)
     if not db.actor or not db.actor:alive() then return false end
