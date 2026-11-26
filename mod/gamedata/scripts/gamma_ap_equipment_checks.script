@@ -123,7 +123,7 @@ local function observe_installations(state, object, group)
     if not gamma_ap_equipment_classes.usable_condition(state,object) then return true end
     if gamma_ap_equipment_classes.contract(state.configuration)
         and state.configuration.options.rewards_progressive_tools == 1
-        and gamma_ap_workshop.tools_level(state) < 3 then return true end
+        and gamma_ap_workshop.tools_level(state) < 1 then return true end
     local values, reason = installed(object)
     if not values then return false, reason end
     local progress = state.equipment

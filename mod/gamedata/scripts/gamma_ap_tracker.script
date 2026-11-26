@@ -62,7 +62,7 @@ local function blocked(state, row, regions, psi, id, standing)
     local diplomacy,optional = gamma_ap_settlement_access.reason(state,id,standing)
     if diplomacy then return diplomacy end
     if config.rewards_progressive_tools == 1 and row.category == "checks_gear_upgrades"
-        and gamma_ap_workshop.tools_level(state) < 3 then return "Expert tool permission required" end
+        and gamma_ap_workshop.tools_level(state) < 1 then return "Basic tool permission required" end
     if config.content_progression == 1 and config.rewards_progressive_tools == 1
         and row.category == "checks_gear_upgrades" and not regions.l01_escape then
         return "Cordon tool-stash retrieval route required for guaranteed physical kits"

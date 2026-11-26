@@ -44,7 +44,9 @@ first tool reward. Configured condition, cumulative class permissions and the
 independent late-equipment regional/psi or AP-goodwill requirements still apply.
 Tool rewards can therefore be placed on these checks when their other access
 requirements are met. Repair actions and newly installed upgrade checks retain
-their existing tool and workshop permissions.
+their tool and workshop permissions. Upgrade actions use the selected native
+chevron tier (Basic/Advanced/Expert); aggregate installation-count checks require
+Basic. See [workshop access](workshop-access.md#upgrade-difficulty).
 
 The active recipe's input toolkit index determines crafting permission. The
 output item does not: crafting a locked kit is allowed when its actual recipe's

@@ -1459,3 +1459,36 @@ No installation, active archive, current session, save or local developer panel
 was changed. This is a future-generation change; existing placements are retained.
 Native in-game acceptance is not run and remains Owen's responsibility. Full
 release sweeps were not run under the affected-area testing policy.
+
+
+## 25 November 2026 - upgrade tool permissions follow native difficulty
+
+The workshop, APWorld, PDA and observer had required Expert for all upgrade
+installations. The action adapter now reads the native selected upgrade `tier`
+in both workshop batches and technician confirmations: Basic/Advanced/Expert
+for difficulty 1/2/3. Batches ignore preinstalled upgrades and require the highest
+new tier. GAMMA Upgrades Overhaul remaps tiers by repair type; its resolved tree
+metadata remains authoritative. Unsupported selected metadata refuses before the
+native mutation method runs. Native supplies and workshop permissions are retained.
+
+Aggregate installation-count checks require Basic in solver/PDA/observer logic;
+several difficulty-one installations across items can satisfy every count. The
+configured item-condition requirement remains. Regression cases cover both entry
+points, all three tiers with zero through three receipts, remapped tiers, mixed
+batches, installed Expert baselines, malformed metadata, disabled settings,
+save/load, observer credit and fresh generic/named solver access. The reproducer
+failed 12 of its 24 tier/receipt combinations before correction.
+
+Affected verification against `origin/main` passed 1,754 regressions. The changed
+AP rules reached 100% line and branch coverage. Lua executable-line coverage was
+100% for upgrade selection, workshop guards and the equipment observer, and
+98.65% for the tracker. Lua branch coverage is not measured. Static checks,
+reproducible packaging and actual APWorld archive loading passed. Package
+validation explicitly includes the new helper. Current-head Windows/Linux
+status and matching package checksums are tracked on the PR. Full release sweeps
+and native in-game acceptance are not run; Owen owns engine verification.
+
+No IDs, configuration fields/digest, receipt order, save schema or active seed
+placements change. This source-only increment does not deploy, interrupt the
+running host, alter Owen/Mini progress or the local developer panel, or write to
+the normal installations. Native source hashes and raw evidence remain private.
