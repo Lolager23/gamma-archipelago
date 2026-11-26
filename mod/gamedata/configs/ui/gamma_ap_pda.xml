@@ -4,7 +4,8 @@
     <main x="28" y="100" width="750" height="620"/>
     <summary x="0" y="0" width="750" height="76" vert_interval="1" always_show_scroll="0"/>
     <checks x="0" y="82" width="190" height="28"><text font="letterica16">gamma_ap_pda_checks</text><texture>ui_inGame2_pda_button</texture></checks>
-    <progression x="194" y="82" width="240" height="28"><text font="letterica16">gamma_ap_pda_progression</text><texture>ui_inGame2_pda_button</texture></progression>
+    <progression x="194" y="82" width="190" height="28"><text font="letterica16">gamma_ap_pda_progression</text><texture>ui_inGame2_pda_button</texture></progression>
+    <hints x="388" y="82" width="190" height="28"><text font="letterica16">gamma_ap_pda_hints</text><texture>ui_inGame2_pda_button</texture></hints>
     <refresh x="638" y="82" width="112" height="28"><text font="letterica16">gamma_ap_pda_refresh</text><texture>ui_inGame2_pda_button</texture></refresh>
     <checks_page x="0" y="122" width="750" height="444">
         <region_label x="0" y="0" width="438" height="18"><text font="letterica16" r="170" g="170" b="170">gamma_ap_pda_region_header</text></region_label>
@@ -26,6 +27,16 @@
         <heading x="0" y="0" width="750" height="20"><text font="letterica16" r="170" g="170" b="170">gamma_ap_pda_progress_heading</text></heading>
         <progress x="0" y="28" width="750" height="416" vert_interval="6" always_show_scroll="0"/>
     </progress_page>
+    <hints_page x="0" y="122" width="750" height="444">
+        <instructions x="0" y="0" width="750" height="42"><text font="letterica16" complex_mode="1">gamma_ap_pda_hint_instructions</text></instructions>
+        <input x="0" y="50" width="342" height="28" max_symb_count="480"><text font="letterica16"/><texture>ui_inGame2_edit_box_1</texture></input>
+        <request_hint x="350" y="50" width="196" height="28"><text font="letterica16">gamma_ap_pda_request_hint</text><texture>ui_inGame2_pda_button</texture></request_hint>
+        <refresh_hints x="554" y="50" width="196" height="28"><text font="letterica16">gamma_ap_pda_refresh_hints</text><texture>ui_inGame2_pda_button</texture></refresh_hints>
+        <budget x="0" y="88" width="750" height="44" vert_interval="2" always_show_scroll="0"/>
+        <replies x="0" y="142" width="750" height="302" vert_interval="6" always_show_scroll="0"/>
+    </hints_page>
+    <hint_budget_row x="0" y="0" width="730" height="16"><text font="letterica16" complex_mode="1" vert_align="t"/></hint_budget_row>
+    <hints_row x="0" y="0" width="730" height="16"><text font="letterica16" complex_mode="1" vert_align="t"/></hints_row>
     <notice x="0" y="570" width="750" height="48" vert_interval="1" always_show_scroll="0"/>
     <!-- Native factories own all rows; measured text remains inside scroll viewports. -->
     <summary_row x="0" y="0" width="730" height="16"><text font="letterica16" complex_mode="1" vert_align="t"/></summary_row>

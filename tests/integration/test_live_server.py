@@ -87,6 +87,12 @@ def test_real_generation_server_item_delivery_and_reconnect(tmp_path, mixed_game
                     await quest.send_msgs(
                         [{"cmd": "LocationChecks", "locations": list(server.locations[quest.slot])}]
                     )
+                if mixed_game:
+                    await wait_until(
+                        lambda: any(
+                            "to QuestPilot" in message.text for message in client.room.messages
+                        )
+                    )
                 key = client.session.session_key
                 outgoing = [
                     "GAMMA_AP_OUT|3",
@@ -125,6 +131,14 @@ def test_real_generation_server_item_delivery_and_reconnect(tmp_path, mixed_game
                         for message in client.room.messages
                     )
                     == 1
+                )
+                hint_request = request.replace(
+                    "request|1|loaded|", "request|2|say|" + b"!hint".hex()
+                )
+                (bridge.directory / "game_requests.txt").write_text(hint_request, encoding="ascii")
+                await client.poll_game_once()
+                await wait_until(
+                    lambda: any("A hint costs" in message.text for message in client.room.messages)
                 )
                 initial_epoch = client.scouting_epoch
                 assert {item.item for item in client.items_received} == set(ITEM_SECTIONS)

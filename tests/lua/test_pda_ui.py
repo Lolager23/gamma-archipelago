@@ -59,6 +59,7 @@ def load_ui(lua, *, xml_filename="gamma_ap_pda.xml", strings_filename="st_gamma_
             assert(select('#',...)==0,'native SetText accepts exactly one string')
             self.text=text
         end
+        methods.GetText=function(self) return self.text or "" end
         methods.SetTextComplexMode=function(self,value) self.complex=value end
         methods.AdjustHeightToText=function(self)
             assert(self.complex)
@@ -157,6 +158,7 @@ def load_ui(lua, *, xml_filename="gamma_ap_pda.xml", strings_filename="st_gamma_
                 local control=init(node,parent); text_controls[#text_controls+1]=control
                 return control
             end,
+            InitEditBox=function(self,node,parent) return init(node,parent) end,
             InitStatic=function(self,node,parent) return init(node,parent) end,
             Init3tButton=function(self,node,parent)
                 local button=init(node,parent); local text=native_window()
@@ -248,6 +250,7 @@ def test_scout_selection_and_next_milestone_rewards_are_displayed_from_metadata(
     module = load_ui(lua)
     state = state_for(lua)
     current = view(lua, state)
+    current.scouting_enabled = True
     current.scouted = lua.table_from({28052001: lua.table(item="Toolkit", player="Friend")})
     current.previews = lua.table_from(
         [

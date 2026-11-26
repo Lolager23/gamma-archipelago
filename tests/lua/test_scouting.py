@@ -102,25 +102,25 @@ def test_cached_information_requires_an_advancing_heartbeat_and_expires(lua):
     game.actor_on_update()
     state = saved_state(lua, game).gamma_archipelago_v1
     engine.files[INFO_PATH] = packet(state, 1)
-    assert "Cached" in game.tracker_view().connection_status
+    assert "Cached" in game.tracker_view().scouting_status
     engine.files[INFO_PATH] = packet(state, 2)
-    assert "active" in game.tracker_view().connection_status
+    assert "active" in game.tracker_view().scouting_status
     engine.now = 0
-    assert "Cached" in game.tracker_view().connection_status
+    assert "Cached" in game.tracker_view().scouting_status
     engine.now = 1000
     engine.now += 5001
-    assert "Cached" in game.tracker_view().connection_status
+    assert "Cached" in game.tracker_view().scouting_status
     engine.files[INFO_PATH] = packet(state, 1)
-    assert "Outdated" in game.tracker_view().connection_status
+    assert "Outdated" in game.tracker_view().scouting_status
     engine.files[INFO_PATH] = packet(state, 1, epoch="e" * 16)
-    assert "Cached" in game.tracker_view().connection_status
+    assert "Cached" in game.tracker_view().scouting_status
     engine.files[INFO_PATH] = "broken\n"
-    assert "mismatch" in game.tracker_view().connection_status.lower()
+    assert "mismatch" in game.tracker_view().scouting_status.lower()
     engine.fail_close = True
-    assert "close failed" in game.tracker_view().connection_status
+    assert "close failed" in game.tracker_view().scouting_status
     engine.fail_close = False
     engine.root = "D:/Anomaly/appdata/"
-    assert "isolated" in game.tracker_view().connection_status
+    assert "isolated" in game.tracker_view().scouting_status
     assert game.request_scout(28052002)[0] is False
 
 
