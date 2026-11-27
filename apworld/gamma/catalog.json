@@ -9175,7 +9175,10 @@
       "key": "grade_D",
       "weapon_grade": "D",
       "repair_kit": "toolkit_r7",
-      "repair_type": "rifle_7"
+      "repair_type": "rifle_7",
+      "readiness": {
+        "tools": 3
+      }
     }
   ],
   "content_inventory": {

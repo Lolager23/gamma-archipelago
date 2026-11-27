@@ -96,3 +96,30 @@ def test_full_story_fills_under_all_new_requirements_and_paced_steps_finish(seed
     report = analyse(multi.worlds[1], True, True)
     assert report["goal_reachable"] and not report["unreachable_checks"]
     assert any(row.item.name.startswith("Artefact:") for row in multi.get_locations() if row.item)
+
+
+@pytest.mark.parametrize("regional,tool_rewards", [(1, 1), (0, 1), (1, 0)])
+def test_class_d_placement_requires_expert_tools_only_when_modeled(regional, tool_rewards):
+    multi = setup_multiworld(
+        GammaWorld,
+        options=presets()["full_story"]
+        | {
+            "regional_progression": regional,
+            "rewards_progressive_tools": tool_rewards,
+            "playability_logic": 0,
+        },
+    )
+    world = multi.worlds[1]
+    counts = {"Progressive Firearm Class": 3, "Progressive Outfit Class": 3, "Progressive Tools": 0}
+    state = maximum(world, counts=counts)
+    check = multi.get_location("Use Firearm Repair Class: D", 1)
+    for tier in range(4):
+        assert check.can_reach(state) == (not regional or not tool_rewards or tier == 3)
+        assert multi.get_location("Use Firearm Repair Class: A", 1).can_reach(state)
+        assert multi.get_location("Use Firearm Repair Class: B", 1).can_reach(state)
+        assert multi.get_location("Use Firearm Repair Class: C", 1).can_reach(state)
+        if tier < 3:
+            if regional and tool_rewards:
+                assert not check.can_fill(state, world.create_item("Progressive Tools"))
+            state.collect(world.create_item("Progressive Tools"), True)
+            state.sweep_for_advancements()

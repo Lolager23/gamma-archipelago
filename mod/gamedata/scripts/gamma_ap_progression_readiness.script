@@ -1,5 +1,5 @@
 -- Read-only logical readiness; native task/kill observers still own completed facts.
-function reason(state,row,regions,id)
+function reason(state,row,regions,id,observed_equipment)
     local config=state.configuration and state.configuration.options or {}
     if config.regional_progression ~= 1 then return end
     local needed=gamma_ap_catalog.check_readiness[id] or {}
@@ -10,10 +10,13 @@ function reason(state,row,regions,id)
             return prefix..label
         end
     end
-    if needed.tools and config.rewards_progressive_tools == 1
+    -- Actual usable equipment can have been looted or bought without repairing it.
+    if not observed_equipment and needed.tools and config.rewards_progressive_tools == 1
         and gamma_ap_workshop.tools_level(state) < needed.tools then
-        local prefix=row.quota == "mutant" and "Mutant discovery readiness: " or "Story readiness: "
-        return prefix..(needed.tools == 2 and "Advanced tools required" or "Expert tools required")
+        local prefix=row.quota == "mutant" and "Mutant discovery readiness: "
+            or row.category == "checks_weapon_tiers" and "AP placement logic: " or "Story readiness: "
+        local suffix=row.weapon_grade == "D" and "; qualifying firearm use still counts" or ""
+        return prefix..(needed.tools == 2 and "Advanced tools required" or "Expert tools required")..suffix
     end
     if gamma_ap_catalog.northern_readiness_checks[id] then
         local ok,shutdown=pcall(has_alife_info,"bar_deactivate_radar_done")

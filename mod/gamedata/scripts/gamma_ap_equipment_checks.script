@@ -73,7 +73,7 @@ local function eligible(state, id)
         return helmet ~= nil and helmet:condition() > 0 and helmet:condition() <= 1
     end)
     local regions = gamma_ap_tracker.reachable(state,ok and psi)
-    return gamma_ap_progression_readiness.reason(state,row,regions,id) == nil
+    return gamma_ap_progression_readiness.reason(state,row,regions,id,true) == nil
         and (not practical or gamma_ap_playability.reason(state,row,regions,ok and psi) == nil)
 end
 
