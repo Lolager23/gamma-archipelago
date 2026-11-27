@@ -94,3 +94,37 @@ def test_class_contract_rejects_a_legacy_manifest_even_when_it_looks_plausible()
             connected_context(data)
 
     asyncio.run(exercise())
+
+
+@pytest.mark.parametrize("route", ["outfit", "helmet"])
+def test_ap_armour_check_reachability_uses_either_progressive_chain(route):
+    options = presets()["full_story"] | {
+        "regional_progression": 0,
+        "playability_logic": 0,
+        "quest_zone_logic": 0,
+        "initial_outfit_class": 0,
+        "initial_helmet_class": 0,
+    }
+    multi = setup_multiworld(GammaWorld, options=options)
+    world = multi.worlds[1]
+    state = CollectionState(multi)
+    omitted = {"Progressive Outfit Class", "Progressive Helmet Class"}
+    for item in multi.itempool + [row.item for row in multi.get_filled_locations()]:
+        if item.name not in omitted:
+            state.collect(item, True)
+    names = ("Light", "Medium / Scientific", "Heavy", "Exoskeleton / Nosorog")
+    checks = [multi.get_location("Reach Armour Tier: " + name, 1) for name in names]
+    assert not any(check.can_reach(state) for check in checks)
+    if route == "outfit":
+        state.collect(world.create_item("Progressive Outfit Class"), True)
+        assert not any(check.can_reach(state) for check in checks)  # Novice is below Light.
+    reward = "Progressive Outfit Class" if route == "outfit" else "Progressive Helmet Class"
+    for tier in range(1, 5):
+        state.collect(world.create_item(reward), True)
+        state.sweep_for_advancements()
+        assert [check.can_reach(state) for check in checks] == [
+            rank <= tier for rank in range(1, 5)
+        ]
+    assert not state.has(
+        "Progressive Helmet Class" if route == "outfit" else "Progressive Outfit Class", 1
+    )

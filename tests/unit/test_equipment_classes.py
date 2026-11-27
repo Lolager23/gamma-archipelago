@@ -6,6 +6,7 @@ from gamma_archipelago.configuration import build_configuration, defaults, encod
 from gamma_archipelago.content_progression import configured_item_ids, required_copy
 from gamma_archipelago.equipment_classes import (
     GROUPS,
+    armour_check_allowed,
     baseline_rewards,
     check_classes,
     count_with_aliases,
@@ -62,7 +63,7 @@ def test_fresh_manifest_retires_generic_permissions_but_legacy_wire_and_unlocks_
 
 def test_class_requirements_follow_each_tier():
     config = configuration(rewards_progressive_tools=1)
-    assert check_classes(config, {"category": "checks_armour_tiers", "key": "4"}) == {"outfit": 5}
+    assert check_classes(config, {"category": "checks_armour_tiers", "key": "4"}) == {}
     assert check_classes(config, {"category": "checks_weapon_tiers", "key": "rifle"}) == {
         "firearms": 3
     }
@@ -85,3 +86,24 @@ def test_generic_tool_receipts_replace_named_tiers_and_always_require_three_copi
     ids = configured_item_ids(config)
     assert 28051801 in ids and not ids & {28051831, 28051832, 28051833}
     assert required_copy(config, {"name": "Progressive Tools"}) == 3
+
+
+@pytest.mark.parametrize("tier", [1, 2, 3, 4])
+@pytest.mark.parametrize("route", ["outfit", "helmet", "neither"])
+def test_armour_checks_accept_either_matching_class_without_the_other_chain(tier, route):
+    outfit = tier + 1 if route == "outfit" else tier
+    helmet = tier if route == "helmet" else tier - 1
+    config = configuration(initial_outfit_class=outfit, initial_helmet_class=helmet)
+    row = {"category": "checks_armour_tiers", "key": str(tier)}
+    assert armour_check_allowed(config, row, Counter().__getitem__) == (route != "neither")
+    assert armour_check_allowed(config, {"category": "checks_weapon_tiers"}, Counter().__getitem__)
+
+
+def test_legacy_armour_check_uses_either_binary_permission_and_keeps_configuration_identity():
+    config = configuration(equipment_class_progression=0, starting_outfit=2, starting_helmet=2)
+    row = {"category": "checks_armour_tiers", "key": "3"}
+    assert not armour_check_allowed(config, row, Counter().__getitem__)
+    for name in ("Equipment Unlock: Outfit", "Equipment Unlock: Helmet"):
+        assert armour_check_allowed(config, row, Counter({name: 1}).__getitem__)
+    values = config.to_values()
+    assert build_configuration(values).digest == config.digest

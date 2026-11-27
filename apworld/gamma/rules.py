@@ -6,7 +6,11 @@ from BaseClasses import CollectionState
 
 from gamma_archipelago.activity_requirements import regional_requirement
 from gamma_archipelago.content_progression import melter_check, tool_level
-from gamma_archipelago.equipment_classes import check_classes, count_with_aliases
+from gamma_archipelago.equipment_classes import (
+    armour_check_allowed,
+    check_classes,
+    count_with_aliases,
+)
 from gamma_archipelago.equipment_classes import level as class_level
 from gamma_archipelago.goodwill import copies as goodwill_copies
 from gamma_archipelago.playability import allowed
@@ -90,8 +94,6 @@ def apply_access_rules(world: "GammaWorld", catalog: dict[str, Any]) -> None:
             "checks_story_milestones",
         }:
             required.append("pda")
-        if category == "checks_armour_tiers":
-            required.append("outfit")
         if category == "checks_weapon_tiers":
             required.append("firearms")
         if category == "checks_knife_tiers":
@@ -207,6 +209,7 @@ def apply_access_rules(world: "GammaWorld", catalog: dict[str, Any]) -> None:
                     or "rewards_artefact_melter" not in world.configuration.rewards
                     or state.has(melter_item(world.configuration), player)
                 )
+                and armour_check_allowed(world.configuration, definition, count)
                 and all(permitted(name) for name in items)
                 and all(
                     class_level(world.configuration, group, count) >= tier

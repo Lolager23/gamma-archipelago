@@ -84,18 +84,28 @@ local function award_tiers(state, locations, tier)
     end
 end
 
+local function check_worn_armour(state, object, group)
+    if not object or gamma_ap_gear_locks.locked(state,object)
+        or not gamma_ap_equipment_classes.usable_condition(state,object) then return end
+    local section = object:section()
+    local tier
+    if group == "helmet" then
+        if gamma_ap_equipment.group(section) ~= "helmet" then return end
+        local repair = ini_sys:r_string_ex(section,"repair_type")
+        tier = gamma_ap_catalog.equipment_classes.groups.helmet.repair_types[repair]
+    elseif gamma_ap_equipment_classes.contract(state.configuration) then
+        tier = gamma_ap_equipment_classes.section_tier(section,"outfit")-1
+    else
+        tier = gamma_ap_catalog.powered_outfits[section] and 4
+            or gamma_ap_catalog.armour_kinds[kind(section)]
+    end
+    award_tiers(state, gamma_ap_catalog.armour_locations, tier)
+end
+
 local function check_equipped(state, options)
     if options.checks_armour_tiers == 1 then
-        local outfit = db.actor:item_in_slot(7)
-        if outfit and not gamma_ap_gear_locks.locked(state,outfit) and gamma_ap_equipment_classes.usable_condition(state,outfit) then
-            local section = outfit:section()
-            local tier = gamma_ap_catalog.powered_outfits[section] and 4
-                or gamma_ap_catalog.armour_kinds[kind(section)]
-            if gamma_ap_equipment_classes.contract(state.configuration) then
-                tier=gamma_ap_equipment_classes.section_tier(section,"outfit")-1
-            end
-            award_tiers(state, gamma_ap_catalog.armour_locations, tier)
-        end
+        check_worn_armour(state, db.actor:item_in_slot(7), "outfit")
+        check_worn_armour(state, db.actor:item_in_slot(12), "helmet")
     end
     if options.checks_weapon_tiers == 1 or options.checks_knife_tiers == 1 then
         local active = db.actor:active_item()

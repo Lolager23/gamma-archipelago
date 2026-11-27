@@ -70,8 +70,6 @@ def check_classes(configuration: "SeedConfiguration", row: Mapping[str, Any]) ->
     if not contract(configuration):
         return {}
     category = row.get("category")
-    if category == "checks_armour_tiers":
-        return {"outfit": int(row["key"]) + 1}
     if category == "checks_weapon_tiers":
         grade = row.get("weapon_grade")
         tier = (
@@ -81,3 +79,16 @@ def check_classes(configuration: "SeedConfiguration", row: Mapping[str, Any]) ->
         )
         return {"firearms": tier}
     return {}
+
+
+def armour_check_allowed(
+    configuration: "SeedConfiguration", row: Mapping[str, Any], count: Callable[[str], int]
+) -> bool:
+    """Helmet tiers align with armour checks; outfits have an extra Novice tier."""
+    if row.get("category") != "checks_armour_tiers":
+        return True
+    tier = int(row["key"])
+    return (
+        level(configuration, "outfit", count) >= tier + 1
+        or level(configuration, "helmet", count) >= tier
+    )
