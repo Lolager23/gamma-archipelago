@@ -43,7 +43,7 @@ local function requested(state)
 end
 
 function message(count)
-    local fallback="Goodwill upgraded: {count} earlier Loner goodwill rewards credited to the other seven factions. Future Loner goodwill rewards now affect all eight factions."
+    local fallback="Goodwill upgraded. Previous Loner goodwill rewards credited to the other seven factions: {count}. Future Loner goodwill now affects all eight factions."
     local ok,text=pcall(function() return game.translate_string("gamma_ap_goodwill_migration_complete") end)
     local tokens=0
     if type(text) == "string" then local _,count=text:gsub("{count}","");tokens=count end
@@ -87,6 +87,11 @@ function poll(state)
         if not applied then return false,reason end
         plan.completed=true
     end
-    if not gamma_ap_readiness.ready() then return true end
+    return true
+end
+
+function notice(state)
+    local plan=state.goodwill_migration
+    if not plan or not plan.completed or not gamma_ap_readiness.ready() then return true end
     return announce(plan)
 end

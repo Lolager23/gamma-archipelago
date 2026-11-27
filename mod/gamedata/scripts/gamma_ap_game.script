@@ -194,6 +194,8 @@ function actor_on_update()
     local success, delivery_error = gamma_ap_state.apply_pending(state, incoming, apply_reward)
     local written, write_error = write_outgoing()
     if not written then report_error(write_error); return end
+    local migration_notice,migration_notice_error = gamma_ap_goodwill_migration.notice(state)
+    if not migration_notice then report_error(migration_notice_error); return end
     local notified, notice_error = gamma_ap_notifications.poll(state)
     if not notified then report_error(notice_error); return end
     local joined, join_error = gamma_ap_communication.poll(state,time_continual())

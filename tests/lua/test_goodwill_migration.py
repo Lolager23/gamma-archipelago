@@ -51,6 +51,7 @@ def test_backfill_preserves_ids_checks_and_existing_loner_standing_then_upgrades
     assert all(engine.goodwill[faction] == 750 for faction in FACTIONS)
     assert list(state.applied_items.values()) == before
     assert state.received_count == 3 and state.checks[28052001]
+    assert module.notice(state) is True
     assert len(engine.stash_news) == 1
     assert module.poll(state) is True and len(engine.stash_news) == 1
     # Bind this detached migrated save into the coordinator and deliver the next old ID.
@@ -142,13 +143,30 @@ def test_pending_legacy_loner_target_is_not_granted_twice_when_converted(lua):
     assert all(engine.goodwill[faction] == 1000 for faction in FACTIONS)
 
 
+def test_migration_notice_failure_cannot_block_a_later_item_receipt(lua):
+    game, engine, state = setup(lua)
+    assert lua.globals().gamma_ap_goodwill_migration.poll(state) is True
+    saved = saved_state(lua, game)
+    saved.gamma_archipelago_v1 = state
+    game.load_state(saved)
+    enter_world(engine)
+    engine.fail_stash_notice = True
+    poll(game, engine)
+    assert progress(lua, game).received_count == 4
+    assert progress(lua, game).goodwill_migration.notice_pending
+    engine.fail_stash_notice = False
+    poll(game, engine)
+    assert all(engine.goodwill[faction] == 1000 for faction in FACTIONS)
+    assert len(engine.stash_news) == 1
+
+
 def test_migration_sentence_has_translation_ready_english_fallback(lua):
     module = lua.globals().gamma_ap_goodwill_migration
-    assert "3 earlier Loner" in module.message(3)
+    assert "factions: 3." in module.message(3)
     lua.execute("game={translate_string=function() return 'Upgraded {count} rewards' end}")
     assert module.message(3) == "Upgraded 3 rewards"
     lua.execute("game.translate_string=function() return '<bad> {count}' end")
-    assert "3 earlier Loner" in module.message(3)
+    assert "factions: 3." in module.message(3)
 
 
 @pytest.mark.parametrize(
