@@ -53,6 +53,8 @@ AP receipt projection for tracker availability. Physical settlement entry is
 independent of reputation; safe placement assumptions never veto observed entry.
 The engine registry still owns goodwill; the AP save
 owns applied receipt history. No additional persistent reputation owner exists.
+The optional [shared-goodwill conversion](shared-goodwill.md) keeps its absolute
+backfill targets in that same save owner, without changing server receipt IDs.
 The projection groups progression facts by status, unlocked/locked permissions
 and exploration without parsing presentation strings; its legacy flat list is
 retained. The UI's Checks/Progression pages and native list selection own no

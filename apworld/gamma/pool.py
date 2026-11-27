@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING, Any
 from BaseClasses import LocationProgressType
 from Options import OptionError
 
+from gamma_archipelago.content_progression import configured_item_ids
 from gamma_archipelago.pool_budget import budget_pool
 from gamma_archipelago.settlement_access import required_reputation
 
@@ -74,6 +75,7 @@ def build_pool(world: "GammaWorld", catalog: dict[str, Any]) -> None:
         for row in catalog["items"]
         if row.get("category") in OPTIONAL
         and row["category"] in world.configuration.rewards
+        and row["id"] in configured_item_ids(world.configuration)
         and row["name"] not in neutrality
         and row["name"] not in plan.required
         and (not row.get("filler_family") or world.configuration.option("varied_filler"))

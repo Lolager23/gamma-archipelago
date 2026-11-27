@@ -53,6 +53,7 @@ def load_game(lua):
     )
     module = lua.globals().load_ap_module(str(ROOT / "mod/gamedata/scripts/gamma_ap_game.script"))
     module.io = lua.globals().mock_io
+    lua.globals().gamma_ap_goodwill_migration.io = lua.globals().mock_io
     lua.globals().gamma_ap_notifications.io = lua.globals().mock_io
     lua.globals().gamma_ap_room.io = lua.globals().mock_io
     lua.globals().gamma_ap_game_run.io = lua.globals().mock_io

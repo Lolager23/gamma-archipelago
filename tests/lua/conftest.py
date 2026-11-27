@@ -57,6 +57,7 @@ def lua():
         "zone_keys",
         "travel",
         "goals",
+        "goodwill_migration",
         "save_validation",
         "stashes",
         "stash_loot",

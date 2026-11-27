@@ -152,7 +152,7 @@ function poll(state)
         if not delivered and not state.notices_seen[notice.id]
             and state.received_count >= notice.receipt then
             local ok = pcall(function()
-                db.actor:give_game_news("Archipelago", gamma_ap_notice_text.render(notice), "ui_inGame2_D_Svyazist", 0, 5000)
+                db.actor:give_game_news("Archipelago", gamma_ap_notice_text.render(notice,state.goodwill_migration and state.goodwill_migration.completed), "ui_inGame2_D_Svyazist", 0, 5000)
             end)
             if not ok then return false, "PDA notice display failed; reward remains applied" end
             state.notices_seen[notice.id] = true

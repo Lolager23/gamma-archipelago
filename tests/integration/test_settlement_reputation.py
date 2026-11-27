@@ -13,7 +13,9 @@ from gamma_archipelago.presets import presets
     [("army", (28052103, 28052106)), ("bandit", (28052108,)), ("killer", (28052112,))],
 )
 def test_hostile_bases_require_five_matching_rewards_and_four_is_still_hostile(faction, ids):
-    multi = setup_multiworld(GammaWorld, options=presets()["full_story"], seed=10)
+    multi = setup_multiworld(
+        GammaWorld, options=(presets()["full_story"] | {"shared_faction_goodwill": 0}), seed=10
+    )
     world = multi.worlds[1]
     name = "Faction Goodwill: " + faction
     assert sum(item.name == name for item in multi.itempool) == 5
@@ -35,6 +37,7 @@ def test_initial_inventory_goodwill_is_progression_before_world_generation_and_o
         options={
             "checks_settlements": 1,
             "rewards_faction_reputation": 1,
+            "shared_faction_goodwill": 0,
             "start_inventory": {"Faction Goodwill: army": 5},
         },
     )
@@ -56,7 +59,7 @@ def test_initial_inventory_goodwill_is_progression_before_world_generation_and_o
 def test_no_supported_neutrality_route_is_filler_only_even_when_missable_progression_is_allowed(
     enabled,
 ):
-    values = presets()["full_story"] | {
+    values = (presets()["full_story"] | {"shared_faction_goodwill": 0}) | {
         "rewards_faction_reputation": enabled,
         "optional_check_policy": 2,
     }
@@ -75,8 +78,13 @@ def test_no_supported_neutrality_route_is_filler_only_even_when_missable_progres
 @pytest.mark.generation
 def test_reputation_gates_fill_without_self_locks_in_full_and_settlement_only_pools():
     for options in (
-        presets()["full_story"],
-        {"checks_maps": 0, "checks_settlements": 1, "rewards_faction_reputation": 1},
+        (presets()["full_story"] | {"shared_faction_goodwill": 0}),
+        {
+            "checks_maps": 0,
+            "checks_settlements": 1,
+            "rewards_faction_reputation": 1,
+            "shared_faction_goodwill": 0,
+        },
     ):
         for seed in range(30):
             multi = setup_multiworld(GammaWorld, options=options, seed=seed)
@@ -96,7 +104,12 @@ def test_sparse_early_request_preserves_normal_and_local_user_constraints(early,
     multi = setup_multiworld(
         GammaWorld,
         steps=("generate_early", "create_regions", "create_items", "set_rules"),
-        options={"checks_maps": 0, "checks_settlements": 1, "rewards_faction_reputation": 1},
+        options={
+            "checks_maps": 0,
+            "checks_settlements": 1,
+            "rewards_faction_reputation": 1,
+            "shared_faction_goodwill": 0,
+        },
     )
     name = "Faction Goodwill: army"
     multi.early_items[1][name] = early
@@ -119,6 +132,7 @@ def test_a_constrained_sparse_opening_refuses_an_early_quota_it_cannot_hold():
             "checks_maps": 0,
             "checks_settlements": 1,
             "rewards_faction_reputation": 1,
+            "shared_faction_goodwill": 0,
             "equipment_class_progression": 0,
             "starting_pda": 2,
             "rewards_starting_gear_unlocks": 1,

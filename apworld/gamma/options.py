@@ -639,6 +639,15 @@ class ChecksFactionStanding(Toggle):
     display_name = "Checks: Faction standing"
 
 
+class SharedFactionGoodwill(DefaultOnToggle):
+    """Twelve guaranteed rewards each grant +250 personal goodwill to all eight factions.
+
+    Disabled preserves faction-specific generation. Existing seeds are unchanged.
+    """
+
+    display_name = "Shared goodwill for all supported factions"
+
+
 class SettlementReputationLogic(DefaultOnToggle):
     """Model neutral goodwill for safe AP placement; unsupported bases are filler-only.
 
@@ -757,6 +766,7 @@ class GammaOptions(PerGameCommonOptions):
     rewards_artefact_melter: RewardsArtefactMelter
     playability_logic: PlayabilityLogic
     settlement_reputation_logic: SettlementReputationLogic
+    shared_faction_goodwill: SharedFactionGoodwill
     ap_start: ArchipelagoStart
     starting_faction: StartingFaction
     starting_location: StartingLocation

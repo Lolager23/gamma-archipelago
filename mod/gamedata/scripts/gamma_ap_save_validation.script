@@ -97,6 +97,8 @@ function validate(state)
             end
         end
     end
+    if not gamma_ap_goodwill_migration.validate(state) then return false,"Invalid saved goodwill migration" end
+    if not gamma_ap_reputation.validate_targets(state) then return false,"Invalid saved goodwill targets" end
     if not gamma_ap_discovery.validate(state.discoveries,key,state.configuration) then return false,"Invalid saved distinct discoveries" end
     if not gamma_ap_deliveries.validate(state) then return false,"Invalid saved delivery plan" end
     if not gamma_ap_starting_supplies.validate(state.loadout_plan) then return false,"Invalid saved starting supply plan" end

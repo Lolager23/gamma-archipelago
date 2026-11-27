@@ -221,7 +221,7 @@ def test_loot_stash_pool_is_optional_seeded_and_fits_even_one_check():
         assert set(world.fill_slot_data()["item_ids"]) == ITEM_IDS - {
             *range(28051801, 28052000),
             *range(28051201, 28051205),
-            *range(28051301, 28051309),
+            *range(28051301, 28051310),
             *range(28051401, 28051405),
             *range(28051501, 28051504),
             *range(28051601, 28051610),
@@ -232,7 +232,7 @@ def test_loot_stash_pool_is_optional_seeded_and_fits_even_one_check():
         assert enabled_item_ids(world.configuration.rewards) == ITEM_IDS - {
             *range(28051801, 28052000),
             *range(28051201, 28051205),
-            *range(28051301, 28051309),
+            *range(28051301, 28051310),
             *range(28051401, 28051405),
             *range(28051501, 28051504),
             *range(28051601, 28051610),

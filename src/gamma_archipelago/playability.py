@@ -5,12 +5,18 @@ from collections.abc import Callable, Mapping
 from importlib.resources import files
 from typing import TYPE_CHECKING, Any
 
+from .goodwill import copies
+
 if TYPE_CHECKING:
     from .configuration import SeedConfiguration
 
 _catalog = json.loads(files("gamma_archipelago").joinpath("catalog.json").read_text("utf-8"))
 EARLY_REWARD_CATEGORIES = frozenset({"rewards_starting_gear_unlocks", "rewards_workshop_access"})
-GOODWILL = tuple(row["name"] for row in _catalog["items"] if row.get("effect") == "reputation")
+GOODWILL = tuple(
+    row["name"]
+    for row in _catalog["items"]
+    if row.get("effect") == "reputation" and row["faction"] != "all"
+)
 FRIENDLY_FACTIONS = (
     frozenset(_catalog["faction_standing_factions"])
     - _catalog["settlement_relations"]["factions"].keys()
@@ -120,7 +126,11 @@ def allowed(
         return True
     reputation = "rewards_faction_reputation" in configuration.rewards
     names = FRIENDLY_GOODWILL if late or row["category"] == "checks_faction_standing" else GOODWILL
-    goodwill = max((count(name) * 250 for name in names), default=0) if reputation else 0
+    goodwill = (
+        max((copies(configuration, name, count) * 250 for name in names), default=0)
+        if reputation
+        else 0
+    )
     if (
         row["category"] == "checks_rank_milestones"
         and needed

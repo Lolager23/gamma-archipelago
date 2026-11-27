@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING
 from BaseClasses import CollectionState, LocationProgressType
 from Options import OptionError
 
+from gamma_archipelago.goodwill import SHARED_NAME, pool_name
 from gamma_archipelago.settlement_access import NEUTRALITY_ITEMS, required_reputation, requirement
 
 if TYPE_CHECKING:
@@ -20,7 +21,11 @@ def request_neutrality_opener(world: "GammaWorld") -> None:
     initial = CollectionState(world.multiworld)
     capable = initial.copy()
     for item in world.multiworld.itempool:
-        if item.player == world.player and item.name not in NEUTRALITY_ITEMS:
+        if (
+            item.player == world.player
+            and item.name not in NEUTRALITY_ITEMS
+            and item.name != SHARED_NAME
+        ):
             capable.collect(item, True)
     needed = {
         name: max(0, count - initial.count(name, world.player)) for name, count in quotas.items()
@@ -29,9 +34,10 @@ def request_neutrality_opener(world: "GammaWorld") -> None:
     if sum(loc.can_reach(capable) for loc in eligible) >= sum(needed.values()):
         return
     benefits = Counter(
-        rule.name
+        pool_name(world.configuration, rule.name)
         for loc in locations
-        if (rule := requirement(world.configuration, loc.address)) and needed[rule.name]
+        if (rule := requirement(world.configuration, loc.address))
+        and needed[pool_name(world.configuration, rule.name)]
     )
     # Military opens two bases; one-base quotas can consume the last free checks
     # before either remaining quota is complete. Never fix an item to a location.
