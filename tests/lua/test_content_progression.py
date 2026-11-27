@@ -127,7 +127,11 @@ def test_tool_stash_contents_are_physical_and_do_not_grant_psi_permission(lua):
     assert not progress(lua, game).unlocks.calibrated_psi
     game.load_state(saved_state(lua, game))
     assert not progress(lua, game).refused_save
-    assert engine.spawn_calls == 3
+    assert engine.spawn_calls == sum(
+        len(record.actions) for record in progress(lua, game).stashes.records.values()
+    )
+    for section in ("itm_basickit", "itm_advancedkit", "itm_expertkit"):
+        assert sum(row.section == section for row in engine.spawns.values()) == 1
 
 
 @pytest.mark.parametrize(
