@@ -166,9 +166,10 @@ def test_zone_and_psi_reasons_and_undirected_route_match_world_connections(lua):
     ],
 )
 def test_equipment_requirements_are_explained_then_clear_after_actual_unlock(lua, category, group):
-    state = state_for(
-        lua, **{category: 1, "starting_" + group: 2, "rewards_starting_gear_unlocks": 1}
-    )
+    options = {category: 1, "starting_" + group: 2, "rewards_starting_gear_unlocks": 1}
+    if category == "checks_armour_tiers":
+        options["starting_helmet"] = 2  # Both alternative routes must be locked first.
+    state = state_for(lua, **options)
     assert any("Equipment permission" in row.reason for row in rows(view(lua, state)))
     state.unlocks["gear_" + group] = True
     assert not any("Equipment permission" in row.reason for row in rows(view(lua, state)))
