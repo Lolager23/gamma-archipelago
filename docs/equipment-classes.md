@@ -47,7 +47,7 @@ default grants. Later earned inventory is never stripped by the initial plan.
 `equipment_check_condition` defaults to 65, range 0–100 inclusive. This is item
 condition, not the proportion of installed upgrade attachments. A small numerical
 tolerance accepts an exact threshold after native floating-point rounding. Broken or invalid
-items never count. Equipped armour, active weapon/knife tiers and newly observed
+items never count. Equipped outfits or helmets, active weapon/knife tiers and newly observed
 upgrade installations use this threshold. Weapon roles, firearm repair classes,
 armour tiers and knife tiers do not require Basic, Advanced or Expert tools to
 earn their checks. For Class D only, regional AP placement logic and its PDA
@@ -99,3 +99,23 @@ point accounting, equip/use guards, backpack grant/reload, knife availability,
 condition boundaries and skipped-tier credit. Mocked engine tests establish adapter
 behaviour only. No installed files, current session or private panel are changed
 by this source work.
+
+## Alternative armour-check routes
+
+Each armour-tier check accepts either the matching worn outfit or helmet:
+Light outfit / Light helmet, Medium or Scientific outfit / Medium helmet,
+Heavy outfit / Heavy helmet, and Exoskeleton or Nosorog outfit / Exoskeleton helmet.
+Outfit permissions have an extra Novice tier; a Heavy outfit needs outfit class 4,
+while a Heavy helmet needs helmet class 3. The other progression chain is not
+required. AP placement and the PDA use that same alternative, including old
+binary-permission sessions. Story and generic-mutant readiness requirements still
+use their separately declared outfit prerequisites.
+
+Native observation reads outfit slot 7 and helmet slot 12. The item must be worn,
+permitted and at the configured condition threshold. Helmet checks use the known
+native repair tiers in the shared catalogue, including GAMMA's novice facemasks
+as Light; unknown helmet repair tiers cannot claim an unproven higher check.
+A higher qualifying tier credits enabled lower tiers, and saved completions remain
+monotonic after gear removal, degradation or load. Existing regional requirements
+are retained. IDs, manifests, configuration digests and receipt history are unchanged;
+new placements need a newly generated world, not a reset of an existing session.

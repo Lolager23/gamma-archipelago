@@ -1691,3 +1691,29 @@ launch, server restart, save/session switch, private developer-panel modificatio
 or protected normal-game write was performed. Existing Mini check recovery is
 separate operational work; this PR changes no active server progress. Current-head
 Windows/Linux CI must be checked separately before treating the PR as validated.
+
+
+### Helmets as alternative armour-tier checks - 27 November 2026
+
+Armour-tier observations now inspect outfit slot 7 and helmet slot 12. A known,
+permitted helmet can satisfy Light/Medium/Heavy/Exoskeleton without the equivalent
+outfit permission; the outfit route remains supported. Helmet tiers 1–4 align
+with the four checks, while outfit tiers 2–5 account for the extra Novice class.
+The APWorld uses an explicit outfit-or-helmet predicate and the PDA mirrors it,
+including legacy binary permissions. Condition and regional requirements remain;
+separate story and mutant outfit-readiness prerequisites are not broadened.
+
+The active GAMMA helmet repair-kit override and pinned actor scripts confirm the
+repair-type mapping and native helmet slot. The reproducer failed seven cases
+before correction; seven rejection cases already passed. Focused Python/world
+regressions passed 37 cases. Added tests cover each tier and its skipped lower
+checks, the inclusive condition boundary, carried/broken/locked/unknown items,
+legacy permission alternatives, copied save state, AP reachability and tracker
+explanations. Affected verification and exact-head Windows/Linux evidence are
+recorded on the PR. Lua branch coverage is not measured; native acceptance and
+full release verification are **not run**.
+
+No catalogue IDs, manifests, configuration digests, save schema or receipt
+history change. The running session, installed mod, private developer panel and
+normal game are not modified. Future generation uses the new placement rule;
+existing archives are not regenerated or retroactively refilled.

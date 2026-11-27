@@ -62,9 +62,16 @@ function supplies(state,id)
 end
 
 function check_reason(state,row)
+    if row.category == "checks_armour_tiers" then
+        local tier = tonumber(row.key)
+        if level(state,"outfit") >= tier+1 or level(state,"helmet") >= tier then return end
+        if not contract(state.configuration) then return "Equipment permission required: outfit or helmet" end
+        local outfit = gamma_ap_catalog.equipment_classes.groups.outfit.labels[tier+1]
+        local helmet = gamma_ap_catalog.equipment_classes.groups.helmet.labels[tier]
+        return "Equipment class required: "..outfit.." outfit or "..helmet.." helmet"
+    end
     if not contract(state.configuration) then return end
     local group,tier
-    if row.category == "checks_armour_tiers" then group,tier="outfit",tonumber(row.key)+1 end
     if row.category == "checks_weapon_tiers" then
         group="firearms"
         tier=row.weapon_grade ~= "" and string.byte(row.weapon_grade)-string.byte("A")+1
