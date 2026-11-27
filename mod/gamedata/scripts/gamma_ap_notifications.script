@@ -112,6 +112,28 @@ function encode_ack(key, seen)
     return table.concat(lines, "\n") .. "\n"
 end
 
+local function restore_ack(state, root)
+    local file=io.open(root.."archipelago\\notices_ack.txt","rb")
+    if not file then return true end
+    local text,closed=file:read(1048577),file:close()
+    if not closed or type(text) ~= "string" or #text > 1048576 then return false,"Notice cache read failed" end
+    local session=text:match("^GAMMA_AP_NOTICES_ACK|1\nsession|([0-9a-f]+)\n")
+    if session and session ~= state.session_key then return true end
+    local ids,count={},0
+    for id in text:gmatch("([^\n]+)\n") do
+        if valid_id(id) then
+            if ids[id] then return false,"Duplicate notice cache identity" end
+            ids[id]=true
+            count=count+1
+            if count > MAX_NOTICES then return false,"Too many notice cache identities" end
+        end
+    end
+    local canonical,problem=encode_ack(state.session_key,ids)
+    if not canonical or canonical ~= text then return false,problem or "Malformed notice cache" end
+    for id in pairs(ids) do state.notices_seen[id]=true end
+    return true
+end
+
 function poll(state)
     if not gamma_ap_readiness.ready() then return true end
     local root = gamma_ap_paths.bridge_root(getFS():update_path("$app_data_root$", ""), io.open)
@@ -123,6 +145,8 @@ function poll(state)
     if not closed then return false, "Notice read close failed" end
     local notices, reason = parse(content, state.session_key)
     if not notices then return false, reason end
+    local restored,problem=restore_ack(state,root)
+    if not restored then return false,problem end
     local delivered = false
     for _, notice in ipairs(notices) do
         if not delivered and not state.notices_seen[notice.id]

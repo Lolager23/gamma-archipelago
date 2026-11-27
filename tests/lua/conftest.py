@@ -69,6 +69,7 @@ def lua():
         "notice_text",
         "readiness",
         "notifications",
+        "game_run",
         "communication",
         "hints",
         "room",

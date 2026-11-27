@@ -23,6 +23,17 @@ Community guide statements must be checked against that code and a live probe.
 Implement a separate `gamedata/scripts` add-on rather than editing engine or base
 game scripts. Prefer additive callbacks and DLTX changes where applicable.
 
+## Native message lifecycle references (27 November 2026)
+
+The inspected Monolith [script exports](https://github.com/themrdemonized/xray-monolith/blob/6d548b350b4acdfdf5b65ba661a7f9e9c8f50c0d/src/xrServerEntities/script_engine_script.cpp)
+return `Core.UserName` from `user_name()`; [log creation](https://github.com/themrdemonized/xray-monolith/blob/6d548b350b4acdfdf5b65ba661a7f9e9c8f50c0d/src/xrCore/log.cpp)
+uses the application/user log filename. Core [initialization](https://github.com/themrdemonized/xray-monolith/blob/6d548b350b4acdfdf5b65ba661a7f9e9c8f50c0d/src/xrCore/xrCore.cpp)
+writes the timestamp header. The inspected reference is commit
+`6d548b350b4acdfdf5b65ba661a7f9e9c8f50c0d`. Existing baseline scripts use that native
+export. A read-only check of the development log confirmed the bounded
+`Game started:` header. These current-source references explain the adapter;
+they do not identify the exact installed binary or replace native acceptance.
+
 ## Archipelago
 
 - [Adding games](https://github.com/ArchipelagoMW/Archipelago/blob/0.6.8/docs/adding%20games.md).

@@ -63,6 +63,7 @@ def test_packages_are_reproducible_and_load_from_apworld(tmp_path):
                 "notifications",
                 "communication",
                 "goodwill_migration",
+                "game_run",
                 "hints",
                 "room",
                 "configuration",
