@@ -59,7 +59,8 @@ the pre-command save and prepare the correction again.
 ## If the correct personal standings are known
 
 Use explicit desired personal goodwill in this fixed order: Mercenaries, Military,
-Bandits. Every target must be at least that faction's dedicated AP-earned floor.
+Bandits. Every target must preserve any dedicated AP-earned floor. With no dedicated
+receipt there is no AP floor, so a known negative personal standing is valid.
 For example, **only if 600/800/500 are the correct desired personal standings**:
 
 ```lua

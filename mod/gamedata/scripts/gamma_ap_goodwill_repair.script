@@ -13,6 +13,12 @@ function floor(state, faction, basis)
     return math.min(3000,amount)
 end
 
+local function target_valid(state,faction,target,basis)
+    local minimum=floor(state,faction,basis)
+    -- With no dedicated receipt there is no AP floor; known negative standing is valid.
+    return integer(target) and (minimum == 0 or target >= minimum)
+end
+
 local function permitted(state)
     return state.session_key and state.configuration_key and not state.refused_save and type(state.configuration) == "table" and type(state.configuration.options) == "table"
         and state.configuration.options.shared_faction_goodwill == 0
@@ -44,8 +50,7 @@ function validate(state)
         if size ~= 3 then return false end
     end
     for _,faction in ipairs(HOSTILE) do
-        if not integer(plan.before[faction]) or not integer(plan.targets[faction])
-            or plan.targets[faction] < floor(state,faction,plan.basis)
+        if not integer(plan.before[faction]) or not target_valid(state,faction,plan.targets[faction],plan.basis)
             or type(plan.applied[faction]) ~= "boolean"
             or (plan.completed and not plan.applied[faction]) then return false end
     end
@@ -73,7 +78,7 @@ function prepare(state, killer, army, bandit, confirmation)
     local plan={version=1,session=state.session_key,configuration=state.configuration_key,
         basis=state.received_count,completed=false,before={},targets=targets,applied={}}
     for _,faction in ipairs(HOSTILE) do
-        if not integer(targets[faction]) or targets[faction] < floor(state,faction) then
+        if not target_valid(state,faction,targets[faction]) then
             return false,"Repair target must be an integer at or above that faction's dedicated AP floor"
         end
         local current,problem=gamma_ap_reputation.current(faction)

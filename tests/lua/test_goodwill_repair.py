@@ -233,3 +233,16 @@ def test_damaged_migration_cannot_make_repair_validation_throw(lua):
     module.ap_only(state, "CONFIRM_AP_ONLY")
     state.goodwill_migration = 7
     assert module.validate(state) is False
+
+
+def test_known_negative_standing_is_valid_when_no_dedicated_ap_floor_was_earned(lua):
+    _, engine, state = migrated(lua)
+    state.applied_items = lua.table_from([28051301] * 3)
+    state.received_count = 3
+    module = lua.globals().gamma_ap_goodwill_repair
+    assert module.prepare(state, -200, -300, -500, "CONFIRM")[0] is True
+    assert module.validate(state)
+    assert module.poll(state) is True
+    assert [engine.goodwill[faction] for faction in HOSTILE] == [-200, -300, -500]
+    assert lua.globals().gamma_ap_reputation.reconcile(state) is True
+    assert [engine.goodwill[faction] for faction in HOSTILE] == [-200, -300, -500]
