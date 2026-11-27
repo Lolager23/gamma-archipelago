@@ -1,5 +1,9 @@
 -- Central-save action plans. A successful spawn and a game save are not one transaction.
-local function sections_for(state, id, receipt)
+local function sections_for(state, id, receipt, version)
+    if gamma_ap_catalog.delivery_legacy_contents[id] then
+        if version == nil then return gamma_ap_catalog.delivery_legacy_contents[id] end
+        if version ~= 2 then return nil end
+    elseif version ~= nil then return nil end
     if gamma_ap_equipment_classes.supplies(state,id) then
         local row=gamma_ap_catalog.equipment_classes.groups.backpack
         local previous=state.configuration.options[row.option] or 0
@@ -28,7 +32,7 @@ end
 function copy(plans)
     local result = {}
     for receipt,plan in pairs(plans or {}) do
-        result[receipt] = {item_id=plan.item_id,next_action=plan.next_action,uncertain=plan.uncertain,sections={}}
+        result[receipt] = {item_id=plan.item_id,version=plan.version,next_action=plan.next_action,uncertain=plan.uncertain,sections={}}
         for _,section in ipairs(plan.sections) do table.insert(result[receipt].sections,section) end
     end
     return result
@@ -45,7 +49,7 @@ function validate(state)
         if not state.session_key or not state.configuration
             or not integer(receipt,1,math.min(4000,state.received_count+1))
             or type(plan) ~= "table" or type(plan.sections) ~= "table" or type(plan.uncertain) ~= "boolean" then return false end
-        local expected = sections_for(state,plan.item_id,receipt)
+        local expected = sections_for(state,plan.item_id,receipt,plan.version)
         if not expected or not enabled(state,plan.item_id)
             or #expected ~= #plan.sections or #expected > 8
             or not integer(plan.next_action,1,#expected+1)
@@ -73,12 +77,13 @@ end
 function receive(state, id, grant_permission)
     if not enabled(state,id) then return false,"Supply delivery is not enabled for this receipt" end
     local receipt = state.received_count+1
-    local sections = sections_for(state,id,receipt)
+    local version = gamma_ap_catalog.delivery_legacy_contents[id] and 2 or nil
+    local sections = sections_for(state,id,receipt,version)
     if not sections then return false,"No supported supplies for this reward" end
     local plan = state.deliveries[receipt]
     if plan and plan.item_id ~= id then return false,"Pending delivery conflicts with ordered item history" end
     if not plan then
-        plan = {item_id=id,next_action=1,uncertain=false,sections={}}
+        plan = {item_id=id,version=version,next_action=1,uncertain=false,sections={}}
         for _,section in ipairs(sections) do table.insert(plan.sections,section) end
         state.deliveries[receipt] = plan
     end

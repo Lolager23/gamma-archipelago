@@ -6,8 +6,34 @@ from .test_workshop import poll, state_of, tool_game
 @pytest.mark.parametrize(
     "identity,category,expected",
     [
-        (28051901, "medical", ["medkit", "bandage", "antirad"]),
-        (28051902, "maintenance", ["gun_oil", "glue_a", "duct_tape"]),
+        (
+            28051901,
+            "medical",
+            [
+                "medkit_army",
+                "medkit_army",
+                "medkit_scientic",
+                "bandage",
+                "bandage",
+                "antirad",
+                "morphine",
+                "drug_antidot",
+            ],
+        ),
+        (
+            28051902,
+            "maintenance",
+            [
+                "gun_oil",
+                "gun_oil",
+                "solvent",
+                "solvent",
+                "glue_a",
+                "glue_a",
+                "sewing_kit_h",
+                "duct_tape",
+            ],
+        ),
         (28051904, "expedition", ["bread", "water_drink", "bandage"]),
     ],
 )
@@ -21,7 +47,7 @@ def test_package_receipts_repeat_deliberately_and_resume_after_save(
     assert "package pending" in game.tracker_view().delivery
     saved = state_of(lua, game)
     game.load_state(lua.table(gamma_archipelago_v1=saved))
-    for _ in range(5):
+    for _ in range(len(expected) * 2 - 1):
         poll(game, engine)
     assert state_of(lua, game).received_count == 2
     assert list(engine.created.values()) == expected * 2

@@ -6,10 +6,25 @@ optional rewards: `rewards_supply_medical`, `rewards_supply_maintenance`,
 
 | Package | Contents | Relative optional-pool weight |
 |---|---|---|
-| Medical | Medkit, bandage, antirad | 3 |
-| Maintenance | Gun oil, advanced glue, duct tape | 2 |
+| Medical | 2 army medkits, 1 scientific medkit, 2 bandages, 1 antirad, 1 morphine, 1 antidote | 3 |
+| Maintenance | 2 gun oils, 2 solvents, 2 advanced adhesives, 1 heavy sewing kit, 1 duct tape | 2 |
 | Ammunition | Three native boxes of the selected calibre | 3 |
 | Expedition | Bread, drinking water, bandage | 2 |
+
+The 27 November improvement gives each named medical/maintenance package eight
+objects. These are direct inventory deliveries, independent of stash value/cash.
+Native charges, item behavior and inventory-repair rules remain unchanged. The
+separate single-item medical/maintenance filler rewards retain their own contents.
+
+Previously started packages retain their exact saved version-1 plans: medical
+was one basic medkit, bandage and antirad; maintenance was one gun oil, advanced
+adhesive and duct tape. The catalogue retains those `legacy_supplies_v1` sections.
+New plans for these two IDs store `version=2`; load validation and copying preserve
+that version. A partial old plan completes its remaining original items, and the
+next receipt uses the new eight-item plan. Already-delivered packages are not
+backfilled or restarted. Unsupported plan versions are refused before mutation.
+There is no item-ID, seed, receipt-order or configuration-digest change. Downgrading
+a new plan requires the matching pre-update save/bundle backup.
 
 `supply_ammo_calibre` selects 9x18 (default), 9x19, 5.45x39, 5.56x45 or 7.62x39.
 Box sizes come from active native definitions; this does not promise a fixed

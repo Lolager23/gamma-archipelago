@@ -1351,6 +1351,16 @@
       "effect": "supply_package",
       "filler_weight": 3,
       "supplies": [
+        "medkit_army",
+        "medkit_army",
+        "medkit_scientic",
+        "bandage",
+        "bandage",
+        "antirad",
+        "morphine",
+        "drug_antidot"
+      ],
+      "legacy_supplies_v1": [
         "medkit",
         "bandage",
         "antirad"
@@ -1364,6 +1374,16 @@
       "effect": "supply_package",
       "filler_weight": 2,
       "supplies": [
+        "gun_oil",
+        "gun_oil",
+        "solvent",
+        "solvent",
+        "glue_a",
+        "glue_a",
+        "sewing_kit_h",
+        "duct_tape"
+      ],
+      "legacy_supplies_v1": [
         "gun_oil",
         "glue_a",
         "duct_tape"

@@ -3305,8 +3305,8 @@ delivery_contents = {
     [28051822]={{"medkit","bandage"}},
     [28051823]={{"ammo_9x18_fmj","ammo_9x18_fmj"}},
     [28051824]={{"lead_box"}},
-    [28051901]={{"medkit","bandage","antirad"}},
-    [28051902]={{"gun_oil","glue_a","duct_tape"}},
+    [28051901]={{"medkit_army","medkit_army","medkit_scientic","bandage","bandage","antirad","morphine","drug_antidot"}},
+    [28051902]={{"gun_oil","gun_oil","solvent","solvent","glue_a","glue_a","sewing_kit_h","duct_tape"}},
     [28051903]={{"ammo_9x18_fmj","ammo_9x18_fmj","ammo_9x18_fmj"},{"ammo_9x19_fmj","ammo_9x19_fmj","ammo_9x19_fmj"},{"ammo_5.45x39_fmj","ammo_5.45x39_fmj","ammo_5.45x39_fmj"},{"ammo_5.56x45_ss190","ammo_5.56x45_ss190","ammo_5.56x45_ss190"},{"ammo_7.62x39_fmj","ammo_7.62x39_fmj","ammo_7.62x39_fmj"}},
     [28051904]={{"bread","water_drink","bandage"}},
     [28051831]={{"itm_basickit"}},
@@ -3393,6 +3393,10 @@ delivery_contents = {
     [28051934]={{"ration_ru"}},
     [28051935]={{"water_drink"}},
     [28051936]={{"energy_drink"}},
+}
+delivery_legacy_contents = {
+    [28051901]={"medkit","bandage","antirad"},
+    [28051902]={"gun_oil","glue_a","duct_tape"},
 }
 notice_cause_templates = {
     ["enter"]="by entering {value}",
