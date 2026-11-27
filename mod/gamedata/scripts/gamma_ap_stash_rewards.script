@@ -1,0 +1,59 @@
+-- A stash's saved absolute cash target permits retries without repeated payouts.
+local LIMIT=2147483647
+
+local function balance()
+    local ok,value=pcall(function() return db.actor:money() end)
+    if not ok or type(value) ~= "number" or value ~= math.floor(value) or value < 0 or value > LIMIT then
+        return nil,"Cannot read the actor's rouble balance for the AP stash"
+    end
+    return value
+end
+
+function upgrade(state, record, receipt)
+    if record.claimed or record.cash_amount then return true end
+    local prices={}
+    local approved=gamma_ap_stash_loot.price_sections(state.session_key,record.item_id,receipt,record.loot_version)
+    if not approved then return false,"Cannot upgrade the frozen AP stash loot plan" end
+    for _,section in ipairs(approved) do
+        local ok,cost=pcall(function() return ini_sys:r_u32(section,"cost") end)
+        if not ok or type(cost) ~= "number" or cost ~= math.floor(cost) or cost < 0 or cost > 100000000 then
+            return false,"Cannot read an approved stash item's nominal value; reward remains pending"
+        end
+        prices[section]=cost
+    end
+    local value={version=1,prices=prices}
+    local sections=gamma_ap_stash_loot.sections(state.session_key,record.item_id,receipt,record.loot_version,value)
+    if not sections then return false,"Cannot fit the AP stash's doubled value into a bounded loot plan" end
+    -- Preserve existing objects and add a varied bonus; unique quest items stay single.
+    for index=#record.actions+1,#sections do record.actions[index]={section=sections[index]} end
+    record.loot_value,record.cash_amount,record.cash_paid=value,5000,false
+    return true
+end
+
+function pay(record)
+    if not record.claimed or not record.cash_amount or record.cash_paid then return true end
+    local current,problem=balance()
+    if current == nil then return false,problem end
+    if not record.cash_target then
+        if current > LIMIT-record.cash_amount then return false,"AP stash cash is pending: spend roubles below the engine balance limit" end
+        record.cash_target=current+record.cash_amount
+    end
+    if current < record.cash_target then
+        local ok=pcall(function() db.actor:give_money(record.cash_target-current) end)
+        if not ok then return false,"AP stash cash update failed; the saved target will retry" end
+        local actual,reason=balance()
+        if actual == nil then return false,reason end
+        if actual < record.cash_target then return false,"AP stash cash update was not confirmed" end
+    end
+    record.cash_paid=true
+    return true
+end
+
+function valid(record)
+    if record.cash_amount == nil then return record.loot_value == nil and record.cash_target == nil and record.cash_paid == nil end
+    if record.cash_amount ~= 5000 or type(record.cash_paid) ~= "boolean" then return false end
+    if type(record.loot_value) ~= "table" then return false end
+    local target=record.cash_target
+    if target ~= nil and (type(target) ~= "number" or target ~= math.floor(target) or target < 5000 or target > LIMIT) then return false end
+    return not record.cash_paid or (record.claimed == true and target ~= nil)
+end

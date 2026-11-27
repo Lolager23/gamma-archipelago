@@ -61,6 +61,7 @@ def lua():
         "save_validation",
         "stashes",
         "stash_loot",
+        "stash_rewards",
         "shop",
         "shop_ui",
         "state",

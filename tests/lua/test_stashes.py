@@ -30,6 +30,9 @@ def stash_game(lua, *, items=(FIRST,), **options):
             engine.stash_news[#engine.stash_news+1]=text
         end
         db.actor.id=function() return 0 end
+        ini_sys.r_u32=function(self,section,key)
+            return (engine.prices and engine.prices[section]) or 1000
+        end
         ini_sys.section_exist=function(self,section) return engine.missing_section~=section end
         treasure_manager={caches={}}
         alife_object=function(id) return engine.servers[id] end
@@ -206,7 +209,10 @@ def test_bounded_spawning_nil_retries_and_offline_box_waits(lua):
     assert engine.spawn_calls - before == 8
     assert progress(lua, game).stashes.records[1].next_action == 9
     poll(game, engine)
-    assert progress(lua, game).stashes.records[1].next_action == 10
+    assert progress(lua, game).stashes.records[1].next_action == 17
+    poll(game, engine)
+    record = progress(lua, game).stashes.records[1]
+    assert record.next_action == len(record.actions) + 1
 
 
 @pytest.mark.parametrize("failure", ["raise_spawn", "bad_identity"])

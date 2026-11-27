@@ -43,7 +43,7 @@ def test_roll_uses_full_session_key_and_does_not_randomize_progression_contents(
     )
     assert list(module.sections(KEY, 28051201, 1, None).values()) == ["good_psy_helmet"]
     assert module.sections(KEY, 28051201, 1, 1) is None
-    assert module.sections(KEY, FIRST, 1, 2) is None
+    assert module.sections(KEY, FIRST, 1, 99) is None
     for key in (None, "", "x" * 64):
         assert module.sections(key, FIRST, 1, 1) is None
 
@@ -53,7 +53,7 @@ def test_randomized_plan_is_saved_before_open_and_keeps_created_actions_through_
     poll(game, engine)
     record = progress(lua, game).stashes.records[1]
     expected = [action.section for action in record.actions.values()]
-    assert record.loot_version == 1 and not record.opened
+    assert record.loot_version == 1 and record.loot_value.version == 1 and not record.opened
     game.load_state(saved_state(lua, game))
     assert [
         action.section for action in progress(lua, game).stashes.records[1].actions.values()
@@ -81,6 +81,7 @@ def test_legacy_assigned_stashes_load_unchanged_when_randomization_is_enabled(lu
     saved = saved_state(lua, game)
     record = saved.gamma_archipelago_v1.stashes.records[1]
     record.loot_version = None
+    record.cash_amount = record.cash_target = record.cash_paid = record.loot_value = None
     record.actions = lua.table_from(
         [lua.table(section=section) for section in STASHES[0]["contents"]]
     )
@@ -94,7 +95,7 @@ def test_legacy_assigned_stashes_load_unchanged_when_randomization_is_enabled(lu
 
 @pytest.mark.parametrize(
     "mutation",
-    ["record.loot_version=2", "record.actions[1].section='unapproved'", "record.actions[1]=nil"],
+    ["record.loot_version=99", "record.actions[1].section='unapproved'", "record.actions[1]=nil"],
 )
 def test_randomized_plan_tampering_is_rejected_before_mutation(lua, mutation):
     game, engine = stash_game(lua, randomized_stash_loot=1)
@@ -114,6 +115,6 @@ def test_missing_rolled_section_keeps_receipt_pending_without_reroll(lua):
     assert state.received_count == 0 and not list(state.stashes.order)
     engine.missing_section = None
     poll(game, engine)
-    assert [a.section for a in progress(lua, game).stashes.records[1].actions.values()] == list(
-        sections.values()
-    )
+    actions = list(progress(lua, game).stashes.records[1].actions.values())
+    assert [a.section for a in actions[: len(sections)]] == list(sections.values())
+    assert len(actions) > len(sections)
