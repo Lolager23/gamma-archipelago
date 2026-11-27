@@ -50,8 +50,11 @@ tolerance accepts an exact threshold after native floating-point rounding. Broke
 items never count. Equipped armour, active weapon/knife tiers and newly observed
 upgrade installations use this threshold. Weapon roles, firearm repair classes,
 armour tiers and knife tiers do not require Basic, Advanced or Expert tools to
-earn their checks. Starting, bought or looted equipment can already qualify
-without repair. Class permissions, condition and independent regional readiness
+earn their checks. For Class D only, regional AP placement logic and its PDA
+projection require Expert Tools when tool rewards are enabled. This conservative
+placement assumption never vetoes actual use of a qualifying Class D firearm;
+Class A–C placement remains tool-free. Starting, bought or looted equipment can
+already qualify without repair. Class permissions, condition and independent regional readiness
 requirements still apply. Attachment installation totals retain the existing
 conservative Expert-tool requirement because they observe a new upgrade action.
 

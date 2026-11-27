@@ -1,5 +1,33 @@
 # Verification record
 
+## 27 November 2026 — Class D Expert Tools placement assumption
+
+`Use Firearm Repair Class: D` now declares Expert Tools in the authoritative
+catalogue's existing readiness field. AP access rules and the generated Lua PDA
+projection require tool tier three when regional progression and tool rewards
+are enabled. A–C placement and disabled/legacy settings retain tool-free access.
+The equipment observer explicitly marks observed equipment when calling the
+shared readiness helper; modeled tools never prevent a qualifying real firearm
+use check. Existing condition, class-permission and independent late-gear rules
+are unchanged. Completed checks remain monotonic.
+
+The new AP regression reproduced the old behavior (1 failed, 2 passed before the
+catalogue change). New cases exercise all four tool tiers, A–C access, disabled
+settings, rejecting a tool reward behind its own requirement, native early Class D
+credit with no tools, the condition boundary and completed PDA status afterward.
+Affected `tools/verify.py --base origin/main` passed lint, format, typing, Node
+checks, deterministic build, **2,480 regressions** and **19 real AP server tests**
+using a separate runtime. Both changed executable Lua modules reached **100%
+executable-line coverage**; Lua branch coverage is not measured. Generated tables
+are verified for catalogue parity. No owned Python runtime module changed.
+
+Existing item/location IDs, schemas and configuration keys are unchanged. Future
+generation uses the new placement assumption; existing archives keep their
+original placements. No deployment, game launch, active session mutation,
+developer-panel alteration or normal-game write was performed. Native acceptance
+and full release sweeps are **not run**. Current-head Windows/Linux CI is tracked
+separately on this PR. This increment is independent of the hostile-entry PR.
+
 ## 23 November 2026 — varied non-progression supply rewards
 
 Fresh `varied_filler` generation replaces alternating Bandage/Medkit spare slots

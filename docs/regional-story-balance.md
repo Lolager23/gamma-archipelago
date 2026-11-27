@@ -11,14 +11,17 @@ it does not repair an existing archive or switch a running session.
 | Turn Off Brain Scorcher; shutdown event | Advanced tools, Medium/Scientific outfit permission, Class C firearm permission |
 | Later Living Legend steps before Path Pripyat | Retain the Scorcher readiness requirements |
 | Path Pripyat and subsequent story steps/goals | Expert tools, Heavy outfit permission, Class D firearm permission |
+| Use Firearm Repair Class: D | Expert Tools for AP placement/PDA logic only; qualifying real firearm use still counts without tools |
 | Fire Machinegun; Exoskeleton/Nosorog check | Scorcher disabled, Red Forest reachable and another northern region reachable |
 | Distinct artefacts 21–40, and optional overflow | Artefact recipe permission as well as the existing melter and detector requirements |
 
 The northern-region set includes Limansk. AP goodwill cannot replace the new
 Scorcher/Red Forest requirement for machinegun or exoskeleton checks. Their own
-class and condition requirements also apply; equipment-use checks have no
-repair-tool prerequisite. World events and terminal goals use
-the same story definitions, preventing a goal from silently bypassing Path Pripyat.
+class and condition requirements also apply. Equipment-use observations have no
+repair-tool prerequisite. Class D placement alone assumes Expert Tools; this is
+enabled by `regional_progression` with `rewards_progressive_tools`. Disabling
+either setting omits that tool assumption, and Class A–C remain unaffected. World
+events and terminal goals use the same story definitions, preventing a goal from silently bypassing Path Pripyat.
 Categories switched off impose no AP permission requirement for that category;
 ordinary GAMMA acquisition and native requirements remain. These are conservative
 solver assumptions about usable equipment, not an inventory simulation or a new
