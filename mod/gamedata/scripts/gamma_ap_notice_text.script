@@ -43,12 +43,14 @@ local function render_template(key, fallback, fields)
     return text
 end
 
-function render(notice)
+function render(notice, shared_loner)
     if not notice.kind then return notice.text end -- Older client sidecar.
     local fallback = templates[notice.kind]
-    local item = notice.item
-    if notice.local_item_id ~= 0 then
-        local label = translated("gamma_ap_reward_" .. notice.local_item_id)
+    local converted = shared_loner and notice.local_item_id == 28051301 and notice.kind:sub(1,9) == "received_"
+    local item = converted and gamma_ap_catalog.tracker_item_names[gamma_ap_catalog.shared_goodwill_id] or notice.item
+    local item_id = converted and gamma_ap_catalog.shared_goodwill_id or notice.local_item_id
+    if item_id ~= 0 then
+        local label = translated("gamma_ap_reward_" .. item_id)
         if plain(label, 384) then item = label end
     end
     local fields = {player=notice.player, item=item}

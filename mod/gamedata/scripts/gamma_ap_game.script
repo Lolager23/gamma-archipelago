@@ -166,6 +166,8 @@ function actor_on_update()
     state.enabled_checks = enabled
     state.allowed_items = gamma_ap_state.enabled_items(configuration)
     state.configuration = gamma_ap_configuration.copy(configuration)
+    local migrated,migration_error = gamma_ap_goodwill_migration.poll(state)
+    if not migrated then report_error(migration_error); return end
     local start_valid,start_error = gamma_ap_start.validate(state)
     if not start_valid then report_error(start_error); return end
     local zone_valid, zone_reason = gamma_ap_zone_keys.validate_start(state)
@@ -192,6 +194,8 @@ function actor_on_update()
     local success, delivery_error = gamma_ap_state.apply_pending(state, incoming, apply_reward)
     local written, write_error = write_outgoing()
     if not written then report_error(write_error); return end
+    local migration_notice,migration_notice_error = gamma_ap_goodwill_migration.notice(state)
+    if not migration_notice then report_error(migration_notice_error); return end
     local notified, notice_error = gamma_ap_notifications.poll(state)
     if not notified then report_error(notice_error); return end
     local joined, join_error = gamma_ap_communication.poll(state,time_continual())

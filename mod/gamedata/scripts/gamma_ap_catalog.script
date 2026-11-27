@@ -256,6 +256,7 @@ item_effects = {
     [28051306] = "reputation",
     [28051307] = "reputation",
     [28051308] = "reputation",
+    [28051309] = "reputation",
     [28051401] = "skill",
     [28051402] = "skill",
     [28051403] = "skill",
@@ -449,6 +450,7 @@ item_categories = {
     [28051306] = "rewards_faction_reputation",
     [28051307] = "rewards_faction_reputation",
     [28051308] = "rewards_faction_reputation",
+    [28051309] = "rewards_faction_reputation",
     [28051401] = "rewards_stat_levels",
     [28051402] = "rewards_stat_levels",
     [28051403] = "rewards_stat_levels",
@@ -813,6 +815,18 @@ reputation_rewards = {
     [28051306] = {faction="killer", bonus=250, cap=3000},
     [28051307] = {faction="army", bonus=250, cap=3000},
     [28051308] = {faction="bandit", bonus=250, cap=3000},
+    [28051309] = {faction="all", bonus=250, cap=3000},
+}
+shared_goodwill_id = 28051309
+goodwill_factions = {
+"stalker",
+"csky",
+"dolg",
+"freedom",
+"ecolog",
+"killer",
+"army",
+"bandit",
 }
 stash_containers = {
     ["esc_treasure_1"] = "l01_escape",
@@ -2364,6 +2378,7 @@ config_limits = {
     ["rewards_zone_keys"] = 1,
     ["scouting_mode"] = 2,
     ["settlement_reputation_logic"] = 1,
+    ["shared_faction_goodwill"] = 1,
     ["starting_ammo"] = 100,
     ["starting_backpack"] = 2,
     ["starting_detector"] = 2,
@@ -2945,6 +2960,7 @@ tracker_item_names = {
     [28051306]="Faction Goodwill: killer",
     [28051307]="Faction Goodwill: army",
     [28051308]="Faction Goodwill: bandit",
+    [28051309]="Faction Goodwill: All Factions",
     [28051401]="Skill Level: Strength",
     [28051402]="Skill Level: Endurance",
     [28051403]="Skill Level: Survival",
@@ -3497,6 +3513,7 @@ config_defaults = {
     ["rewards_workshop_access"]=0,
     ["scouting_mode"]=0,
     ["settlement_reputation_logic"]=0,
+    ["shared_faction_goodwill"]=0,
     ["starting_faction"]=0,
     ["starting_location"]=0,
     ["stat_level_rewards"]=0,

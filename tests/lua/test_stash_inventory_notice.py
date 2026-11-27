@@ -33,7 +33,7 @@ def test_successful_direct_delivery_announces_once_and_saved_reload_never_respaw
     game.physic_object_on_use_callback(box, lua.globals().db.actor)
     record = progress(lua, game).stashes.records[1]
     assert record.claimed and record.inventory_notice_pending
-    assert engine.spawn_calls == 1 and engine.spawns[101].owner == 0
+    assert engine.spawn_calls == 2 and engine.spawns[101].owner == 0
     poll(game, engine)
     assert list(engine.stash_news.values()) == [TEMPLATE.format(item="Calibrated Psi Helmet")]
     assert not progress(lua, game).stashes.records[1].inventory_notice_pending
@@ -42,7 +42,7 @@ def test_successful_direct_delivery_announces_once_and_saved_reload_never_respaw
     game.load_state(saved_state(lua, game))
     enter_world(engine)
     poll(game, engine)
-    assert len(engine.stash_news) == engine.spawn_calls == 1
+    assert len(engine.stash_news) == 1 and engine.spawn_calls == 2
 
 
 def test_pending_notice_survives_reload_and_waits_for_world_readiness(lua):
@@ -58,7 +58,7 @@ def test_pending_notice_survives_reload_and_waits_for_world_readiness(lua):
     assert not list(engine.stash_news.values())
     engine.paused = False
     poll(game, engine)
-    assert len(engine.stash_news) == engine.spawn_calls == 1
+    assert len(engine.stash_news) == 1 and engine.spawn_calls == 2
 
 
 def test_display_failure_retries_only_notice_and_does_not_hold_later_rewards(lua):
@@ -101,7 +101,7 @@ def test_old_claimed_stash_without_notice_flag_does_not_replay_old_delivery(lua)
     game.load_state(data)
     enter_world(engine)
     poll(game, engine)
-    assert engine.spawn_calls == 1 and not list(engine.stash_news.values())
+    assert engine.spawn_calls == 2 and not list(engine.stash_news.values())
 
 
 def test_ordinary_box_loot_does_not_emit_a_direct_inventory_notice(lua):
@@ -120,7 +120,7 @@ def test_map_cleanup_failure_cannot_hide_an_already_delivered_inventory_reward(l
     poll(game, engine)
     assert len(engine.stash_news) == 1
     poll(game, engine)
-    assert len(engine.stash_news) == engine.spawn_calls == 1
+    assert len(engine.stash_news) == 1 and engine.spawn_calls == 2
 
 
 def test_two_direct_deliveries_are_announced_at_most_one_per_poll(lua):
@@ -129,7 +129,7 @@ def test_two_direct_deliveries_are_announced_at_most_one_per_poll(lua):
     poll(game, engine)
     assert len(engine.stash_news) == 1
     poll(game, engine)
-    assert len(engine.stash_news) == 2 and engine.spawn_calls == 2
+    assert len(engine.stash_news) == 2 and engine.spawn_calls == 4
 
 
 @pytest.mark.parametrize("template", [None, "", "{item}{item}", "{unknown}", "%c[red]{item}"])

@@ -1356,6 +1356,9 @@
     <string id="gamma_ap_reward_28051308">
         <text>Faction Goodwill: bandit</text>
     </string>
+    <string id="gamma_ap_reward_28051309">
+        <text>Faction Goodwill: All Factions</text>
+    </string>
     <string id="gamma_ap_reward_28051401">
         <text>Skill Level: Strength</text>
     </string>

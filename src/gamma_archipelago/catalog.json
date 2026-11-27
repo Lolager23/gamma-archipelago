@@ -703,6 +703,16 @@
       "cap": 3000
     },
     {
+      "id": 28051309,
+      "name": "Faction Goodwill: All Factions",
+      "classification": "progression",
+      "effect": "reputation",
+      "category": "rewards_faction_reputation",
+      "faction": "all",
+      "bonus": 250,
+      "cap": 3000
+    },
+    {
       "id": 28051401,
       "name": "Skill Level: Strength",
       "classification": "useful",

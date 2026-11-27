@@ -5,6 +5,8 @@ from dataclasses import dataclass
 from importlib.resources import files
 from typing import TYPE_CHECKING
 
+from .goodwill import pool_name
+
 if TYPE_CHECKING:
     from .configuration import SeedConfiguration
 
@@ -75,7 +77,7 @@ def required_reputation(
 ) -> dict[str, int]:
     """A faction's bases share one quota, never separate duplicated quotas."""
     return {
-        rule.name: rule.copies
+        pool_name(configuration, rule.name): rule.copies
         for id in sorted(checks)
         if (rule := requirement(configuration, id)) is not None
     }

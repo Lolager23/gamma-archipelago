@@ -17,6 +17,9 @@ def load_game(lua):
                   frame=100, precache=0, paused=false, present=true}
         db = {actor={alive=function() return engine.alive end,
                      has_info=function() return false end}}
+        user_name = function() return "test" end
+        engine.files["D:/AnomalyAP/appdata/logs\\\\xray_test.log"]=
+            "Game started: 27.11.2026 04:23:42.345\\n"
         time_global = function() return engine.now end
         time_continual = function() return engine.continual_now or engine.now end
         level = {name=function() return engine.level end,
@@ -50,8 +53,10 @@ def load_game(lua):
     )
     module = lua.globals().load_ap_module(str(ROOT / "mod/gamedata/scripts/gamma_ap_game.script"))
     module.io = lua.globals().mock_io
+    lua.globals().gamma_ap_goodwill_migration.io = lua.globals().mock_io
     lua.globals().gamma_ap_notifications.io = lua.globals().mock_io
     lua.globals().gamma_ap_room.io = lua.globals().mock_io
+    lua.globals().gamma_ap_game_run.io = lua.globals().mock_io
     lua.globals().gamma_ap_communication.io = lua.globals().mock_io
     lua.globals().gamma_ap_scouting.io = lua.globals().mock_io
     if lua.globals().gamma_ap_actions is not None:

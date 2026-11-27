@@ -122,3 +122,4 @@ S.T.A.L.K.E.R. GAMMA:
   zone_unlock_travel: 0
   pda_tracker: 1
   discovery_exclusions: []
+  shared_faction_goodwill: 1

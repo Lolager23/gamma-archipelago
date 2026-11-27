@@ -17,7 +17,7 @@ from gamma_archipelago.web_planner import preview
 
 
 def test_reviewed_hostile_bases_share_faction_quotas_and_use_the_exact_neutral_boundary():
-    config = build_configuration(presets()["full_story"])
+    config = build_configuration(presets()["full_story"] | {"shared_faction_goodwill": 0})
     ids = configured_location_ids(config)
     assert set(SETTLEMENT_RULES) == {28052103, 28052106, 28052108, 28052112, 28052113, 28052114}
     assert protected_settlements(config) == {28052113, 28052114}
@@ -36,7 +36,7 @@ def test_reviewed_hostile_bases_share_faction_quotas_and_use_the_exact_neutral_b
 @pytest.mark.parametrize("enabled,rewards", [(0, 0), (0, 1), (1, 0), (1, 1)])
 def test_disabled_and_unsupported_routes_never_require_unavailable_rewards(enabled, rewards):
     config = build_configuration(
-        presets()["full_story"]
+        (presets()["full_story"] | {"shared_faction_goodwill": 0})
         | {"settlement_reputation_logic": enabled, "rewards_faction_reputation": rewards}
     )
     ids = configured_location_ids(config)
@@ -46,7 +46,7 @@ def test_disabled_and_unsupported_routes_never_require_unavailable_rewards(enabl
 
 
 def test_reputation_is_budgeted_before_optional_rewards_and_starting_copies_are_accounted_for():
-    config = build_configuration(presets()["full_story"])
+    config = build_configuration(presets()["full_story"] | {"shared_faction_goodwill": 0})
     ids = configured_location_ids(config)
     plan = budget_pool(config, ids)
     assert Counter(plan.required)["Faction Goodwill: army"] == 5

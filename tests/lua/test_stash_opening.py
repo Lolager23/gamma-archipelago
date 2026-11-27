@@ -43,12 +43,17 @@ def test_shared_stash_use_is_bounded_and_reopening_finishes_only_pending_actions
     game.physic_object_on_use_callback(box, lua.globals().db.actor)
     assert engine.spawn_calls == 64
     assert "close and reopen" in list(engine.logs.values())[-1]
-    game.physic_object_on_use_callback(box, lua.globals().db.actor)
-    assert engine.spawn_calls == 72
+    expected = sum(len(record.actions) for record in progress(lua, game).stashes.records.values())
+    for _ in range(4):
+        before = engine.spawn_calls
+        game.physic_object_on_use_callback(box, lua.globals().db.actor)
+        assert engine.spawn_calls - before <= 64
+    assert engine.spawn_calls == expected
     assert progress(lua, game).received_count == 8
-    assert all(record.next_action == 10 for record in progress(lua, game).stashes.records.values())
-    game.physic_object_on_use_callback(box, lua.globals().db.actor)
-    assert engine.spawn_calls == 72
+    assert all(
+        record.next_action == len(record.actions) + 1
+        for record in progress(lua, game).stashes.records.values()
+    )
 
 
 def test_creation_error_during_use_is_reported_and_a_known_failure_can_retry(lua):

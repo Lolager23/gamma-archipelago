@@ -11,7 +11,7 @@ local function generator(key,item,receipt)
     end
 end
 
-function sections(key,item,receipt,version)
+local function base_sections(key,item,receipt,version)
     if version == nil then return gamma_ap_catalog.stash_contents[item] end
     local roll=gamma_ap_catalog.stash_loot_rolls_v1[item]
     if version ~= 1 or not roll or type(key) ~= "string" or #key ~= 64
@@ -31,4 +31,78 @@ function sections(key,item,receipt,version)
         result[index],result[other]=result[other],result[index]
     end
     return result
+end
+
+local function pool(item)
+    local roll=gamma_ap_catalog.stash_loot_rolls_v1[item]
+    local profile=gamma_ap_catalog.stash_loot_profiles_v1[roll and roll.profile or "advanced"]
+    local result,seen={},{}
+    for _,group in ipairs({profile.quality,profile.supplies,roll and roll.ammunition or {}}) do
+        for _,section in ipairs(group) do
+            if not seen[section] then result[#result+1]=section;seen[section]=true end
+        end
+    end
+    table.sort(result)
+    return result
+end
+
+function price_sections(key,item,receipt,version)
+    local original=base_sections(key,item,receipt,version)
+    if not original then return nil end
+    local result,seen={},{}
+    for _,group in ipairs({original,pool(item)}) do
+        for _,section in ipairs(group) do
+            if not seen[section] then result[#result+1]=section;seen[section]=true end
+        end
+    end
+    return result
+end
+
+function copy_value(value)
+    if not value then return nil end
+    local result={version=value.version,prices={}}
+    for section,price in pairs(value.prices) do result.prices[section]=price end
+    return result
+end
+
+function sections(key,item,receipt,version,value)
+    local original=base_sections(key,item,receipt,version)
+    if not original or not value then return original end
+    if type(key) ~= "string" or #key ~= 64 or key:find("[^0-9a-f]")
+        or type(receipt) ~= "number" or receipt ~= math.floor(receipt) or receipt < 1 or receipt > 4000 then return nil end
+    if type(value) ~= "table" or value.version ~= 1 or type(value.prices) ~= "table" then return nil end
+    local allowed=price_sections(key,item,receipt,version)
+    local count=0
+    for _ in pairs(value.prices) do count=count+1 end
+    if count ~= #allowed then return nil end
+    for _,section in ipairs(allowed) do
+        local cost=value.prices[section]
+        if type(cost) ~= "number" or cost ~= math.floor(cost) or cost < 0 or cost > 100000000 then return nil end
+    end
+    local result,remaining={},0
+    for _,section in ipairs(original) do result[#result+1]=section;remaining=remaining+value.prices[section] end
+    -- A zero-price quest item has no market value; still add a useful loot bonus.
+    if remaining == 0 then remaining=5000 end
+    local candidates,cheapest={},nil
+    for _,section in ipairs(pool(item)) do
+        local cost=value.prices[section]
+        if cost > 0 then
+            candidates[#candidates+1]=section
+            if not cheapest or cost < value.prices[cheapest] then cheapest=section end
+        end
+    end
+    if not cheapest then return nil end
+    local random=generator(key,item+7919,receipt)
+    for step=1,64 do
+        local choices={}
+        for _,section in ipairs(candidates) do
+            local cost=value.prices[section]
+            if cost <= remaining and cost >= remaining/(65-step) then choices[#choices+1]=section end
+        end
+        local section=#choices > 0 and choices[random(#choices)] or cheapest
+        result[#result+1]=section
+        remaining=remaining-value.prices[section]
+        if remaining <= 0 then return result end
+    end
+    return nil -- Refuse an unsupported value budget rather than silently underpay.
 end
