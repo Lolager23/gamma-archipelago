@@ -1,0 +1,60 @@
+-- Presentation identity survives Lua reloads; this file owns no AP progression.
+local marker
+
+function epoch(state)
+    if not marker then
+        local ok,user=pcall(user_name)
+        if not ok or type(user) ~= "string" or #user == 0 or #user > 64 or user:find("[/\\:%z\1-\31\127]") then
+            return nil,"Cannot identify the native game log owner"
+        end
+        local base=gamma_ap_paths.bridge_root(getFS():update_path("$app_data_root$",""),io.open)
+        if not base then return nil,"Game run requires isolated appdata" end
+        local file=io.open(base.."logs\\xray_"..user..".log","rb")
+        if not file then return nil,"Native game start marker unavailable" end
+        local text,closed=file:read(4096),file:close()
+        if not closed or type(text) ~= "string" then return nil,"Native game log read failed" end
+        local day,month,year,hour,minute,second,ms=text:match("Game started: (%d%d)%.(%d%d)%.(%d%d%d%d) (%d%d):(%d%d):(%d%d)%.(%d%d%d)")
+        if not ms or tonumber(day) < 1 or tonumber(day) > 31 or tonumber(month) < 1
+            or tonumber(month) > 12 or tonumber(hour) > 23 or tonumber(minute) > 59
+            or tonumber(second) > 59 then return nil,"Invalid native game start marker" end
+        marker={tonumber(year..month..day),tonumber(hour..minute..second..ms)}
+    end
+    return string.format("%08x%08x",bit.bxor(marker[1],tonumber(state.session_key:sub(1,8),16))%4294967296,
+        bit.bxor(marker[2],tonumber(state.session_key:sub(9,16),16))%4294967296)
+end
+
+local function path()
+    local base=gamma_ap_paths.bridge_root(getFS():update_path("$app_data_root$",""),io.open)
+    return base and base.."archipelago\\game_run.txt"
+end
+
+function load(state)
+    local game,problem=epoch(state)
+    if not game then return nil,problem end
+    local fresh={game=game,sequence=0,ack=0,entered=false}
+    local destination=path()
+    if not destination then return nil,"Game run cache requires isolated appdata" end
+    local file=io.open(destination,"rb")
+    if not file then return fresh end
+    local text,closed=file:read(2049),file:close()
+    if not closed or type(text) ~= "string" or #text > 2048 then return nil,"Game run cache read failed" end
+    local session,config,stored,sequence,ack,entered=text:match("^GAMMA_AP_RUN|1\nsession|([0-9a-f]+)\nconfiguration|([0-9a-f%-]+)\nrun|([0-9a-f]+)\nsequence|(%d+)\nack|(%d+)\nentered|([01])\nend|1\n$")
+    sequence,ack=gamma_ap_protocol.canonical_number(sequence),gamma_ap_protocol.canonical_number(ack)
+    if not session or #session ~= 64 or (config ~= "-" and (#config ~= 64 or not config:match("^[0-9a-f]+$"))) or not stored or #stored ~= 16
+        or not sequence or sequence > 999999999 or not ack or ack > sequence then return nil,"Malformed game run cache" end
+    if session ~= state.session_key or config ~= (state.configuration_key or "-") or stored ~= game then return fresh end
+    return {game=game,sequence=sequence,ack=ack,entered=entered=="1"}
+end
+
+function save(state, progress)
+    local destination=path()
+    if not destination then return false,"Game run cache requires isolated appdata" end
+    local file=io.open(destination,"wb")
+    if not file then return false,"Cannot write game run cache" end
+    local text=table.concat({"GAMMA_AP_RUN|1","session|"..state.session_key,
+        "configuration|"..(state.configuration_key or "-"),"run|"..progress.game,
+        "sequence|"..progress.sequence,"ack|"..progress.ack,"entered|"..(progress.entered and 1 or 0),"end|1",""},"\n")
+    local written,closed=file:write(text),file:close()
+    if not written or not closed then return false,"Game run cache write failed" end
+    return true
+end

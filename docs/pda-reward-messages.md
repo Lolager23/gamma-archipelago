@@ -256,9 +256,10 @@ room feed does not duplicate them or claim delivery in someone else's inventory.
 `room_feed.txt` is an optional bounded presentation snapshot, tied to the exact
 session/configuration, with a process epoch, advancing heartbeat and the last 64
 messages. The game waits for world readiness and an observed heartbeat advance,
-then displays at most one message per poll. Its cursor survives level/save loads
-within the process. A stopped companion cannot initiate announcements from a
-cached file. Room news is transient, not a durable chat archive or saved item
+then displays at most one message per poll. Its isolated presentation cursor
+survives level/save loads and reconstruction of the Lua modules. A stopped
+companion cannot initiate announcements from a cached file. Room news is
+transient, not a durable chat archive or saved item
 acknowledgement; sufficiently long absences can exceed the 64-message window.
 English room transfer prose uses upstream labels and the existing check-cause
 projection. Local reward localization and receipt/check protocols are unchanged.
@@ -276,9 +277,11 @@ After the first ready-world load in the game process, a challenge-bound game
 request asks the connected companion to send "<slot> loaded GAMMA and entered the
 Zone." through upstream Say. It is ordinary room chat, visible to other AP
 clients. Loading gates delay the request; level switches and save reloads do not
-reset its transient queue/acknowledgement. The companion deduplicates requests
-across reconnects in that process. A restarted game creates a fresh request epoch.
-Old request files cannot be replayed by a new companion challenge. Requests use
+reset its queue/acknowledgement. The native log start marker and a bounded
+presentation cache retain its identity across Lua reconstruction. The companion
+deduplicates requests across reconnects in that process. A restarted game creates
+a fresh request epoch. Old target challenges are refused; the running game may
+retarget its validated pending queue to a new companion challenge. Requests use
 a separate bounded 32-entry data queue and never alter checks or item receipts.
 Submission acknowledgement means the websocket write completed, not that every
 other client displayed the message; chat has no crash-proof delivery guarantee.
@@ -293,3 +296,23 @@ session, developer panel, IDs or saved receipt/check state is changed.
 
 This requires matching companion and game packages. Native loading, MCM rendering
 and level-switch acceptance remain not run, reserved for Owen.
+
+## Quiet region changes (27 November 2026)
+
+Changing maps must not itself emit an AP message. Room cursors, chat request
+counters and the first-entry flag now survive module reconstruction, rather than
+relying on Lua locals surviving the load. Already-displayed reward identities are
+also recovered from the existing game-owned acknowledgement sidecar when loading
+an older save. This recovery never applies an item or completes a check.
+
+New room/check/reward events remain pending behind the existing loading gate and
+appear once the character is in the world. The room cursor binds while loading;
+it does not discard new events merely because Enter the Zone is still visible.
+On the first upgrade only, an absent cursor baselines unknown cached room history.
+Existing local reward notices have their independent durable identities. See the
+[bridge cache formats and failure limits](bridge-protocol.md#reload-safe-game-presentation-caches).
+
+Native acceptance is **not run**: transition between already-checked maps with no
+room traffic (silence), receive a reward/chat during loading (one delayed message),
+reload a save (no historical replay), and restart the engine (one genuine first
+entry announcement). These checks remain Owen's responsibility.

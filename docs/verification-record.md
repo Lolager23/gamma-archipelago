@@ -1,5 +1,41 @@
 # Verification record
 
+## 27 November 2026 — suppress message replay on region changes
+
+Room cursors and first-entry/chat counters previously lived only in Lua locals.
+Reconstructing those modules could replay cached room history and submit another
+world-entry announcement. The three new regressions fail against the previous
+modules: historical room replay, delayed loading news and older-save notice replay.
+
+The game now persists session/configuration-bound presentation cursors and derives
+its run token from the native log start marker. Existing notice acknowledgements
+also suppress already-announced transfers after an older save is loaded. New news
+remains behind the existing readiness gate. A first-upgrade cursor baselines the
+unknown historical room buffer; subsequent arrivals remain pending.
+
+Affected `tools/verify.py --base origin/main` passed static checks, deterministic
+packaging/archive loading and **1,437 regressions**. The four changed Lua modules
+reached **100% executable-line coverage**; Lua branch coverage is not measured.
+Additional cache-write-failure recovery assertions passed in a focused follow-up;
+that single-test run is not a replacement for the component coverage gates.
+Regressions also cover module reconstruction, process restart, delayed loading,
+pending/acknowledged chat, companion epoch changes, malformed/foreign/oversized
+caches, cache I/O failures, forbidden roots and counter exhaustion. No owned
+Python runtime code changed. Windows/Linux current-head CI is tracked on the PR.
+
+The native log header was inspected read-only; engine exports/initialization were
+checked against the documented reference. Native GAMMA acceptance and real AP
+server traffic are **not run** for this increment. It changes no item/location ID,
+configuration digest, save schema or receipt/check protocol. UI display/submission
+and cache writes are not an atomic transaction; crash-proof exactly-once messages
+are not claimed. Missing/invalid native log metadata fails the communication
+channel closed with a diagnostic, independently of item/check synchronization.
+
+No game launch, deployment, server restart, active-session mutation, developer-panel
+change or normal-game write was performed. Native acceptance remains Owen's:
+quiet travel, one delayed new event after loading, no historical replay after
+save reload, and one entry announcement after a real engine restart.
+
 ## 27 November 2026 — Class D Expert Tools placement assumption
 
 `Use Firearm Repair Class: D` now declares Expert Tools in the authoritative

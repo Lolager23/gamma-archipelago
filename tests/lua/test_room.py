@@ -25,7 +25,7 @@ def test_live_feed_waits_for_readiness_and_advance_without_replay_on_level_load(
     """)
     set_incoming(engine, items=())
     module = lua.globals().gamma_ap_room
-    engine.files[PATH] = packet()
+    engine.files[PATH] = encode_feed(KEY, None, "b" * 16, 10, ())
     game.actor_on_update()
     engine.now += 500
     game.actor_on_update()
