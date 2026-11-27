@@ -12,8 +12,14 @@ The catalogue maps actual status/target/title functors explicitly. Monster assau
 parameters distinguish hunting from stalker assaults. Unrecognized templates can
 still count as successfully completed nonstory side jobs, but do not invent a
 quest-type classification. Story tasks are excluded from side totals and ordinary
-quest-type checks. The frozen main-trilogy roster covers Living Legend, Mortal Sin
-and Operation Afterglow, grouping 83 faction variants into 53 shared milestones.
+quest-type checks, with one explicit exception: successful native faction-payment
+jobs using `drx_sl_money_task_status` or `drx_sl_money_task_target` award Donation
+(28052511) even though GAMMA marks them `storyline=true`. These payments stay out
+of side-task totals. Donation means completing the faction-change fee task, such
+as Sidorovich's **Burning Bridges**, rather than spending money at a trader or
+merely accepting a task. Known main-trilogy story IDs retain their own checks and
+never use this exception. The frozen main-trilogy roster covers Living Legend,
+Mortal Sin and Operation Afterglow, grouping 83 faction variants into 53 shared milestones.
 Other storylines are not silently classified as main-trilogy progress.
 
 The installed Monolith `callbacks_gameobject.script` publishes
