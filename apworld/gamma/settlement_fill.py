@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING
 from BaseClasses import CollectionState, LocationProgressType
 from Options import OptionError
 
-from gamma_archipelago.goodwill import SHARED_NAME, pool_name
+from gamma_archipelago.goodwill import ALLIED_NAME, SHARED_NAME, pool_name
 from gamma_archipelago.settlement_access import NEUTRALITY_ITEMS, required_reputation, requirement
 
 if TYPE_CHECKING:
@@ -24,7 +24,7 @@ def request_neutrality_opener(world: "GammaWorld") -> None:
         if (
             item.player == world.player
             and item.name not in NEUTRALITY_ITEMS
-            and item.name != SHARED_NAME
+            and item.name not in {SHARED_NAME, ALLIED_NAME}
         ):
             capable.collect(item, True)
     needed = {

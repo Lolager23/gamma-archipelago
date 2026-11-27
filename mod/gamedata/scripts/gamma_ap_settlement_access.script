@@ -9,14 +9,13 @@ local function gated(state, entry)
     return entry and entry.item ~= 0 and state.configuration.options.rewards_faction_reputation == 1
 end
 
-local function common(state, id)
-    return (id == gamma_ap_catalog.shared_goodwill_id and state.configuration.options.shared_faction_goodwill == 1)
-        or (id == 28051301 and state.goodwill_migration and state.goodwill_migration.completed)
+local function common(state, id, faction)
+    return gamma_ap_goodwill_scope.includes(state,id,faction)
 end
 
-local function copies(state, item)
+local function copies(state, item, faction)
     local count = 0
-    for _,id in ipairs(state.applied_items) do if id == item or common(state,id) then count=count+1 end end
+    for _,id in ipairs(state.applied_items) do if id == item or common(state,id,faction) then count=count+1 end end
     return count
 end
 
@@ -24,7 +23,7 @@ function minimum_goodwill(state, pending)
     local result = {}
     if not state.session_key or state.refused_save or not state.expanded or not state.configuration then return result end
     local options = state.configuration.options
-    local broad = options.rewards_faction_reputation == 1 and (options.shared_faction_goodwill == 1 or (state.goodwill_migration and state.goodwill_migration.completed)
+    local broad = options.rewards_faction_reputation == 1 and ((options.shared_faction_goodwill or 0) > 0 or (state.goodwill_migration and state.goodwill_migration.completed)
         or (options.content_progression == 1 and options.playability_logic == 1 and (options.checks_rank_milestones == 1
             or options.checks_faction_standing == 1 or options.checks_armour_tiers == 1 or options.checks_weapon_tiers == 1)))
     if broad then
@@ -32,9 +31,9 @@ function minimum_goodwill(state, pending)
         local function add(id)
             local reward=gamma_ap_catalog.reputation_rewards[id]
             if not reward then return end
-            if common(state,id) then
-                for _,faction in ipairs(gamma_ap_catalog.goodwill_factions) do counts[faction]=(counts[faction] or 0)+1 end
-            elseif reward.faction ~= "all" then counts[reward.faction]=(counts[reward.faction] or 0)+1 end
+            if gamma_ap_goodwill_scope.group(state,id) then
+                for _,faction in ipairs(gamma_ap_goodwill_scope.factions(gamma_ap_goodwill_scope.group(state,id))) do counts[faction]=(counts[faction] or 0)+1 end
+            elseif reward.faction ~= "all" and reward.faction ~= "allied" then counts[reward.faction]=(counts[reward.faction] or 0)+1 end
         end
         for _,id in ipairs(state.applied_items) do add(id) end
         if pending then add(pending) end
@@ -44,7 +43,7 @@ function minimum_goodwill(state, pending)
     for id in pairs(gamma_ap_catalog.settlement_rules) do
         local entry = rule(state,id)
         if gated(state,entry) then
-            local count = copies(state,entry.item) + ((pending == entry.item or common(state,pending)) and 1 or 0)
+            local count = copies(state,entry.item,entry.faction) + ((pending == entry.item or common(state,pending,entry.faction)) and 1 or 0)
             if count > 0 then
                 local reward = gamma_ap_catalog.reputation_rewards[entry.item]
                 result[entry.faction] = math.min(reward.cap,count*reward.bonus)
@@ -61,7 +60,7 @@ function reason(state, id)
     if not gated(state,entry) then
         return nil,"Filler-only hostile settlement: no supported neutrality reward route"
     end
-    local received = copies(state,entry.item)
+    local received = copies(state,entry.item,entry.faction)
     if received < entry.copies then
         return "AP placement logic: "..entry.label.." goodwill rewards "..received.." / "..entry.copies
             .."; physical entry still counts regardless of hostility"

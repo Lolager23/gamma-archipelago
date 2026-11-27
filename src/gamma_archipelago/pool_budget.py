@@ -12,7 +12,7 @@ from .configuration import SeedConfiguration
 from .content_progression import configured_item_ids, required_copy
 from .content_progression import protected as content_protected
 from .discovery import configured_location_ids, protected_tail_ids
-from .goodwill import SHARED_NAME, shared
+from .goodwill import shared, shared_name
 from .opening import opening_checks, opening_permissions
 from .playability import fragile_ids
 from .playability import protected as practical_protected
@@ -75,10 +75,12 @@ def required_counts(
                 continue  # The chosen starting zone is always accessible.
             required[name] = max(0, required_copy(configuration, row) - gifts.get(name, 0))
     if shared(configuration):
-        required[SHARED_NAME] = max(0, 12 - gifts.get(SHARED_NAME, 0))
-        return required
+        name = shared_name(configuration)
+        required[name] = max(0, 12 - gifts.get(name, 0))
     for name, count in required_reputation(configuration, check_ids).items():
-        required[name] = max(0, count - gifts.get(name, 0))
+        required[name] = max(required[name], max(0, count - gifts.get(name, 0)))
+    if shared(configuration):
+        return required
     if (
         configuration.option("playability_logic")
         and "rewards_faction_reputation" in configuration.rewards

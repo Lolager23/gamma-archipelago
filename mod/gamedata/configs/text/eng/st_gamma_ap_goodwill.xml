@@ -3,4 +3,7 @@
     <string id="gamma_ap_goodwill_migration_complete">
         <text>Goodwill upgraded. Previous Loner goodwill rewards credited to the other seven factions: {count}. Future Loner goodwill now affects all eight factions.</text>
     </string>
+    <string id="gamma_ap_goodwill_migration_allied">
+        <text>Goodwill upgraded. Previous Loner goodwill rewards credited to the other four allied factions: {count}. Future Loner goodwill affects five allied factions; hostile factions keep their dedicated rewards.</text>
+    </string>
 </string_table>

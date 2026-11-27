@@ -98,6 +98,7 @@ function validate(state)
             end
         end
     end
+    if not gamma_ap_goodwill_repair.validate(state) then return false,"Invalid saved goodwill repair" end
     if not gamma_ap_goodwill_migration.validate(state) then return false,"Invalid saved goodwill migration" end
     if not gamma_ap_reputation.validate_targets(state) then return false,"Invalid saved goodwill targets" end
     if not gamma_ap_discovery.validate(state.discoveries,key,state.configuration) then return false,"Invalid saved distinct discoveries" end

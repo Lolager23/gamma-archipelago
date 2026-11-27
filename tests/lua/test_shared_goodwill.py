@@ -8,7 +8,12 @@ FACTIONS = ("stalker", "csky", "dolg", "freedom", "ecolog", "killer", "army", "b
 
 
 def setup(lua, **options):
-    game, engine = stash_game(lua, items=(SHARED, SHARED), rewards_faction_reputation=1, **options)
+    game, engine = stash_game(
+        lua,
+        items=(SHARED, SHARED),
+        rewards_faction_reputation=1,
+        **({"shared_faction_goodwill": 1} | options),
+    )
     lua.execute("""
         engine.goodwill={};engine.sets={}
         relation_registry={community_goodwill=function(faction)

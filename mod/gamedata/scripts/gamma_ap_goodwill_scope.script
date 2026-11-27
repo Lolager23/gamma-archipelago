@@ -1,0 +1,32 @@
+-- Stateless reward scope; the central save owns any explicit legacy-run repair.
+function enabled(configuration, id)
+    local mode=configuration and configuration.options.shared_faction_goodwill or 0
+    if id == gamma_ap_catalog.shared_goodwill_id then return mode == 1 end
+    if id == gamma_ap_catalog.allied_goodwill_id then return mode == 2 end
+    return true
+end
+
+function group(state, id)
+    local mode=state.configuration and state.configuration.options.shared_faction_goodwill or 0
+    if id == gamma_ap_catalog.shared_goodwill_id and mode == 1 then return "all" end
+    if id == gamma_ap_catalog.allied_goodwill_id and mode == 2 then return "allied" end
+    local migration=state.goodwill_migration
+    if id == 28051301 and migration and migration.completed then
+        return (state.goodwill_repair or migration.scope == "allied") and "allied" or "all"
+    end
+end
+
+function factions(scope)
+    local result={}
+    for _,faction in ipairs(gamma_ap_catalog.goodwill_factions) do
+        if scope == "all" or (scope == "allied" and gamma_ap_catalog.friendly_goodwill_factions[faction]) then
+            result[#result+1]=faction
+        end
+    end
+    return result
+end
+
+function includes(state, id, faction)
+    local scope=group(state,id)
+    return scope == "all" or (scope == "allied" and gamma_ap_catalog.friendly_goodwill_factions[faction] == true)
+end

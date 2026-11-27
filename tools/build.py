@@ -99,11 +99,18 @@ def generate_catalogues() -> None:
                 f'    [{item["id"]}] = {{faction="{item["faction"]}", '
                 f"bonus={item['bonus']}, cap={item['cap']}}},"
             )
-    lines.extend(["}", "shared_goodwill_id = 28051309", "goodwill_factions = {"])
+    lines.extend(
+        [
+            "}",
+            "shared_goodwill_id = 28051309",
+            "allied_goodwill_id = 28051310",
+            "goodwill_factions = {",
+        ]
+    )
     lines.extend(
         json.dumps(item["faction"]) + ","
         for item in catalogue["items"]
-        if item.get("effect") == "reputation" and item["faction"] != "all"
+        if item.get("effect") == "reputation" and item["faction"] not in {"all", "allied"}
     )
     lines.extend(["}", "stash_containers = {"])
     lines.extend(

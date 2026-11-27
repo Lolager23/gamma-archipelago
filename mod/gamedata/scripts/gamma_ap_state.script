@@ -19,7 +19,7 @@ function enabled_items(configuration)
             and configuration.options[category] == 1) then
             local gear = gamma_ap_catalog.gear_rewards[id]
             if (not gear or (configuration and configuration.options["starting_" .. gear.group] == 2))
-                and (id ~= gamma_ap_catalog.shared_goodwill_id or (configuration and configuration.options.shared_faction_goodwill == 1))
+                and gamma_ap_goodwill_scope.enabled(configuration,id)
                 and gamma_ap_tool_permissions.item_enabled(configuration,id)
                 and gamma_ap_equipment_classes.item_enabled(configuration,id)
                 and (not gamma_ap_catalog.tool_stash_levels[id] or (configuration and configuration.options.content_progression == 1))
@@ -88,6 +88,7 @@ function copy_state(state)
     result.rank_highest = state.rank_highest or -1
     result.skill_plans = gamma_ap_skills.copy(state.skill_plans)
     result.reputation_targets = gamma_ap_reputation.copy_targets(state.reputation_targets)
+    result.goodwill_repair = gamma_ap_goodwill_repair.copy(state.goodwill_repair)
     result.goodwill_migration = gamma_ap_goodwill_migration.copy(state.goodwill_migration)
     result.configuration = gamma_ap_configuration.copy(state.configuration)
     result.deliveries = gamma_ap_deliveries.copy(state.deliveries)

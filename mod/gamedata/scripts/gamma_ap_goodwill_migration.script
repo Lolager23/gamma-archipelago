@@ -6,7 +6,7 @@ end
 function copy(source)
     if not source then return nil end
     local result={version=source.version,session=source.session,configuration=source.configuration,
-        basis=source.basis,count=source.count,completed=source.completed,notice_pending=source.notice_pending,targets={}}
+        basis=source.basis,count=source.count,scope=source.scope,completed=source.completed,notice_pending=source.notice_pending,targets={}}
     for faction,target in pairs(source.targets) do result.targets[faction]=target end
     return result
 end
@@ -14,7 +14,7 @@ end
 function validate(state)
     local plan=state.goodwill_migration
     if plan == nil then return true end
-    if type(plan) ~= "table" or plan.version ~= 1 or plan.session ~= state.session_key
+    if type(plan) ~= "table" or (plan.scope ~= nil and plan.scope ~= "allied") or plan.version ~= 1 or plan.session ~= state.session_key
         or plan.configuration ~= state.configuration_key or not integer(plan.basis,0,state.received_count)
         or not integer(plan.count,0,plan.basis) or type(plan.completed) ~= "boolean"
         or type(plan.notice_pending) ~= "boolean" or type(plan.targets) ~= "table" then return false end
@@ -22,8 +22,8 @@ function validate(state)
     for index=1,plan.basis do if state.applied_items[index] == 28051301 then count=count+1 end end
     if count ~= plan.count then return false end
     for _ in pairs(plan.targets) do size=size+1 end
-    if size ~= #gamma_ap_catalog.goodwill_factions-1 then return false end
-    for _,faction in ipairs(gamma_ap_catalog.goodwill_factions) do
+    if size ~= #gamma_ap_goodwill_scope.factions(plan.scope or "all")-1 then return false end
+    for _,faction in ipairs(gamma_ap_goodwill_scope.factions(plan.scope or "all")) do
         if faction ~= "stalker" and not integer(plan.targets[faction],-2147483648,2147483647) then return false end
     end
     return true
@@ -37,14 +37,20 @@ local function requested(state)
     local text,closed=file:read(513),file:close()
     if not closed or type(text) ~= "string" or #text > 512 then return nil,"Goodwill migration request read failed" end
     local session,config=text:match("^GAMMA_AP_GOODWILL_MIGRATION|1\nsession|([0-9a-f]+)\nconfiguration|([0-9a-f]+)\nconvert_loner|1\nend|1\n$")
+    local scope="all"
+    if not session then
+        session,config=text:match("^GAMMA_AP_GOODWILL_MIGRATION|2\nsession|([0-9a-f]+)\nconfiguration|([0-9a-f]+)\nconvert_loner|1\nscope|allied\nend|1\n$")
+        scope="allied"
+    end
     if not session or #session ~= 64 or not config or #config ~= 64 then return nil,"Malformed goodwill migration request" end
     if session ~= state.session_key or config ~= state.configuration_key then return nil,"Goodwill migration belongs to another seed or slot" end
-    return true
+    return scope
 end
 
-function message(count)
+function message(count, scope)
     local fallback="Goodwill upgraded. Previous Loner goodwill rewards credited to the other seven factions: {count}. Future Loner goodwill now affects all eight factions."
-    local ok,text=pcall(function() return game.translate_string("gamma_ap_goodwill_migration_complete") end)
+    if scope == "allied" then fallback="Goodwill upgraded. Previous Loner goodwill rewards credited to the other four allied factions: {count}. Future Loner goodwill affects five allied factions; hostile factions keep their dedicated rewards." end
+    local ok,text=pcall(function() return game.translate_string(scope == "allied" and "gamma_ap_goodwill_migration_allied" or "gamma_ap_goodwill_migration_complete") end)
     local tokens=0
     if type(text) == "string" then local _,count=text:gsub("{count}","");tokens=count end
     if not ok or type(text) ~= "string" or #text > 2048 or tokens ~= 1
@@ -55,7 +61,7 @@ end
 local function announce(plan)
     if not plan.notice_pending then return true end
     local shown=pcall(function()
-        db.actor:give_game_news("Archipelago",message(plan.count),
+        db.actor:give_game_news("Archipelago",message(plan.count,plan.scope),
             "ui_inGame2_D_Svyazist",0,5000)
     end)
     if not shown then return false,"Goodwill migration completed; PDA notice will retry" end
@@ -71,14 +77,14 @@ function poll(state)
         if wanted == nil then return false,problem end
         if not wanted then return true end
         if state.configuration.options.rewards_faction_reputation ~= 1
-            or state.configuration.options.shared_faction_goodwill == 1 then return false,"Migration requires a legacy faction-goodwill seed" end
+            or (state.configuration.options.shared_faction_goodwill or 0) > 0 then return false,"Migration requires a legacy faction-goodwill seed" end
         if not gamma_ap_readiness.ready() then return false,"Goodwill migration waits for a ready world" end
         local count=0
         for _,id in ipairs(state.applied_items) do if id == 28051301 then count=count+1 end end
-        local targets,reason=gamma_ap_reputation.plan_backfill(state,count*250)
+        local targets,reason=gamma_ap_reputation.plan_backfill(state,count*250,wanted)
         if not targets then return false,reason end
         plan={version=1,session=state.session_key,configuration=state.configuration_key,
-            basis=state.received_count,count=count,targets=targets,completed=false,notice_pending=true}
+            basis=state.received_count,count=count,scope=wanted == "allied" and "allied" or nil,targets=targets,completed=false,notice_pending=true}
         state.goodwill_migration=plan
     end
     if not plan.completed then

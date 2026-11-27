@@ -15,7 +15,7 @@ EARLY_REWARD_CATEGORIES = frozenset({"rewards_starting_gear_unlocks", "rewards_w
 GOODWILL = tuple(
     row["name"]
     for row in _catalog["items"]
-    if row.get("effect") == "reputation" and row["faction"] != "all"
+    if row.get("effect") == "reputation" and row["faction"] not in {"all", "allied"}
 )
 FRIENDLY_FACTIONS = (
     frozenset(_catalog["faction_standing_factions"])
