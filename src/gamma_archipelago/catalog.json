@@ -5570,10 +5570,15 @@
       "category": "checks_quest_types",
       "key": "investigation",
       "logic": {
-        "any_regions": [],
-        "all_regions": [
-          "l02_garbage"
+        "any_regions": [
+          "k01_darkscape",
+          "k02_trucks_cemetery",
+          "y04_pole",
+          "zaton",
+          "jupiter",
+          "pripyat"
         ],
+        "all_regions": [],
         "reliable": false
       }
     },
@@ -9628,7 +9633,7 @@
     "actor_has_fetch_item": "fetch",
     "general_fetch_task": "fetch",
     "multifetch_status_functor": "fetch",
-    "drx_sl_quest_item_task_status": "fetch",
+    "drx_sl_quest_item_task_status": "recovery",
     "delivery_task": "delivery",
     "general_delivery": "delivery",
     "drx_sl_retrieve_item_task_status": "recovery",
@@ -9658,7 +9663,12 @@
     "dominance_task_status_functor": "territory",
     "smart_control_task_status_functor": "territory",
     "veh_destroy_sf": "vehicle",
-    "veh_destroy_tf": "vehicle"
+    "veh_destroy_tf": "vehicle",
+    "drx_sl_quest_item_task_target": "recovery",
+    "nta_stash_task_status_functor": "recovery",
+    "nta_stash_task_target_functor": "recovery",
+    "hold_the_ground_task_status_functor": "defence",
+    "hold_the_ground_task_target_functor": "defence"
   },
   "equipment": {
     "armour_kinds": {

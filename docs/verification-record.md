@@ -1712,3 +1712,31 @@ protected normal-game change or private developer-panel modification occurred.
 The requested manual Donation releases were saved separately on the active server
 with previous checks and ordered item history preserved; they are recovery work,
 not engine verification of this patch.
+
+
+### GAMMA Recovery, Defence and Investigation corrections - 27 November 2026
+
+This increment builds on the Donation detector. Native quest-stash recovery was
+classified as Fetch or absent from the functor roster; New Tasks' Flea Market
+`hold_the_ground` defence functors were absent. Add the explicit status/target
+mappings and permit successful standalone storyline Recovery, without giving
+known trilogy tasks another category or adding story jobs to side-task totals.
+The reproducer failed seven cases before the fix and passed eleven guard cases.
+Regressions retain duplicate, reload, disabled, cancelled and incomplete handling.
+
+The installed Lost Signal task selects Darkscape, Truck Cemetery, Meadow, Zaton,
+Jupiter or Jupiter Outskirts. The native Tasks QoL blacklist filters northern
+destinations before both psi emitters are disabled. Replace the erroneous
+Garbage-only source rule with those supported regions and require the RF
+receiver's Utilities permission alongside PDA access. Preserve `reliable=false`:
+an accessible candidate is not a guaranteed target for an accepted random task,
+so it cannot hold progression or useful rewards. Focused regional/world
+regressions passed seventeen cases; native tracker parity and the affected
+component/coverage gates are recorded on the PR with current-head Windows/Linux
+CI. Full release sweeps and native acceptance are **not run**.
+
+No published IDs, save formats, receipt history or configuration identity change.
+Existing seed placements are not recomputed. Manual Recovery releases for both
+players and Defence for Owen were saved separately, preserving earlier checks
+and ordered rewards. No game launch, deployment, developer-panel modification,
+normal-game write or session reset occurred.

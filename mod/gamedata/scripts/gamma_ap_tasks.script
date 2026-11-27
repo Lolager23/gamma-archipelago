@@ -79,11 +79,12 @@ function observe(state, object, status, manager, id)
     end
     if story_id then return true end
     local kind = quest_type(id, entry)
-    -- Native faction-payment jobs are marked storyline, but supply Donation.
-    if entry.storyline ~= false and not (entry.storyline == true and kind == "donation") then return true end
+    -- Native payment and document-retrieval jobs also carry the storyline flag.
+    local standalone_type = kind == "donation" or kind == "recovery"
+    if entry.storyline ~= false and not (entry.storyline == true and standalone_type) then return true end
     local type_id = gamma_ap_catalog.quest_type_locations[kind]
     if type_id and state.enabled_checks[type_id] then state.checks[type_id] = true end
-    -- Their payment event is a quest-type check, never an ordinary side job.
+    -- These storyline events are quest-type checks, never ordinary side jobs.
     if entry.storyline == true then return true end
     local progress = state.tasks
     local limit = progress.thresholds[#progress.thresholds] or 0

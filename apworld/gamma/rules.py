@@ -90,6 +90,8 @@ def apply_access_rules(world: "GammaWorld", catalog: dict[str, Any]) -> None:
             "checks_story_milestones",
         }:
             required.append("pda")
+        if category == "checks_quest_types" and definition["key"] == "investigation":
+            required.append("utilities")  # RF receiver is a native i_device.
         if category == "checks_armour_tiers":
             required.append("outfit")
         if category == "checks_weapon_tiers":
