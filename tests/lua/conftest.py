@@ -30,6 +30,7 @@ def lua():
         "loadout",
         "starting_supplies",
         "convenience",
+        "ammunition",
         "deliveries",
         "upgrade_tools",
         "workshop",

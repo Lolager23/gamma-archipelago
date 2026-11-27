@@ -333,9 +333,9 @@ class ChecksRankMilestones(Toggle):
 
 
 class SupplyAmmoCalibre(Choice):
-    """Choose the calibre for ammunition packages; ordinary native box sizes apply."""
+    """Legacy calibre for existing saved plans; new packages use equipped weapons or 9x18."""
 
-    display_name = "Supply package ammunition calibre"
+    display_name = "Legacy ammunition package calibre"
     option_9x18 = 0
     option_9x19 = 1
     option_545 = 2

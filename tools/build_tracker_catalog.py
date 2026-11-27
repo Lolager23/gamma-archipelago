@@ -97,4 +97,9 @@ def tracker_lines(catalogue: dict[str, Any]) -> list[str]:
                 "{" + ",".join(quoted(section) for section in tier) + "}" for tier in tiers
             )
             lines.append(f"    [{row['id']}]={{{values}}},")
+    lines.extend(["}", "delivery_legacy_contents = {"])
+    for row in catalogue["items"]:
+        if "legacy_supplies_v1" in row:
+            sections = ",".join(quoted(section) for section in row["legacy_supplies_v1"])
+            lines.append(f"    [{row['id']}]={{{sections}}},")
     return lines + ["}"]

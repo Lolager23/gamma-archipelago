@@ -36,7 +36,15 @@ def test_combined_reward_history_recovers_partial_delivery_and_rolls_back_permis
         if state_of(lua, game).received_count == len(history):
             break
     assert state_of(lua, game).received_count == len(history)
-    assert list(engine.created.values()) == before + ["bandage", "antirad"]
+    assert list(engine.created.values()) == before + [
+        "medkit_army",
+        "medkit_scientic",
+        "bandage",
+        "bandage",
+        "antirad",
+        "morphine",
+        "drug_antidot",
+    ]
     assert engine.weights.gamma_archipelago_carry == 5 and engine.weights.other == 7
     assert lua.globals().ui_workshop.UIWorkshopCraft.Craft(craft_dialog(lua, 3)) == "native"
     created = list(engine.created.values())
