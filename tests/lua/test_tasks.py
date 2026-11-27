@@ -1,7 +1,8 @@
 import pytest
 
-from gamma_archipelago.catalog import SIDE_TASK_MILESTONE_BASE, enabled_location_ids
+from gamma_archipelago.catalog import SIDE_TASK_MILESTONE_BASE
 from gamma_archipelago.configuration import encode_configuration
+from gamma_archipelago.discovery import configured_location_ids
 from gamma_archipelago.protocol import encode_confirmed
 
 from .test_game_adapter import saved_state
@@ -61,9 +62,7 @@ def test_repeat_template_instances_deduplicate_save_and_restore_their_counter(lu
         emit(lua, game, entry(lua, time=time))
     state = progress(lua, game)
     assert state.tasks.count == 4 and len(list(state.tasks.seen)) == 4
-    allowed = enabled_location_ids(
-        configuration.checks, configuration.kill_milestones, configuration.side_task_milestones
-    )
+    allowed = configured_location_ids(configuration)
     assert set(state.enabled_checks) == allowed
     packet = encode_confirmed(KEY, frozenset({SIDE_TASK_MILESTONE_BASE + 4}))
     assert lua.globals().gamma_ap_protocol.parse_confirmed(packet, KEY)[

@@ -218,6 +218,7 @@ def test_native_tail_validation_and_observations_keep_the_same_checks(lua, group
 
 @pytest.mark.parametrize("roster,expected", [(0, True), (1, False)])
 def test_vehicle_roster_matches_python_and_keeps_legacy_checks_after_reload(lua, roster, expected):
+    lua.execute("callbacks_gameobject={task_callback=function() end}")
     game, _, configuration = discovery_game(lua, checks_quest_types=1, quest_type_roster=roster)
     state = progress(lua, game)
     assert set(state.enabled_checks) == configured_location_ids(configuration)
