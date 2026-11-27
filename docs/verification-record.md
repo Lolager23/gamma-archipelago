@@ -1691,3 +1691,24 @@ launch, server restart, save/session switch, private developer-panel modificatio
 or protected normal-game write was performed. Existing Mini check recovery is
 separate operational work; this PR changes no active server progress. Current-head
 Windows/Linux CI must be checked separately before treating the PR as validated.
+
+
+### Donation completion detection - 27 November 2026
+
+The native faction-change payment templates carry `storyline=true`; the generic
+story exclusion previously discarded their successful completion before Donation
+classification. Allow this one explicit normalized type while preserving known
+story-ID precedence and keeping those payments outside side-task totals. No IDs,
+configuration keys, save schemas, receipt history or AP placement rules change.
+
+The regression failed eleven cases before the fix and passed all nineteen after
+it. Affected verification against `origin/main` passed 1,529 native adapter tests,
+static checks and deterministic packaging. `gamma_ap_tasks.script` measured 100%
+executable-line coverage; Lua branch coverage is not measured. Cases include all
+ten pinned payment templates, target fallback, duplicate completion and reload,
+disabled checks, incomplete/failed/cancelled payments and main-story exclusion.
+Native acceptance is **not run**, reserved for Owen. No game launch, deployment,
+protected normal-game change or private developer-panel modification occurred.
+The requested manual Donation releases were saved separately on the active server
+with previous checks and ordered item history preserved; they are recovery work,
+not engine verification of this patch.

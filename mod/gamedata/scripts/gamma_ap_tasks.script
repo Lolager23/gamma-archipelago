@@ -77,9 +77,14 @@ function observe(state, object, status, manager, id)
         state.tasks.stories[story_id] = true
         if state.enabled_checks[story_id] then state.checks[story_id] = true end
     end
-    if entry.storyline ~= false or story_id then return true end
-    local type_id = gamma_ap_catalog.quest_type_locations[quest_type(id, entry)]
+    if story_id then return true end
+    local kind = quest_type(id, entry)
+    -- Native faction-payment jobs are marked storyline, but supply Donation.
+    if entry.storyline ~= false and not (entry.storyline == true and kind == "donation") then return true end
+    local type_id = gamma_ap_catalog.quest_type_locations[kind]
     if type_id and state.enabled_checks[type_id] then state.checks[type_id] = true end
+    -- Their payment event is a quest-type check, never an ordinary side job.
+    if entry.storyline == true then return true end
     local progress = state.tasks
     local limit = progress.thresholds[#progress.thresholds] or 0
     if progress.count >= limit then return true end
