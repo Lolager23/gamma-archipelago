@@ -9,6 +9,7 @@ from .catalog import CLASS_ITEM_IDS, enabled_item_ids
 from .equipment_classes import enabled as classes_enabled
 from .equipment_classes import item_enabled as class_item_enabled
 from .equipment_classes import required_copies as class_copies
+from .goodwill import SHARED_ID, shared
 from .tool_permissions import TOOL_ITEM_IDS, enabled
 from .tool_permissions import generic as generic_tools
 from .tool_permissions import level as permission_level
@@ -37,6 +38,8 @@ def tool_level(count: Callable[[str], int]) -> int:
 
 def configured_item_ids(configuration: "SeedConfiguration") -> frozenset[int]:
     ids = enabled_item_ids(configuration.rewards, configuration.gear)
+    if not shared(configuration):
+        ids -= {SHARED_ID}
     if classes_enabled(configuration):
         ids |= CLASS_ITEM_IDS
     ids &= frozenset(row["id"] for row in _data["items"] if class_item_enabled(configuration, row))

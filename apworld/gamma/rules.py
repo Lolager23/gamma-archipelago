@@ -8,6 +8,7 @@ from gamma_archipelago.activity_requirements import regional_requirement
 from gamma_archipelago.content_progression import melter_check, tool_level
 from gamma_archipelago.equipment_classes import check_classes, count_with_aliases
 from gamma_archipelago.equipment_classes import level as class_level
+from gamma_archipelago.goodwill import copies as goodwill_copies
 from gamma_archipelago.playability import allowed
 from gamma_archipelago.progression_readiness import allowed as progression_allowed
 from gamma_archipelago.progression_readiness import requirements as readiness_requirements
@@ -188,7 +189,11 @@ def apply_access_rules(world: "GammaWorld", catalog: dict[str, Any]) -> None:
                     permitted,
                     lambda level: state.can_reach_region(level, player),
                 )
-                and (settlement is None or state.has(settlement.name, player, settlement.copies))
+                and (
+                    settlement is None
+                    or goodwill_copies(world.configuration, settlement.name, count)
+                    >= settlement.copies
+                )
                 and (not tools or owned_tools >= tools)
                 and progression_allowed(
                     world.configuration,

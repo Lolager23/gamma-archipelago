@@ -4,6 +4,10 @@ from .expansion_settings import EXPANSION_LIMITS
 from .reward_quantities import DEFAULT_COUNTS
 
 CHOICES = {
+    "shared_faction_goodwill": [
+        "Legacy faction-specific goodwill",
+        "Twelve all-faction goodwill rewards",
+    ],
     "varied_filler": ["Legacy basic filler", "Varied enabled supplies and stashes"],
     "randomized_stash_loot": ["Fixed legacy stash contents", "Varied tier/calibre stash contents"],
     "progressive_sphere_pacing": [

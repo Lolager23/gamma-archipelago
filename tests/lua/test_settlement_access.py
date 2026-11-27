@@ -27,7 +27,9 @@ def native(lua, goodwill=0, relation=-2000):
 
 
 def configured(lua):
-    game, engine, _ = configured_settlements(lua, rewards_faction_reputation=1)
+    game, engine, _ = configured_settlements(
+        lua, rewards_faction_reputation=1, shared_faction_goodwill=0
+    )
     native(lua)
     lua.execute("db.actor.id=function() return 0 end")
     return game, engine, saved_state(lua, game).gamma_archipelago_v1

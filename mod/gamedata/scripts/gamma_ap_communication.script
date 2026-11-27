@@ -1,15 +1,8 @@
--- Process-local chat requests and diagnostics; never persist checks or receipts here.
-local game_epoch = string.format("%08x%08x",os.time()%4294967296,math.floor(os.clock()*1000000)%4294967296)
+-- Reload-safe chat requests and diagnostics; never persist checks or receipts here.
+local game_epoch
 local bound,epoch,heartbeat,changed_at,live = nil,nil,nil,nil,false
 local requests,next_sequence,entered = {},0,false
-local request_key = nil
-
-local function bind(key)
-    if request_key and request_key ~= key then
-        requests,next_sequence,entered = {},0,false
-    end
-    request_key = key
-end
+local request_key,last_ack,dirty = nil,0,false
 
 local function plain(text, maximum)
     return type(text) == "string" and #text <= maximum and not text:find("[%z\1-\31\127%%<>|%[%]]")
@@ -59,9 +52,64 @@ local function read(root, name, maximum)
     return content
 end
 
+local function restore_requests(state)
+    local root=root_path()
+    local content,problem=read(root,"game_requests.txt",40000)
+    if not content then return not problem or problem=="Companion connection status unavailable",problem end
+    local lines={}
+    for line in content:gmatch("([^\n]*)\n") do lines[#lines+1]=line end
+    if lines[2] ~= "session|"..state.session_key or lines[3] ~= "configuration|"..(state.configuration_key or "-")
+        or lines[4] ~= "game|"..game_epoch then return true end
+    local target=(lines[5] or ""):match("^target|([0-9a-f]+)$")
+    if #content > 40000 or content:sub(-1) ~= "\n" or lines[1] ~= "GAMMA_AP_COMMANDS|1"
+        or #lines < 6 or #lines > 38 or not target or #target ~= 16
+        or lines[#lines] ~= "end|"..(#lines-6) then return false,"Malformed cached AP requests" end
+    local restored,previous={},0
+    for index=6,#lines-1 do
+        local sequence,kind,text=lines[index]:match("^request|(%d+)|([a-z]+)|([0-9a-f]*)$")
+        sequence=gamma_ap_protocol.canonical_number(sequence)
+        if not sequence or sequence <= previous or sequence > 999999999 or not text or #text > 1024 or #text%2 ~= 0
+            or (kind ~= "loaded" and kind ~= "say") or (kind=="loaded") ~= (text=="") then return false,"Invalid cached AP request" end
+        text=text:gsub("%x%x",function(pair) return string.char(tonumber(pair,16)) end)
+        if text:find("[%z\1-\31\127]") then return false,"Unsafe cached AP request" end
+        if sequence > last_ack then restored[#restored+1]={sequence=sequence,kind=kind,text=text} end
+        previous=sequence
+        if kind=="loaded" then entered=true end
+    end
+    requests,next_sequence=restored,math.max(next_sequence,previous)
+    return true
+end
+
+local function bind(state)
+    if request_key == state.session_key then return true end
+    local changed=request_key ~= nil
+    local progress,problem=gamma_ap_game_run.load(state)
+    if not progress then return false,problem end
+    game_epoch=progress.game
+    requests,next_sequence,entered,last_ack={},progress.sequence,progress.entered,progress.ack
+    if changed then next_sequence,entered,last_ack=0,false,0 end
+    if not changed then
+        local ok,reason=restore_requests(state)
+        if not ok then return false,reason end
+    end
+    request_key=state.session_key
+    dirty=next_sequence ~= progress.sequence or entered ~= progress.entered or changed
+    return true
+end
+
+local function persist(state)
+    if not dirty then return true end
+    local ok,reason=gamma_ap_game_run.save(state,{game=game_epoch,sequence=next_sequence,ack=last_ack,entered=entered})
+    if not ok then return false,reason end
+    dirty=false
+    return true
+end
+
 function view(state, now)
     local empty = {status="Companion connection status unavailable",fresh=false,connected=false,pending="unknown"}
     if not state.session_key then return empty end
+    local bound_ok,bound_error=bind(state)
+    if not bound_ok then empty.status=bound_error;return empty end
     local root = root_path()
     if not root then empty.status="Communication requires isolated appdata"; return empty end
     local content,reason = read(root,"connection_status.txt",8192)
@@ -84,14 +132,18 @@ function view(state, now)
         for id in pairs(state.checks) do if not confirmed[id] then frame.pending=frame.pending+1 end end
     end
     if frame.game == game_epoch then
+        if frame.ack > last_ack then
+            last_ack,next_sequence,dirty=frame.ack,math.max(next_sequence,frame.ack),true
+        end
         while requests[1] and requests[1].sequence <= frame.ack do table.remove(requests,1) end
     end
     return frame
 end
 
 local function enqueue(kind,text)
+    if next_sequence >= 999999999 then return false,"AP request counter exhausted; restart GAMMA" end
     if #requests >= 32 then return false,"AP message queue is full; reconnect before sending more" end
-    next_sequence = next_sequence+1
+    next_sequence,dirty = next_sequence+1,true
     requests[#requests+1] = {sequence=next_sequence,kind=kind,text=text}
     return true,"Queued for Archipelago; awaiting companion submission"
 end
@@ -109,13 +161,14 @@ local function write_requests(state, target)
     if not file then return false,"Cannot write AP game requests" end
     local written,closed = file:write(table.concat(lines,"\n").."\n"),file:close()
     if not written or not closed then return false,"AP game request write failed" end
-    return true
+    return persist(state)
 end
 
 function flush(state, now)
     if not state.session_key then return true end
-    bind(state.session_key)
-    if #requests == 0 then return true end
+    local ok,reason=bind(state)
+    if not ok then return false,reason end
+    if #requests == 0 then return persist(state) end
     local frame = view(state,now)
     if not frame.fresh then return true end
     return write_requests(state,frame.epoch)
@@ -123,7 +176,8 @@ end
 
 function say(state,text)
     if not state.session_key then return false,"Load an Archipelago game first" end
-    bind(state.session_key)
+    local ok,reason=bind(state)
+    if not ok then return false,reason end
     if type(text) ~= "string" or #text == 0 or #text > 512 or text:find("[%z\1-\31\127]") then
         return false,"AP message is empty, too long, or contains a line break/control character"
     end
@@ -135,14 +189,16 @@ end
 
 function poll(state, now)
     if not state.session_key or not gamma_ap_readiness.ready() then return true end
-    bind(state.session_key)
+    local ok,reason=bind(state)
+    if not ok then return false,reason end
     local frame = view(state,now)
     if not frame.fresh then return true end
     if not entered and #requests < 32 then
-        enqueue("loaded","")
+        local queued,problem=enqueue("loaded","")
+        if not queued then return false,problem end
         entered = true
     end
-    if #requests == 0 then return true end
+    if #requests == 0 then return persist(state) end
     return write_requests(state,frame.epoch)
 end
 

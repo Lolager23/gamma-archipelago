@@ -1,5 +1,6 @@
 -- Transient room news: never acknowledge rewards or mutate saved progression.
 local key,epoch,heartbeat,changed_at,cursor,live = nil,nil,nil,nil,0,false
+local dirty=false
 
 function parse(content, session, configuration)
     if type(content) ~= "string" or #content > 280000 or content:sub(-1) ~= "\n" then
@@ -38,20 +39,54 @@ function snapshot(state)
     return frame,reason
 end
 
+local function cursor_file(state, frame, root)
+    local path=root.."archipelago\\room_cursor.txt"
+    local file=io.open(path,"rb")
+    if not file then
+        -- First upgrade baselines the old buffer, before the loading gate opens.
+        return #frame.messages > 0 and frame.messages[#frame.messages].sequence or 0,path
+    end
+    local text,closed=file:read(1025),file:close()
+    if not closed or type(text) ~= "string" or #text > 1024 then return nil,"Room cursor read failed" end
+    local session,config,token,sequence=text:match("^GAMMA_AP_CURSOR|1\nsession|([0-9a-f]+)\nconfiguration|([0-9a-f%-]+)\nepoch|([0-9a-f]+)\ncursor|(%d+)\nend|1\n$")
+    sequence=gamma_ap_protocol.canonical_number(sequence)
+    if not session or #session ~= 64 or (config ~= "-" and (#config ~= 64 or not config:match("^[0-9a-f]+$"))) or not token or #token ~= 16
+        or not sequence or sequence > 999999999 then return nil,"Malformed room cursor" end
+    return session==state.session_key and config==(state.configuration_key or "-") and token==frame.epoch and sequence or 0,path
+end
+
+local function persist(state, path)
+    dirty=true
+    local file=io.open(path,"wb")
+    if not file then return false,"Cannot write room cursor" end
+    local text=table.concat({"GAMMA_AP_CURSOR|1","session|"..state.session_key,
+        "configuration|"..(state.configuration_key or "-"),"epoch|"..epoch,"cursor|"..cursor,"end|1",""},"\n")
+    local written,closed=file:write(text),file:close()
+    if not written or not closed then return false,"Room cursor write failed" end
+    dirty=false
+    return true
+end
+
 function poll(state, now)
-    if not state.session_key or not gamma_ap_readiness.ready() then return true end
+    if not state.session_key then return true end
     local frame,reason = snapshot(state)
     if not frame then return not reason,reason end
+    local root=gamma_ap_paths.bridge_root(getFS():update_path("$app_data_root$",""),io.open)
+    local path=root.."archipelago\\room_cursor.txt"
     if key ~= state.session_key or epoch ~= frame.epoch then
-        key,epoch,heartbeat,changed_at,cursor = state.session_key,frame.epoch,frame.heartbeat,now,0
+        local restored,destination=cursor_file(state,frame,root)
+        if not restored then return false,destination end
+        key,epoch,heartbeat,changed_at,cursor = state.session_key,frame.epoch,frame.heartbeat,now,restored
         live = false
-        return true
+        return persist(state,destination)
+    end
+    if dirty then
+        local ok,problem=persist(state,path)
+        if not ok then return false,problem end
     end
     if now < changed_at then changed_at=now end
     if frame.heartbeat > heartbeat then heartbeat,changed_at,live=frame.heartbeat,now,true end
-    if now-changed_at > 5000 then return true end
-    -- A new epoch must advance before cached news can be displayed.
-    if not live then return true end
+    if now-changed_at > 5000 or not live or not gamma_ap_readiness.ready() then return true end
     for _,message in ipairs(frame.messages) do
         if message.sequence > cursor then
             local shown = pcall(function()
@@ -59,7 +94,7 @@ function poll(state, now)
             end)
             if not shown then return false,"Room news display failed" end
             cursor = message.sequence
-            break
+            return persist(state,path)
         end
     end
     return true
