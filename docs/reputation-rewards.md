@@ -1,3 +1,5 @@
+For corrected allied sharing and the current-run repair, see [shared goodwill](shared-goodwill.md) and [manual repair](goodwill-repair.md).
+
 # Step 16: faction goodwill rewards
 
 New generations now use [shared goodwill](shared-goodwill.md): twelve rewards each

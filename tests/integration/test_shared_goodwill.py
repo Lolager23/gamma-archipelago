@@ -12,7 +12,9 @@ from gamma_archipelago.presets import presets
 
 @pytest.mark.parametrize("seed", [17, 118])
 def test_shared_pool_fills_without_self_locks_and_credits_each_faction(seed):
-    multi = setup_multiworld(GammaWorld, options=presets()["living_legend"], seed=seed)
+    multi = setup_multiworld(
+        GammaWorld, options=presets()["living_legend"] | {"shared_faction_goodwill": 1}, seed=seed
+    )
     world = multi.worlds[1]
     assert Counter(
         item.name for item in multi.itempool if item.name.startswith("Faction Goodwill:")

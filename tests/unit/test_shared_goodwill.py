@@ -14,7 +14,7 @@ from gamma_archipelago.settlement_access import required_reputation
 
 
 def config(**values):
-    return build_configuration(presets()["living_legend"] | values)
+    return build_configuration(presets()["living_legend"] | {"shared_faction_goodwill": 1} | values)
 
 
 def test_twelve_shared_copies_cover_every_quota_without_redundant_faction_guarantees():

@@ -1,0 +1,117 @@
+-- Explicit manual repair. Never guess natural goodwill that the old migration lost.
+local HOSTILE={"killer","army","bandit"}
+local function integer(value)
+    return type(value) == "number" and value == math.floor(value) and value >= -2147483648 and value <= 2147483647
+end
+
+function floor(state, faction, basis)
+    local amount=0
+    for index=1,basis or state.received_count do
+        local reward=gamma_ap_catalog.reputation_rewards[state.applied_items[index]]
+        if reward and reward.faction == faction then amount=amount+reward.bonus end
+    end
+    return math.min(3000,amount)
+end
+
+local function target_valid(state,faction,target,basis)
+    local minimum=floor(state,faction,basis)
+    -- With no dedicated receipt there is no AP floor; known negative standing is valid.
+    return integer(target) and (minimum == 0 or target >= minimum)
+end
+
+local function permitted(state)
+    return state.session_key and state.configuration_key and not state.refused_save and type(state.configuration) == "table" and type(state.configuration.options) == "table"
+        and state.configuration.options.shared_faction_goodwill == 0
+        and type(state.goodwill_migration) == "table" and state.goodwill_migration.completed
+end
+
+function copy(plan)
+    if not plan then return nil end
+    local result={version=plan.version,session=plan.session,configuration=plan.configuration,
+        basis=plan.basis,completed=plan.completed,before={},targets={},applied={}}
+    for _,faction in ipairs(HOSTILE) do
+        result.before[faction]=plan.before[faction];result.targets[faction]=plan.targets[faction]
+        result.applied[faction]=plan.applied[faction]
+    end
+    return result
+end
+
+function validate(state)
+    local plan=state.goodwill_repair
+    if plan == nil then return true end
+    if not permitted(state) or type(plan) ~= "table" or plan.version ~= 1
+        or plan.session ~= state.session_key or plan.configuration ~= state.configuration_key
+        or not integer(plan.basis) or plan.basis < 0 or plan.basis > state.received_count
+        or type(plan.completed) ~= "boolean" then return false end
+    for _,name in ipairs({"before","targets","applied"}) do
+        if type(plan[name]) ~= "table" then return false end
+        local size=0
+        for _ in pairs(plan[name]) do size=size+1 end
+        if size ~= 3 then return false end
+    end
+    for _,faction in ipairs(HOSTILE) do
+        if not integer(plan.before[faction]) or not target_valid(state,faction,plan.targets[faction],plan.basis)
+            or type(plan.applied[faction]) ~= "boolean"
+            or (plan.completed and not plan.applied[faction]) then return false end
+    end
+    return true
+end
+
+function report(state)
+    if not permitted(state) then return nil,"Repair requires this save's completed legacy goodwill migration" end
+    local lines={"Hostile goodwill: current personal standing / dedicated AP floor"}
+    for _,faction in ipairs(HOSTILE) do
+        local current,problem=gamma_ap_reputation.current(faction)
+        if current == nil then return nil,problem end
+        lines[#lines+1]=faction..": "..current.." / "..floor(state,faction)
+    end
+    lines[#lines+1]=state.goodwill_repair and (state.goodwill_repair.completed and "Repair completed; shared rewards limited to allies" or "Repair pending")
+        or "No repair requested; original natural standings cannot be reconstructed"
+    return table.concat(lines,"\n")
+end
+
+function prepare(state, killer, army, bandit, confirmation)
+    if not permitted(state) then return false,"Repair requires this save's completed legacy goodwill migration" end
+    if state.goodwill_repair then return false,"A saved repair already exists; inspect its report instead of repeating it" end
+    if confirmation ~= "CONFIRM" then return false,"Explicit CONFIRM is required; use known personal standings or the AP-only reset" end
+    local targets={killer=killer,army=army,bandit=bandit}
+    local plan={version=1,session=state.session_key,configuration=state.configuration_key,
+        basis=state.received_count,completed=false,before={},targets=targets,applied={}}
+    for _,faction in ipairs(HOSTILE) do
+        if not target_valid(state,faction,targets[faction]) then
+            return false,"Repair target must be an integer at or above that faction's dedicated AP floor"
+        end
+        local current,problem=gamma_ap_reputation.current(faction)
+        if current == nil then return false,problem end
+        plan.before[faction]=current;plan.applied[faction]=false
+    end
+    state.goodwill_repair=plan
+    return true,"Repair queued. Resume the world, check the report, then save. Checks and received history are unchanged"
+end
+
+function ap_only(state, confirmation)
+    if confirmation ~= "CONFIRM_AP_ONLY" then return false,"CONFIRM_AP_ONLY acknowledges discarding unknown natural goodwill for these three factions" end
+    if not permitted(state) then return false,"Repair requires this save's completed legacy goodwill migration" end
+    return prepare(state,floor(state,"killer"),floor(state,"army"),floor(state,"bandit"),"CONFIRM")
+end
+
+function poll(state)
+    local plan=state.goodwill_repair
+    if not plan or plan.completed then return true end
+    if not gamma_ap_readiness.ready() then return false,"Goodwill repair waits for a ready world" end
+    for _,faction in ipairs(HOSTILE) do
+        if not plan.applied[faction] then
+            local current,problem=gamma_ap_reputation.current(faction)
+            if current == nil then return false,problem end
+            local target=plan.targets[faction]
+            if current ~= target then
+                if current ~= plan.before[faction] then return false,"Goodwill changed since repair was planned; restore the pre-command save and prepare again" end
+                local ok,reason=gamma_ap_reputation.set_target(faction,target)
+                if not ok then return false,reason end
+            end
+            plan.applied[faction]=true
+        end
+    end
+    plan.completed=true
+    return true
+end

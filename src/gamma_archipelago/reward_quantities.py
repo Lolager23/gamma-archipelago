@@ -5,7 +5,7 @@ from collections import Counter
 from importlib.resources import files
 from typing import TYPE_CHECKING
 
-from .goodwill import SHARED_NAME, shared
+from .goodwill import ALLIED_NAME, SHARED_NAME, shared, shared_name
 
 if TYPE_CHECKING:
     from .configuration import SeedConfiguration
@@ -48,7 +48,11 @@ def requested(configuration: "SeedConfiguration") -> Counter[str]:
             and not row.get("filler_family")
             and (
                 category != "rewards_faction_reputation"
-                or (row["name"] == SHARED_NAME) == shared(configuration)
+                or (
+                    row["name"] == shared_name(configuration)
+                    if shared(configuration)
+                    else row["name"] not in {SHARED_NAME, ALLIED_NAME}
+                )
             )
         ]
         for index in range(configuration.option(key)):

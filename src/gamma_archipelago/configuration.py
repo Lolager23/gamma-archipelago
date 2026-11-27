@@ -183,7 +183,7 @@ def defaults() -> dict[str, object]:
         faction_discovery_mode=1,
         artefact_discovery_mode=1,
         settlement_reputation_logic=1,
-        shared_faction_goodwill=1,
+        shared_faction_goodwill=2,
         playability_logic=1,
         content_progression=1,
         tool_use_permissions=1,

@@ -55,6 +55,9 @@ The engine registry still owns goodwill; the AP save
 owns applied receipt history. No additional persistent reputation owner exists.
 The optional [shared-goodwill conversion](shared-goodwill.md) keeps its absolute
 backfill targets in that same save owner, without changing server receipt IDs.
+The explicit [goodwill repair](goodwill-repair.md) also stores its bounded absolute
+three-faction plan there; it never rewrites checks or receipt history. New allied
+rewards preserve the dedicated hostile-faction placement and native floor rules.
 The projection groups progression facts by status, unlocked/locked permissions
 and exploration without parsing presentation strings; its legacy flat list is
 retained. The UI's Checks/Progression pages and native list selection own no

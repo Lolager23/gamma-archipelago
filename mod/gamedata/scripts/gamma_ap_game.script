@@ -168,6 +168,8 @@ function actor_on_update()
     state.configuration = gamma_ap_configuration.copy(configuration)
     local migrated,migration_error = gamma_ap_goodwill_migration.poll(state)
     if not migrated then report_error(migration_error); return end
+    local repaired,repair_error = gamma_ap_goodwill_repair.poll(state)
+    if not repaired then report_error(repair_error); return end
     local start_valid,start_error = gamma_ap_start.validate(state)
     if not start_valid then report_error(start_error); return end
     local zone_valid, zone_reason = gamma_ap_zone_keys.validate_start(state)
@@ -475,4 +477,22 @@ end
 
 function flush_ap_messages()
     return gamma_ap_communication.flush(state,time_continual())
+end
+
+-- Explicit debugger actions delegate to the central save; no receipt history edits.
+local function repair_message(ok,message)
+    local text=message or (ok and "Goodwill repair ready" or "Goodwill repair refused")
+    printf("[Archipelago] %s",text)
+    pcall(function() db.actor:give_game_news("Archipelago",text,"ui_inGame2_D_Svyazist",0,10000) end)
+    return ok,text
+end
+function goodwill_report()
+    local text,reason=gamma_ap_goodwill_repair.report(state)
+    return repair_message(text ~= nil,text or reason)
+end
+function repair_goodwill(killer,army,bandit,confirmation)
+    return repair_message(gamma_ap_goodwill_repair.prepare(state,killer,army,bandit,confirmation))
+end
+function repair_goodwill_ap_only(confirmation)
+    return repair_message(gamma_ap_goodwill_repair.ap_only(state,confirmation))
 end

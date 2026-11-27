@@ -46,13 +46,19 @@ function validate_targets(state)
         if not integer(receipt,1,math.min(4000,state.received_count+1)) then return false end
         if type(target) == "table" then
             local config=state.configuration and state.configuration.options or {}
-            if config.shared_faction_goodwill ~= 1 and not (state.goodwill_migration and state.goodwill_migration.completed) then return false end
-            if receipt <= state.received_count and state.applied_items[receipt] ~= gamma_ap_catalog.shared_goodwill_id
+            if config.shared_faction_goodwill ~= 1 and config.shared_faction_goodwill ~= 2 and not (state.goodwill_migration and state.goodwill_migration.completed) then return false end
+            if receipt <= state.received_count and state.applied_items[receipt] ~= gamma_ap_catalog.shared_goodwill_id and state.applied_items[receipt] ~= gamma_ap_catalog.allied_goodwill_id
                 and not (state.goodwill_migration and state.applied_items[receipt] == 28051301) then return false end
             local count=0
             for _ in pairs(target) do count=count+1 end
-            if count ~= #gamma_ap_catalog.goodwill_factions then return false end
-            for _,faction in ipairs(gamma_ap_catalog.goodwill_factions) do
+            local item=state.applied_items[receipt]
+            local allied=gamma_ap_goodwill_scope.group(state,item) == "allied"
+                or (receipt > state.received_count and (config.shared_faction_goodwill == 2
+                    or gamma_ap_goodwill_scope.group(state,28051301) == "allied"))
+            if count ~= 8 and not (count == 5 and allied) then return false end
+            if item == gamma_ap_catalog.allied_goodwill_id and count ~= 5 then return false end
+            if count == 8 and receipt > state.received_count and config.shared_faction_goodwill == 2 then return false end
+            for _,faction in ipairs(gamma_ap_goodwill_scope.factions(count == 5 and "allied" or "all")) do
                 if not integer(target[faction],-2147483648,2147483647) then return false end
             end
         elseif not integer(target,-2147483648,2147483647) then return false end
@@ -66,7 +72,7 @@ local function shared_targets(state, reward, receipt, item_id)
     local legacy_target=targets
     targets={}
     local floors=gamma_ap_settlement_access.minimum_goodwill(state,item_id)
-    for _,faction in ipairs(gamma_ap_catalog.goodwill_factions) do
+    for _,faction in ipairs(gamma_ap_goodwill_scope.factions(gamma_ap_goodwill_scope.group(state,item_id))) do
         local current,problem=read(faction)
         if current == nil then return nil,problem end
         targets[faction]=faction == "stalker" and legacy_target or
@@ -83,10 +89,10 @@ function receive(state, item_id)
         return false, "Faction reward is disabled in this seed"
     end
     local receipt = state.received_count + 1
-    if reward.faction == "all" or (item_id == 28051301 and state.goodwill_migration and state.goodwill_migration.completed) then
+    if gamma_ap_goodwill_scope.group(state,item_id) then
         local targets,problem=shared_targets(state,reward,receipt,item_id)
         if not targets then return false,problem end
-        for _,faction in ipairs(gamma_ap_catalog.goodwill_factions) do
+        for _,faction in ipairs(gamma_ap_goodwill_scope.factions(gamma_ap_goodwill_scope.group(state,item_id))) do
             local current,id=read(faction)
             if current == nil then return false,id end
             if current < targets[faction] then
@@ -109,7 +115,7 @@ function receive(state, item_id)
 end
 
 function reconcile(state)
-    if state.goodwill_migration and not state.goodwill_migration.completed then return true end
+    if (state.goodwill_migration and not state.goodwill_migration.completed) or (state.goodwill_repair and not state.goodwill_repair.completed) then return true end
     local floors = gamma_ap_settlement_access.minimum_goodwill(state)
     for faction,target in pairs(floors) do
         local current,id = read(faction)
@@ -122,9 +128,9 @@ function reconcile(state)
     return true
 end
 
-function plan_backfill(state, amount)
+function plan_backfill(state, amount, scope)
     local targets={}
-    for _,faction in ipairs(gamma_ap_catalog.goodwill_factions) do
+    for _,faction in ipairs(gamma_ap_goodwill_scope.factions(scope or "all")) do
         if faction ~= "stalker" then
             local current,problem=read(faction)
             if current == nil then return nil,problem end
@@ -135,7 +141,7 @@ function plan_backfill(state, amount)
 end
 
 function apply_backfill(targets)
-    for _,faction in ipairs(gamma_ap_catalog.goodwill_factions) do
+    for faction in pairs(targets) do
         if faction ~= "stalker" then
             local current,id=read(faction)
             if current == nil then return false,id end
@@ -146,4 +152,11 @@ function apply_backfill(targets)
         end
     end
     return true
+end
+
+function current(faction) return read(faction) end
+function set_target(faction,target)
+    local current,id=read(faction)
+    if current == nil then return false,id end
+    return set_and_confirm(faction,id,target)
 end

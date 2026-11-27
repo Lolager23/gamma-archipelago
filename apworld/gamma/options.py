@@ -639,13 +639,23 @@ class ChecksFactionStanding(Toggle):
     display_name = "Checks: Faction standing"
 
 
-class SharedFactionGoodwill(DefaultOnToggle):
-    """Twelve guaranteed rewards each grant +250 personal goodwill to all eight factions.
+class SharedFactionGoodwill(Choice):
+    """Share twelve rewards among allied factions; hostile bases retain dedicated rewards.
 
-    Disabled preserves faction-specific generation. Existing seeds are unchanged.
+    Legacy all-eight mode remains available for existing seeds and configurations.
     """
 
-    display_name = "Shared goodwill for all supported factions"
+    display_name = "Shared allied-faction goodwill"
+    option_faction_specific = 0
+    option_legacy_all_factions = 1
+    option_allied_factions = 2
+    alias_true = 1
+    alias_false = 0
+    alias_on = 1
+    alias_off = 0
+    alias_yes = 1
+    alias_no = 0
+    default = 2
 
 
 class SettlementReputationLogic(DefaultOnToggle):

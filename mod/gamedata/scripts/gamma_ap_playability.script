@@ -1,18 +1,18 @@
 -- Pure tracker assumptions. Native observers remain the authority on completed facts.
 local knife_mutants = {boar=true,dog=true,flesh=true,cat=true,tushkano=true}
 local function goodwill(state, friendly)
-    local counts,best,common = {},0,0
+    local counts,best={},0
     for _,id in ipairs(state.applied_items) do
-        local reward = gamma_ap_catalog.reputation_rewards[id]
-        if reward and ((reward.faction == "all" and state.configuration.options.shared_faction_goodwill == 1)
-            or (id == 28051301 and state.goodwill_migration and state.goodwill_migration.completed)) then
-            common=common+1
-        elseif reward and reward.faction ~= "all" and (not friendly or gamma_ap_catalog.friendly_goodwill_factions[reward.faction]) then
-            counts[id] = (counts[id] or 0)+1
-            best = math.max(best,counts[id]*250)
+        local reward=gamma_ap_catalog.reputation_rewards[id]
+        for _,faction in ipairs(gamma_ap_catalog.goodwill_factions) do
+            if (not friendly or gamma_ap_catalog.friendly_goodwill_factions[faction])
+                and reward and (reward.faction == faction or gamma_ap_goodwill_scope.includes(state,id,faction)) then
+                counts[faction]=(counts[faction] or 0)+250
+                best=math.max(best,counts[faction])
+            end
         end
     end
-    return best+common*250
+    return best
 end
 
 function reason(state, row, regions, psi)

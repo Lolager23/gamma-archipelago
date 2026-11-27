@@ -258,6 +258,7 @@ item_effects = {
     [28051307] = "reputation",
     [28051308] = "reputation",
     [28051309] = "reputation",
+    [28051310] = "reputation",
     [28051401] = "skill",
     [28051402] = "skill",
     [28051403] = "skill",
@@ -452,6 +453,7 @@ item_categories = {
     [28051307] = "rewards_faction_reputation",
     [28051308] = "rewards_faction_reputation",
     [28051309] = "rewards_faction_reputation",
+    [28051310] = "rewards_faction_reputation",
     [28051401] = "rewards_stat_levels",
     [28051402] = "rewards_stat_levels",
     [28051403] = "rewards_stat_levels",
@@ -817,8 +819,10 @@ reputation_rewards = {
     [28051307] = {faction="army", bonus=250, cap=3000},
     [28051308] = {faction="bandit", bonus=250, cap=3000},
     [28051309] = {faction="all", bonus=250, cap=3000},
+    [28051310] = {faction="allied", bonus=250, cap=3000},
 }
 shared_goodwill_id = 28051309
+allied_goodwill_id = 28051310
 goodwill_factions = {
 "stalker",
 "csky",
@@ -2379,7 +2383,7 @@ config_limits = {
     ["rewards_zone_keys"] = 1,
     ["scouting_mode"] = 2,
     ["settlement_reputation_logic"] = 1,
-    ["shared_faction_goodwill"] = 1,
+    ["shared_faction_goodwill"] = 2,
     ["starting_ammo"] = 100,
     ["starting_backpack"] = 2,
     ["starting_detector"] = 2,
@@ -2962,6 +2966,7 @@ tracker_item_names = {
     [28051307]="Faction Goodwill: army",
     [28051308]="Faction Goodwill: bandit",
     [28051309]="Faction Goodwill: All Factions",
+    [28051310]="Faction Goodwill: Allied Factions",
     [28051401]="Skill Level: Strength",
     [28051402]="Skill Level: Endurance",
     [28051403]="Skill Level: Survival",
