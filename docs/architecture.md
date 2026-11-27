@@ -27,12 +27,17 @@ checks; the CommonClient notice adapter resolves the finder slot's game and
 data-package metadata. The game translates the sentence, cause and owned value.
 See [PDA messages](pda-reward-messages.md) for coordinated bundle upgrades.
 
-Optional room news and connection diagnostics are transient presentation channels.
+Optional room news and connection diagnostics are presentation channels.
 The companion writes bounded session/configuration-bound room/status snapshots;
 the game writes a bounded challenge-bound request queue for chat and hints.
 A first ready-world entry requests room chat once per game process, with request
 submission deduplication across companion reconnects. Level/save loading never
-resets that queue. Upstream Join/Part retains its real connection meaning.
+resets that queue, including when Lua modules are reconstructed. The small
+`game_run` adapter derives the process token from the native log start marker and
+keeps presentation counters in isolated appdata. The room cursor also survives
+Lua reloads; the existing notice acknowledgement file suppresses already-displayed
+notices when loading an older save. These caches never apply receipts.
+Upstream Join/Part retains its real connection meaning.
 The legacy presence heartbeat remains available to older bundles; the current
 add-on no longer emits a local join popup from it. None of these caches owns
 checks, received history or applied receipt state. See [PDA messages](pda-reward-messages.md).
