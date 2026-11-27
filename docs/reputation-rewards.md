@@ -1,5 +1,10 @@
 # Step 16: faction goodwill rewards
 
+New generations now use [shared goodwill](shared-goodwill.md): twelve rewards each
+credit all eight supported factions. That document also defines the explicit,
+session-bound migration for an existing run. The faction-specific behavior below
+is retained for legacy seeds without that migration.
+
 Current extension: [settlement reputation access](settlement-reputation.md)
 guarantees five progression copies each for Military, Bandits and Mercenaries
 when their hostile settlement gates are enabled. Other faction bonuses retain

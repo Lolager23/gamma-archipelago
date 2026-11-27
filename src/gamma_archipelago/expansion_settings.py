@@ -1,6 +1,7 @@
 """Additional bounded settings; legacy values preserve pre-expansion seed identities."""
 
 EXPANSION_LIMITS = {
+    "shared_faction_goodwill": 1,
     "varied_filler": 1,
     "randomized_stash_loot": 1,
     "progressive_sphere_pacing": 1,

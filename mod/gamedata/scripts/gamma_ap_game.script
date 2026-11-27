@@ -166,6 +166,8 @@ function actor_on_update()
     state.enabled_checks = enabled
     state.allowed_items = gamma_ap_state.enabled_items(configuration)
     state.configuration = gamma_ap_configuration.copy(configuration)
+    local migrated,migration_error = gamma_ap_goodwill_migration.poll(state)
+    if not migrated then report_error(migration_error); return end
     local start_valid,start_error = gamma_ap_start.validate(state)
     if not start_valid then report_error(start_error); return end
     local zone_valid, zone_reason = gamma_ap_zone_keys.validate_start(state)
