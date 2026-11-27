@@ -58,6 +58,8 @@ def configured_location_ids(configuration: "SeedConfiguration") -> frozenset[int
             configuration.checks, configuration.kill_milestones, configuration.side_task_milestones
         )
     )
+    if configuration.option("quest_type_roster"):
+        ids.difference_update(row["id"] for row in _data["locations"] if row.get("retired"))
     excluded = set(configuration.discovery_exclusions)
     for group, category in GROUPS.items():
         roster = SOURCES[group]

@@ -21,6 +21,9 @@ function select(configuration, enabled)
         or configuration.options.rewards_artefact_melter ~= 1) then
         return nil,"Invalid extra artefact capacity"
     end
+    if configuration.options.quest_type_roster == 1 then
+        for id in pairs(gamma_ap_catalog.retired_locations) do enabled[id] = nil end
+    end
     for group,category in pairs(categories) do
         local count,roster = 0,{}
         for id,source in pairs(gamma_ap_catalog.discovery_sources) do

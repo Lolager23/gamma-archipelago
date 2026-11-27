@@ -55,7 +55,7 @@ def test_progression_excludes_uncertain_sources_and_keeps_the_native_check_manif
     multi = setup_multiworld(GammaWorld, options=legacy_full())
     unsafe = unreliable_check_ids(multi.worlds[1].configuration)
     locations = [row for row in multi.get_locations() if row.address]
-    assert len(locations) == 253
+    assert len(locations) == 252
     assert all(
         row.progress_type == LocationProgressType.EXCLUDED
         for row in locations

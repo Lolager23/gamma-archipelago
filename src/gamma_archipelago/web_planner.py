@@ -94,7 +94,11 @@ def catalogue() -> dict[str, Any]:
 
 def metadata() -> dict[str, object]:
     data = catalogue()
-    check_counts = Counter(row["category"] for row in data["locations"] if "quota_group" not in row)
+    check_counts = Counter(
+        row["category"]
+        for row in data["locations"]
+        if "quota_group" not in row and not row.get("retired")
+    )
     for arc in ("living_legend", "mortal_sin", "operation_afterglow"):
         key = "checks_story_milestones" if arc == "living_legend" else "checks_" + arc
         check_counts[key] = sum(row.get("story_arc") == arc for row in data["locations"])

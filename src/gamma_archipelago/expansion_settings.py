@@ -1,6 +1,7 @@
 """Additional bounded settings; legacy values preserve pre-expansion seed identities."""
 
 EXPANSION_LIMITS = {
+    "quest_type_roster": 1,
     "shared_faction_goodwill": 1,
     "varied_filler": 1,
     "randomized_stash_loot": 1,

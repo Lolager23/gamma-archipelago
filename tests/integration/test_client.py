@@ -556,3 +556,49 @@ async def test_connection_clears_old_notices_before_publishing_new_settings(tmp_
         },
     )
     assert acknowledgements.read_text() == "old incomplete acknowledgements"
+
+
+@run_async
+async def test_current_and_pre_retirement_task_rosters_keep_exact_manifests_and_offline_checks():
+    from gamma_archipelago.configuration import build_configuration, defaults
+    from gamma_archipelago.discovery import configured_location_ids
+
+    for roster in (0, 1):
+        values = {**defaults(), "checks_maps": 0, "checks_quest_types": 1}
+        if roster == 0:
+            values.pop("quest_type_roster")
+        configuration = build_configuration(values)
+        slot_values = configuration.to_values()
+        if roster == 0:
+            slot_values.pop("quest_type_roster")
+        allowed = configured_location_ids(configuration)
+        context = connected_context(
+            {
+                "schema_version": 3,
+                "pilot": False,
+                "configuration": slot_values,
+                "configuration_key": configuration.digest,
+                "location_ids": sorted(allowed),
+            }
+        )
+        assert (28052513 in context.session.allowed_locations) == (roster == 0)
+        context.send_msgs = AsyncMock()
+        completed = frozenset({28052513 if roster == 0 else 28052503})
+        context.bridge.read_game = lambda key, completed=completed: GameSnapshot(
+            key, 0, completed, False
+        )
+        await context.poll_game_once()
+        assert completed <= context.session.checked_locations
+        with pytest.raises(ProtocolError, match="manifest"):
+            connected_context(
+                {
+                    **{
+                        "schema_version": 3,
+                        "pilot": False,
+                        "configuration": slot_values,
+                        "configuration_key": configuration.digest,
+                        "location_ids": sorted(allowed),
+                    },
+                    "location_ids": sorted(allowed ^ {28052513}),
+                }
+            )

@@ -5631,7 +5631,8 @@
           "l07_military"
         ],
         "reliable": false
-      }
+      },
+      "retired": true
     },
     {
       "id": 28052601,

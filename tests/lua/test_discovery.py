@@ -214,3 +214,17 @@ def test_native_tail_validation_and_observations_keep_the_same_checks(lua, group
         malformed = lua.table(options=options, exclusions=lua.table())
         selected, reason = lua.globals().gamma_ap_discovery.select(malformed, lua.table())
         assert selected is None and "tail" in reason
+
+
+@pytest.mark.parametrize("roster,expected", [(0, True), (1, False)])
+def test_vehicle_roster_matches_python_and_keeps_legacy_checks_after_reload(lua, roster, expected):
+    lua.execute("callbacks_gameobject={task_callback=function() end}")
+    game, _, configuration = discovery_game(lua, checks_quest_types=1, quest_type_roster=roster)
+    state = progress(lua, game)
+    assert set(state.enabled_checks) == configured_location_ids(configuration)
+    assert bool(state.enabled_checks[28052513]) == expected
+    lua.globals().gamma_ap_state.merge_confirmed(
+        state, lua.table_from({28052513: True}) if expected else lua.table()
+    )
+    game.load_state(lua.table(gamma_archipelago_v1=state))
+    assert bool(progress(lua, game).checks[28052513]) == expected

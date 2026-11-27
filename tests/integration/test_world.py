@@ -151,7 +151,7 @@ def test_single_threshold_seed_has_one_reward_without_pool_overflow():
 @pytest.mark.parametrize(
     "category,count",
     [
-        ("checks_quest_types", 13),
+        ("checks_quest_types", 12),
         ("checks_story_milestones", 21),
         ("checks_side_task_milestones", 3),
     ],

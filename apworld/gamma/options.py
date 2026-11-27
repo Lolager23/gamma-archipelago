@@ -11,6 +11,7 @@ from Options import (
     Range,
     StartInventoryPool,
     Toggle,
+    Visibility,
 )
 
 
@@ -276,6 +277,12 @@ class ChecksArtefacts(Toggle):
     """Enable artefacts checks."""
 
     display_name = "Checks: Artefacts"
+
+
+class QuestTypeRoster(DefaultOnToggle):
+    """Current task roster; zero is reserved for reading pre-retirement sessions."""
+
+    visibility = Visibility.none
 
 
 class ChecksQuestTypes(Toggle):
@@ -808,6 +815,7 @@ class GammaOptions(PerGameCommonOptions):
     checks_faction_first_kills: ChecksFactionFirstKills
     checks_artefacts: ChecksArtefacts
     checks_quest_types: ChecksQuestTypes
+    quest_type_roster: QuestTypeRoster
     checks_gear_upgrades: ChecksGearUpgrades
     checks_armour_tiers: ChecksArmourTiers
     checks_weapon_tiers: ChecksWeaponTiers

@@ -1,13 +1,15 @@
 # Step 11: task types, side jobs and story milestones
 
-Stack base: artefact PR #14. Three independent options add thirteen normalized
-quest types (28052501–28052513), fifty-three story milestones (28052601–28052653)
+The original Step 11 stack built on artefact PR #14. New generation uses twelve
+normalized quest types (28052501–28052512), with Vehicle (28052513) retained only
+for existing seeds. Three independent options select quest types, fifty-three story milestones (28052601–28052653)
 and configured side-task totals. A side threshold's stable ID is 28120000 plus
 its count; the finite selected list uses the same 1–20 thresholds and 1–10,000
 count bounds as kill milestones. Only selected thresholds become seed locations.
 
 Quest types are fetch, delivery, recovery, hunting, bounty, rescue, defence,
-research, investigation, assault, donation, territory and vehicle destruction.
+research, investigation, assault, donation and territory. Vehicle destruction is
+reserved for the legacy roster.
 The catalogue maps actual status/target/title functors explicitly. Monster assault
 parameters distinguish hunting from stalker assaults. Unrecognized templates can
 still count as successfully completed nonstory side jobs, but do not invent a
@@ -49,3 +51,16 @@ missing/late hooks, story mode and exact standalone category generation/manifest
 Lua branch coverage is not measured. Actual completion timing, timestamp resolution
 and installed task-mod interactions are **not run**, reserved for the user's
 post-merge acceptance. No game launch, deployment or protected-root modification.
+
+## Vehicle check retirement
+
+New worlds have twelve quest-type checks: Vehicle Destruction (28052513) is
+retired from generation, previews and the generator category count. Its published
+ID, name and native functor mappings remain reserved and readable for existing
+seeds. An internal `quest_type_roster` compatibility value is one in new
+generation and zero when absent from an older seed. Zero is omitted from the
+wire and digest, preserving existing session identities, confirmations, saved
+checks and receipt histories. It is hidden from the normal generator controls.
+Older clients need the matching updated bundle before connecting to new worlds.
+The active session is not regenerated; requested manual releases complete the
+old check without deleting or replacing its reward.

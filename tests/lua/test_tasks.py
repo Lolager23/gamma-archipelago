@@ -1,7 +1,8 @@
 import pytest
 
-from gamma_archipelago.catalog import SIDE_TASK_MILESTONE_BASE, enabled_location_ids
+from gamma_archipelago.catalog import SIDE_TASK_MILESTONE_BASE
 from gamma_archipelago.configuration import encode_configuration
+from gamma_archipelago.discovery import configured_location_ids
 from gamma_archipelago.protocol import encode_confirmed
 
 from .test_game_adapter import saved_state
@@ -61,9 +62,7 @@ def test_repeat_template_instances_deduplicate_save_and_restore_their_counter(lu
         emit(lua, game, entry(lua, time=time))
     state = progress(lua, game)
     assert state.tasks.count == 4 and len(list(state.tasks.seen)) == 4
-    allowed = enabled_location_ids(
-        configuration.checks, configuration.kill_milestones, configuration.side_task_milestones
-    )
+    allowed = configured_location_ids(configuration)
     assert set(state.enabled_checks) == allowed
     packet = encode_confirmed(KEY, frozenset({SIDE_TASK_MILESTONE_BASE + 4}))
     assert lua.globals().gamma_ap_protocol.parse_confirmed(packet, KEY)[
@@ -71,13 +70,15 @@ def test_repeat_template_instances_deduplicate_save_and_restore_their_counter(lu
     ]
 
 
-def test_all_task_functors_and_monster_assault_normalize_to_the_finite_roster(lua):
-    game, _, _ = task_game(lua, checks_quest_types=1)
+@pytest.mark.parametrize("roster", [0, 1])
+def test_all_task_functors_and_monster_assault_normalize_to_the_finite_roster(lua, roster):
+    game, _, _ = task_game(lua, checks_quest_types=1, quest_type_roster=roster)
     catalogue = lua.globals().gamma_ap_catalog
     for index, (functor, name) in enumerate(catalogue.task_functors.items(), 1):
         row = entry(lua, time=index, functor=functor)
         emit(lua, game, row)
-        assert progress(lua, game).checks[catalogue.quest_type_locations[name]]
+        expected = not (roster == 1 and name == "vehicle")
+        assert bool(progress(lua, game).checks[catalogue.quest_type_locations[name]]) == expected
     # Exercise target/title fallback rather than substring guessing.
     for field in ("target_functor", "title_functor"):
         row = entry(lua, functor="unknown")
