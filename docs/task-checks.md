@@ -12,8 +12,8 @@ The catalogue maps actual status/target/title functors explicitly. Monster assau
 parameters distinguish hunting from stalker assaults. Unrecognized templates can
 still count as successfully completed nonstory side jobs, but do not invent a
 quest-type classification. Story tasks are excluded from side totals and ordinary
-quest-type checks, with one explicit exception: successful native faction-payment
-jobs using `drx_sl_money_task_status` or `drx_sl_money_task_target` award Donation
+quest-type checks, with explicit exceptions for successful native recovery and
+faction-payment jobs. Native payments using `drx_sl_money_task_status` or `drx_sl_money_task_target` award Donation
 (28052511) even though GAMMA marks them `storyline=true`. These payments stay out
 of side-task totals. Donation means completing the faction-change fee task, such
 as Sidorovich's **Burning Bridges**, rather than spending money at a trader or
@@ -55,3 +55,40 @@ missing/late hooks, story mode and exact standalone category generation/manifest
 Lua branch coverage is not measured. Actual completion timing, timestamp resolution
 and installed task-mod interactions are **not run**, reserved for the user's
 post-merge acceptance. No game launch, deployment or protected-root modification.
+
+## GAMMA recovery and Flea Market defence
+
+Recovery includes successful stash-document/quest-item retrieval using
+`drx_sl_quest_item_task_status` / `drx_sl_quest_item_task_target` (for example
+`simulation_task_46` in the active Dynamic Tasks Balance `tm_dynamic.ltx`),
+`nta_stash_task_status_functor` / `nta_stash_task_target_functor` from New Tasks,
+and the existing corpse and DRX retrieval functors. Generic fetch jobs remain a
+separate check. Native DRX recovery jobs marked `storyline=true` can award Recovery
+but never side-task totals; recognized main-trilogy IDs retain precedence.
+
+Petrenko's **Hold the Ground** uses `hold_the_ground_task_status_functor` and
+`hold_the_ground_task_target_functor`, now mapped to Defence. The active New Tasks
+`tasks_hold_the_ground.script` identifies the Flea Market smart terrain and its
+bandit waves. Credit is still the engine's successful task completion callback;
+merely defending an area without completing a native task does not create a
+check. Failed, abandoned, active and disabled checks cannot award either category.
+
+Published IDs, configuration and save formats are unchanged. Existing completed
+jobs are not reconstructed from absent task records; requested manual releases
+recover the current run. These corrections require an updated game add-on for
+future observations; no live deployment is part of this PR.
+
+## Investigation opportunities
+
+The active `simulation_task_52` Lost Signal task chooses Darkscape, Truck Cemetery,
+Meadow, Zaton, Jupiter or Jupiter Outskirts, not Garbage. Tasks QoL removes the
+northern destinations before both native psi emitters are disabled. AP placement
+and the PDA require a reachable supported target region, the ordinary PDA
+permission and Utilities permission when restricted (the RF receiver's native
+`D_CUSTOM` / `i_device` classification). Access to a northern region also follows
+the world's normal zone/quest rules. This describes a possible job, not a promise
+that an accepted random job selected an unlocked map. The check remains
+`reliable=false`, so generation excludes progression and useful rewards from it.
+The receiver must still be acquired in game and the actual native task completed.
+This changes future generation and the tracker projection, not the existing
+server's pre-generated placements or its saved completion history.

@@ -216,3 +216,18 @@ def test_activity_opener_requests_a_capability_when_no_paid_start_is_affordable(
     request_activity_opener(multi.worlds[1], CATALOG)
     assert sum(multi.early_items[1].values()) == 1
     assert next(iter(multi.early_items[1])).startswith("Equipment Unlock:")
+
+
+def test_investigation_requires_lost_signal_region_pda_and_rf_permission():
+    options = legacy_full() | {"quest_zone_logic": 0}
+    multi = setup_multiworld(GammaWorld, options=options)
+    world = multi.worlds[1]
+    state = CollectionState(multi)
+    check = multi.get_location("Complete Quest Type: Investigation", 1)
+    collect(world, state, "Zone Key: Garbage", "Equipment Unlock: PDA")
+    assert not check.can_reach(state)
+    collect(world, state, "Zone Key: Meadow")
+    assert not check.can_reach(state)
+    collect(world, state, "Equipment Unlock: Utilities")
+    assert check.can_reach(state)
+    assert check.progress_type == LocationProgressType.EXCLUDED

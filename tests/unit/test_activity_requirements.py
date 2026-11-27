@@ -96,3 +96,14 @@ def test_unknown_sources_and_quota_excess_reserve_filler_before_pool_budgeting()
     assert budget.eligible_checks <= len(ids - unsafe)
     assert not regional_requirement(ROWS[28052401], options).reliable
     assert regional_requirement(ROWS[28052401], options).accessible(lambda region: False)
+
+
+def test_investigation_uses_native_lost_signal_targets_and_remains_filler_only():
+    rule = regional_requirement(ROWS[28052509], config())
+    targets = {"k01_darkscape", "k02_trucks_cemetery", "y04_pole", "zaton", "jupiter", "pripyat"}
+    assert set(rule.sources[0]) == targets and not rule.all_regions
+    for target in targets:
+        assert rule.accessible(lambda region, target=target: region == target)
+    assert not rule.accessible(lambda region: region in {"l01_escape", "l02_garbage"})
+    assert not rule.reliable
+    assert 28052509 in unreliable_check_ids(config())

@@ -69,6 +69,10 @@ local function blocked(state, row, regions, psi, id)
     end
     if config.rewards_workshop_access == 1 and row.category == "checks_gear_upgrades"
         and not state.unlocks.workshop_upgrade then return "Workshop upgrade permission required" end
+    if row.category == "checks_quest_types" and row.key == "investigation"
+        and config.starting_utilities == 2 and not state.unlocks.gear_utilities then
+        return "Equipment permission required: utilities (RF receiver)"
+    end
     local group = equipment[row.category]
     if group and not gamma_ap_equipment_classes.permitted(state,group) then
         return "Equipment permission required: " .. group

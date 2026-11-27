@@ -197,3 +197,23 @@ def test_pda_check_availability_matches_actual_ap_access_rules(lua, gear, keys, 
     for loc in multi.get_locations():
         if loc.address:
             assert (statuses[loc.address] == "available") == loc.can_reach(ap), loc.name
+
+
+def test_investigation_tracker_requires_eligible_map_and_rf_utilities(lua):
+    state = state_for(
+        lua,
+        checks_quest_types=1,
+        rewards_zone_keys=1,
+        starting_utilities=2,
+        rewards_starting_gear_unlocks=1,
+    )
+    state.unlocks["zone_l02_garbage"] = True
+    check = {row.id: row for row in rows(view(lua, state))}[28052509]
+    assert "Regional activity" in check.reason
+    zone_keys = lua.globals().gamma_ap_catalog.zone_keys
+    state.unlocks[zone_keys["y04_pole"]] = True
+    check = {row.id: row for row in rows(view(lua, state))}[28052509]
+    assert "utilities (RF receiver)" in check.reason
+    state.unlocks.gear_utilities = True
+    check = {row.id: row for row in rows(view(lua, state))}[28052509]
+    assert check.status == "available" and "Optional check" in check.reason
