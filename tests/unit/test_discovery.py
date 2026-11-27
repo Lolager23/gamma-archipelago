@@ -109,3 +109,26 @@ def test_optional_policy_exclusion_normalization_and_legacy_identity():
     assert configured_location_ids(included) >= MISSABLE_IDS
     omitted = build_configuration({**included.to_values(), "optional_check_policy": 1})
     assert not MISSABLE_IDS & configured_location_ids(omitted)
+
+
+def test_vehicle_retirement_preserves_legacy_identity_and_published_id():
+    from gamma_archipelago.catalog import ALL_LOCATION_IDS, LOCATION_NAMES
+    from gamma_archipelago.configuration import encode_configuration
+    from gamma_archipelago.web_planner import metadata
+
+    values = {**defaults(), "checks_maps": 0, "checks_quest_types": 1}
+    current = build_configuration(values)
+    legacy_values = {key: value for key, value in values.items() if key != "quest_type_roster"}
+    legacy = build_configuration(legacy_values)
+    explicit_legacy = build_configuration({**values, "quest_type_roster": 0})
+    assert len(configured_location_ids(current)) == 12
+    assert configured_location_ids(legacy) == configured_location_ids(current) | {28052513}
+    assert legacy.digest == explicit_legacy.digest != current.digest
+    assert "option|quest_type_roster|" not in encode_configuration("a" * 64, legacy)
+    assert LOCATION_NAMES["Complete Quest Type: Vehicle"] == 28052513
+    assert 28052513 in ALL_LOCATION_IDS
+    assert (
+        next(row for row in metadata()["checks"] if row["key"] == "checks_quest_types")["count"]
+        == 12
+    )
+    assert "quest_type_roster" not in {row["key"] for row in metadata()["advanced"]}

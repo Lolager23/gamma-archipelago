@@ -100,5 +100,11 @@ def advanced_options() -> list[dict[str, object]]:
         }
         for key, maximum in {"pda_tracker": 1, **EXPANSION_LIMITS}.items()
         if key
-        not in {"ap_start", "artefact_overflow_count", "supply_ammo_calibre", *DEFAULT_COUNTS}
+        not in {
+            "ap_start",
+            "quest_type_roster",
+            "artefact_overflow_count",
+            "supply_ammo_calibre",
+            *DEFAULT_COUNTS,
+        }
     ]

@@ -1691,3 +1691,23 @@ launch, server restart, save/session switch, private developer-panel modificatio
 or protected normal-game write was performed. Existing Mini check recovery is
 separate operational work; this PR changes no active server progress. Current-head
 Windows/Linux CI must be checked separately before treating the PR as validated.
+
+
+### Retire Vehicle from new worlds - 27 November 2026
+
+Current generation and generator previews omit Vehicle (28052513), leaving twelve
+quest types. Preserve its catalogue ID/name, functors, server confirmations and
+old save support. The hidden roster value defaults to one in APWorld/new presets;
+old slot data defaults to zero and omits that value from its digest and wire.
+Python selection and generated Lua apply the same retirement filter.
+
+Regressions cover both exact client manifests, rejecting a mismatched roster,
+legacy outbound completion, game save/load confirmations, native functor mapping,
+category counts and independent task-category generation. A read-only check of
+the actual active two-player seed confirms both old configuration digests and
+both exact check manifests are preserved. Updated bundled presets use the current
+roster. Affected verification and current-head Windows/Linux results are recorded
+on the PR; full release sweeps and native acceptance are **not run**. No game
+launch, deployment, session regeneration, developer-panel change or protected
+normal-game write is part of this source change. Requested manual Vehicle
+completions were saved separately with prior checks and item history preserved.

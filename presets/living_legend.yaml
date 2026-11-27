@@ -12,6 +12,7 @@ S.T.A.L.K.E.R. GAMMA:
   checks_mutant_first_kills: 1
   checks_faction_first_kills: 1
   checks_artefacts: 1
+  quest_type_roster: 1
   checks_quest_types: 1
   checks_gear_upgrades: 1
   checks_armour_tiers: 1

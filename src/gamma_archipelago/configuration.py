@@ -175,6 +175,7 @@ def defaults() -> dict[str, object]:
     values.update(dict.fromkeys(QUANTITY_OPTIONS, 100))
     values.update(
         checks_maps=1,
+        quest_type_roster=1,
         pda_tracker=1,
         kill_milestones=[10, 25, 50, 100],
         side_task_milestones=[5, 10, 20, 40],
@@ -405,6 +406,7 @@ def encode_configuration(
         elif (
             name
             in {
+                "quest_type_roster",
                 "checks_shop_purchases",
                 "quest_zone_logic",
                 "regional_progression",

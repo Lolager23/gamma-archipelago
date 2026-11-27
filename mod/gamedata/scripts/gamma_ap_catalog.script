@@ -185,6 +185,7 @@ settlement_rules = {
 }
 rank_goodwill_proxy = {["0"]=0,["3999"]=250,["5999"]=500,["9999"]=750,["15999"]=1000,["23999"]=1500,["34999"]=2000,["49999"]=3000}
 northern_equipment_regions = {"jupiter","zaton","l11_pripyat","pripyat","l11_hospital","l12_stancia","l12_stancia_2","l13_generators"}
+retired_locations = {[28052513]=true}
 adaptive_ammunition = {["item_id"]=28051903,["max_types"]=32,["fallback"]={"ammo_9x18_fmj","ammo_9x18_pmm","ammo_9x18_ap"}}
 mutant_diversity = {["starting_region_slots"]=5,["additional_region_slots"]=2,["starting_region_overrides"]={["l01_escape"]=3}}
 filler_reward_items = {[28051920]=true,[28051921]=true,[28051922]=true,[28051923]=true,[28051924]=true,[28051925]=true,[28051926]=true,[28051927]=true,[28051928]=true,[28051929]=true,[28051930]=true,[28051931]=true,[28051932]=true,[28051933]=true,[28051934]=true,[28051935]=true,[28051936]=true}
@@ -2352,6 +2353,7 @@ config_limits = {
     ["playability_logic"] = 1,
     ["progressive_sphere_pacing"] = 1,
     ["progressive_tool_receipts"] = 1,
+    ["quest_type_roster"] = 1,
     ["quest_zone_logic"] = 1,
     ["random_starting_unlock"] = 1,
     ["randomized_stash_loot"] = 1,
@@ -3494,6 +3496,7 @@ config_defaults = {
     ["playability_logic"]=0,
     ["progressive_sphere_pacing"]=0,
     ["progressive_tool_receipts"]=0,
+    ["quest_type_roster"]=0,
     ["quest_zone_logic"]=0,
     ["random_starting_unlock"]=0,
     ["randomized_stash_loot"]=0,

@@ -71,13 +71,15 @@ def test_repeat_template_instances_deduplicate_save_and_restore_their_counter(lu
     ]
 
 
-def test_all_task_functors_and_monster_assault_normalize_to_the_finite_roster(lua):
-    game, _, _ = task_game(lua, checks_quest_types=1)
+@pytest.mark.parametrize("roster", [0, 1])
+def test_all_task_functors_and_monster_assault_normalize_to_the_finite_roster(lua, roster):
+    game, _, _ = task_game(lua, checks_quest_types=1, quest_type_roster=roster)
     catalogue = lua.globals().gamma_ap_catalog
     for index, (functor, name) in enumerate(catalogue.task_functors.items(), 1):
         row = entry(lua, time=index, functor=functor)
         emit(lua, game, row)
-        assert progress(lua, game).checks[catalogue.quest_type_locations[name]]
+        expected = not (roster == 1 and name == "vehicle")
+        assert bool(progress(lua, game).checks[catalogue.quest_type_locations[name]]) == expected
     # Exercise target/title fallback rather than substring guessing.
     for field in ("target_functor", "title_functor"):
         row = entry(lua, functor="unknown")
