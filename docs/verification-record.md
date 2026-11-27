@@ -1620,3 +1620,38 @@ draft PR. Native acceptance is not run: edit-box focus, Enter/click behavior,
 paused-PDA interaction and actual rendering remain Owen's checks. No GAMMA was
 launched, deployed or modified; the developer panel, active Owen/Mini session,
 backend processes and normal installation were left untouched.
+
+
+### Hostile settlement entry counts independently of reputation - 27 November 2026
+
+Physical entry now completes any enabled settlement check regardless of native
+hostility, AP goodwill receipts or reputation API availability. Remove both the
+entry neutrality guard and the pre-entry floor reconciliation that could return
+early. Keep the existing live actor, map, smart identity, online status and finite
+50-metre distance validation. The earned floor still runs on the independent
+bounded update path. APWorld placement requirements, unsupported-base filler-only
+policy, item/location IDs, configuration digests and save formats are unchanged.
+The PDA derives its safe-placement explanation from AP receipts and explicitly
+states that hostile physical entry still counts; generator wording agrees.
+
+The initial reproducer failed 15 cases and passed 6 against the previous source.
+The replacement entry tests cover all six hostile bases across negative, hostile,
+neutral-boundary and friendly standing, repeat entry, save/load and unavailable
+reputation operations. Existing placement regressions now assert zero through
+four matching rewards remain out of logic and five permit the supported bases.
+Obsolete tests of the removed native neutrality query are replaced by the entry
+and AP-projection regressions; reward/floor identity and failure tests remain.
+
+Affected verification (`tools/verify.py --base origin/main` with a separate AP
+runtime) passed: lint, format, typing, deterministic build, **2,482 covered tests**,
+**19 untraced real AP server tests**, and the independent coverage gates. Changed
+Python modules `settings_ui` and `worlds.gamma.options` measured 100% line coverage
+(no branches). Changed Lua measured 100% executable lines in `game`, `settlements`
+and `settlement_access`, and 98.65% in `tracker`; Lua branch coverage is not
+measured. Full release sweeps and native engine acceptance are **not run**.
+
+This is source-only work on `codex/hostile-settlement-entry`. No deployment, game
+launch, server restart, save/session switch, private developer-panel modification
+or protected normal-game write was performed. Existing Mini check recovery is
+separate operational work; this PR changes no active server progress. Current-head
+Windows/Linux CI must be checked separately before treating the PR as validated.
