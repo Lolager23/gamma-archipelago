@@ -39,12 +39,13 @@ local function valid_stashes(stashes, received, key)
         local record = stashes.records[receipt]
         if not integer(receipt, 1, math.min(4000, received+1)) or seen[receipt] or type(record) ~= "table" then return false end
         seen[receipt] = true
-        local sections = gamma_ap_stash_loot.sections(key,record.item_id,receipt,record.loot_version)
+        local sections = gamma_ap_stash_loot.sections(key,record.item_id,receipt,record.loot_version,record.loot_value)
         local expected_level = gamma_ap_catalog.stash_containers[record.cache_name]
         if not sections or not integer(record.cache_id, 1, 65534)
             or not expected_level or expected_level ~= record.level
             or type(record.actions) ~= "table" or #record.actions ~= #sections
             or not integer(record.next_action, 1, #sections+1) then return false end
+        if not gamma_ap_stash_rewards.valid(record) then return false end
         local pending = record.inventory_notice_pending
         if pending ~= nil and type(pending) ~= "boolean" then return false end
         if pending and (not gamma_ap_catalog.protected_stash_items[record.item_id]
