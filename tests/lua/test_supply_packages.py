@@ -69,7 +69,7 @@ def test_package_receipts_repeat_deliberately_and_resume_after_save(
         )
     ),
 )
-def test_ammunition_packages_use_seed_calibre_and_native_box_sizes(lua, calibre, section):
+def test_legacy_ammunition_plans_keep_seed_calibre_and_native_box_sizes(lua, calibre, section):
     game, engine, _ = tool_game(
         lua,
         (28051903,),
@@ -77,6 +77,13 @@ def test_ammunition_packages_use_seed_calibre_and_native_box_sizes(lua, calibre,
         rewards_supply_ammunition=1,
         supply_ammo_calibre=calibre,
     )
+    saved = state_of(lua, game)
+    plan = saved.deliveries[1]
+    plan.version = None
+    plan.ammo_types = None
+    plan.sections = lua.table_from([section] * 3)
+    engine.created[1] = section
+    game.load_state(lua.table(gamma_archipelago_v1=saved))
     poll(game, engine)
     poll(game, engine)
     assert list(engine.created.values()) == [section] * 3

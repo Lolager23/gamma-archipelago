@@ -30,6 +30,11 @@ def tool_game(lua, items=(), **options):
         item_repair={UIRepair={OnRepair=original}}
         ui_inventory={UIInventory={RMode_RepairYes=original,RMode_UpgradeYes=original}}
         news_manager={send_tip=function(actor,text) engine.tips[#engine.tips+1]=text end}
+        local prior=ini_sys.r_string_ex
+        ini_sys.r_string_ex=function(self,section,key)
+            if key=="class" and section:sub(1,5)=="ammo_" then return "AMMO_S" end
+            return prior(self,section,key)
+        end
         ini_sys.section_exist=function(self,section) return section~=engine.missing_section end
     """)
     engine.files[CONFIG_PATH] = encode_configuration(KEY, configuration, expanded=True)

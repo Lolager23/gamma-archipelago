@@ -1,0 +1,54 @@
+-- Snapshot equipped weapons once per package; never reroll an in-progress receipt.
+local function supported(section)
+    if type(section) ~= "string" or #section > 96 or not section:match("^ammo_[a-z0-9_.]+$")
+        or section:find("_bad",1,true) or section:find("_verybad",1,true) then return false end
+    local ok,valid=pcall(function()
+        local class=ini_sys:r_string_ex(section,"class")
+        return ini_sys:section_exist(section) and type(class) == "string" and class:match("^AMMO") ~= nil
+    end)
+    return ok and valid
+end
+
+function select()
+    local found={}
+    for slot=1,13 do
+        local ok,classes=pcall(function()
+            local weapon=db.actor:item_in_slot(slot)
+            return weapon and ini_sys:r_string_ex(weapon:section(),"ammo_class")
+        end)
+        if ok and type(classes) == "string" then
+            if #classes > 8192 then return nil,"Equipped weapon ammo list exceeds the supported bound" end
+            for value in classes:gmatch("[^,]+") do
+                local section=value:match("^%s*(.-)%s*$")
+                if supported(section) then found[section]=true end
+            end
+        end
+    end
+    if not next(found) then
+        for _,section in ipairs(gamma_ap_catalog.adaptive_ammunition.fallback) do
+            if supported(section) then found[section]=true end
+        end
+    end
+    local result={}
+    for section in pairs(found) do result[#result+1]=section end
+    table.sort(result)
+    if #result == 0 or #result > gamma_ap_catalog.adaptive_ammunition.max_types then
+        return nil,"No supported ammunition selection fits this package; receipt remains pending"
+    end
+    return result
+end
+
+function sections(types)
+    local maximum=gamma_ap_catalog.adaptive_ammunition.max_types
+    if type(types) ~= "table" or #types < 1 or #types > maximum then return nil end
+    for index in pairs(types) do
+        if type(index) ~= "number" or index ~= math.floor(index) or index < 1 or index > #types then return nil end
+    end
+    local result,previous={},""
+    for _,section in ipairs(types) do
+        if not supported(section) or section <= previous then return nil end
+        for _=1,3 do result[#result+1]=section end
+        previous=section
+    end
+    return result
+end

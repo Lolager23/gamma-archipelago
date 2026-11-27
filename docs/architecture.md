@@ -136,7 +136,7 @@ transaction or change the server's authority over item history.
 
 [Supply packages](supply-packages.md) reuse those plans for repeatable useful
 rewards. Their contents and relative optional-pool weights are catalogue data;
-ammunition calibre is seed configuration. A package receipt grants its contents
+ammunition snapshots compatible full-quality types from equipped weapons; legacy plans retain their seed calibre. A package receipt grants its contents
 without a permanent permission, while receipt ordering and completion still
 belong to the same central save coordinator.
 

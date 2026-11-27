@@ -10266,5 +10266,14 @@
     "starting_region_overrides": {
       "l01_escape": 3
     }
+  },
+  "adaptive_ammunition": {
+    "item_id": 28051903,
+    "max_types": 32,
+    "fallback": [
+      "ammo_9x18_fmj",
+      "ammo_9x18_pmm",
+      "ammo_9x18_ap"
+    ]
   }
 }

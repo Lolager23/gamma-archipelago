@@ -8,7 +8,7 @@ optional rewards: `rewards_supply_medical`, `rewards_supply_maintenance`,
 |---|---|---|
 | Medical | 2 army medkits, 1 scientific medkit, 2 bandages, 1 antirad, 1 morphine, 1 antidote | 3 |
 | Maintenance | 2 gun oils, 2 solvents, 2 advanced adhesives, 1 heavy sewing kit, 1 duct tape | 2 |
-| Ammunition | Three native boxes of the selected calibre | 3 |
+| Ammunition | Three native boxes of each full-quality ammo type supported by equipped weapons | 3 |
 | Expedition | Bread, drinking water, bandage | 2 |
 
 The 27 November improvement gives each named medical/maintenance package eight
@@ -26,11 +26,23 @@ backfilled or restarted. Unsupported plan versions are refused before mutation.
 There is no item-ID, seed, receipt-order or configuration-digest change. Downgrading
 a new plan requires the matching pre-update save/bundle backup.
 
-`supply_ammo_calibre` selects 9x18 (default), 9x19, 5.45x39, 5.56x45 or 7.62x39.
-Box sizes come from active native definitions; this does not promise a fixed
-round count or detect the player's equipped weapon. Choose the calibre to suit
-the intended character. Sections were checked in the extracted native definitions
-and are preflight-checked again before spawning in the game.
+New ammunition packages snapshot the `ammo_class` lists of equipped weapons,
+deduplicate their supported full-quality sections and deliver three native boxes
+of each type. Both equipped guns count, including mixed calibres. Damaged ammo
+variants are excluded. With no supported equipped firearm, the fallback is three
+boxes each of 9x18 FMJ, PMM and AP (nine boxes). Native definitions determine box
+sizes; no fixed round count is promised. A bounded maximum of 32 distinct types
+(96 boxes) keeps delivery and save validation finite. Unsupported selections stay
+pending with a diagnostic instead of silently acknowledging an empty reward.
+
+The selection is frozen in the central receipt plan before the first spawn and
+resumes unchanged after weapon swaps or save/load. Previously started ammunition
+plans retain their original three boxes and legacy `supply_ammo_calibre` choice.
+That option remains readable for existing seeds but is hidden from the generator.
+Already-applied packages and individual named one-box ammo filler rewards do not
+change. This also works for future receipts in an existing seed without changing
+its configuration identity. The native sections and ammo classes were checked in
+the extracted Anomaly definitions and are checked again before delivery.
 
 These packages are useful filler, not required progression. They never displace
 mandatory permissions. The optional reward draw uses relative catalogue weights;
