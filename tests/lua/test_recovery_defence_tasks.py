@@ -72,7 +72,13 @@ def test_native_task_mapping_still_requires_successful_enabled_completion(
 
 
 def test_known_story_id_takes_precedence_over_recovery_exception(lua):
-    game, _, _ = task_game(lua, checks_quest_types=1, checks_story_milestones=1)
+    game, _, _ = task_game(
+        lua,
+        checks_quest_types=1,
+        checks_story_milestones=1,
+        checks_mortal_sin=1,
+        checks_operation_afterglow=1,
+    )
     task_id, check = next(iter(lua.globals().gamma_ap_catalog.story_task_locations.items()))
     emit(lua, game, entry(lua, storyline=True, functor="drx_sl_retrieve_item_task_status"), task_id)
     state = progress(lua, game)
