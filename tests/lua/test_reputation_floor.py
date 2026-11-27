@@ -41,8 +41,10 @@ def test_five_rewards_guarantee_neutrality_despite_prior_debt_then_restore_later
 
     engine.goodwill = -1000
     game.actor_on_interaction("smarts", smart(lua, name), name)
-    assert engine.goodwill == 1250
+    assert engine.goodwill == -1000  # Entry does not query or restore reputation.
     assert progress(lua, game).checks[28052103]
+    poll(game, engine)
+    assert engine.goodwill == 1250  # The independent bounded update still restores the floor.
 
 
 def test_floor_setter_failure_after_mutation_retries_one_target_without_extra_receipts(lua):

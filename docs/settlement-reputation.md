@@ -1,7 +1,7 @@
 # Settlement reputation access
 
 New generations default `settlement_reputation_logic` on. Free Stalker hostility
-now affects settlement access rules and progression budgeting. No faction alliance,
+affects AP placement requirements and progression budgeting only. No faction alliance,
 actor community, NPC forced relation or personal NPC grudge is changed by this
 feature. Native testing is **not run**, reserved for Owen.
 
@@ -9,10 +9,10 @@ feature. Native testing is **not run**, reserved for Owen.
 
 | Settlement | Default community | Progression policy |
 |---|---|---|
-| Southern Checkpoint | Military | Five Military goodwill rewards / neutral native standing |
-| Agroprom Research Institute | Military | Shares the same five Military rewards |
-| Bandit Base, Dark Valley | Bandits | Five Bandit goodwill rewards / neutral native standing |
-| Mercenary Base, Dead City | Mercenaries | Five Mercenary goodwill rewards / neutral native standing |
+| Southern Checkpoint | Military | Five Military goodwill rewards in AP logic |
+| Agroprom Research Institute | Military | Shares the same five Military rewards in AP logic |
+| Bandit Base, Dark Valley | Bandits | Five Bandit goodwill rewards in AP logic |
+| Mercenary Base, Dead City | Mercenaries | Five Mercenary goodwill rewards in AP logic |
 | Sin Mine Barracks | Sin | Filler-only: no supported goodwill reward route |
 | Monolith Cultural Center | Monolith | Filler-only: no supported goodwill reward route |
 
@@ -57,29 +57,32 @@ or additional persistent state is introduced as the progression graph grows.
 
 ## Native checks and PDA
 
-The AP solver models five received rewards as a conservative earning route. The
-native entry callback instead checks current personal goodwill plus current
-community relation against the neutral threshold. Natural goodwill can therefore
-permit an earlier check. Entering at hostile standing leaves the check pending;
-the normal repeated smart callback can complete it after standing improves.
+The AP solver models five received rewards as a conservative safe-entry route for
+placing progression. This is a placement assumption, not a runtime requirement.
+An actual entry within the configured smart-terrain radius completes the enabled
+check even when the faction is hostile, no goodwill rewards have arrived, or native
+reputation APIs are missing. The callback still validates the live actor, map,
+smart name, online object and finite entry distance. Repeated entry and save/load
+cannot duplicate the check.
 
-The PDA accepts a read-only native standing projection and explains the current
-goodwill deficit. Offline/model-only projections use applied AP receipt counts.
-Missing or malformed native APIs and invalid actor identities fail closed, with
-an actionable reason; invalid community names never reach native relation bindings.
-Completed checks remain monotonic after hostility changes or save/load.
+The PDA models availability from applied AP goodwill receipts and labels any
+shortfall as **AP placement logic**, explicitly stating that physical hostile entry
+still counts. It no longer queries native standing to decide availability. Natural
+friendship, disguises or surviving a hostile base can therefore yield a valid check
+before AP's conservative placement model considers it reachable. Completed checks
+remain monotonic, including before a modeled requirement is met.
 
-These ordinary community thresholds do not guarantee that a particular NPC stops
-shooting. Scripted quest hostility, personal grudges, disguises and dynamic faction
-wars can change individual eligibility; native acceptance remains required.
+Reputation-floor restoration runs independently during the bounded game update;
+its failure cannot suppress the physical entry callback. No native entry guard or
+pre-entry reputation operation remains. The earned floor and reward delivery
+semantics are unchanged.
 
 Owen selected a permanent AP-earned reputation floor. In these reputation-gated
 seeds, each applied Military/Bandit/Mercenary reward contributes +250 to a minimum
 personal standing, capped at 3,000. Higher natural goodwill is preserved. A new
 receipt targets at least its earned floor, so earlier combat debt cannot prevent
 the fifth reward from achieving ordinary neutrality. The adapter restores later
-personal losses during its bounded update and before smart entry, including while
-the bridge is offline. Other faction rewards retain their original mutable bonus.
+personal losses during its bounded update, including while the bridge is offline. Other faction rewards retain their original mutable bonus.
 
 The floor derives from the same validated applied receipt history; no separate
 saved reputation counter exists. Setter failures retry the same target without
@@ -105,7 +108,8 @@ confirm the sum and inclusive boundary. The
 [goodwill registry](https://github.com/themrdemonized/xray-monolith/blob/7289a03f19a3cc712d9fc4cf6122345984c8c094/src/xrGame/relation_registry.cpp)
 remains the native state owner.
 
-Owen should test hostile entry without rewards, four versus five rewards, natural
-neutrality, both Military bases sharing a quota, negative goodwill, save/reload,
-completed-check retention, current PDA reasons and any forced-hostile NPCs in a
-fresh coordinated Dev seed. No game launch or deployment is part of this PR.
+Owen should test hostile physical entry without rewards, the Mercenary Base and
+both Military bases, negative goodwill, save/reload, completed-check retention
+and the PDA distinction between AP logic and actual completion. Native acceptance
+is not run; the adapter tests mock the engine. No game launch or deployment is
+part of this PR.

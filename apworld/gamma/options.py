@@ -640,7 +640,10 @@ class ChecksFactionStanding(Toggle):
 
 
 class SettlementReputationLogic(DefaultOnToggle):
-    """Require neutral goodwill for supported hostile bases; unsupported bases are filler-only."""
+    """Model neutral goodwill for safe AP placement; unsupported bases are filler-only.
+
+    Physical base entry completes the check regardless of actual faction hostility.
+    """
 
     display_name = "Hostile settlement reputation logic"
 

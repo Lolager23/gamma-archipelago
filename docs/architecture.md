@@ -44,7 +44,9 @@ application. A user-requested MCM diagnostic can print while the menu is paused.
 
 The [PDA tracker](pda-tracker.md) reads a detached view from the game-state owner.
 Settlement diplomacy uses catalogue-backed solver requirements and a read-only
-native standing projection. The engine registry still owns goodwill; the AP save
+AP receipt projection for tracker availability. Physical settlement entry is
+independent of reputation; safe placement assumptions never veto observed entry.
+The engine registry still owns goodwill; the AP save
 owns applied receipt history. No additional persistent reputation owner exists.
 The projection groups progression facts by status, unlocked/locked permissions
 and exploration without parsing presentation strings; its legacy flat list is

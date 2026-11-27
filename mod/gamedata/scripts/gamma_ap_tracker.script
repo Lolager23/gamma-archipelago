@@ -42,7 +42,7 @@ function reachable(state, psi)
     return result
 end
 
-local function blocked(state, row, regions, psi, id, standing)
+local function blocked(state, row, regions, psi, id)
     local config = options(state)
     local class_problem=gamma_ap_equipment_classes.check_reason(state,row)
     if class_problem then return class_problem end
@@ -59,7 +59,7 @@ local function blocked(state, row, regions, psi, id, standing)
     if practical then return practical end
     local readiness=gamma_ap_progression_readiness.reason(state,row,regions,id)
     if readiness then return readiness end
-    local diplomacy,optional = gamma_ap_settlement_access.reason(state,id,standing)
+    local diplomacy,optional = gamma_ap_settlement_access.reason(state,id)
     if diplomacy then return diplomacy end
     if config.rewards_progressive_tools == 1 and row.category == "checks_gear_upgrades"
         and gamma_ap_workshop.tools_level(state) < 1 then return "Basic tool permission required" end
@@ -108,7 +108,7 @@ local function progression_entry(result, group, text)
     entries[#entries+1] = text
 end
 
-function snapshot(state, total, problem, psi, standing)
+function snapshot(state, total, problem, psi)
     local result = {rows={}, regions={}, completed=0, available=0, blocked=0, progression={}}
     result.progression_groups = {status={}, unlocked={}, exploration={}, locked={}}
     result.enabled = options(state).pda_tracker ~= 0
@@ -125,7 +125,7 @@ function snapshot(state, total, problem, psi, standing)
     for id in pairs(state.enabled_checks) do
         local row = definition(id)
         local reason,optional
-        if not state.checks[id] then reason,optional = blocked(state,row,regions,psi,id,standing) end
+        if not state.checks[id] then reason,optional = blocked(state,row,regions,psi,id) end
         local status = state.checks[id] and "completed" or (reason and "blocked" or "available")
         local region = gamma_ap_catalog.tracker_regions[row.region] or "Global activities"
         result.rows[#result.rows+1] = {id=id, name=row.name, region=region, status=status,
