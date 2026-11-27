@@ -10,6 +10,7 @@ local function supported(section)
 end
 
 function select()
+    if not gamma_ap_readiness.ready() then return nil,"Ammunition selection waits for a ready world" end
     local found={}
     for slot=1,13 do
         local ok,classes=pcall(function()

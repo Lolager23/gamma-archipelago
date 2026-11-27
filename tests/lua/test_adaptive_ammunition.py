@@ -135,3 +135,22 @@ def test_adaptive_metadata_cannot_be_attached_to_another_package(lua):
     state = state_of(lua, game)
     state.deliveries[1].ammo_types = lua.table_from(FALLBACK)
     assert lua.globals().gamma_ap_deliveries.validate(state) is False
+
+
+def test_loading_cannot_freeze_an_empty_loadout_as_the_fallback(lua):
+    game, engine, config = tool_game(lua, rewards_supply_ammunition=1, checks_gear_upgrades=0)
+    lua.globals().gamma_ap_readiness.reset()
+    engine.files[INCOMING] = encode_incoming(KEY, (AMMO,), config.digest)
+    poll(game, engine)
+    assert state_of(lua, game).deliveries[1] is None
+    assert not list(engine.created.values())
+    equipped(lua, engine, 1, "ammo_5.45x39_ap")
+    engine.callbacks.on_loading_screen_dismissed()
+    poll(game, engine)
+    assert state_of(lua, game).deliveries[1] is None
+    engine.frame += 1
+    poll(game, engine)
+    assert list(engine.created.values()) == ["ammo_5.45x39_ap"]
+    for _ in range(2):
+        poll(game, engine)
+    assert state_of(lua, game).received_count == 1
