@@ -22,10 +22,9 @@ def test_hostile_bases_require_five_matching_rewards_and_four_is_still_hostile(f
         if item.name != name:
             state.collect(item, True)
     checks = {loc.address: loc for loc in multi.get_locations() if loc.address in ids}
-    for _ in range(4):
+    for _ in range(5):
+        assert all(not loc.can_reach(state) for loc in checks.values())
         state.collect(world.create_item(name), True)
-    assert all(not loc.can_reach(state) for loc in checks.values())
-    state.collect(world.create_item(name), True)
     assert all(loc.can_reach(state) for loc in checks.values())
 
 

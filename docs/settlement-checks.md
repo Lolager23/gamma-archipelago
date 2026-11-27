@@ -12,7 +12,9 @@ Monolith Cultural Center, Skadovsk, Yanov Station, Hermann Bunker and Laundromat
 Faction hostility does not silently remove a hub from the generated roster.
 
 New generations apply [settlement reputation access](settlement-reputation.md):
-supported hostile bases require neutrality, and unsupported routes are filler-only.
+supported hostile bases require goodwill for AP placement, and unsupported routes
+are filler-only. Physical entry completes any enabled settlement check regardless
+of hostility or goodwill; the runtime does not enforce AP placement assumptions.
 All eighteen published checks remain in the roster. Legacy configurations retain
 their original entry behaviour through the default-zero compatibility setting.
 

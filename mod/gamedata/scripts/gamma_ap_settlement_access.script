@@ -1,4 +1,4 @@
--- Catalogue rules are permanent data; native standing is a read-only observation.
+-- AP placement projection and earned goodwill floors derive from receipt history.
 local function rule(state, id)
     local config = state.configuration
     if not state.expanded or not config or config.options.settlement_reputation_logic ~= 1 then return end
@@ -47,57 +47,16 @@ function minimum_goodwill(state, pending)
     return result
 end
 
-local function valid(value)
-    return type(value) == "number" and value == math.floor(value) and math.abs(value) <= 2147483647
-end
-
-local function query(entry)
-    local ok,goodwill,relation = pcall(function()
-        local actor = db.actor
-        local id,community = actor:id(),character_community(actor)
-        -- Invalid Lua values must never reach the native relation bindings.
-        if not valid(id) or id < 0 or id >= 65535 or type(community) ~= "string"
-            or community == "" or community == "none" then error("Invalid actor identity") end
-        return relation_registry.community_goodwill(entry.faction,id),
-            relation_registry.community_relation(entry.faction,community)
-    end)
-    if not ok or not valid(goodwill) or not valid(relation) then return {problem=true} end
-    return {goodwill=goodwill,minimum=entry.neutral-relation,neutral=goodwill+relation >= entry.neutral}
-end
-
-function native_allowed(state, id)
-    local entry = rule(state,id)
-    if not gated(state,entry) then return true end
-    local observed = query(entry)
-    if observed.problem then return nil,"Cannot verify "..entry.label.." neutrality; native goodwill APIs are unavailable or invalid" end
-    return observed.neutral
-end
-
-function standing(state)
-    local result = {}
-    for id in pairs(state.enabled_checks) do
-        local entry = rule(state,id)
-        if gated(state,entry) and not result[entry.faction] then result[entry.faction] = query(entry) end
-    end
-    return result
-end
-
-function reason(state, id, standing)
+-- Tracker availability mirrors conservative AP placement, not native entry eligibility.
+function reason(state, id)
     local entry = rule(state,id)
     if not entry then return end
     if not gated(state,entry) then
         return nil,"Filler-only hostile settlement: no supported neutrality reward route"
     end
-    local observed = standing and standing[entry.faction]
-    if observed then
-        if observed.problem then return entry.label.." neutrality could not be verified" end
-        if not observed.neutral then
-            return entry.label.." remains hostile: "..observed.goodwill.." / "..observed.minimum.." personal goodwill required"
-        end
-        return
-    end
     local received = copies(state,entry.item)
     if received < entry.copies then
-        return entry.label.." neutrality: "..received.." / "..entry.copies.." goodwill rewards (natural standing may allow earlier entry)"
+        return "AP placement logic: "..entry.label.." goodwill rewards "..received.." / "..entry.copies
+            .."; physical entry still counts regardless of hostility"
     end
 end

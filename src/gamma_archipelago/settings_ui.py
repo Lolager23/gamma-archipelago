@@ -41,7 +41,7 @@ CHOICES = {
     "playability_logic": ["Legacy assumptions", "Practical progression and early equipment"],
     "settlement_reputation_logic": [
         "Legacy settlement access",
-        "Require neutral hostile settlements",
+        "Neutrality for AP placement only",
     ],
     "ap_start": ["Legacy seed", "Archipelago start required"],
     "starting_faction": ["Free Stalkers"],

@@ -33,94 +33,35 @@ def configured(lua):
     return game, engine, saved_state(lua, game).gamma_archipelago_v1
 
 
-def test_native_settlement_waits_for_real_neutrality_and_accepts_natural_goodwill(lua):
-    game, _, _ = configured(lua)
-    name = "esc_smart_terrain_3_16"
-    for goodwill in (0, 1000):
-        lua.globals().goodwill = goodwill
-        game.actor_on_interaction("smarts", smart(lua, name), name)
-        assert not saved_state(lua, game).gamma_archipelago_v1.checks[28052103]
-    lua.globals().goodwill = 1001
-    game.actor_on_interaction("smarts", smart(lua, name), name)
-    assert saved_state(lua, game).gamma_archipelago_v1.checks[28052103]
-    game.load_state(saved_state(lua, game))
-    lua.globals().goodwill = -3000
-    assert saved_state(lua, game).gamma_archipelago_v1.checks[28052103]
-
-
-def test_tracker_uses_receipts_without_native_observations_and_live_standing_when_supplied(lua):
+def test_tracker_uses_ap_receipts_only_and_explains_that_hostile_entry_still_counts(lua):
     lua.execute("has_alife_info=function() return true end")
     _, _, state = configured(lua)
     module = lua.globals().gamma_ap_settlement_access
     assert "0 / 5" in module.reason(state, 28052103)
     state.applied_items = lua.table_from([28051307] * 4)
     assert "4 / 5" in module.reason(state, 28052103)
+    snapshot = lua.globals().gamma_ap_tracker.snapshot(state, 0, None, False)
+    checks = {row.id: row for row in rows(snapshot)}
+    assert checks[28052103].status == "blocked"
+    assert "AP placement logic" in checks[28052103].reason
+    assert "physical entry still counts regardless of hostility" in checks[28052103].reason
+    assert "Filler-only" in checks[28052113].reason
     state.applied_items[5] = 28051307
     assert module.reason(state, 28052103) is None
-    standing = module.standing(state)
-    assert "remains hostile" in module.reason(state, 28052103, standing)
-    assert lua.globals().queries.army == 1  # Two bases share one query.
-    lua.globals().goodwill = 1250
-    assert module.reason(state, 28052103, module.standing(state)) is None
     assert module.reason(state, 28052101) is None
-    assert "Filler-only" in module.reason(state, 28052113)[1]
-    snapshot = lua.globals().gamma_ap_tracker.snapshot(state, 0, None, False, standing)
-    checks = {row.id: row for row in rows(snapshot)}
-    assert "remains hostile" in checks[28052103].reason
-    assert "Filler-only" in checks[28052113].reason
+    assert not list(lua.globals().queries)
 
 
-@pytest.mark.parametrize("value", [None, "bad", 0.5, float("inf"), float("nan"), 2147483648])
-@pytest.mark.parametrize("field", ["goodwill", "relation"])
-def test_unavailable_or_malformed_native_standing_fails_closed_without_a_check(lua, value, field):
-    game, _, state = configured(lua)
-    lua.globals()[field] = value
-    module = lua.globals().gamma_ap_settlement_access
-    allowed, error = module.native_allowed(state, 28052103)
-    assert allowed is None and "Cannot verify" in error
-    assert "could not be verified" in module.reason(state, 28052103, module.standing(state))
-    name = "esc_smart_terrain_3_16"
-    game.actor_on_interaction("smarts", smart(lua, name), name)
-    assert not saved_state(lua, game).gamma_archipelago_v1.checks[28052103]
-
-
-def test_legacy_and_no_reward_routes_do_not_call_native_apis_and_remain_optional(lua):
+def test_legacy_and_no_reward_routes_remain_optional_without_native_standing(lua):
     game, _, _ = configured_settlements(lua)
     state = saved_state(lua, game).gamma_archipelago_v1
     module = lua.globals().gamma_ap_settlement_access
     lua.globals().relation_registry = None
-    assert module.native_allowed(state, 28052103)
     assert "Filler-only" in module.reason(state, 28052103)[1]
     state.configuration.options.settlement_reputation_logic = 0
     assert module.reason(state, 28052103) is None
-    assert not list(module.standing(state))
     state.configuration = None
-    assert module.native_allowed(state, 28052103)
-
-
-def test_missing_native_api_fails_closed_in_an_active_reputation_seed(lua):
-    _, _, state = configured(lua)
-    lua.globals().relation_registry = None
-    allowed, error = lua.globals().gamma_ap_settlement_access.native_allowed(state, 28052103)
-    assert allowed is None and "native goodwill APIs" in error
-
-
-@pytest.mark.parametrize("community", [None, "", "none", 123])
-def test_invalid_actor_community_never_reaches_native_relation_bindings(lua, community):
-    _, _, state = configured(lua)
-    lua.globals().community_result = community
-    lua.execute("character_community=function() return community_result end")
-    allowed, _ = lua.globals().gamma_ap_settlement_access.native_allowed(state, 28052103)
-    assert allowed is None and not list(lua.globals().queries)
-
-
-@pytest.mark.parametrize("id", [-1, 65535, "bad", 0.5])
-def test_invalid_actor_id_never_reaches_native_relation_bindings(lua, id):
-    _, _, state = configured(lua)
-    lua.globals().actor_id = id
-    lua.execute("db.actor.id=function() return actor_id end")
-    allowed, _ = lua.globals().gamma_ap_settlement_access.native_allowed(state, 28052103)
-    assert allowed is None and not list(lua.globals().queries)
+    assert module.reason(state, 28052103) is None
 
 
 def test_earned_floor_restores_negative_standing_before_entry_and_survives_saved_history(lua):
